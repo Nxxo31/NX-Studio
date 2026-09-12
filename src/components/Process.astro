@@ -1,0 +1,26 @@
+---
+const steps = [
+  { n: "01", title: "Descubrimiento gratis", desc: "Consulta inicial sin costo, análisis de necesidades y propuesta personalizada." },
+  { n: "02", title: "Diseño y prototipo", desc: "Wireframes, mockups interactivos y revisión iterativa hasta tu aprobación." },
+  { n: "03", title: "Desarrollo ágil", desc: "Entregas cada 2 semanas con pruebas continuas y feedback integrado." },
+  { n: "04", title: "Lanzamiento", desc: "Deploy a producción, capacitación del equipo y documentación completa." },
+  { n: "05", title: "Soporte continuo", desc: "Monitoreo, actualizaciones de seguridad y optimización por métricas reales." },
+];
+---
+
+<section id="proceso" class="border-t border-nx-border px-6 py-24">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="font-display text-3xl font-bold md:text-4xl">Proceso de trabajo</h2>
+    <ol class="mt-12 space-y-6">
+      {steps.map((s) => (
+        <li class="flex gap-6 rounded-xl border border-nx-border bg-nx-surface p-6">
+          <div class="font-display text-3xl font-bold text-nx-primary">{s.n}</div>
+          <div>
+            <h3 class="font-semibold">{s.title}</h3>
+            <p class="mt-1 text-sm text-nx-muted">{s.desc}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

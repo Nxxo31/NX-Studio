@@ -1,0 +1,35 @@
+---
+const links = [
+  { href: "#servicios", label: "Servicios" },
+  { href: "#proyectos", label: "Proyectos" },
+  { href: "#proceso", label: "Proceso" },
+  { href: "#stack", label: "Stack" },
+  { href: "#contacto", label: "Contacto" },
+];
+---
+
+<header class="fixed top-0 z-50 w-full border-b border-nx-border bg-nx-bg/80 backdrop-blur-md">
+  <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    <a href="/" class="font-display text-xl font-bold tracking-tight">
+      <span class="text-nx-primary">NX</span>-Studio
+    </a>
+    <ul class="hidden items-center gap-8 md:flex">
+      {links.map((l) => (
+        <li>
+          <a
+            href={l.href}
+            class="text-sm text-nx-muted transition-colors hover:text-nx-text"
+          >
+            {l.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a
+      href="#contacto"
+      class="rounded-full bg-nx-primary px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-nx-primary-dim"
+    >
+      Consulta gratis
+    </a>
+  </nav>
+</header>
