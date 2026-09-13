@@ -2,47 +2,48 @@
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-nx-border px-6 py-12">
+<footer class="border-t border-nx-border bg-nx-surface px-6 py-16">
   <div class="mx-auto max-w-7xl">
-    <div class="grid gap-8 md:grid-cols-4">
-      <div>
-        <div class="flex items-center gap-2 font-display font-semibold">
-          <span class="flex h-6 w-6 items-center justify-center rounded bg-gradient-to-br from-nx-primary to-nx-accent text-xs font-bold text-nx-bg">
-            NX
-          </span>
+    <div class="grid gap-12 md:grid-cols-4">
+      <div class="md:col-span-2">
+        <a href="/NX-Studio/" class="flex items-center gap-2 font-display text-xl font-bold">
+          <span class="grid h-10 w-10 place-items-center rounded-md bg-gradient-to-br from-nx-accent to-nx-purple font-mono text-sm text-white">NX</span>
           <span>NX-Studio</span>
-        </div>
-        <p class="mt-3 text-sm text-nx-muted">Socio tecnológico nearshore para empresas latinoamericanas.</p>
+        </a>
+        <p class="mt-4 max-w-md text-sm text-nx-muted">
+          Estudio de software LATAM. Producto + servicio. Bots de trading, ERP multi-tenant,
+          auditoría electoral, experiencias 3D y más. Neiva, Colombia · Servicio remoto global.
+        </p>
+        <p class="mt-6 font-mono text-xs text-nx-dim">
+          Sebastian Velasco Ocampo · Full-stack + IA
+        </p>
       </div>
+
       <div>
-        <div class="text-xs font-semibold uppercase tracking-wider text-nx-dim">Navegación</div>
-        <ul class="mt-3 space-y-2 text-sm text-nx-muted">
-          <li><a href="#servicios" class="hover:text-nx-text">Servicios</a></li>
-          <li><a href="#proyectos" class="hover:text-nx-text">Proyectos</a></li>
-          <li><a href="#modelo" class="hover:text-nx-text">Modelo</a></li>
-          <li><a href="#lita" class="hover:text-nx-text">LITA</a></li>
+        <h4 class="font-mono text-xs uppercase tracking-widest text-nx-accent">Sitio</h4>
+        <ul class="mt-4 space-y-2 text-sm">
+          <li><a href="/NX-Studio/productos" class="text-nx-muted hover:text-nx-text">Catálogo de productos</a></li>
+          <li><a href="/NX-Studio/laboratorio" class="text-nx-muted hover:text-nx-text">Laboratorio IA</a></li>
+          <li><a href="/NX-Studio/proceso" class="text-nx-muted hover:text-nx-text">Cómo trabajamos</a></li>
+          <li><a href="/NX-Studio/precios" class="text-nx-muted hover:text-nx-text">Precios</a></li>
+          <li><a href="/NX-Studio/contacto" class="text-nx-muted hover:text-nx-text">Contacto</a></li>
         </ul>
       </div>
+
       <div>
-        <div class="text-xs font-semibold uppercase tracking-wider text-nx-dim">Contacto</div>
-        <ul class="mt-3 space-y-2 text-sm text-nx-muted">
-          <li><a href="mailto:hello@nxstudio.dev" class="hover:text-nx-text">hello@nxstudio.dev</a></li>
-          <li><a href="https://wa.me/573001234567" class="hover:text-nx-text">+57 300 123 4567</a></li>
-          <li>Neiva, Colombia</li>
-        </ul>
-      </div>
-      <div>
-        <div class="text-xs font-semibold uppercase tracking-wider text-nx-dim">Social</div>
-        <ul class="mt-3 space-y-2 text-sm text-nx-muted">
-          <li><a href="#" class="hover:text-nx-text">LinkedIn</a></li>
-          <li><a href="#" class="hover:text-nx-text">GitHub</a></li>
-          <li><a href="#" class="hover:text-nx-text">Twitter/X</a></li>
+        <h4 class="font-mono text-xs uppercase tracking-widest text-nx-accent">Repos</h4>
+        <ul class="mt-4 space-y-2 text-sm">
+          <li><a href="https://github.com/Nxxo31" target="_blank" rel="noopener" class="text-nx-muted hover:text-nx-text">GitHub · Nxxo31</a></li>
+          <li><a href="https://github.com/Nxxo31/synthetic-trader" target="_blank" rel="noopener" class="text-nx-muted hover:text-nx-text">Synthetic Trader</a></li>
+          <li><a href="https://github.com/Nxxo31/nexocore" target="_blank" rel="noopener" class="text-nx-muted hover:text-nx-text">NexoCore</a></li>
+          <li><a href="https://github.com/Nxxo31/nva-demons" target="_blank" rel="noopener" class="text-nx-muted hover:text-nx-text">Tatacoa NVA</a></li>
         </ul>
       </div>
     </div>
-    <div class="mt-10 border-t border-nx-border pt-6 text-xs text-nx-dim">
-      © {year} NX-Studio · ISO 27001:2022 en proceso de certificación ·
-      <span class="block md:inline">Hecho en Neiva con código limpio.</span>
+
+    <div class="mt-12 flex flex-col gap-4 border-t border-nx-border pt-8 md:flex-row md:items-center md:justify-between">
+      <p class="font-mono text-xs text-nx-dim">© {year} NX-Studio · Neiva, COL · UTC-05</p>
+      <p class="font-mono text-xs text-nx-dim">Built with Astro + Tailwind + ⚡ Hermes</p>
     </div>
   </div>
 </footer>

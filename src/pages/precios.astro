@@ -1,0 +1,192 @@
+---
+import Base from "../layouts/Base.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+const tiers = [
+  {
+    name: 'Prototipo',
+    badge: 'GRATIS',
+    badgeClass: 'bg-emerald-500/20 text-emerald-300',
+    price: '$0',
+    period: '14 días',
+    desc: 'Mockup interactivo + roadmap técnico + estimación honesta. Sin compromiso, sin cláusula oculta.',
+    features: [
+      'Wireframe funcional (Figma)',
+      'Arquitectura propuesta',
+      'Estimación de esfuerzo',
+      'Stack recomendado',
+      'Roadmap de 4 semanas',
+    ],
+    cta: 'Empezar gratis',
+    href: '/NX-Studio/contacto',
+    highlight: false,
+  },
+  {
+    name: 'MVP Productizado',
+    badge: 'MÁS POPULAR',
+    badgeClass: 'bg-nx-accent text-white',
+    price: 'Desde $3.500',
+    period: 'USD · 4 semanas',
+    desc: 'Software funcional siguiendo Shape Up. Fixed time, variable scope. Demos cada viernes.',
+    features: [
+      'Producto deployado en staging',
+      'CI/CD desde día 1',
+      'Demo semanal cada viernes',
+      'Tests automatizados',
+      'Documentación completa',
+      '2 semanas post-launch support',
+      'Garantía: entregas o reembolso parcial',
+    ],
+    cta: 'Reservar mi MVP',
+    href: '/NX-Studio/contacto',
+    highlight: true,
+  },
+  {
+    name: 'Retainer',
+    badge: 'EVOLUCIÓN',
+    badgeClass: 'bg-nx-purple/30 text-nx-purple',
+    price: '$1.200',
+    period: 'USD / mes',
+    desc: 'Mejora continua post-lanzamiento. Features nuevas, monitoreo, optimización, soporte prioritario.',
+    features: [
+      '20 horas de desarrollo / mes',
+      'Monitoreo de performance 24/7',
+      'Parches de seguridad',
+      'Optimización basada en métricas',
+      'Acceso prioritario (respuesta <4h)',
+      'Reunión mensual de roadmap',
+      'Cancelación sin penalización',
+    ],
+    cta: 'Hablar de retainer',
+    href: '/NX-Studio/contacto',
+    highlight: false,
+  },
+];
+
+const faqs = [
+  {
+    q: '¿Por qué publicas precios?',
+    a: 'Porque esconder precios genera desconfianza. La mayoría de clientes abandonan cuando tienen que pedir cotización para saber si el servicio está en su rango. Mejor que sepas desde ya si tiene sentido.',
+  },
+  {
+    q: '¿Cobras en COP o USD?',
+    a: 'Trabajo con USD para clientes internacionales y COP para clientes locales. Las cifras en esta página son USD. Conversación al tipo de cambio del día.',
+  },
+  {
+    q: '¿Qué pasa si mi proyecto no encaja en 4 semanas?',
+    a: 'Lo dividimos en ciclos de 4 semanas. Cada ciclo termina con un producto funcional. Nunca te entrego "avance del 80%" — o está shipped o no está.',
+  },
+  {
+    q: '¿Necesito tener todo definido para empezar?',
+    a: 'No. El Prototipo Gratis (14 días) existe exactamente para ayudarte a definir. Sal de ahí con arquitectura + estimación, decidas seguir o no.',
+  },
+  {
+    q: '¿Tienes referencias verificables?',
+    a: 'Sí. Mis repos públicos están en github.com/Nxxo31. El código es la mejor referencia: Synthetic Trader, NexoCore, ContractGuard, SupplyRadar — todo open source.',
+  },
+  {
+    q: '¿Y si quiero construir algo que ya está en tu catálogo?',
+    a: 'Mejor todavía. Significa que ya tengo el 60-80% construido. Lo personalizo a tu caso en vez de empezar de cero. Precio y tiempo bajan sustancialmente.',
+  },
+];
+---
+
+<Base title="Precios — NX-Studio">
+  <Nav />
+
+  <main class="px-6 py-16">
+    <header class="mx-auto max-w-4xl text-center">
+      <p class="font-mono text-sm uppercase tracking-widest text-nx-accent">/ precios</p>
+      <h1 class="mt-3 font-display text-5xl font-bold md:text-6xl">Precios transparentes</h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg text-nx-muted">
+        Tres tiers claros. Sin sorpresas, sin cláusulas ocultas.
+        Empieza gratis, escala cuando tenga sentido para ti.
+      </p>
+    </header>
+
+    <!-- Tiers -->
+    <section class="mx-auto mt-16 grid max-w-6xl gap-6 lg:grid-cols-3">
+      {tiers.map((t) => (
+        <article class={`relative rounded-3xl border p-8 ${t.highlight ? 'border-nx-accent bg-gradient-to-br from-nx-accent/5 via-nx-surface to-nx-purple/5 scale-105 shadow-2xl shadow-nx-accent/20' : 'border-nx-border bg-nx-surface'}`}>
+          <span class={`inline-block rounded-full px-3 py-1 font-mono text-xs ${t.badgeClass}`}>{t.badge}</span>
+          <h2 class="mt-6 font-display text-3xl font-bold">{t.name}</h2>
+          <p class="mt-2 text-sm text-nx-muted">{t.desc}</p>
+
+          <div class="mt-6 border-t border-nx-border pt-6">
+            <div class="font-display text-4xl font-bold">{t.price}</div>
+            <div class="mt-1 font-mono text-xs text-nx-dim">{t.period}</div>
+          </div>
+
+          <ul class="mt-6 space-y-2">
+            {t.features.map((f) => (
+              <li class="flex gap-2 text-sm">
+                <span class="text-nx-accent shrink-0">✓</span>
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+
+          <a
+            href={t.href}
+            class={`mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition ${t.highlight ? 'bg-gradient-to-r from-nx-accent to-nx-purple text-white hover:shadow-lg hover:shadow-nx-accent/30' : 'border border-nx-border bg-nx-bg hover:border-nx-accent'}`}
+          >
+            {t.cta} →
+          </a>
+        </article>
+      ))}
+    </section>
+
+    <!-- Comparación -->
+    <section class="mx-auto mt-24 max-w-4xl">
+      <div class="rounded-3xl border border-nx-border bg-nx-surface p-8">
+        <h2 class="font-display text-2xl font-bold">¿Qué modelo me conviene?</h2>
+        <div class="mt-6 grid gap-4 md:grid-cols-3">
+          <div>
+            <h3 class="font-semibold text-nx-accent">→ Prototipo</h3>
+            <p class="mt-2 text-sm text-nx-muted">
+              Si tienes una idea pero no sabes si vale la pena construirla.
+              Sale con mockup + estimación honesta.
+            </p>
+          </div>
+          <div>
+            <h3 class="font-semibold text-nx-accent">→ MVP</h3>
+            <p class="mt-2 text-sm text-nx-muted">
+              Si ya validaste la idea y necesitas producto real para lanzar
+              o vender a tu primer cliente.
+            </p>
+          </div>
+          <div>
+            <h3 class="font-semibold text-nx-accent">→ Retainer</h3>
+            <p class="mt-2 text-sm text-nx-muted">
+              Si ya tienes producto y necesitas evolución continua
+              sin contratar equipo interno.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mx-auto mt-24 max-w-3xl">
+      <div class="text-center">
+        <p class="font-mono text-sm uppercase tracking-widest text-nx-accent">/ preguntas</p>
+        <h2 class="mt-3 font-display text-4xl font-bold">FAQ</h2>
+      </div>
+
+      <div class="mt-12 space-y-3">
+        {faqs.map((f) => (
+          <details class="group rounded-xl border border-nx-border bg-nx-surface p-5">
+            <summary class="flex cursor-pointer items-center justify-between font-semibold">
+              <span>{f.q}</span>
+              <span class="text-nx-accent transition group-open:rotate-45">+</span>
+            </summary>
+            <p class="mt-3 text-sm text-nx-muted">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>

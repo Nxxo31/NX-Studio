@@ -1,0 +1,134 @@
+---
+import Base from "../layouts/Base.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+const phases = [
+  {
+    n: '01',
+    code: 'SHAPING',
+    title: 'Shaping — semana 0',
+    duration: '5–7 días',
+    desc: 'Investigación profunda del problema. Defino arquitectura, métricas de éxito, riesgos técnicos y boundaries. Te entrego un documento de diseño antes de escribir código.',
+    deliverable: 'Documento de arquitectura + pitch técnico',
+    icon: '◇',
+  },
+  {
+    n: '02',
+    code: 'BUILD',
+    title: 'Build — semana 1 y 2',
+    duration: '10 días',
+    desc: 'Construyo el producto completo. Demos semanales cada viernes. Tú ves progreso real, no slides. CI/CD activo desde el día 1.',
+    deliverable: 'Software funcional en staging',
+    icon: '◈',
+  },
+  {
+    n: '03',
+    code: 'INTEGRATE',
+    title: 'Integrate — semana 3',
+    duration: '5 días',
+    desc: 'QA, pagos, onboarding, integraciones externas, performance testing. Te entrego staging con datos reales para validación.',
+    deliverable: 'Sistema QA-pass + onboarding documentado',
+    icon: '◉',
+  },
+  {
+    n: '04',
+    code: 'SHIP',
+    title: 'Ship + Cool-down — semana 4',
+    duration: '5 días',
+    desc: 'Deploy a producción. Capacitación al equipo. Documentación completa. Período de hipercuidado post-lanzamiento (2 semanas).',
+    deliverable: 'Producción + capacitación + docs',
+    icon: '◎',
+  },
+];
+
+const principles = [
+  { t: 'Fixed time, variable scope', d: '4 semanas garantizadas. Si el scope no cabe, recorto features, no calidad.' },
+  { t: 'Zero backlog', d: 'Solo lo que está en el pitch de hoy. Nada de "lo agregamos al sprint siguiente".' },
+  { t: 'Demo weekly', d: 'Cada viernes te muestro lo construido. Sin sorpresas.' },
+  { t: 'CI/CD desde día 1', d: 'Tu software en staging desde la semana 1. Ves código real corriendo.' },
+  { t: 'Métricas en vivo', d: 'Performance, uso, errores — todo dashboard público para ti.' },
+  { t: 'Apetito claro', d: 'Te digo desde el día 1 qué problema resuelvo, qué dejo fuera, y por qué.' },
+];
+---
+
+<Base title="Cómo Trabajamos — NX-Studio">
+  <Nav />
+
+  <main class="px-6 py-16">
+    <header class="mx-auto max-w-4xl text-center">
+      <p class="font-mono text-sm uppercase tracking-widest text-nx-accent">/ proceso</p>
+      <h1 class="mt-3 font-display text-5xl font-bold md:text-6xl">
+        Cómo trabajamos: Shape Up en 4 semanas
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg text-nx-muted">
+        Metodología adaptada de Basecamp. Fixed time, variable scope. Cero backlog.
+        Demos reales cada semana. Inspirado en cómo los equipos pequeños y con foco
+        entregan software sin quemarse.
+      </p>
+    </header>
+
+    <!-- Timeline -->
+    <section class="mx-auto mt-20 max-w-5xl">
+      <div class="space-y-6">
+        {phases.map((p, i) => (
+          <article class="group relative rounded-2xl border border-nx-border bg-nx-surface p-8 transition hover:border-nx-accent/40">
+            <div class="grid gap-6 md:grid-cols-[100px_1fr_220px] md:items-center">
+              <div>
+                <div class="font-display text-5xl font-bold text-nx-accent">{p.n}</div>
+                <div class="mt-1 font-mono text-xs text-nx-dim">{p.code}</div>
+              </div>
+              <div>
+                <h2 class="font-display text-2xl font-semibold">{p.title}</h2>
+                <p class="mt-2 text-nx-muted">{p.desc}</p>
+              </div>
+              <div class="rounded-xl border border-nx-border bg-nx-bg p-4">
+                <p class="font-mono text-xs uppercase tracking-widest text-nx-dim">Entregable</p>
+                <p class="mt-2 text-sm font-semibold">{p.deliverable}</p>
+                <p class="mt-3 font-mono text-xs text-nx-accent">⏱ {p.duration}</p>
+              </div>
+            </div>
+            {i < phases.length - 1 && (
+              <div class="absolute left-[68px] top-full h-6 w-px bg-gradient-to-b from-nx-accent to-transparent md:block hidden"></div>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Principios -->
+    <section class="mx-auto mt-32 max-w-6xl">
+      <div class="text-center">
+        <p class="font-mono text-sm uppercase tracking-widest text-nx-accent">/ principios</p>
+        <h2 class="mt-3 font-display text-4xl font-bold md:text-5xl">Por qué este ciclo</h2>
+      </div>
+
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {principles.map((p) => (
+          <article class="rounded-2xl border border-nx-border bg-nx-surface p-6">
+            <h3 class="font-display text-lg font-semibold">{p.t}</h3>
+            <p class="mt-2 text-sm text-nx-muted">{p.d}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Cool-down -->
+    <section class="mx-auto mt-32 max-w-4xl rounded-3xl border border-nx-border bg-gradient-to-br from-nx-accent/10 via-nx-bg to-nx-purple/10 p-12 text-center">
+      <p class="font-mono text-sm uppercase tracking-widest text-nx-accent">/ cool-down</p>
+      <h2 class="mt-3 font-display text-3xl font-bold md:text-4xl">Después del ship: 2 semanas de hipercuidado</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-nx-muted">
+        Lanzamos. Estabilizamos métricas. Resolvemos lo que aparezca. Luego, tú operas.
+        Sin contratos de soporte ocultos, sin dependencia eterna. Software que tu equipo entiende y mantiene.
+      </p>
+    </section>
+
+    <section class="mt-16 text-center">
+      <a href="/NX-Studio/contacto" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-nx-accent to-nx-purple px-6 py-3 text-sm font-semibold text-white hover:shadow-lg hover:shadow-nx-accent/30">
+        Empezar mi proyecto →
+      </a>
+    </section>
+  </main>
+
+  <Footer />
+</Base>

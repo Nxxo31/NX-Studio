@@ -1,0 +1,256 @@
+---
+import Base from "../layouts/Base.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Base title="Laboratorio IA — NX-Studio">
+  <Nav />
+
+  <main class="px-6 py-16">
+    <div class="mx-auto max-w-7xl">
+      <header class="text-center">
+        <p class="font-mono text-sm uppercase tracking-widest text-nx-accent">/ laboratorio · beta</p>
+        <h1 class="mt-3 font-display text-5xl font-bold md:text-6xl">
+          Describe tu idea → recibe un mockup visual
+        </h1>
+        <p class="mx-auto mt-4 max-w-2xl text-lg text-nx-muted">
+          Conversamos sobre lo que quieres construir, te hago preguntas de refinamiento
+          y generamos una imagen conceptual de tu producto en segundos. Sin registro, sin backend, todo en tu navegador.
+        </p>
+      </header>
+
+      <div class="mt-12 grid gap-6 lg:grid-cols-2">
+        <!-- Chat panel -->
+        <div class="rounded-2xl border border-nx-border bg-nx-surface p-6">
+          <div class="flex items-center justify-between border-b border-nx-border pb-4">
+            <div>
+              <h2 class="font-display text-lg font-semibold">◈ Chat de ideación</h2>
+              <p class="font-mono text-xs text-nx-dim">Refinamos tu idea en 3–5 mensajes</p>
+            </div>
+            <button id="reset-btn" class="rounded-md border border-nx-border px-3 py-1 font-mono text-xs hover:border-nx-accent transition">
+              Reiniciar
+            </button>
+          </div>
+
+          <div id="chat-log" class="mt-4 h-[420px] overflow-y-auto space-y-3 pr-2">
+            <!-- Mensaje inicial -->
+            <div class="flex gap-3">
+              <div class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-nx-accent to-nx-purple font-mono text-xs text-white">NX</div>
+              <div class="rounded-2xl rounded-tl-sm bg-nx-bg p-3 text-sm">
+                ¡Hola! Soy el asistente de NX-Studio. Cuéntame: <strong>¿qué producto o sistema quieres construir?</strong>
+              </div>
+            </div>
+          </div>
+
+          <form id="chat-form" class="mt-4 flex gap-2">
+            <input
+              id="chat-input"
+              type="text"
+              placeholder="Escribe tu idea..."
+              autocomplete="off"
+              class="flex-1 rounded-xl border border-nx-border bg-nx-bg px-4 py-3 text-sm outline-none focus:border-nx-accent"
+            />
+            <button
+              type="submit"
+              class="rounded-xl bg-gradient-to-r from-nx-accent to-nx-purple px-5 py-3 text-sm font-semibold text-white hover:shadow-lg hover:shadow-nx-accent/30"
+            >
+              Enviar
+            </button>
+          </form>
+        </div>
+
+        <!-- Mockup panel -->
+        <div class="rounded-2xl border border-nx-border bg-nx-surface p-6">
+          <div class="flex items-center justify-between border-b border-nx-border pb-4">
+            <div>
+              <h2 class="font-display text-lg font-semibold">◎ Mockup generado</h2>
+              <p class="font-mono text-xs text-nx-dim">Imagen conceptual con IA · Pollinations.ai</p>
+            </div>
+            <button id="regenerate" class="hidden rounded-md border border-nx-border px-3 py-1 font-mono text-xs hover:border-nx-accent transition">
+              Regenerar
+            </button>
+          </div>
+
+          <div id="mockup-area" class="mt-4 grid aspect-square place-items-center rounded-xl border border-dashed border-nx-border bg-nx-bg/50">
+            <div class="text-center text-nx-dim">
+              <div class="text-5xl">◇</div>
+              <p class="mt-3 font-mono text-xs">Tu mockup aparecerá aquí</p>
+              <p class="mt-1 font-mono text-xs">mínimo 3 mensajes de conversación</p>
+            </div>
+          </div>
+
+          <div class="mt-4 flex items-center justify-between font-mono text-xs text-nx-dim">
+            <span id="mockup-status">Esperando...</span>
+            <a href="https://pollinations.ai" target="_blank" rel="noopener" class="hover:text-nx-accent">
+              powered by pollinations.ai ↗
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Disclaimer -->
+      <p class="mx-auto mt-8 max-w-2xl text-center font-mono text-xs text-nx-dim">
+        ⚠ Este laboratorio es un prototipo sin backend: tu conversación no se guarda en ningún servidor.
+        Las imágenes son generadas por Pollinations.ai, una API pública gratuita.
+      </p>
+
+      <!-- CTA -->
+      <section class="mt-16 rounded-3xl border border-nx-border bg-gradient-to-br from-nx-accent/10 via-nx-bg to-nx-purple/10 p-12 text-center">
+        <h2 class="font-display text-3xl font-bold md:text-4xl">¿Te gustó lo que ves en el mockup?</h2>
+        <p class="mx-auto mt-3 max-w-xl text-nx-muted">
+          Reservamos 30 minutos gratis. Me lo describes en persona, lo refino contigo y te entrego un prototipo funcional en 72 horas.
+        </p>
+        <a
+          href="/NX-Studio/contacto"
+          class="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-nx-accent to-nx-purple px-6 py-3 text-sm font-semibold text-white hover:shadow-lg hover:shadow-nx-accent/30"
+        >
+          Reservar consulta gratis →
+        </a>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</Base>
+
+<script>
+  // ============================================================
+  // LABORATORIO — Chatbot + Generador de Mockups (sin backend)
+  // ============================================================
+
+  type Msg = { role: 'user' | 'bot'; text: string };
+  const state: { messages: Msg[]; turn: number; prompt: string } = {
+    messages: [],
+    turn: 0,
+    prompt: '',
+  };
+
+  const questions = [
+    'Interesante. ¿Quién es el usuario principal y qué problema concreto le resuelve?',
+    'Perfecto. ¿En qué plataforma lo imaginas: web app, mobile, desktop, o algo físico/digital combinado?',
+    'Genial. ¿Cuál es la sensación que quieres transmitir al usuario cuando lo usa: profesional y minimalista, colorido y divertido, futurista, o algo más cálido/orgánico?',
+    'Casi listo. ¿Tienes referencia visual que te guste? Si no, dime 2-3 palabras clave de estilo (ej: "estilo Apple, colores neutros, mucho espacio").',
+    '¡Ya tengo todo! Dame un segundo para generar tu mockup...',
+  ];
+
+  const log = document.getElementById('chat-log') as HTMLDivElement;
+  const form = document.getElementById('chat-form') as HTMLFormElement;
+  const input = document.getElementById('chat-input') as HTMLInputElement;
+  const mockupArea = document.getElementById('mockup-area') as HTMLDivElement;
+  const regenBtn = document.getElementById('regenerate') as HTMLButtonElement;
+  const statusEl = document.getElementById('mockup-status') as HTMLSpanElement;
+  const resetBtn = document.getElementById('reset-btn') as HTMLButtonElement;
+
+  function addMsg(role: 'user' | 'bot', text: string) {
+    const wrap = document.createElement('div');
+    wrap.className = role === 'user' ? 'flex gap-3 justify-end' : 'flex gap-3';
+
+    const bubble = document.createElement('div');
+    bubble.className = role === 'user'
+      ? 'rounded-2xl rounded-tr-sm bg-nx-accent/20 border border-nx-accent/30 p-3 text-sm max-w-[85%]'
+      : 'rounded-2xl rounded-tl-sm bg-nx-bg p-3 text-sm max-w-[85%]';
+
+    if (role === 'bot') {
+      const avatar = document.createElement('div');
+      avatar.className = 'grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-nx-accent to-nx-purple font-mono text-xs text-white';
+      avatar.textContent = 'NX';
+      wrap.appendChild(avatar);
+    }
+
+    bubble.textContent = text;
+    wrap.appendChild(bubble);
+    log.appendChild(wrap);
+    log.scrollTop = log.scrollHeight;
+    state.messages.push({ role, text });
+  }
+
+  function buildPrompt(): string {
+    const userMsgs = state.messages.filter((m) => m.role === 'user').map((m) => m.text).join(' | ');
+    const styleHints = state.messages
+      .filter((m) => m.role === 'user' && state.turn >= 4)
+      .map((m) => m.text)
+      .join(' ');
+    return `professional UI mockup screenshot of a software product: ${userMsgs}. Style: ${styleHints || 'modern, clean, premium, dark theme'}. High fidelity, isometric or screen view, dribbble-quality, no text, no logos`;
+  }
+
+  async function generateMockup() {
+    state.prompt = buildPrompt();
+    statusEl.textContent = 'Generando...';
+
+    const encoded = encodeURIComponent(state.prompt);
+    const seed = Math.floor(Math.random() * 99999);
+    const url = `https://image.pollinations.ai/prompt/${encoded}?width=768&height=768&seed=${seed}&nologo=true`;
+
+    mockupArea.innerHTML = `
+      <div class="text-center">
+        <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-nx-accent border-t-transparent"></div>
+        <p class="mt-4 font-mono text-xs text-nx-dim">Generando mockup...</p>
+        <p class="mt-1 font-mono text-xs text-nx-dim">Prompt: ${state.prompt.slice(0, 80)}...</p>
+      </div>
+    `;
+
+    try {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.alt = 'Mockup generado por IA';
+      img.className = 'h-full w-full rounded-xl object-cover';
+      img.onload = () => {
+        mockupArea.innerHTML = '';
+        mockupArea.appendChild(img);
+        statusEl.textContent = '✓ Generado';
+        regenBtn.classList.remove('hidden');
+      };
+      img.onerror = () => {
+        mockupArea.innerHTML = `
+          <div class="text-center text-rose-400">
+            <div class="text-5xl">⚠</div>
+            <p class="mt-3 font-mono text-xs">Pollinations.ai no respondió. Intenta regenerar.</p>
+          </div>
+        `;
+        statusEl.textContent = '✗ Error';
+      };
+      img.src = url;
+    } catch (e) {
+      statusEl.textContent = '✗ Error';
+    }
+  }
+
+  function botRespond() {
+    if (state.turn < questions.length) {
+      setTimeout(() => addMsg('bot', questions[state.turn]), 600);
+      state.turn++;
+      if (state.turn === questions.length) {
+        setTimeout(generateMockup, 1500);
+      }
+    }
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+    addMsg('user', text);
+    input.value = '';
+    botRespond();
+  });
+
+  regenBtn.addEventListener('click', generateMockup);
+
+  resetBtn.addEventListener('click', () => {
+    state.messages = [];
+    state.turn = 0;
+    state.prompt = '';
+    log.innerHTML = '';
+    mockupArea.innerHTML = `
+      <div class="text-center text-nx-dim">
+        <div class="text-5xl">◇</div>
+        <p class="mt-3 font-mono text-xs">Tu mockup aparecerá aquí</p>
+        <p class="mt-1 font-mono text-xs">mínimo 3 mensajes de conversación</p>
+      </div>
+    `;
+    statusEl.textContent = 'Esperando...';
+    regenBtn.classList.add('hidden');
+    addMsg('bot', '¡Hola de nuevo! Soy el asistente de NX-Studio. Cuéntame: ¿qué producto o sistema quieres construir?');
+  });
+</script>

@@ -9,6 +9,7 @@
   --color-nx-primary: #6d5bff;
   --color-nx-primary-soft: #8b7bff;
   --color-nx-accent: #2dd4bf;
+  --color-nx-purple: #a855f7;
   --color-nx-amber: #f59e0b;
   --color-nx-text: #f4f4f6;
   --color-nx-muted: #8b8b9e;
@@ -16,6 +17,22 @@
   --font-display: "Space Grotesk", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* Nav links */
+.nav-link {
+  position: relative;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-nx-muted);
+  transition: color 0.2s, background 0.2s;
+}
+.nav-link:hover { color: var(--color-nx-text); background: rgba(255,255,255,0.04); }
+.nav-active {
+  color: var(--color-nx-accent);
+  background: rgba(45,212,191,0.08);
 }
 
 ::selection {

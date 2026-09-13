@@ -1,0 +1,160 @@
+---
+import Base from "../../layouts/Base.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import { projects, categories } from "../../data/catalog";
+---
+
+<Base title="Catálogo de Productos — NX-Studio">
+  <Nav />
+
+  <main class="px-6 py-24">
+    <section class="mx-auto max-w-7xl">
+      <div class="reveal">
+        <p class="font-mono text-sm uppercase tracking-widest text-nx-accent">/ productos</p>
+        <h1 class="mt-3 font-display text-5xl font-bold md:text-6xl">
+          Catálogo de productos reales
+        </h1>
+        <p class="mt-6 max-w-2xl text-lg text-nx-muted">
+          Cada producto aquí listado es un repositorio activo en mi GitHub.
+          Mismo stack, misma calidad que entrego a clientes. Filtra por categoría
+          y haz clic en cualquier card para ver el detalle.
+        </p>
+      </div>
+
+      <!-- Filtros -->
+      <div class="mt-12 flex flex-wrap gap-2" id="filters">
+        {categories.map((cat) => (
+          <button
+            data-cat={cat.id}
+            class="filter-btn rounded-full border border-nx-border px-4 py-2 font-mono text-xs transition hover:border-nx-accent hover:bg-nx-accent/10"
+            aria-pressed={cat.id === 'all' ? 'true' : 'false'}
+          >
+            <span class="mr-1 opacity-60">{cat.icon}</span>{cat.label}
+          </button>
+        ))}
+      </div>
+
+      <!-- Grid -->
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" id="grid">
+        {projects.map((p) => (
+          <a
+            href={`/NX-Studio/productos/${p.slug}`}
+            data-category={p.category}
+            class="product-card reveal group relative overflow-hidden rounded-2xl border border-nx-border bg-nx-surface p-6 transition hover:border-nx-accent/40 hover:shadow-2xl hover:shadow-nx-accent/10"
+          >
+            <!-- Video preview o cover -->
+            <div class="relative mb-5 aspect-video overflow-hidden rounded-xl bg-gradient-to-br from-nx-accent/20 to-nx-purple/20">
+              <div class="absolute inset-0 grid place-items-center">
+                <div class="font-display text-5xl font-bold opacity-30 group-hover:opacity-60 transition">
+                  {p.code}
+                </div>
+              </div>
+              {p.status === 'live' && (
+                <div class="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-emerald-500/20 px-2 py-1 text-xs backdrop-blur">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span class="font-mono text-emerald-300">live</span>
+                </div>
+              )}
+              {p.status === 'prototype' && (
+                <div class="absolute right-3 top-3 rounded-full bg-amber-500/20 px-2 py-1 text-xs backdrop-blur">
+                  <span class="font-mono text-amber-300">prototype</span>
+                </div>
+              )}
+              <!-- Icono play simulado -->
+              <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                <div class="rounded-full bg-nx-accent/90 p-4 backdrop-blur">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="font-mono text-xs text-nx-dim">{p.code} · {p.category}</p>
+                <h3 class="mt-1 font-display text-xl font-semibold">{p.name}</h3>
+              </div>
+              <span class="font-mono text-xs text-nx-accent whitespace-nowrap">{p.year}</span>
+            </div>
+            <p class="mt-3 text-sm text-nx-muted">{p.tagline}</p>
+
+            <div class="mt-5 flex flex-wrap gap-1.5">
+              {p.stack.slice(0, 3).map((s) => (
+                <span class="rounded-md bg-nx-bg px-2 py-1 font-mono text-xs text-nx-dim">{s}</span>
+              ))}
+              {p.stack.length > 3 && (
+                <span class="rounded-md bg-nx-bg px-2 py-1 font-mono text-xs text-nx-dim">+{p.stack.length - 3}</span>
+              )}
+            </div>
+
+            <div class="mt-5 flex items-center justify-between border-t border-nx-border pt-4">
+              <span class="font-mono text-xs text-nx-accent">{p.impact}</span>
+              <span class="font-mono text-xs text-nx-dim group-hover:text-nx-accent transition">Ver detalle →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <div id="empty" class="mt-12 hidden rounded-2xl border border-dashed border-nx-border p-12 text-center">
+        <p class="font-mono text-sm text-nx-dim">No hay proyectos en esta categoría todavía.</p>
+      </div>
+    </section>
+
+    <!-- CTA final -->
+    <section class="mx-auto mt-32 max-w-7xl rounded-3xl border border-nx-border bg-gradient-to-br from-nx-accent/10 via-nx-bg to-nx-purple/10 p-12 text-center md:p-16">
+      <p class="font-mono text-sm uppercase tracking-widest text-nx-accent">/ próximo paso</p>
+      <h2 class="mt-3 font-display text-4xl font-bold md:text-5xl">¿Tu idea no está en el catálogo?</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-nx-muted">
+        El 70% del trabajo que hago es a medida. Conversamos 30 minutos gratis, defines si tiene sentido, y te entrego prototipo funcional en 72h.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href="/NX-Studio/laboratorio" class="inline-flex items-center gap-2 rounded-full bg-nx-surface border border-nx-border px-6 py-3 text-sm font-semibold hover:border-nx-accent transition">
+          ◈ Probar Laboratorio IA
+        </a>
+        <a href="/NX-Studio/contacto" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-nx-accent to-nx-purple px-6 py-3 text-sm font-semibold text-white hover:shadow-lg hover:shadow-nx-accent/30">
+          Reservar consulta gratis →
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<script>
+  const buttons = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.product-card');
+  const empty = document.getElementById('empty');
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const cat = (btn as HTMLElement).dataset.cat;
+
+      buttons.forEach((b) => {
+        b.classList.remove('bg-nx-accent', 'text-white', 'border-nx-accent');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('bg-nx-accent', 'text-white', 'border-nx-accent');
+      btn.setAttribute('aria-pressed', 'true');
+
+      let visible = 0;
+      cards.forEach((card) => {
+        const cardCat = (card as HTMLElement).dataset.category;
+        if (cat === 'all' || cardCat === cat) {
+          (card as HTMLElement).style.display = '';
+          visible++;
+        } else {
+          (card as HTMLElement).style.display = 'none';
+        }
+      });
+
+      if (empty) empty.classList.toggle('hidden', visible > 0);
+    });
+  });
+
+  // Activar "Todos" por defecto
+  const allBtn = document.querySelector('[data-cat="all"]') as HTMLElement;
+  if (allBtn) allBtn.click();
+</script>

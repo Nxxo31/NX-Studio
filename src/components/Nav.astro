@@ -1,34 +1,58 @@
 ---
-const links = [
-  { href: "#servicios", label: "Servicios" },
-  { href: "#proyectos", label: "Proyectos" },
-  { href: "#modelo", label: "Modelo" },
-  { href: "#lita", label: "LITA" },
-  { href: "#contacto", label: "Contacto" },
-];
+const path = Astro.url.pathname;
+const isActive = (p: string) => {
+  if (p === '/') return path === '/NX-Studio/' || path === '/';
+  return path.startsWith(p);
+};
 ---
 
-<header class="fixed top-0 z-40 w-full">
-  <div class="mx-auto max-w-7xl px-6">
-    <div class="mt-6 flex items-center justify-between rounded-2xl border border-nx-border bg-nx-bg/70 px-5 py-3 backdrop-blur-xl">
-      <a href="/" class="flex items-center gap-2 font-display text-lg font-bold tracking-tight">
-        <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-nx-primary to-nx-accent text-xs font-extrabold text-nx-bg">
-          NX
-        </span>
-        <span>NX-Studio</span>
-      </a>
-      <ul class="hidden items-center gap-1 md:flex">
-        {links.map((l) => (
-          <li>
-            <a href={l.href} class="rounded-md px-3.5 py-2 text-sm text-nx-muted transition-colors hover:bg-nx-surface hover:text-nx-text">
-              {l.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <a href="#contacto" class="rounded-full bg-nx-primary px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-nx-primary-soft">
-        Consulta gratis
-      </a>
-    </div>
+<header class="sticky top-0 z-50 border-b border-nx-border bg-nx-bg/80 backdrop-blur-xl">
+  <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+    <a href="/NX-Studio/" class="flex items-center gap-2 font-display text-lg font-bold">
+      <span class="grid h-8 w-8 place-items-center rounded-md bg-gradient-to-br from-nx-accent to-nx-purple font-mono text-xs text-white">NX</span>
+      <span>NX-Studio</span>
+    </a>
+
+    <ul class="hidden items-center gap-1 md:flex">
+      <li>
+        <a href="/NX-Studio/" class={`nav-link ${isActive('/NX-Studio/') && path.length < 15 ? 'nav-active' : ''}`}>Inicio</a>
+      </li>
+      <li><a href="/NX-Studio/productos" class={`nav-link ${isActive('/NX-Studio/productos') ? 'nav-active' : ''}`}>Productos</a></li>
+      <li><a href="/NX-Studio/laboratorio" class={`nav-link ${isActive('/NX-Studio/laboratorio') ? 'nav-active' : ''}`}>Laboratorio</a></li>
+      <li><a href="/NX-Studio/proceso" class={`nav-link ${isActive('/NX-Studio/proceso') ? 'nav-active' : ''}`}>Proceso</a></li>
+      <li><a href="/NX-Studio/precios" class={`nav-link ${isActive('/NX-Studio/precios') ? 'nav-active' : ''}`}>Precios</a></li>
+      <li><a href="/NX-Studio/contacto" class={`nav-link ${isActive('/NX-Studio/contacto') ? 'nav-active' : ''}`}>Contacto</a></li>
+    </ul>
+
+    <a href="/NX-Studio/laboratorio" class="hidden md:inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-nx-accent to-nx-purple px-4 py-2 text-sm font-semibold text-white transition hover:shadow-lg hover:shadow-nx-accent/30">
+      Probar Laboratorio →
+    </a>
+
+    <button id="mobile-toggle" class="md:hidden rounded-md border border-nx-border p-2" aria-label="Menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <div id="mobile-menu" class="hidden border-t border-nx-border md:hidden">
+    <ul class="flex flex-col gap-1 px-6 py-4">
+      <li><a href="/NX-Studio/" class="nav-link block">Inicio</a></li>
+      <li><a href="/NX-Studio/productos" class="nav-link block">Productos</a></li>
+      <li><a href="/NX-Studio/laboratorio" class="nav-link block">Laboratorio</a></li>
+      <li><a href="/NX-Studio/proceso" class="nav-link block">Proceso</a></li>
+      <li><a href="/NX-Studio/precios" class="nav-link block">Precios</a></li>
+      <li><a href="/NX-Studio/contacto" class="nav-link block">Contacto</a></li>
+    </ul>
   </div>
 </header>
+
+<script>
+  const toggle = document.getElementById('mobile-toggle');
+  const menu = document.getElementById('mobile-menu');
+  toggle?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+  });
+</script>
