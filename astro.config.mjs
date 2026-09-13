@@ -3,7 +3,8 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://nxstudio.dev',
+  site: 'https://nxxo31.github.io',
+  base: '/nx-studio/',
   vite: {
     plugins: [tailwindcss()],
   },
