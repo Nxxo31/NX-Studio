@@ -2,34 +2,33 @@
 const links = [
   { href: "#servicios", label: "Servicios" },
   { href: "#proyectos", label: "Proyectos" },
-  { href: "#proceso", label: "Proceso" },
-  { href: "#stack", label: "Stack" },
+  { href: "#modelo", label: "Modelo" },
+  { href: "#lita", label: "LITA" },
   { href: "#contacto", label: "Contacto" },
 ];
 ---
 
-<header class="fixed top-0 z-50 w-full border-b border-nx-border bg-nx-bg/80 backdrop-blur-md">
-  <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-    <a href="/" class="font-display text-xl font-bold tracking-tight">
-      <span class="text-nx-primary">NX</span>-Studio
-    </a>
-    <ul class="hidden items-center gap-8 md:flex">
-      {links.map((l) => (
-        <li>
-          <a
-            href={l.href}
-            class="text-sm text-nx-muted transition-colors hover:text-nx-text"
-          >
-            {l.label}
-          </a>
-        </li>
-      ))}
-    </ul>
-    <a
-      href="#contacto"
-      class="rounded-full bg-nx-primary px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-nx-primary-dim"
-    >
-      Consulta gratis
-    </a>
-  </nav>
+<header class="fixed top-0 z-40 w-full">
+  <div class="mx-auto max-w-7xl px-6">
+    <div class="mt-6 flex items-center justify-between rounded-2xl border border-nx-border bg-nx-bg/70 px-5 py-3 backdrop-blur-xl">
+      <a href="/" class="flex items-center gap-2 font-display text-lg font-bold tracking-tight">
+        <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-nx-primary to-nx-accent text-xs font-extrabold text-nx-bg">
+          NX
+        </span>
+        <span>NX-Studio</span>
+      </a>
+      <ul class="hidden items-center gap-1 md:flex">
+        {links.map((l) => (
+          <li>
+            <a href={l.href} class="rounded-md px-3.5 py-2 text-sm text-nx-muted transition-colors hover:bg-nx-surface hover:text-nx-text">
+              {l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a href="#contacto" class="rounded-full bg-nx-primary px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-nx-primary-soft">
+        Consulta gratis
+      </a>
+    </div>
+  </div>
 </header>

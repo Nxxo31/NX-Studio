@@ -4,7 +4,10 @@ interface Props {
   description?: string;
 }
 
-const { title, description = "NX-Studio — desarrollo web premium, aplicaciones móviles, sistemas de gestión inteligentes y automatización con IA." } = Astro.props;
+const {
+  title,
+  description = "NX-Studio — Socio tecnológico nearshore. Arquitectura de software, apps móviles, IA aplicada y sistemas de gestión para LATAM.",
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -18,17 +21,61 @@ const { title, description = "NX-Studio — desarrollo web premium, aplicaciones
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://nxstudio.dev" />
-    <meta name="theme-color" content="#0a0a0f" />
+    <meta name="theme-color" content="#050508" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <title>{title}</title>
   </head>
-  <body class="min-h-screen antialiased">
+  <body class="antialiased">
     <slot />
+    <div class="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" aria-hidden="true"></div>
+    <script>
+      // Scroll reveal observer
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add("is-visible");
+              observer.unobserve(e.target);
+            }
+          }
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+      );
+      document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+
+      // Custom cursor
+      const dot = document.querySelector<HTMLDivElement>(".cursor-dot");
+      const ring = document.querySelector<HTMLDivElement>(".cursor-ring");
+      if (dot && ring && matchMedia("(pointer:fine)").matches) {
+        let mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener("mousemove", (e) => {
+          mx = e.clientX; my = e.clientY;
+          dot.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
+        });
+        const loop = () => {
+          rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+          ring.style.transform = `translate(${rx - 16}px, ${ry - 16}px)`;
+          requestAnimationFrame(loop);
+        };
+        loop();
+        document.querySelectorAll("a, button").forEach((el) => {
+          el.addEventListener("mouseenter", () => {
+            ring.style.width = "48px"; ring.style.height = "48px";
+            ring.style.opacity = "0.7";
+          });
+          el.addEventListener("mouseleave", () => {
+            ring.style.width = "32px"; ring.style.height = "32px";
+            ring.style.opacity = "0.4";
+          });
+        });
+      }
+    </script>
   </body>
 </html>
