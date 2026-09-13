@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://nxxo31.github.io',
-  base: '/nx-studio/',
+  base: '/NX-Studio/',
   vite: {
     plugins: [tailwindcss()],
   },
