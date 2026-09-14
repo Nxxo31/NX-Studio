@@ -73,30 +73,41 @@ body {
   position: relative;
 }
 
-/* Lava grid sutil de fondo (grid lines estilo Matrix NX-Studio) */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.5;
-  background-image:
-    linear-gradient(to right, rgba(255, 69, 0, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 69, 0, 0.035) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
-}
+/* Lava grid sutil de fondo — fallback cuando WebGL no carga */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    background-image:
+      linear-gradient(to right, rgba(255, 69, 0, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 69, 0, 0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
+  }
 
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  pointer-events: none;
-  opacity: 0.35;
-  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/></svg>");
-}
+  /* Vignette oscuro que mejora legibilidad del texto sobre el WebGL background */
+  #nx-bg-canvas + #nx-bg-fallback + .lava-vignette-mask,
+  body > .lava-vignette-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 90% 70% at 50% 50%, transparent 20%, rgba(10, 6, 8, 0.55) 70%, rgba(10, 6, 8, 0.85) 100%);
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.25;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/></svg>");
+  }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);

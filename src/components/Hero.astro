@@ -1,65 +1,192 @@
 ---
 import { projects } from "../data/catalog";
 const totalStack = Array.from(new Set(projects.flatMap((p) => p.stack))).length;
+
+// Líneas del terminal rotativo (status / spec / quote)
+const terminalLines = [
+  { prefix: "$", text: "nx-studio --status", kind: "cmd" },
+  { prefix: "→", text: "OK · 11 productos · 24 tecnologías · 0 incidentes", kind: "ok" },
+  { prefix: "$", text: "nx-studio --availability", kind: "cmd" },
+  { prefix: "→", text: "Q4 2026 · 4 cupos · fixed/retainer/dedicated", kind: "ok" },
+  { prefix: "$", text: "nx-studio --engagement", kind: "cmd" },
+  { prefix: "→", text: "starting scoping call →", kind: "info" },
+];
 ---
 
-<section id="hero" class="relative overflow-hidden px-6 py-24 md:py-32">
-  <!-- Gradient background -->
-  <div class="absolute inset-0 -z-10">
-    <div class="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-nx-accent/20 blur-3xl"></div>
-    <div class="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-nx-purple/20 blur-3xl"></div>
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_var(--nx-bg)_70%)]"></div>
-  </div>
+<section id="hero" class="relative overflow-hidden px-6 pt-20 pb-12 md:pt-32 md:pb-16">
+  <div class="mx-auto max-w-7xl">
 
-  <div class="mx-auto max-w-6xl">
-    <div class="flex flex-col items-center text-center">
-      <div class="reveal inline-flex items-center gap-2 rounded-full border border-nx-border bg-nx-surface/50 px-4 py-1.5 backdrop-blur">
-        <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span class="font-mono text-xs">Disponible · 4 cupos para Q4 2026</span>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+
+      <!-- Left: headline + CTA -->
+      <div class="lg:col-span-7">
+        <!-- Status badge -->
+        <div class="reveal inline-flex items-center gap-2 lava-tag">
+          <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>online · disponibilidad Q4 2026</span>
+        </div>
+
+        <!-- Headline -->
+        <h1 class="reveal mt-6 font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.05] tracking-tight">
+          Construimos sistemas
+          <span class="block mt-2">
+            <span class="text-lava">tecnológicos</span>
+            <span class="text-nx-text"> que</span>
+          </span>
+          <span class="block mt-2">
+            escalan con tu negocio.
+          </span>
+        </h1>
+
+        <!-- Subtitulo dual: técnico + accesible -->
+        <p class="reveal mt-6 max-w-2xl text-lg text-nx-muted leading-relaxed">
+          Estudio de desarrollo <b class="text-nx-text">LATAM-first</b>.
+          Arquitectura de software a medida, OSINT, QA as a service, plantillas listas para producción.
+          Stack verificable, código abierto, sin caja negra.
+        </p>
+
+        <!-- Spec badges -->
+        <div class="reveal mt-8 flex flex-wrap gap-2">
+          <span class="lava-tag" style="background: transparent; border-left-color: var(--lava-edge); color: var(--lava-edge);">
+            11 productos OSS
+          </span>
+          <span class="lava-tag" style="background: transparent; border-left-color: var(--lava-edge); color: var(--lava-edge);">
+            24+ tecnologías
+          </span>
+          <span class="lava-tag" style="background: transparent; border-left-color: var(--lava-edge); color: var(--lava-edge);">
+            LATAM remote-first
+          </span>
+          <span class="lava-tag" style="background: transparent; border-left-color: var(--lava-edge); color: var(--lava-edge);">
+            Engagement flexible
+          </span>
+        </div>
+
+        <!-- CTAs -->
+        <div class="reveal mt-10 flex flex-wrap gap-3">
+          <a href="/NX-Studio/cotizador" class="lava-btn">
+            <span>Cotizar proyecto</span>
+            <span>→</span>
+          </a>
+          <a href="/NX-Studio/productos" class="lava-btn lava-btn-ghost">
+            Ver productos OSS
+          </a>
+        </div>
+
+        <!-- Quick stats -->
+        <div class="reveal mt-12 grid grid-cols-3 gap-6 border-t border-nx-border pt-6 max-w-2xl">
+          <div>
+            <div class="font-display text-3xl font-bold text-lava">{projects.length}</div>
+            <div class="mt-1 font-mono text-xs text-nx-dim">productos</div>
+          </div>
+          <div>
+            <div class="font-display text-3xl font-bold text-lava">{totalStack}+</div>
+            <div class="mt-1 font-mono text-xs text-nx-dim">tecnologías</div>
+          </div>
+          <div>
+            <div class="font-display text-3xl font-bold text-lava">4 sem</div>
+            <div class="mt-1 font-mono text-xs text-nx-dim">ciclo MVP</div>
+          </div>
+        </div>
       </div>
 
-      <h1 class="reveal mt-8 font-display text-5xl font-bold leading-tight md:text-7xl lg:text-8xl">
-        Software que
-        <span class="block bg-gradient-to-r from-nx-accent via-nx-purple to-nx-accent bg-clip-text text-transparent">
-          escala contigo
-        </span>
-      </h1>
+      <!-- Right: terminal animado -->
+      <div class="lg:col-span-5 reveal">
+        <div class="lava-card lava-card-accent overflow-hidden" style="clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));">
+          <!-- Terminal header -->
+          <div class="flex items-center justify-between px-4 py-3 border-b border-nx-border bg-nx-bg/50">
+            <div class="flex items-center gap-2">
+              <span class="h-3 w-3 rounded-full bg-red-500/70"></span>
+              <span class="h-3 w-3 rounded-full bg-yellow-500/70"></span>
+              <span class="h-3 w-3 rounded-full bg-green-500/70"></span>
+              <span class="ml-3 font-mono text-xs text-nx-dim">nx-studio@ssh ~ %</span>
+            </div>
+            <span class="font-mono text-xs text-nx-dim" id="terminal-clock">--:--:--</span>
+          </div>
 
-      <p class="reveal mx-auto mt-6 max-w-2xl text-lg text-nx-muted md:text-xl">
-        Estudio de software LATAM. Construyo producto + servicio con código abierto verificable.
-        Bots de trading, ERP multi-tenant, auditoría electoral, experiencias 3D.
-      </p>
+          <!-- Terminal body -->
+          <div class="p-4 font-mono text-xs sm:text-sm space-y-2 min-h-[360px]" id="terminal-body">
+            {terminalLines.map((line) => (
+              <div class={`flex gap-2 ${line.kind === 'cmd' ? 'text-nx-text' : line.kind === 'ok' ? 'text-emerald-400' : 'text-lava-edge'}`}>
+                <span class="shrink-0 text-nx-dim">{line.prefix}</span>
+                <span class={line.kind === 'cmd' ? 'text-nx-text font-semibold' : ''}>{line.text}</span>
+              </div>
+            ))}
+          </div>
 
-      <div class="reveal mt-10 flex flex-wrap items-center justify-center gap-3">
-        <a
-          href="/NX-Studio/laboratorio"
-          class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-nx-accent to-nx-purple px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-nx-accent/30 transition hover:shadow-xl hover:shadow-nx-accent/50"
-        >
-          ◈ Probar Laboratorio IA
-        </a>
-        <a
-          href="/NX-Studio/productos"
-          class="inline-flex items-center gap-2 rounded-full border border-nx-border bg-nx-surface/50 px-6 py-3 text-sm font-semibold backdrop-blur transition hover:border-nx-accent"
-        >
-          Ver {projects.length} productos →
-        </a>
+          <!-- Terminal footer -->
+          <div class="flex items-center justify-between px-4 py-2 border-t border-nx-border bg-nx-bg/50">
+            <span class="font-mono text-xs text-nx-dim">scope: latam · timezone: utc-05</span>
+            <span class="font-mono text-xs text-emerald-400 flex items-center gap-1">
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              live
+            </span>
+          </div>
+        </div>
+
+        <!-- Helper link -->
+        <div class="mt-3 text-center">
+          <a href="/NX-Studio/cotizador" class="font-mono text-xs text-nx-dim hover:text-lava-edge transition">
+            // ejecutar cotizador interactivo →
+          </a>
+        </div>
       </div>
 
-      <!-- Stats -->
-      <div class="reveal mt-20 grid w-full max-w-3xl grid-cols-3 gap-8 border-y border-nx-border py-8">
-        <div>
-          <div class="font-display text-4xl font-bold text-nx-accent">{projects.length}</div>
-          <div class="mt-1 font-mono text-xs text-nx-dim">productos en GitHub</div>
-        </div>
-        <div>
-          <div class="font-display text-4xl font-bold text-nx-accent">{totalStack}+</div>
-          <div class="mt-1 font-mono text-xs text-nx-dim">tecnologías dominadas</div>
-        </div>
-        <div>
-          <div class="font-display text-4xl font-bold text-nx-accent">4 sem</div>
-          <div class="mt-1 font-mono text-xs text-nx-dim">cycle MVP</div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
+
+<script>
+  // Live clock
+  const clock = document.getElementById('terminal-clock');
+  if (clock) {
+    const tick = () => {
+      const d = new Date();
+      clock.textContent = d.toLocaleTimeString('en-US', { hour12: false });
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+
+  // Animated typing terminal
+  const body = document.getElementById('terminal-body');
+  if (body) {
+    const fullText = `// engagement shapes disponibles
+  fixed      →  sprint/release puntual
+  retainer   →  cuota mensual predecible
+  dedicated  →  equipo exclusivo full-time
+  tm         →  hourly, OSINT/audit
+
+// próximas líneas del roadmap
+  [ok] pricing engine por features
+  [ok] OSINT · threat intelligence
+  [ok] QA · Foundation/Accelerator/Strategic
+  [wip] backend real para cotizador
+  [wip] templates marketplace
+
+// ¿listo?
+  → /cotizador`;
+
+    let i = 0;
+    const cursor = document.createElement('span');
+    cursor.className = 'inline-block w-2 h-3 bg-lava-edge animate-pulse';
+    body.appendChild(cursor);
+
+    function type() {
+      if (i >= fullText.length) return;
+      const ch = fullText[i];
+      if (ch === '\n') {
+        body.insertBefore(document.createElement('br'), cursor);
+      } else {
+        const span = document.createElement('span');
+        span.textContent = ch;
+        span.className = 'text-nx-muted';
+        body.insertBefore(span, cursor);
+      }
+      i++;
+      // Auto-scroll dentro del terminal
+      body.scrollTop = body.scrollHeight;
+      setTimeout(type, 18 + Math.random() * 30);
+    }
+    setTimeout(type, 800);
+  }
+</script>
