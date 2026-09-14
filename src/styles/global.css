@@ -1,42 +1,62 @@
 @import "tailwindcss";
 
+/* ============================================================
+   NX-Studio · Sistema de tokens — Lava Neon (Matriz NX-Studio)
+   Paleta naranja/rojizo con geometría angular Matrix-style.
+   Inspiración estructural (no visual) de Vertex pricing + Toptal
+   engagement shapes + OSINT/QA tiered models. Identidad propia.
+   ============================================================ */
+
 @theme {
-  --color-nx-bg: #050508;
-  --color-nx-surface: #0d0d15;
-  --color-nx-raised: #16161f;
-  --color-nx-border: rgba(255, 255, 255, 0.08);
-  --color-nx-border-strong: rgba(255, 255, 255, 0.16);
-  --color-nx-primary: #6d5bff;
-  --color-nx-primary-soft: #8b7bff;
-  --color-nx-accent: #2dd4bf;
-  --color-nx-purple: #a855f7;
+  /* Lava core */
+  --color-nx-bg: #0a0608;            /* fondo base, tinte rojizo */
+  --color-nx-surface: #14090c;       /* surface cards */
+  --color-nx-raised: #1f0e10;        /* raised/elevated */
+  --color-nx-border: rgba(255, 90, 30, 0.12);
+  --color-nx-border-strong: rgba(255, 90, 30, 0.28);
+
+  /* Lava accents */
+  --color-nx-primary: #ff4500;       /* lava core */
+  --color-nx-primary-soft: #ff6a00;  /* lava edge / highlight */
+  --color-nx-deep: #8b0000;          /* lava deep / sombras */
+  --color-nx-ember: #d97706;         /* brasas / second accent */
+
+  /* Legacy compat (cyan/purple) — usados en algunos componentes, ahora reservados para alertas/highlights */
+  --color-nx-accent: #ff6a00;        /* antes cyan, ahora lava-edge */
+  --color-nx-purple: #c026d3;        /* alert/highlight magenta */
   --color-nx-amber: #f59e0b;
-  --color-nx-text: #f4f4f6;
-  --color-nx-muted: #8b8b9e;
-  --color-nx-dim: #55555f;
+
+  --color-nx-text: #f5e6d3;          /* texto primario cálido */
+  --color-nx-muted: #a89580;         /* texto secundario */
+  --color-nx-dim: #5a4a40;
+
+  --color-nx-success: #10b981;
+  --color-nx-warn: #f59e0b;
+  --color-nx-danger: #ef4444;
+
+  /* Tipografía */
   --font-display: "Space Grotesk", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
-/* Nav links */
-.nav-link {
-  position: relative;
-  padding: 0.5rem 0.875rem;
-  border-radius: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  color: var(--color-nx-muted);
-  transition: color 0.2s, background 0.2s;
-}
-.nav-link:hover { color: var(--color-nx-text); background: rgba(255,255,255,0.04); }
-.nav-active {
-  color: var(--color-nx-accent);
-  background: rgba(45,212,191,0.08);
+/* Reset de CSS variables semánticas para reutilizar en componentes */
+:root {
+  --lava-core: var(--color-nx-primary);
+  --lava-edge: var(--color-nx-primary-soft);
+  --lava-deep: var(--color-nx-deep);
+  --lava-glow: rgba(255, 69, 0, 0.55);
+  --lava-glow-soft: rgba(255, 69, 0, 0.18);
+  --bg-void: var(--color-nx-bg);
+  --bg-ember: var(--color-nx-surface);
 }
 
+/* ============================================================
+   Base
+   ============================================================ */
+
 ::selection {
-  background: var(--color-nx-primary);
+  background: var(--lava-core);
   color: white;
 }
 
@@ -45,27 +65,183 @@ html {
 }
 
 body {
-  background: var(--color-nx-bg);
+  background: var(--bg-void);
   color: var(--color-nx-text);
   font-family: var(--font-body);
   font-feature-settings: "ss01", "cv11";
   overflow-x: hidden;
+  position: relative;
 }
 
-/* Subtle grain overlay */
+/* Lava grid sutil de fondo (grid lines estilo Matrix NX-Studio) */
 body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(to right, rgba(255, 69, 0, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 69, 0, 0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
+}
+
+body::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 50;
   pointer-events: none;
-  opacity: 0.4;
+  opacity: 0.35;
   background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/></svg>");
 }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   letter-spacing: -0.02em;
+}
+
+code, kbd, .mono {
+  font-family: var(--font-mono);
+}
+
+/* ============================================================
+   Geometría Matrix NX-Studio · bordes angulares con chamfers
+   ============================================================ */
+
+/* Card con chamfer (corte diagonal en esquina) */
+.lava-card {
+  position: relative;
+  background: linear-gradient(180deg, var(--color-nx-surface), var(--color-nx-raised));
+  border: 1px solid var(--color-nx-border);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 18px) 0,
+    100% 18px,
+    100% 100%,
+    18px 100%,
+    0 calc(100% - 18px)
+  );
+  transition: border-color 0.25s, transform 0.25s;
+}
+
+.lava-card:hover {
+  border-color: var(--lava-edge);
+  transform: translateY(-2px);
+}
+
+.lava-card-accent {
+  border-color: var(--lava-edge);
+  box-shadow:
+    0 0 0 1px var(--lava-glow-soft),
+    0 8px 24px -8px var(--lava-glow-soft);
+}
+
+/* Botón chamfer con glow */
+.lava-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bg-void);
+  background: linear-gradient(135deg, var(--lava-core), var(--lava-edge));
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  transition: filter 0.2s, transform 0.15s;
+  cursor: pointer;
+}
+
+.lava-btn:hover {
+  filter: brightness(1.15) drop-shadow(0 0 8px var(--lava-glow));
+  transform: translateY(-1px);
+}
+
+.lava-btn-ghost {
+  color: var(--lava-edge);
+  background: transparent;
+  border: 1px solid var(--lava-edge);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+}
+
+.lava-btn-ghost:hover {
+  background: var(--lava-glow-soft);
+  filter: drop-shadow(0 0 6px var(--lava-glow));
+}
+
+/* Etiqueta monospace con barra lava */
+.lava-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lava-edge);
+  background: var(--lava-glow-soft);
+  border-left: 2px solid var(--lava-core);
+}
+
+/* Hairline divider lava */
+.hairline {
+  background: linear-gradient(90deg, transparent, var(--lava-edge), transparent);
+  height: 1px;
+  opacity: 0.5;
+}
+
+/* Scan line sutil (animación opcional, respeta prefers-reduced-motion) */
+@keyframes lava-scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+.lava-scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.lava-scan::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--lava-edge), transparent);
+  animation: lava-scan 6s linear infinite;
+  opacity: 0.4;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lava-scan::before { animation: none; opacity: 0; }
+}
+
+/* Glow orbs (reemplazan los púrpuras) */
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  pointer-events: none;
+  will-change: transform;
 }
 
 /* Scroll reveal */
@@ -79,71 +255,48 @@ h1, h2, h3, h4 {
   transform: translateY(0);
 }
 
-/* Gradient hairline */
-.hairline {
-  background: linear-gradient(90deg, transparent, var(--color-nx-border-strong), transparent);
-  height: 1px;
+/* Nav links */
+.nav-link {
+  position: relative;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-nx-muted);
+  transition: color 0.2s, background 0.2s;
+}
+.nav-link:hover { color: var(--color-nx-text); background: rgba(255, 90, 30, 0.06); }
+.nav-active {
+  color: var(--lava-edge);
+  background: var(--lava-glow-soft);
 }
 
-/* Glow orbs */
-.orb {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(80px);
-  pointer-events: none;
-  will-change: transform;
-}
-
-/* Card hover */
+/* Card hover genérico */
 .card-hover {
-  transition: border-color 0.25s, background-color 0.25s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: border-color 0.25s, transform 0.25s;
 }
 .card-hover:hover {
-  border-color: rgba(109, 91, 255, 0.35);
-  background: rgba(109, 91, 255, 0.04);
-  transform: translateY(-3px);
+  border-color: var(--lava-edge);
+  transform: translateY(-2px);
 }
 
-/* Marquee */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-.marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee 30s linear infinite;
-}
-.marquee:hover { animation-play-state: paused; }
+/* Utilities */
+.text-lava { color: var(--lava-core); }
+.text-lava-edge { color: var(--lava-edge); }
+.bg-lava-soft { background: var(--lava-glow-soft); }
+.border-lava { border-color: var(--lava-edge); }
 
-/* Number ticker */
-.stat-value {
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
+/* Scrollbar estilo Matrix */
+::-webkit-scrollbar {
+  width: 10px; height: 10px;
 }
-
-/* Custom cursor dot */
-@media (pointer: fine) {
-  .cursor-dot {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--color-nx-primary);
-    pointer-events: none;
-    z-index: 9999;
-    mix-blend-mode: screen;
-    transition: transform 0.12s ease-out;
-  }
-  .cursor-ring {
-    position: fixed;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 1px solid var(--color-nx-primary);
-    pointer-events: none;
-    z-index: 9998;
-    opacity: 0.4;
-    transition: transform 0.18s ease-out, width 0.18s, height 0.18s, opacity 0.18s;
-  }
+::-webkit-scrollbar-track {
+  background: var(--bg-void);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--lava-deep), var(--lava-core));
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--lava-core), var(--lava-edge));
 }

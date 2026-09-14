@@ -1,0 +1,89 @@
+---
+import Layout from '../layouts/Base.astro';
+import { TEMPLATES } from '../data/templates';
+---
+
+<Layout title="Templates · NX-Studio" description="Plantillas de proyectos listas para producción. Landing, dashboard, e-commerce. Compra única, código fuente MIT.">
+  <section class="relative px-6 py-20 lg:py-28">
+    <div class="mx-auto max-w-6xl">
+      <header class="mb-12 reveal">
+        <span class="lava-tag mb-4">// marketplace.v0.1</span>
+        <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
+          Templates <span class="text-lava">comprables</span>
+        </h1>
+        <p class="text-nx-muted max-w-2xl text-lg">
+          Plantillas de proyectos listas para producción. Compra única, código fuente MIT-licensed.
+          Shippea en días lo que tardaría semanas en construir desde cero.
+        </p>
+      </header>
+
+      <!-- Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+        {TEMPLATES.map((t) => (
+          <article class={`lava-card p-6 flex flex-col ${t.featured ? 'lava-card-accent' : ''}`}>
+            <div class="lava-tag mb-3">// {t.category.toLowerCase()}</div>
+            <h3 class="font-display font-semibold text-xl mb-2">{t.name}</h3>
+            <p class="text-sm text-lava-edge mb-3">{t.tagline}</p>
+            <p class="text-sm text-nx-muted mb-4 flex-1">{t.desc}</p>
+
+            <div class="mb-4">
+              <div class="font-mono text-[10px] uppercase tracking-widest text-nx-muted mb-2">stack</div>
+              <div class="flex flex-wrap gap-1.5">
+                {t.stack.map((s) => (
+                  <span class="font-mono text-xs px-2 py-0.5 bg-nx-surface border border-nx-border rounded">{s}</span>
+                ))}
+              </div>
+            </div>
+
+            <div class="hairline mb-4"></div>
+
+            <div class="mb-4">
+              <div class="font-mono text-[10px] uppercase tracking-widest text-nx-muted mb-2">incluye</div>
+              <ul class="space-y-1 text-xs text-nx-muted">
+                {t.includes.slice(0, 4).map((i) => (
+                  <li class="flex gap-2"><span class="text-lava">✓</span>{i}</li>
+                ))}
+                {t.includes.length > 4 && (
+                  <li class="text-nx-dim">+ {t.includes.length - 4} más...</li>
+                )}
+              </ul>
+            </div>
+
+            <div class="flex items-baseline justify-between mt-auto">
+              <div>
+                <span class="font-display text-3xl font-bold text-lava">${t.price}</span>
+                <span class="text-xs text-nx-dim ml-1">USD one-time</span>
+              </div>
+              <a href={`/templates/${t.slug}`} class="font-mono text-xs text-lava-edge hover:text-lava transition">
+                Ver detalle →
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <!-- Roadmap -->
+      <div class="lava-card p-6 mb-12 reveal">
+        <div class="lava-tag mb-3">// roadmap</div>
+        <h3 class="font-display font-semibold text-lg mb-3">Próximos templates</h3>
+        <p class="text-sm text-nx-muted mb-4">
+          Lanzaremos gradualmente. Si necesitas uno urgente, podemos cotizarlo como fixed-sprint en el
+          <a href="/cotizador" class="text-lava-edge hover:text-lava">cotizador</a>.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {[
+            ['SaaS starter', 'Multi-tenant + Stripe + auth + dashboard básico. $990'],
+            ['Auth boilerplate', 'NextAuth + OAuth + magic links + RBAC. $190'],
+            ['Blog/CMS', 'MDX + i18n + OG cards + sitemap. $290'],
+            ['Mobile PWA', 'Offline-first + push notifications + install prompt. $390'],
+          ].map(([name, desc]) => (
+            <div class="lava-card p-4 opacity-60">
+              <div class="font-display font-medium text-sm mb-1">{name}</div>
+              <div class="text-xs text-nx-muted">{desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

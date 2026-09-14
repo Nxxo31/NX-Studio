@@ -1,0 +1,102 @@
+---
+import Layout from '../../layouts/Base.astro';
+---
+
+<Layout title="OSINT · NX-Studio" description="Investigación de fuentes abiertas: personas, empresas, marcas, dominios, redes sociales y dark web leak monitoring.">
+  <section class="relative px-6 py-20 lg:py-28">
+    <div class="mx-auto max-w-5xl">
+      <header class="mb-12 reveal">
+        <span class="lava-tag mb-4">// osint.v0.1</span>
+        <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
+          OSINT <span class="text-lava">inteligencia abierta</span>
+        </h1>
+        <p class="text-nx-muted max-w-2xl text-lg">
+          Investigación de fuentes abiertas para due diligence, verificación de identidad, mapeo corporativo,
+          monitoreo de marca y threat intelligence. Solo métodos legales y éticos — GDPR compliant.
+        </p>
+      </header>
+
+      <!-- Engagement shapes para OSINT -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 reveal">
+        <div class="lava-card p-6">
+          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-2">A · scoped</div>
+          <div class="font-display font-semibold text-lg mb-2">Fixed-fee packages</div>
+          <p class="text-sm text-nx-muted mb-4">Alcance cerrado: pre-deal diligence, brand threat setup, leak search one-shot.</p>
+          <div class="font-mono text-xs text-nx-dim">Desde $1,800 USD</div>
+        </div>
+        <div class="lava-card lava-card-accent p-6">
+          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-2">B · evolutivo</div>
+          <div class="font-display font-semibold text-lg mb-2">T&M (Time & Materials)</div>
+          <p class="text-sm text-nx-muted mb-4">Cap semanal, stop/go checkpoints. Para investigaciones donde el alcance evoluciona.</p>
+          <div class="font-mono text-xs text-nx-dim">Analyst $80/h · Senior $110/h · Specialist $140/h</div>
+        </div>
+        <div class="lava-card p-6">
+          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-2">C · managed</div>
+          <div class="font-display font-semibold text-lg mb-2">Brand monitoring retainer</div>
+          <p class="text-sm text-nx-muted mb-4">Setup + alertas afinadas, digest semanal, roll-up mensual, briefing trimestral.</p>
+          <div class="font-mono text-xs text-nx-dim">$3,000 — $5,000 / mes</div>
+        </div>
+      </div>
+
+      <!-- Qué incluye / qué NO incluye -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12 reveal">
+        <div class="lava-card p-6">
+          <div class="lava-tag mb-3">// scope-in</div>
+          <h3 class="font-display font-semibold text-lg mb-3">Qué incluye</h3>
+          <ul class="space-y-2 text-sm text-nx-muted">
+            <li class="flex gap-2"><span class="text-lava">▸</span>Personas: verificación de identidad, antecedentes públicos, redes sociales,PEP/sanctions</li>
+            <li class="flex gap-2"><span class="text-lava">▸</span>Empresas: ownership chain, UBO mapping, oficiales, estados financieros públicos</li>
+            <li class="flex gap-2"><span class="text-lava">▸</span>Dominios: WHOIS histórico, subdominios, certs, infra correlation</li>
+            <li class="flex gap-2"><span class="text-lava">▸</span>Marcas: menciones, sentiment, threat actors, fake accounts</li>
+            <li class="flex gap-2"><span class="text-lava">▸</span>Dark web: leak search (haveibeenpwned + commercial sources), paste sites, foros</li>
+            <li class="flex gap-2"><span class="text-lava">▸</span>Reportes: brief ejecutivo, full PDF, data export, board-ready deck</li>
+          </ul>
+        </div>
+        <div class="lava-card p-6">
+          <div class="lava-tag mb-3" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: #ef4444;">// scope-out</div>
+          <h3 class="font-display font-semibold text-lg mb-3">Qué NO hacemos</h3>
+          <ul class="space-y-2 text-sm text-nx-muted">
+            <li class="flex gap-2"><span class="text-nx-purple">✕</span>Pretexting o ingeniería social</li>
+            <li class="flex gap-2"><span class="text-nx-purple">✕</span>Acceso no autorizado a sistemas</li>
+            <li class="flex gap-2"><span class="text-nx-purple">✕</span>Doxxing de personas privadas sin causa legal</li>
+            <li class="flex gap-2"><span class="text-nx-purple">✕</span>Investigaciones que violen GDPR o leyes locales</li>
+            <li class="flex gap-2"><span class="text-nx-purple">✕</span>Trabajo donde la likelihood de éxito es baja (declaramos upfront)</li>
+            <li class="flex gap-2"><span class="text-nx-purple">✕</span>Hacking, phishing, malware analysis (→ eso es cybersecurity ofensivo)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Process -->
+      <div class="mb-12 reveal">
+        <h2 class="font-display text-2xl font-bold mb-6">Proceso</h2>
+        <div class="space-y-3">
+          {[
+            ['01', 'Assessment gratuito', '20-30 min call + 1h desk research para entender objetivos, restricciones y success criteria.'],
+            ['02', 'Scoping sprint (opcional)', '1-3 días, fee fijo $250-600 que se acredita si procedes. Produce methods plan + assumptions + quote.'],
+            ['03', 'Términos + kickoff', 'Scope, budget, timeline, deliverables. 50% upfront (fixed-fee) o retainer (T&M).'],
+            ['04', 'Ejecución + updates', 'Interim updates, risk notes, early findings según acuerdo.'],
+            ['05', 'Delivery + amendments', 'Una ronda de ediciones incluida (fixed-fee). Monitoring opcional posterior.'],
+          ].map(([n, title, desc]) => (
+            <div class="lava-card p-5 flex items-start gap-4">
+              <div class="font-mono text-2xl text-lava shrink-0 w-12">{n}</div>
+              <div>
+                <div class="font-display font-semibold mb-1">{title}</div>
+                <div class="text-sm text-nx-muted">{desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="lava-card lava-card-accent p-8 text-center reveal">
+        <div class="lava-tag mb-3 mx-auto">// free assessment</div>
+        <h2 class="font-display text-2xl font-bold mb-3">Empieza con un assessment gratuito</h2>
+        <p class="text-nx-muted mb-6 max-w-xl mx-auto">
+          20-30 minutos, sin compromiso. Si el caso no es para nosotros, te referimos a alguien que sí.
+        </p>
+        <a href="/contacto?topic=osint" class="lava-btn">Solicitar assessment →</a>
+      </div>
+    </div>
+  </section>
+</Layout>

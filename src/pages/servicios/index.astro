@@ -1,0 +1,74 @@
+---
+import Layout from '../../layouts/Base.astro';
+
+const services = [
+  {
+    slug: 'osint',
+    name: 'OSINT',
+    tagline: 'Inteligencia de fuentes abiertas',
+    desc: 'Due diligence, verificación, mapeo corporativo, brand threat monitoring, dark web leak search.',
+    price: 'Desde $1,800',
+    accent: false,
+  },
+  {
+    slug: 'testing',
+    name: 'Testing & QA',
+    tagline: 'QA as a service con outcomes',
+    desc: 'Manual + automation, performance, accesibilidad WCAG 2.1 AA, security pen-testing.',
+    price: 'Desde $3,000/sprint',
+    accent: true,
+  },
+];
+---
+
+<Layout title="Servicios · NX-Studio" description="Catálogo completo de servicios: arquitectura, OSINT, testing, integraciones, IA.">
+  <section class="relative px-6 py-20 lg:py-28">
+    <div class="mx-auto max-w-5xl">
+      <header class="mb-12 reveal">
+        <span class="lava-tag mb-4">// servicios.v0.1</span>
+        <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
+          Servicios <span class="text-lava">especializados</span>
+        </h1>
+        <p class="text-nx-muted max-w-2xl text-lg">
+          Lo que diferencia a NX-Studio: capacidades técnicas que requieren expertise real,
+          no commodity que cualquier freelancer puede entregar.
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+        {services.map((s) => (
+          <a
+            href={`/servicios/${s.slug}`}
+            class={`lava-card p-6 block ${s.accent ? 'lava-card-accent' : ''}`}
+          >
+            <div class="lava-tag mb-3">// {s.slug}</div>
+            <h2 class="font-display font-semibold text-2xl mb-2">{s.name}</h2>
+            <p class="text-sm text-lava-edge mb-3">{s.tagline}</p>
+            <p class="text-sm text-nx-muted mb-4">{s.desc}</p>
+            <div class="flex items-baseline justify-between">
+              <span class="font-mono text-xs text-nx-dim">{s.price}</span>
+              <span class="font-mono text-xs text-lava-edge">Ver detalle →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Servicios clásicos (resumen, links a /proceso /precios) -->
+      <div class="lava-card p-6 reveal">
+        <div class="lava-tag mb-3">// capacidades core</div>
+        <h3 class="font-display font-semibold text-lg mb-3">Capacidades core de NX-Studio</h3>
+        <p class="text-sm text-nx-muted mb-4">
+          Además de los servicios especializados, NX-Studio cubre el ciclo completo:
+        </p>
+        <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-nx-muted">
+          <li class="flex gap-2"><span class="text-lava">▸</span><a href="/proceso" class="hover:text-lava-edge">Arquitectura de software a medida</a></li>
+          <li class="flex gap-2"><span class="text-lava">▸</span><a href="/proceso" class="hover:text-lava-edge">Desarrollo full-stack (web/mobile/PWA)</a></li>
+          <li class="flex gap-2"><span class="text-lava">▸</span><a href="/proceso" class="hover:text-lava-edge">IA aplicada (chatbots, RAG, agentes)</a></li>
+          <li class="flex gap-2"><span class="text-lava">▸</span><a href="/proceso" class="hover:text-lava-edge">Integraciones (Stripe, Resend, Twilio, OpenAI)</a></li>
+          <li class="flex gap-2"><span class="text-lava">▸</span><a href="/proceso" class="hover:text-lava-edge">Modernización de stacks legacy</a></li>
+          <li class="flex gap-2"><span class="text-lava">▸</span><a href="/precios" class="hover:text-lava-edge">Templates comprables</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Layout>
