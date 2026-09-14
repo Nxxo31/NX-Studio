@@ -9,7 +9,7 @@ const isActive = (p: string) => {
 <header class="sticky top-0 z-50 border-b border-nx-border bg-nx-bg/80 backdrop-blur-xl">
   <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
     <a href="/NX-Studio/" class="flex items-center gap-2 font-display text-lg font-bold">
-      <span class="grid h-8 w-8 place-items-center rounded-md bg-gradient-to-br from-nx-accent to-nx-purple font-mono text-xs text-white">NX</span>
+      <span class="grid h-8 w-8 place-items-center rounded-md font-mono text-xs text-black" style="background: linear-gradient(135deg, var(--lava-core), var(--lava-edge));">NX</span>
       <span>NX-Studio</span>
     </a>
 
@@ -17,15 +17,16 @@ const isActive = (p: string) => {
       <li>
         <a href="/NX-Studio/" class={`nav-link ${isActive('/NX-Studio/') && path.length < 15 ? 'nav-active' : ''}`}>Inicio</a>
       </li>
+      <li><a href="/NX-Studio/cotizador" class={`nav-link ${isActive('/NX-Studio/cotizador') ? 'nav-active' : ''}`}>Cotizador</a></li>
+      <li><a href="/NX-Studio/servicios" class={`nav-link ${isActive('/NX-Studio/servicios') ? 'nav-active' : ''}`}>Servicios</a></li>
       <li><a href="/NX-Studio/productos" class={`nav-link ${isActive('/NX-Studio/productos') ? 'nav-active' : ''}`}>Productos</a></li>
-      <li><a href="/NX-Studio/laboratorio" class={`nav-link ${isActive('/NX-Studio/laboratorio') ? 'nav-active' : ''}`}>Laboratorio</a></li>
-      <li><a href="/NX-Studio/proceso" class={`nav-link ${isActive('/NX-Studio/proceso') ? 'nav-active' : ''}`}>Proceso</a></li>
-      <li><a href="/NX-Studio/precios" class={`nav-link ${isActive('/NX-Studio/precios') ? 'nav-active' : ''}`}>Precios</a></li>
+      <li><a href="/NX-Studio/templates" class={`nav-link ${isActive('/NX-Studio/templates') ? 'nav-active' : ''}`}>Templates</a></li>
+      <li><a href="/NX-Studio/laboratorio" class={`nav-link ${isActive('/NX-Studio/laboratorio') ? 'nav-active' : ''}`}>Lab</a></li>
       <li><a href="/NX-Studio/contacto" class={`nav-link ${isActive('/NX-Studio/contacto') ? 'nav-active' : ''}`}>Contacto</a></li>
     </ul>
 
-    <a href="/NX-Studio/laboratorio" class="hidden md:inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-nx-accent to-nx-purple px-4 py-2 text-sm font-semibold text-white transition hover:shadow-lg hover:shadow-nx-accent/30">
-      Probar Laboratorio →
+    <a href="/NX-Studio/cotizador" class="hidden md:inline-flex items-center gap-2 lava-btn" style="padding: 0.5rem 1.25rem;">
+      Cotizar proyecto →
     </a>
 
     <button id="mobile-toggle" class="md:hidden rounded-md border border-nx-border p-2" aria-label="Menu">
@@ -40,10 +41,11 @@ const isActive = (p: string) => {
   <div id="mobile-menu" class="hidden border-t border-nx-border md:hidden">
     <ul class="flex flex-col gap-1 px-6 py-4">
       <li><a href="/NX-Studio/" class="nav-link block">Inicio</a></li>
+      <li><a href="/NX-Studio/cotizador" class="nav-link block">Cotizador</a></li>
+      <li><a href="/NX-Studio/servicios" class="nav-link block">Servicios</a></li>
       <li><a href="/NX-Studio/productos" class="nav-link block">Productos</a></li>
-      <li><a href="/NX-Studio/laboratorio" class="nav-link block">Laboratorio</a></li>
-      <li><a href="/NX-Studio/proceso" class="nav-link block">Proceso</a></li>
-      <li><a href="/NX-Studio/precios" class="nav-link block">Precios</a></li>
+      <li><a href="/NX-Studio/templates" class="nav-link block">Templates</a></li>
+      <li><a href="/NX-Studio/laboratorio" class="nav-link block">Lab</a></li>
       <li><a href="/NX-Studio/contacto" class="nav-link block">Contacto</a></li>
     </ul>
   </div>

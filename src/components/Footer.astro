@@ -7,7 +7,7 @@ const year = new Date().getFullYear();
     <div class="grid gap-12 md:grid-cols-4">
       <div class="md:col-span-2">
         <a href="/NX-Studio/" class="flex items-center gap-2 font-display text-xl font-bold">
-          <span class="grid h-10 w-10 place-items-center rounded-md bg-gradient-to-br from-nx-accent to-nx-purple font-mono text-sm text-white">NX</span>
+          <span class="grid h-10 w-10 place-items-center rounded-md font-mono text-sm text-black" style="background: linear-gradient(135deg, var(--lava-core), var(--lava-edge));">NX</span>
           <span>NX-Studio</span>
         </a>
         <p class="mt-4 max-w-md text-sm text-nx-muted">
@@ -20,18 +20,20 @@ const year = new Date().getFullYear();
       </div>
 
       <div>
-        <h4 class="font-mono text-xs uppercase tracking-widest text-nx-accent">Sitio</h4>
+        <h4 class="font-mono text-xs uppercase tracking-widest" style="color: var(--lava-edge);">Sitio</h4>
         <ul class="mt-4 space-y-2 text-sm">
+          <li><a href="/NX-Studio/cotizador" class="text-nx-muted hover:text-nx-text">Cotizador</a></li>
+          <li><a href="/NX-Studio/servicios" class="text-nx-muted hover:text-nx-text">Servicios</a></li>
           <li><a href="/NX-Studio/productos" class="text-nx-muted hover:text-nx-text">Catálogo de productos</a></li>
+          <li><a href="/NX-Studio/templates" class="text-nx-muted hover:text-nx-text">Templates</a></li>
           <li><a href="/NX-Studio/laboratorio" class="text-nx-muted hover:text-nx-text">Laboratorio IA</a></li>
           <li><a href="/NX-Studio/proceso" class="text-nx-muted hover:text-nx-text">Cómo trabajamos</a></li>
-          <li><a href="/NX-Studio/precios" class="text-nx-muted hover:text-nx-text">Precios</a></li>
           <li><a href="/NX-Studio/contacto" class="text-nx-muted hover:text-nx-text">Contacto</a></li>
         </ul>
       </div>
 
       <div>
-        <h4 class="font-mono text-xs uppercase tracking-widest text-nx-accent">Repos</h4>
+        <h4 class="font-mono text-xs uppercase tracking-widest" style="color: var(--lava-edge);">Repos</h4>
         <ul class="mt-4 space-y-2 text-sm">
           <li><a href="https://github.com/Nxxo31" target="_blank" rel="noopener" class="text-nx-muted hover:text-nx-text">GitHub · Nxxo31</a></li>
           <li><a href="https://github.com/Nxxo31/synthetic-trader" target="_blank" rel="noopener" class="text-nx-muted hover:text-nx-text">Synthetic Trader</a></li>

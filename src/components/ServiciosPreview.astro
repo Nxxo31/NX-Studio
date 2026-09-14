@@ -1,0 +1,83 @@
+---
+import { CATEGORIES } from '../data/pricing';
+
+const servicios = [
+  {
+    tag: '// cotizador',
+    title: 'Pricing engine interactivo',
+    desc: 'Selecciona las capacidades que necesitas. Engagement shape, modifiers de urgencia, desglose completo. Rango indicativo en tiempo real.',
+    href: '/NX-Studio/cotizador',
+    cta: 'Abrir cotizador →',
+    accent: true,
+  },
+  {
+    tag: '// osint',
+    title: 'OSINT · Inteligencia abierta',
+    desc: 'Due diligence de personas y empresas. Brand threat monitoring. Dark web leak search. Solo métodos legales y éticos.',
+    href: '/NX-Studio/servicios/osint',
+    cta: 'Ver servicio →',
+    accent: false,
+  },
+  {
+    tag: '// qa',
+    title: 'Testing & QA as a service',
+    desc: 'Manual + automation, performance, accesibilidad WCAG 2.1 AA, security pen-testing. Tiers Foundation/Accelerator/Strategic.',
+    href: '/NX-Studio/servicios/testing',
+    cta: 'Ver tiers →',
+    accent: false,
+  },
+  {
+    tag: '// templates',
+    title: 'Templates comprables',
+    desc: 'Landing Converter, Dashboard Starter, Headless E-commerce. One-time payment, código MIT-licensed. Shippea en días.',
+    href: '/NX-Studio/templates',
+    cta: 'Ver marketplace →',
+    accent: false,
+  },
+];
+
+const categoryCount = Object.keys(CATEGORIES).length;
+const featureCount = 18; // hardcoded here, refactor si quieres sync
+---
+
+<section class="relative px-6 py-20 lg:py-28">
+  <div class="mx-auto max-w-7xl">
+    <header class="mb-12 reveal">
+      <div class="flex items-baseline gap-3 mb-3">
+        <span class="lava-tag">// servicios.v0.2.0</span>
+        <span class="font-mono text-xs text-nx-dim">{categoryCount} categorías · {featureCount} features configurables</span>
+      </div>
+      <h2 class="font-display text-4xl lg:text-5xl font-bold tracking-tight mb-4">
+        Lo que <span class="text-lava">nos diferencia</span>
+      </h2>
+      <p class="text-nx-muted max-w-2xl text-lg">
+        Capacidades técnicas que requieren expertise real, no commodity. Pricing transparente,
+        engagement shapes que escalan con tu roadmap.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {servicios.map((s) => (
+        <a
+          href={s.href}
+          class={`lava-card p-6 lg:p-8 block group ${s.accent ? 'lava-card-accent' : ''}`}
+        >
+          <div class="flex items-start justify-between gap-4 mb-4">
+            <span class="lava-tag">{s.tag}</span>
+            <span class="font-mono text-xs text-nx-dim opacity-0 group-hover:opacity-100 transition">
+              {s.cta.split(' ')[0]} →
+            </span>
+          </div>
+          <h3 class="font-display font-semibold text-xl mb-2">{s.title}</h3>
+          <p class="text-sm text-nx-muted leading-relaxed">{s.desc}</p>
+          <div class="mt-6 flex items-center gap-2 font-mono text-xs text-lava-edge">
+            <span>{s.cta}</span>
+            <svg class="w-3 h-3 transition group-hover:translate-x-1" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 6h8m-3-3l3 3-3 3" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
