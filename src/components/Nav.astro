@@ -18,15 +18,12 @@ const isActive = (p: string) => {
         <a href="/NX-Studio/" class={`nav-link ${isActive('/NX-Studio/') && path.length < 15 ? 'nav-active' : ''}`}>Inicio</a>
       </li>
       <li><a href="/NX-Studio/cotizador" class={`nav-link ${isActive('/NX-Studio/cotizador') ? 'nav-active' : ''}`}>Cotizador</a></li>
-      <li><a href="/NX-Studio/servicios" class={`nav-link ${isActive('/NX-Studio/servicios') ? 'nav-active' : ''}`}>Servicios</a></li>
-      <li><a href="/NX-Studio/productos" class={`nav-link ${isActive('/NX-Studio/productos') ? 'nav-active' : ''}`}>Productos</a></li>
-      <li><a href="/NX-Studio/templates" class={`nav-link ${isActive('/NX-Studio/templates') ? 'nav-active' : ''}`}>Templates</a></li>
-      <li><a href="/NX-Studio/laboratorio" class={`nav-link ${isActive('/NX-Studio/laboratorio') ? 'nav-active' : ''}`}>Lab</a></li>
-      <li><a href="/NX-Studio/contacto" class={`nav-link ${isActive('/NX-Studio/contacto') ? 'nav-active' : ''}`}>Contacto</a></li>
+      <li><a href="/NX-Studio/laboratorio" class={`nav-link ${isActive('/NX-Studio/laboratorio') ? 'nav-active' : ''}`}>Laboratorio</a></li>
+      <li><a href="/NX-Studio/contacto" class={`nav-link ${isActive('/NX-Studio/contacto') ? 'nav-active' : ''}`}>Licitar</a></li>
     </ul>
 
-    <a href="/NX-Studio/cotizador" class="hidden md:inline-flex items-center gap-2 lava-btn" style="padding: 0.5rem 1.25rem;">
-      Cotizar proyecto →
+    <a href="/NX-Studio/contacto" class="hidden md:inline-flex items-center gap-2 lava-btn" style="padding: 0.5rem 1.25rem;">
+      Pedir propuesta →
     </a>
 
     <button id="mobile-toggle" class="md:hidden rounded-md border border-nx-border p-2" aria-label="Menu">
@@ -42,11 +39,8 @@ const isActive = (p: string) => {
     <ul class="flex flex-col gap-1 px-6 py-4">
       <li><a href="/NX-Studio/" class="nav-link block">Inicio</a></li>
       <li><a href="/NX-Studio/cotizador" class="nav-link block">Cotizador</a></li>
-      <li><a href="/NX-Studio/servicios" class="nav-link block">Servicios</a></li>
-      <li><a href="/NX-Studio/productos" class="nav-link block">Productos</a></li>
-      <li><a href="/NX-Studio/templates" class="nav-link block">Templates</a></li>
-      <li><a href="/NX-Studio/laboratorio" class="nav-link block">Lab</a></li>
-      <li><a href="/NX-Studio/contacto" class="nav-link block">Contacto</a></li>
+      <li><a href="/NX-Studio/laboratorio" class="nav-link block">Laboratorio</a></li>
+      <li><a href="/NX-Studio/contacto" class="nav-link block">Licitar</a></li>
     </ul>
   </div>
 </header>
