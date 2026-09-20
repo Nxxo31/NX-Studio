@@ -1,28 +1,39 @@
 ---
 const path = Astro.url.pathname;
-const isActive = (p: string) => {
-  if (p === '/') return path === '/NX-Studio/' || path === '/';
-  return path.startsWith(p);
+const base = '/NX-Studio';
+const isActive = (href: string) => {
+  if (href === `${base}/`) {
+    return path === `${base}/` || path === `${base}` || path === '/' || path === '/NX-Studio/';
+  }
+  return path.startsWith(href);
 };
+
+const links = [
+  { href: `${base}/`,           label: 'Inicio' },
+  { href: `${base}/servicios/`, label: 'Servicios' },
+  { href: `${base}/cotizador`,  label: 'Cotizador' },
+  { href: `${base}/templates`,  label: 'Templates' },
+  { href: `${base}/laboratorio`,label: 'Laboratorio' },
+  { href: `${base}/contacto`,   label: 'Licitar' },
+];
 ---
 
 <header class="sticky top-0 z-50 border-b border-nx-border bg-nx-bg/80 backdrop-blur-xl">
   <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-    <a href="/NX-Studio/" class="flex items-center gap-2 font-display text-lg font-bold">
+    <a href={`${base}/`} class="flex items-center gap-2 font-display text-lg font-bold">
       <span class="grid h-8 w-8 place-items-center rounded-md font-mono text-xs text-black" style="background: linear-gradient(135deg, var(--lava-core), var(--lava-edge));" aria-hidden="true">NX</span>
       <span>NX-Studio</span>
     </a>
 
     <ul class="hidden items-center gap-1 md:flex">
-      <li>
-        <a href="/NX-Studio/" class={`nav-link ${isActive('/NX-Studio/') && path.length < 15 ? 'nav-active' : ''}`}>Inicio</a>
-      </li>
-      <li><a href="/NX-Studio/cotizador" class={`nav-link ${isActive('/NX-Studio/cotizador') ? 'nav-active' : ''}`}>Cotizador</a></li>
-      <li><a href="/NX-Studio/laboratorio" class={`nav-link ${isActive('/NX-Studio/laboratorio') ? 'nav-active' : ''}`}>Laboratorio</a></li>
-      <li><a href="/NX-Studio/contacto" class={`nav-link ${isActive('/NX-Studio/contacto') ? 'nav-active' : ''}`}>Licitar</a></li>
+      {links.map((l) => (
+        <li>
+          <a href={l.href} class={`nav-link ${isActive(l.href) ? 'nav-active' : ''}`}>{l.label}</a>
+        </li>
+      ))}
     </ul>
 
-    <a href="/NX-Studio/contacto" class="hidden md:inline-flex items-center gap-2 lava-btn" style="padding: 0.5rem 1.25rem;">
+    <a href={`${base}/contacto`} class="hidden md:inline-flex items-center gap-2 lava-btn" style="padding: 0.5rem 1.25rem;">
       Pedir propuesta →
     </a>
 
@@ -37,10 +48,9 @@ const isActive = (p: string) => {
 
   <div id="mobile-menu" class="hidden border-t border-nx-border md:hidden">
     <ul class="flex flex-col gap-1 px-6 py-4">
-      <li><a href="/NX-Studio/" class="nav-link block">Inicio</a></li>
-      <li><a href="/NX-Studio/cotizador" class="nav-link block">Cotizador</a></li>
-      <li><a href="/NX-Studio/laboratorio" class="nav-link block">Laboratorio</a></li>
-      <li><a href="/NX-Studio/contacto" class="nav-link block">Licitar</a></li>
+      {links.map((l) => (
+        <li><a href={l.href} class="nav-link block">{l.label}</a></li>
+      ))}
     </ul>
   </div>
 </header>

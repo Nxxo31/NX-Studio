@@ -1,0 +1,98 @@
+---
+import Base from "../../layouts/Base.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import { TEMPLATES } from "../../data/templates";
+
+// Marketplace de templates comprables — one-time payment, código MIT-licensed.
+// Estructura modelo Arc.dev marketplace.
+const featured = TEMPLATES.filter((t) => t.featured);
+const rest = TEMPLATES.filter((t) => !t.featured);
+
+const fmt = new Intl.NumberFormat('en-US');
+---
+
+<Base
+  title="Templates — NX-Studio"
+  description="Marketplace de templates: landing pages, dashboards, e-commerce. Código MIT-licensed, one-time payment."
+>
+  <Nav />
+  <main>
+    <section class="relative px-6 py-20 lg:py-28">
+      <div class="mx-auto max-w-6xl">
+        <header class="mb-14 reveal">
+          <span class="lava-tag mb-4">// marketplace.v1</span>
+          <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
+            Templates <span class="text-lava">comprables</span>
+          </h1>
+          <p class="text-nx-muted max-w-2xl text-lg">
+            Starters production-ready para desafíos comunes. Código MIT-licensed,
+            one-time payment, sin royalties. Compra el template y lánzalo en menos de 1 sprint.
+          </p>
+        </header>
+
+        {featured.length > 0 && (
+          <div class="mb-14">
+            <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">
+              Destacados
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {featured.map((t) => (
+                <a href={`/NX-Studio/templates/${t.slug}`} class="lava-card lava-card-accent p-6 lg:p-7 reveal flex flex-col card-hover">
+                  <div class="flex items-start justify-between mb-3">
+                    <span class="lava-tag">{t.category}</span>
+                    <span class="font-display text-2xl font-bold">${fmt.format(t.price)}</span>
+                  </div>
+                  <h3 class="font-display text-2xl font-bold mb-2">{t.name}</h3>
+                  <p class="text-sm text-lava-edge font-mono mb-3">{t.tagline}</p>
+                  <p class="text-sm text-nx-muted leading-relaxed flex-1 mb-4">{t.desc}</p>
+                  <div class="flex flex-wrap gap-1.5 mb-3">
+                    {t.stack.slice(0, 4).map((s) => (
+                      <span class="text-xs font-mono text-nx-dim px-2 py-0.5 rounded border border-nx-border">{s}</span>
+                    ))}
+                    {t.stack.length > 4 && (
+                      <span class="text-xs font-mono text-nx-dim px-2 py-0.5">+{t.stack.length - 4}</span>
+                    )}
+                  </div>
+                  <span class="font-mono text-xs text-lava-edge">Ver detalle →</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {rest.length > 0 && (
+          <div>
+            <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">Otros</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {rest.map((t) => (
+                <a href={`/NX-Studio/templates/${t.slug}`} class="lava-card p-5 reveal flex flex-col card-hover">
+                  <div class="flex items-start justify-between mb-3">
+                    <span class="lava-tag">{t.category}</span>
+                    <span class="font-display text-xl font-bold">${fmt.format(t.price)}</span>
+                  </div>
+                  <h3 class="font-display text-lg font-bold mb-2">{t.name}</h3>
+                  <p class="text-sm text-lava-edge font-mono mb-3">{t.tagline}</p>
+                  <p class="text-sm text-nx-muted leading-relaxed flex-1">{t.desc}</p>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div class="mt-16 lava-card p-8 lg:p-10 reveal">
+          <span class="lava-tag mb-3">// faq</span>
+          <h2 class="font-display text-2xl font-bold mb-4">Cómo funciona la compra</h2>
+          <ol class="space-y-3 text-nx-muted">
+            <li><span class="text-lava-edge font-mono mr-2">1.</span> Seleccionas el template y nos contactas.</li>
+            <li><span class="text-lava-edge font-mono mr-2">2.</span> Te enviamos el repo privado + invoice (one-time).</li>
+            <li><span class="text-lava-edge font-mono mr-2">3.</span> Setup guiado: deploy, env vars, dominio, integraciones.</li>
+            <li><span class="text-lava-edge font-mono mr-2">4.</span> Handover con Q&A de 60 minutos.</li>
+          </ol>
+          <a href="/NX-Studio/contacto?topic=template" class="lava-btn mt-6 inline-flex">Iniciar compra →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>

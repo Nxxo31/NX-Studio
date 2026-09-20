@@ -1,0 +1,126 @@
+---
+import Base from "../../layouts/Base.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+
+// Testing & QA as a service — tiers + platform fee (modelo OutpostQA).
+// NUNCA publicar horas facturadas (regla AGENTS.md).
+const tiers = [
+  {
+    id: 'foundation',
+    name: 'Foundation',
+    tag: '// qa · starter',
+    desc: 'QA reactivo para equipos que recién empiezan a invertir en testing.',
+    bullets: [
+      'Manual testing de regresión por sprint',
+      'Bug reports con repro steps + severidad',
+      'Smoke tests en CI por PR',
+      'Reporte semanal de métricas básicas',
+    ],
+    platformNote: 'Platform fee + 1 QA part-time',
+  },
+  {
+    id: 'accelerator',
+    name: 'Accelerator',
+    tag: '// qa · growth',
+    desc: 'QA embedido con automation, performance y accesibilidad. Ideal para series A.',
+    bullets: [
+      'Todo Foundation, más:',
+      'Automation suite (Playwright + visual regression)',
+      'Performance budgets + Core Web Vitals tracking',
+      'Accesibilidad WCAG 2.1 AA audits',
+      'Security baseline (OWASP top 10)',
+      'Dedicado 1 QA senior full-time',
+    ],
+    platformNote: 'Platform fee + seat licenses (Playwright/axe/Lighthouse)',
+    featured: true,
+  },
+  {
+    id: 'strategic',
+    name: 'Strategic',
+    tag: '// qa · scale',
+    desc: 'Managed pod con QA lead, dedicated team y reporting ejecutivo.',
+    bullets: [
+      'Todo Accelerator, más:',
+      'QA lead dedicado',
+      'Pen-testing básico en cada release',
+      'Reporte ejecutivo mensual',
+      'On-call rotation',
+      'Integration con Linear/Jira/Notion',
+    ],
+    platformNote: 'Platform fee + managed pod (2-4 QAs)',
+  },
+];
+---
+
+<Base
+  title="Testing & QA as a service — NX-Studio"
+  description="QA embedido con tiers Foundation / Accelerator / Strategic. Automation, performance, accesibilidad WCAG 2.1 AA, pen-testing."
+>
+  <Nav />
+  <main>
+    <section class="relative px-6 py-20 lg:py-28">
+      <div class="mx-auto max-w-6xl">
+        <header class="mb-14 reveal">
+          <span class="lava-tag mb-4">// qa.v1</span>
+          <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
+            Testing & <span class="text-lava">QA as a service</span>
+          </h1>
+          <p class="text-nx-muted max-w-2xl text-lg">
+            QA embedido con tiers por outcome (no por horas). Platform fee separado de
+            seat licenses para máxima transparencia. Pricing orientativo: sesión de descubrimiento.
+          </p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-12">
+          {tiers.map((t) => (
+            <article class={`lava-card p-6 lg:p-7 reveal flex flex-col ${t.featured ? 'lava-card-accent' : ''}`}>
+              <div class="flex items-start justify-between mb-3">
+                <span class="lava-tag">{t.tag}</span>
+                {t.featured && <span class="lava-tag" style="background: var(--lava-core); color: black;">featured</span>}
+              </div>
+              <h2 class="font-display text-2xl font-bold mb-2">{t.name}</h2>
+              <p class="text-sm text-nx-muted leading-relaxed mb-5">{t.desc}</p>
+              <ul class="space-y-2 mb-5 flex-1">
+                {t.bullets.map((b) => (
+                  <li class="flex gap-2 text-sm text-nx-muted">
+                    <span class="text-lava-edge font-mono shrink-0">▸</span>
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+              <div class="hairline mb-3"></div>
+              <p class="text-xs font-mono text-nx-dim">{t.platformNote}</p>
+            </article>
+          ))}
+        </div>
+
+        <div class="lava-card p-6 lg:p-8 mb-12 reveal">
+          <h2 class="font-display text-xl font-bold mb-3">Modelo de pricing</h2>
+          <p class="text-nx-muted leading-relaxed mb-3">
+            Cada tier combina un <b class="text-lava-edge">platform fee mensual</b> (cobertura
+            del servicio, on-call, reporting) más el costo de los seat licenses de las
+            herramientas utilizadas. Cero horas facturadas: pagas por capacidad desplegada,
+            no por ticket.
+          </p>
+          <p class="text-nx-dim text-xs font-mono">
+            ⚠ Pricing exacto requiere scoping del codebase, stack y volumen de releases.
+          </p>
+        </div>
+
+        <div class="lava-card lava-card-accent p-8 lg:p-10 reveal">
+          <span class="lava-tag mb-3">// intake</span>
+          <h2 class="font-display text-2xl lg:text-3xl font-bold mb-3">
+            ¿Cuál tier encaja con tu equipo?
+          </h2>
+          <p class="text-nx-muted mb-6 max-w-2xl">
+            Sesión gratuita de 30-45 minutos. Analizamos tu stack, volumen de releases y
+            pain points actuales, y recomendamos el tier con ROI esperado.
+          </p>
+          <a href="/NX-Studio/contacto?topic=qa" class="lava-btn">Agendar scoping QA →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>

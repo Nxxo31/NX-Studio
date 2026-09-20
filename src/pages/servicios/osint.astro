@@ -1,0 +1,115 @@
+---
+import Base from "../../layouts/Base.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+
+// OSINT — Intelligence de fuentes abiertas.
+// Pricing: role-based (alineado con benchmarks Smart Intelligence).
+// NUNCA publicar precio fijo (regla AGENTS.md).
+const roles = [
+  { name: 'Analyst',   rate: 80,  desc: 'Recolección OSINT estándar. Personas, empresas, dominios, redes sociales.' },
+  { name: 'Senior',    rate: 110, desc: 'Investigación profunda + cross-referencing. Brand threat monitoring continuo.' },
+  { name: 'Specialist',rate: 140, desc: 'Dark web monitoring, infraestructura adversaria, TTP analysis.' },
+];
+
+const capabilities = [
+  'Due diligence corporativo y de personas',
+  'Brand threat monitoring (menciones, fugas, suplantación)',
+  'Dark web leak search (credenciales, datos expuestos)',
+  'Investigación de dominios, DNS, infraestructura',
+  'Mapeo de redes sociales y grafos de relaciones',
+  'Reportes con cadena de custodia preservable',
+];
+
+const deliverables = [
+  'Informe ejecutivo (1-2 páginas)',
+  'Reporte técnico detallado con fuentes citadas',
+  'Cadena de custodia preservable legalmente',
+  'Briefing oral de 30-60 minutos',
+];
+---
+
+<Base
+  title="OSINT · Inteligencia de fuentes abiertas — NX-Studio"
+  description="Investigación OSINT legal y ética: due diligence, brand threat monitoring, dark web leak search. Pricing role-based, GDPR compliant."
+>
+  <Nav />
+  <main>
+    <section class="relative px-6 py-20 lg:py-28">
+      <div class="mx-auto max-w-6xl">
+        <header class="mb-14 reveal">
+          <span class="lava-tag mb-4">// osint.v1</span>
+          <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
+            OSINT · <span class="text-lava">Inteligencia abierta</span>
+          </h1>
+          <p class="text-nx-muted max-w-2xl text-lg">
+            Inteligencia de fuentes abiertas con métodos legales y éticos. Solo usamos
+            información pública, respetando GDPR y jurisdicción local. Nunca publicamos
+            precio fijo: pricing role-based según complejidad del caso.
+          </p>
+        </header>
+
+        <div class="mb-14">
+          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">Capacidades</h2>
+          <ul class="lava-card p-6 lg:p-8 space-y-3 reveal">
+            {capabilities.map((c) => (
+              <li class="flex gap-3 text-nx-muted">
+                <span class="text-lava-edge font-mono shrink-0">▸</span>
+                <span>{c}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="mb-14">
+          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">
+            Pricing role-based
+          </h2>
+          <p class="text-nx-muted mb-6 max-w-2xl">
+            Tarifa por hora según seniority del investigador. Rango total del proyecto
+            se determina en la sesión de descubrimiento (4h response promise).
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {roles.map((r) => (
+              <article class="lava-card p-6 reveal flex flex-col">
+                <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">{r.name}</div>
+                <div class="font-display text-3xl font-bold mb-2">
+                  ${r.rate}<span class="text-base font-normal text-nx-muted">/hora</span>
+                </div>
+                <p class="text-sm text-nx-muted leading-relaxed flex-1">{r.desc}</p>
+              </article>
+            ))}
+          </div>
+          <p class="text-nx-dim text-xs mt-4 font-mono">
+            ⚠ Rango indicativo. Engagement mínimo 8h. Casos enterprise requieren scoping previo.
+          </p>
+        </div>
+
+        <div class="mb-14">
+          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">Entregables</h2>
+          <ul class="lava-card p-6 lg:p-8 space-y-3 reveal">
+            {deliverables.map((d) => (
+              <li class="flex gap-3 text-nx-muted">
+                <span class="text-lava-edge font-mono shrink-0">▸</span>
+                <span>{d}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="lava-card lava-card-accent p-8 lg:p-10 reveal">
+          <span class="lava-tag mb-3">// intake · 4h</span>
+          <h2 class="font-display text-2xl lg:text-3xl font-bold mb-3">
+            Sesión de descubrimiento OSINT
+          </h2>
+          <p class="text-nx-muted mb-6 max-w-2xl">
+            Cuéntanos qué necesitas investigar. Te respondemos en menos de 4 horas hábiles
+            con un scoping preliminar, rango de inversión y plan de trabajo.
+          </p>
+          <a href="/NX-Studio/contacto?topic=osint" class="lava-btn">Iniciar caso OSINT →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>

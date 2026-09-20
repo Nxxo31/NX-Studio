@@ -1,0 +1,97 @@
+---
+import Base from "../../layouts/Base.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+
+// Índice de servicios especializados.
+// Estructura preparada para crecer: cada servicio es un objeto { slug, summary }.
+// Las páginas individuales viven en /servicios/<slug>.astro.
+const servicios = [
+  {
+    slug: 'osint',
+    tag: '// osint.v1',
+    title: 'OSINT',
+    desc: 'Inteligencia de fuentes abiertas: due diligence, brand threat monitoring, dark web leak search. Solo métodos legales y éticos, GDPR compliant.',
+    icon: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',
+  },
+  {
+    slug: 'testing',
+    tag: '// qa.v1',
+    title: 'Testing & QA',
+    desc: 'QA as a service con tiers Foundation / Accelerator / Strategic. Manual + automation, performance, accesibilidad WCAG 2.1 AA, security pen-testing.',
+    icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
+  },
+];
+
+const capacidadesCore = [
+  { tag: '// arquitectura', desc: 'Diseño y construcción de sistemas que escalan con tu negocio. Web, mobile, ERP, integraciones.' },
+  { tag: '// ia',          desc: 'Chatbots, RAG, agentes, automatización con LLMs. Soluciones que entregan valor real, no demos.' },
+];
+---
+
+<Base title="Servicios · NX-Studio" description="Servicios especializados: arquitectura de software, OSINT, Testing & QA, IA aplicada. Pricing transparente y engagement shapes claros.">
+  <Nav />
+  <main>
+    <section class="relative px-6 py-20 lg:py-28">
+      <div class="mx-auto max-w-6xl">
+        <header class="mb-14 reveal">
+          <span class="lava-tag mb-4">// servicios.v0.4</span>
+          <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
+            Servicios <span class="text-lava">especializados</span>
+          </h1>
+          <p class="text-nx-muted max-w-2xl text-lg">
+            Capacidades core para construir productos digitales y servicios verticales
+            para clientes con necesidades regulatorias o de investigación específicas.
+          </p>
+        </header>
+
+        <div class="mb-14">
+          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">Capacidades core</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {capacidadesCore.map((s) => (
+              <article class="lava-card p-6 reveal">
+                <span class="lava-tag mb-3">{s.tag}</span>
+                <p class="text-nx-muted leading-relaxed">{s.desc}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">Servicios especializados</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {servicios.map((s) => (
+              <a href={`/NX-Studio/servicios/${s.slug}`} class="lava-card p-6 reveal flex flex-col gap-3 card-hover">
+                <div class="flex items-start justify-between">
+                  <span class="lava-tag">{s.tag}</span>
+                  <svg class="w-5 h-5 text-lava-edge shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d={s.icon} />
+                  </svg>
+                </div>
+                <h3 class="font-display text-xl font-semibold">{s.title}</h3>
+                <p class="text-sm text-nx-muted leading-relaxed flex-1">{s.desc}</p>
+                <span class="font-mono text-xs text-lava-edge">Ver detalle →</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div class="mt-16 lava-card lava-card-accent p-8 lg:p-10 reveal">
+          <span class="lava-tag mb-3">// pricing</span>
+          <h2 class="font-display text-2xl lg:text-3xl font-bold mb-3">
+            ¿No estás seguro cuál encaja?
+          </h2>
+          <p class="text-nx-muted mb-6 max-w-2xl">
+            Usa el cotizador para obtener un rango indicativo según las capacidades que necesitas,
+            o contáctanos directamente para una sesión de descubrimiento gratuita.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="/NX-Studio/cotizador" class="lava-btn">Abrir cotizador</a>
+            <a href="/NX-Studio/contacto" class="lava-btn lava-btn-ghost">Sesión de descubrimiento</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>

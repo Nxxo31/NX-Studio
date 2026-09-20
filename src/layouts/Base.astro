@@ -11,6 +11,8 @@ const {
   title = "NX-Studio — Software que escala contigo",
   description = "Estudio de desarrollo LATAM. Arquitectura de software a medida, OSINT, QA as a service, templates comprables. Cotizador interactivo.",
 } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://nxxo31.github.io").toString();
 ---
 
 <!doctype html>
@@ -20,25 +22,36 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0a0608" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <link rel="icon" type="image/svg+xml" href="/NX-Studio/favicon.svg" />
+    <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="NX-Studio" />
     <meta property="og:image" content="https://raw.githubusercontent.com/Nxxo31/NX-Studio/master/public/og-image.svg" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
     <title>{title}</title>
   </head>
   <body class="bg-nx-bg text-nx-text antialiased relative">
     <WebGLBackground />
-    <div class="lava-vignette-mask" aria-hidden="true"></div>
     <div class="relative z-10">
       <slot />
     </div>
     <script is:inline>
-      // Reveal on scroll — global observer
+      // Reveal on scroll — global observer (vanilla, ~30 lines, sin dependencias)
       document.addEventListener('DOMContentLoaded', () => {
         const els = document.querySelectorAll('.reveal');
         if (!els.length) return;
+        if (!('IntersectionObserver' in window)) {
+          els.forEach((el) => el.classList.add('is-visible'));
+          return;
+        }
         const obs = new IntersectionObserver((entries) => {
           entries.forEach((e) => {
             if (e.isIntersecting) {
