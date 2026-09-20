@@ -1,16 +1,23 @@
 # PROJECT.md — NX-Studio
 
-> **Estado:** Activo | **Versión:** 0.2.0 — Sistema lava neon + Cotizador + Servicios especializados + Templates | **Stack:** Astro 7 + Tailwind v4 (vía @tailwindcss/vite)
->
-> ## Visión General
->
-> NX-Studio es el sitio web **empresarial** de Sebastian Velasco para posicionar la marca, captar leads B2B y mostrar capacidades técnicas avanzadas que lo diferencian en el mercado latinoamericano. Complementa al portafolio personal (`portafolio/`, Next.js) — el personal muestra el expertise individual, el empresarial posiciona la oferta.
->
-> **Objetivo:** Sitio visualmente impactante con identidad lava neon naranja/rojiza, sistema de pricing engine por features (diferenciador backend clave), catálogo de proyectos reales y marketplace de templates comprables.
+> **Estado:** Activo | **Versión:** 0.3.0 — SSG estático en GitHub Pages | **Stack:** Astro 7.3.2 + Tailwind v4 (vía @tailwindcss/vite) + TypeScript
+
+## Visión General
+
+NX-Studio es el sitio web **empresarial** de Sebastian Velasco para posicionar la marca,
+captar leads B2B y mostrar capacidades técnicas avanzadas que lo diferencian en el
+mercado latinoamericano. Complementa al portafolio personal (`portafolio/`, Next.js) — el
+personal muestra el expertise individual, el empresarial posiciona la oferta.
+
+**Objetivo:** Sitio visualmente impactante con identidad lava neon naranja/rojiza,
+sistema de pricing engine por features (diferenciador backend), catálogo de proyectos
+reales y marketplace de templates comprables. **SSG puro** desplegado en GitHub Pages
+(`nxxo31.github.io/NX-Studio/`).
 
 ## Identidad de marca · Lava Neon
 
-Paleta naranja/rojizo Matrix-style:
+Paleta naranja/rojizo Matrix-style, centralizada en `src/styles/global.css`:
+
 - `--lava-core: #ff4500` (primario)
 - `--lava-edge: #ff6a00` (highlight)
 - `--lava-deep: #8b0000` (sombras)
@@ -18,112 +25,113 @@ Paleta naranja/rojizo Matrix-style:
 - `--bg-ember: #14090c` (surface)
 - `--text-primary: #f5e6d3` (texto cálido)
 
-Geometría: bordes angulares con chamfers (clip-path), grid lines de fondo, scan-line animation opcional, monospace para números/códigos.
+Geometría: bordes angulares con chamfers (clip-path), grid lines de fondo, scan-line
+animation opcional, monospace para números/códigos.
 
 ## Estructura de páginas
 
 ```
-/
-├── index                      # Home (Hero asimétrico, Servicios, Por qué NX-Studio, Proceso, LITA, Stack, Impacto)
-├── /proceso                   # Metodología 5 fases
-├── /precios                   # Engagement shapes + tiers
-├── /contacto                  # Formulario WhatsApp + email
-├── /laboratorio               # Chat IA + mockup Pollinations + preview cotizador
-├── /cotizador                 # ★ Pricing engine por features (state local, tiempo real)
-├── /servicios                 # Índice servicios especializados
-│   ├── /osint                 # OSINT: due diligence, brand threat, leak monitoring
-│   └── /testing               # QA/Testing: tiers Foundation/Accelerator/Strategic
-├── /templates                 # Marketplace de templates comprables
-│   └── /[slug]                # Detalle por template
-├── /productos                 # Catálogo de 11 repos reales de Nxxo31
-│   ├── /[slug]                # Detalle por proyecto (screenshots, sin videos aún)
-│   └── /index
-└── /docs                      # research-pricing-patterns.md (referencias internas)
+/                           # Home (Hero, Servicios, Pricing CTA, Licitar CTA)
+/servicios                  # Índice de servicios especializados
+  ├── /osint                # OSINT: due diligence, brand threat, leak monitoring
+  └── /testing              # QA: tiers Foundation/Accelerator/Strategic
+/templates                  # Marketplace de templates comprables
+  └── /[slug]               # Detalle por template (3 productos)
+/cotizador                  # ★ Pricing engine (state local, tiempo real)
+/laboratorio                # Chat IA + mockup preview
+/contacto                   # Formulario WhatsApp + email
 ```
 
-## Servicios ofrecidos (actualizado 2026-09-14)
+## Servicios ofrecidos
 
 ### Capacidades core
+
 - Arquitectura de software a medida
 - Desarrollo full-stack (web/mobile/PWA)
 - IA aplicada (chatbots, RAG, agentes)
 - Integraciones (Stripe, Resend, Twilio, OpenAI)
 - Modernización de stacks legacy
 
-### Servicios especializados (nuevos v0.2.0)
-- **OSINT** — Investigación de fuentes abiertas (personas, empresas, marcas, dominios, dark web). Pricing role-based: Analyst $80/h, Senior $110/h, Specialist $140/h
-- **Testing & QA** — Manual + automation, performance, accesibilidad WCAG 2.1 AA, security pen-testing. Tiers Foundation/Accelerator/Strategic con platform fee transparente
+### Servicios especializados
 
-### Productos (nuevos v0.2.0)
-- **Templates comprables** — Landing Converter $290, Dashboard Starter $590, Headless E-commerce $890. One-time payment, código MIT-licensed
+- **OSINT** — Investigación de fuentes abiertas (personas, empresas, marcas, dominios,
+  dark web). Pricing role-based: Analyst $80/h, Senior $110/h, Specialist $140/h.
+  GDPR compliant, métodos legales y éticos.
+- **Testing & QA** — Manual + automation, performance, accesibilidad WCAG 2.1 AA,
+  security pen-testing. Tiers Foundation/Accelerator/Strategic con platform fee
+  separado de seat licenses (modelo OutpostQA).
+
+### Productos
+
+- **Templates comprables** — Landing Converter $290, Dashboard Starter $590,
+  Headless E-commerce $890. One-time payment, código MIT-licensed.
 
 ## Pricing engine (diferenciador backend)
 
 `src/data/pricing.ts` define:
+
 - **18 features** organizadas en 5 categorías (core/design/backend/growth/ops)
 - **4 engagement shapes**: fixed / retainer / dedicated / tm
 - **3 modifiers**: rush +25%, bundle -10% (>80h), longterm -15% (≥12mo)
-- **Cálculo**: `(sum(features) + baseFee) × multipliers` con rango ±15% (alineado industria: "no publicamos precio exacto")
+- **Cálculo**: `(sum(features) + baseFee) × multipliers` con rango ±15% (alineado
+  industria: "no publicamos precio exacto")
 - **Output**: banda Starter / Standard / Growth / Enterprise
 
-UI con state local vanilla JS en `/cotizador`. No backend todavía — el cálculo es client-side.
-
-## Research de patrones (referencias estructurales, no visuales)
-
-`docs/research-pricing-patterns.md` documenta benchmarks de:
-- **Vertex pricing engine** (base fee + transaction tiers + modules)
-- **Toptal / Andela / Arc.dev** (engagement shapes: hourly/retainer/dedicated)
-- **Smart Intelligence OSINT** (€80-160/hr role-based)
-- **Oxint / THINKPOL** (intake rápido + scoping + fixed-fee)
-- **OutpostQA / remote.qa / Appsierra** (QA tiers + managed pods)
-
-Mantener identidad propia lava neon, NO copiar marca ni estilo visual de estos.
+UI con state local vanilla JS en `/cotizador`. Cálculo client-side — sin backend.
 
 ## Estado de implementación
 
 | Fase | Descripción | Commit |
-| | |
+|------|-------------|--------|
 | Phase 0 | Foundation: Astro 7 + Tailwind v4 + estructura | (anterior) |
 | Phase 1 | Hero asimétrico, Servicios, Proceso 5 fases, LITA, Stack, Impacto, Contact | `ac3128b` |
 | Phase 2 | Catálogo productos (11 repos reales) | `77ce0b8` |
 | Phase 3 | Laboratorio IA (chatbot + Pollinations) | `77ce0b8` |
-| Phase 4 | Pricing engine + Servicios especializados + Templates | `5282fff` ★ |
-| Phase 5 | (futuro) Backend real para cotizador, payments para templates, analytics | — |
+| Phase 4 | Pricing engine + Servicios especializados + Templates | `5282fff` |
+| Phase 5 | Migración a SSG estático puro (GitHub Pages) | `3b97b1c` ★ |
+| Phase 6 | Páginas /servicios + /templates marketplace | TBD ★ |
+| Phase 7 | (futuro) /proceso, /precios, /productos, /docs | — |
 
 ## Sprint actual
 
-**Sprint v0.2.0 — Pricing engine + Servicios especializados + Templates (completado)**
+**Sprint v0.3.0 — SSG migration + servicios/templates pages (en progreso)**
 
-Tareas:
-- [x] Research de patrones (docs/research-pricing-patterns.md)
-- [x] Sistema de tokens lava neon (reemplaza púrpura/cian)
-- [x] Pricing engine con 18 features, 4 shapes, 3 modifiers, cálculo en tiempo real
-- [x] Página /cotizador con UI funcional y desglose completo
-- [x] Páginas /servicios/osint y /servicios/testing
-- [x] Página índice /servicios
-- [x] Marketplace /templates con 3 productos
-- [x] Detalle por template con includes/excludes
-- [x] Preview del cotizador en /laboratorio
-- [x] Build de producción: 25 páginas estáticas, exit 0
-- [x] Smoke test todas las rutas: 15/15 HTTP 200
+Tareas completadas:
+- [x] Migrar a output: 'static' (sin @astrojs/node, sin SSR)
+- [x] Quitar dependencias innecesarias (three, gsap, lenis, resend, better-sqlite3)
+- [x] Borrar archivos runtime (data/nx-studio.db*, src/lib/db.ts, src/pages/api/*)
+- [x] Reescribir WebGLBackground como CSS-only (zero JS)
+- [x] Refactor Nav a data-driven, agregar Servicios + Templates
+- [x] Crear /servicios/{index, osint, testing}.astro
+- [x] Crear /templates/{index, [slug]}.astro
+- [x] Build exit 0, 11 páginas estáticas
+- [x] Smoke test 11/11 HTTP 200
+- [x] Headers de seguridad en Base.astro (X-Content-Type-Options, referrer, canonical, OG)
 
-Resultado: build exit 0, 25 páginas, 15/15 rutas OK, cotizador funcional con state local.
+Pendientes:
+- [ ] /proceso (metodología 5 fases)
+- [ ] /precios (engagement shapes + tiers)
+- [ ] /productos (catálogo 11 repos)
+- [ ] /productos/[slug] (detalle por proyecto)
+- [ ] /docs (research-pricing-patterns.md)
+- [ ] Decidir i18n (ES vs ES+EN) — pendiente AGENTS.md
 
 ## Stack técnico
 
 | Capa | Tecnología | Versión |
-| | | |
+|------|-----------|---------|
 | Framework | Astro | 7.3.2 |
 | Styling | Tailwind CSS (vía Vite plugin) | 4.3.3 |
 | TypeScript | | 5.7 |
 | Hosting | GitHub Pages | (base: /NX-Studio/) |
-| Identity | Lava neon (palette naranja/rojizo + chamfers + scan lines) | v0.2.0 |
+| Identity | Lava neon (palette naranja/rojizo + chamfers + scan lines) | v0.3.0 |
 
 ## Decisiones arquitectónicas
 
 | Decisión | Elegida | Razón |
-| | | |
+|----------|---------|-------|
 | Framework | Astro 7 | SSG + islands, ideal para sitios con poco JS |
+| Output | `static` | GitHub Pages no soporta SSR; SSG es lo correcto |
 | Pricing engine | Client-side (state local vanilla JS) | Sin backend, cálculo instantáneo, deploy simple |
 | Engagement shapes | 4 formas (fixed/retainer/dedicated/tm) | Patrón consistente en B2B dev shops |
 | OSINT pricing | Role-based (analyst/senior/specialist) | Alineado con benchmarks Smart Intelligence |
@@ -131,24 +139,37 @@ Resultado: build exit 0, 25 páginas, 15/15 rutas OK, cotizador funcional con st
 | Templates | One-time payment, MIT-licensed | Modelo Arc.dev marketplace |
 | Identidad | Lava neon naranja/rojizo | Distintiva vs competencia púrpura/azul |
 
+## Seguridad
+
+- Site 100% estático: sin endpoints dinámicos, sin superficie de ataque runtime
+- Headers via `<meta>`: `X-Content-Type-Options: nosniff`, `referrer: strict-origin-when-cross-origin`
+- Canonical URLs por página (evita contenido duplicado en Google index)
+- `robots: index, follow`
+- `.gitignore` estricto: `.env*`, SQLite artifacts, IDE/editor temp
+- Secrets NUNCA en repo: API keys y tokens solo en runtime deployment
+- OG/Twitter metadata en cada página (defense-in-depth en social sharing)
+
 ## Limitaciones conocidas
 
-1. **Cotizador sin backend**: el cálculo es client-side. Para enviar cotizaciones reales habría que añadir un endpoint que persista.
-2. **Templates sin payment real**: el botón de comprar redirige a `/contacto?topic=template&slug=X` — no hay Stripe checkout aún.
-3. **OSINT sin intake form**: la página describe el servicio pero no tiene formulario de intake de 4h (Oxint pattern). Pendiente.
-4. **Sin i18n**: solo ES. AGENTS.md menciona decisión pendiente (ES vs ES+EN).
-5. **Catálogo sin videos**: videoUrl queda undefined en `catalog.ts` por ahora. Se llenará cuando proyectos estén finalizados.
-6. **Sin tests automatizados**: build manual + smoke test con curl. Pendiente Playwright/Vitest.
+1. **Cotizador client-side**: el cálculo es local. Para enviar cotizaciones reales
+   haría falta endpoint que persista (futuro: integración con backend externo).
+2. **Templates sin payment real**: el botón de comprar redirige a
+   `/contacto?topic=template&slug=X` — no hay Stripe checkout aún.
+3. **OSINT sin intake form**: la página describe el servicio pero el intake se hace
+   por el formulario de contacto general (param `topic=osint`).
+4. **Sin i18n**: solo ES. Pendiente decisión.
+5. **Catálogo sin videos**: `videoUrl` queda undefined en `catalog.ts` por ahora.
+6. **Sin tests automatizados**: build manual + smoke test con curl.
+7. **Páginas sin implementar** (ver Sprint actual): /proceso, /precios, /productos, /docs.
 
-## Pendientes operador
+## Referencias
 
-- Decidir si el cotizador necesita backend real (lead capture → CRM)
-- Implementar Stripe checkout para templates
-- Intake form para OSINT (4h response promise)
-- Decidir i18n (ES vs ES+EN)
-- Cuando los proyectos del portafolio estén finalizados, llenar `videoUrl` en catalog.ts
+- `docs/research-pricing-patterns.md` — benchmarks estructurales (NO visuales) de
+  Vertex, Toptal, Andela, Arc.dev, OSINT firms, QA firms.
+- Astro docs: https://docs.astro.build
+- Tailwind v4: https://tailwindcss.com/
 
 ---
 
 *Generado por SophIA — Sebastian Velasco's autonomous operating system*
-*v0.2.0: 2026-09-14 — Sistema lava neon, pricing engine, OSINT/Testing, templates marketplace.*
+*v0.3.0: 2026-09-19 — Migración a SSG estático puro + páginas de servicios y marketplace.*
