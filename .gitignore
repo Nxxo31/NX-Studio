@@ -12,10 +12,11 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-
-# environment variables
+# environment variables — secrets NEVER in repo
 .env
 .env.production
+.env.local
+.env.*.local
 
 # macOS-specific files
 .DS_Store
@@ -23,8 +24,23 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# local SQLite
+# VS Code
+.vscode/
+
+# local SQLite (runtime artifacts, never in repo)
 data/*.db
 data/*.db-journal
 data/*.db-shm
 data/*.db-wal
+
+# OS / editor temp
+*.swp
+*.swo
+Thumbs.db
+
+# gh-pages artifact (if used)
+gh-pages/
+
+# Coverage / test artifacts
+coverage/
+.nyc_output/
