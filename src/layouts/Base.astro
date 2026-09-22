@@ -43,6 +43,24 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://nxxo31.gith
     <div class="relative z-10">
       <slot />
     </div>
+
+    <!-- ============================================================
+         Palette switcher flotante (solo visible si ?palettes en URL)
+         Activar: /NX-Studio/?palettes → muestra el switcher en todas las páginas
+         ============================================================ -->
+    <div id="nx-palette-bar" class="hidden fixed bottom-4 left-4 z-50 lava-card lava-card-accent p-3 max-w-xs">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="font-mono text-[10px] uppercase tracking-widest text-nx-dim">// preview paleta:</span>
+        <button id="nx-palette-close" class="ml-auto text-nx-dim hover:text-lava-edge text-xs">✕</button>
+      </div>
+      <div class="flex flex-wrap gap-1">
+        <button data-set-palette="lava-pure" class="palette-chip px-2 py-1 rounded font-mono text-[10px] uppercase border border-nx-border hover:border-lava-edge transition">Lava</button>
+        <button data-set-palette="steel-indigo" class="palette-chip px-2 py-1 rounded font-mono text-[10px] uppercase border border-nx-border hover:border-lava-edge transition">Indigo</button>
+        <button data-set-palette="obsidian-teal" class="palette-chip px-2 py-1 rounded font-mono text-[10px] uppercase border border-nx-border hover:border-lava-edge transition">Teal</button>
+        <button data-set-palette="navy-gold" class="palette-chip px-2 py-1 rounded font-mono text-[10px] uppercase border border-nx-border hover:border-lava-edge transition">Navy</button>
+      </div>
+    </div>
+
     <script is:inline>
       // Reveal on scroll — global observer (vanilla, ~30 lines, sin dependencias)
       document.addEventListener('DOMContentLoaded', () => {
@@ -62,6 +80,57 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://nxxo31.gith
         }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
         els.forEach((el) => obs.observe(el));
       });
+
+      // Palette switcher (global, disponible en todas las páginas si ?palettes en URL)
+      (function() {
+        const STORAGE_KEY = 'nx-studio-palette';
+        const bar = document.getElementById('nx-palette-bar');
+        const close = document.getElementById('nx-palette-close');
+        if (!bar) return;
+
+        // Show only if ?palettes in URL
+        const url = new URL(window.location.href);
+        if (!url.searchParams.has('palettes')) return;
+        bar.classList.remove('hidden');
+
+        function applyPalette(p) {
+          document.documentElement.setAttribute('data-palette', p);
+          try { localStorage.setItem(STORAGE_KEY, p); } catch(e) {}
+          document.querySelectorAll('[data-set-palette]').forEach((btn) => {
+            const target = btn.getAttribute('data-set-palette');
+            if (target === p) {
+              btn.classList.add('border-lava-edge', 'bg-lava-soft', 'text-lava-edge');
+              btn.classList.remove('border-nx-border');
+            } else {
+              btn.classList.remove('border-lava-edge', 'bg-lava-soft', 'text-lava-edge');
+              btn.classList.add('border-nx-border');
+            }
+          });
+        }
+
+        // Restore from localStorage
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) applyPalette(stored);
+        else applyPalette('steel-indigo');
+
+        // Bind buttons
+        document.querySelectorAll('[data-set-palette]').forEach((btn) => {
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const p = btn.getAttribute('data-set-palette');
+            if (p) applyPalette(p);
+          });
+        });
+
+        // Close
+        if (close) {
+          close.addEventListener('click', () => {
+            bar.classList.add('hidden');
+            url.searchParams.delete('palettes');
+            window.history.replaceState({}, '', url.toString());
+          });
+        }
+      })();
     </script>
   </body>
 </html>

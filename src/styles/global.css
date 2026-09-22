@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./palettes.css";
 
 /* ============================================================
    NX-Studio · Sistema de tokens — Lava Neon (Matriz NX-Studio)
@@ -8,31 +9,40 @@
    ============================================================ */
 
 @theme {
-  /* Lava core */
-  --color-nx-bg: #0a0608;            /* fondo base, tinte rojizo */
-  --color-nx-surface: #14090c;       /* surface cards */
-  --color-nx-raised: #1f0e10;        /* raised/elevated */
-  --color-nx-border: rgba(255, 90, 30, 0.12);
-  --color-nx-border-strong: rgba(255, 90, 30, 0.28);
+  /* ============================================================
+     Steel Indigo · paleta corporativa LATAM-tech
+     Lava se reserva como primary (CTAs heroicos, brand mark dash)
+     Indigo como secondary (acento corporativo principal)
+     Backgrounds: deep navy-blue tints (Linear/Vercel vibe)
+     ============================================================ */
 
-  /* Lava accents */
-  --color-nx-primary: #ff4500;       /* lava core */
-  --color-nx-primary-soft: #ff6a00;  /* lava edge / highlight */
-  --color-nx-deep: #8b0000;          /* lava deep / sombras */
-  --color-nx-ember: #d97706;         /* brasas / second accent */
+  /* Backgrounds (cool blue-tinted darks — Linear-style) */
+  --color-nx-bg: #0b0b14;             /* fondo base navy */
+  --color-nx-surface: #15172a;        /* surface cards */
+  --color-nx-raised: #1c1f3a;         /* raised/elevated */
+  --color-nx-border: rgba(94, 106, 210, 0.12);
+  --color-nx-border-strong: rgba(94, 106, 210, 0.28);
 
-  /* Legacy compat (cyan/purple) — usados en algunos componentes, ahora reservados para alertas/highlights */
-  --color-nx-accent: #ff6a00;        /* antes cyan, ahora lava-edge */
-  --color-nx-purple: #c026d3;        /* alert/highlight magenta */
+  /* Primary (lava) — acento emocional, usado en CTAs heroicos */
+  --color-nx-primary: #ff4500;
+  --color-nx-primary-soft: #ff6a00;
+  --color-nx-deep: #8b0000;
+  --color-nx-ember: #d97706;
+
+  /* Secondary (indigo) — acento corporativo */
+  --color-nx-accent: #5e6ad2;
+  --color-nx-purple: #818cf8;          /* indigo-soft */
   --color-nx-amber: #f59e0b;
 
-  --color-nx-text: #f5e6d3;          /* texto primario cálido */
-  --color-nx-muted: #a89580;         /* texto secundario */
-  --color-nx-dim: #5a4a40;
+  /* Text (cool white scale) */
+  --color-nx-text: #f1f1f4;
+  --color-nx-muted: #9b9bad;
+  --color-nx-dim: #4a4a60;
 
-  --color-nx-success: #10b981;
+  /* Semantic (calibrados para dark + cool) */
+  --color-nx-success: #22c55e;
   --color-nx-warn: #f59e0b;
-  --color-nx-danger: #ef4444;
+  --color-nx-danger: #f87171;
 
   /* Tipografía */
   --font-display: "Space Grotesk", system-ui, sans-serif;
@@ -40,15 +50,68 @@
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
-/* Reset de CSS variables semánticas para reutilizar en componentes */
+/* El bridge --lava-* está más abajo, cerca de las utility classes */
+
+/* ============================================================
+   Brand palettes v2 — sistema --nx-* (sobrescribe cuando hay data-palette activo)
+   Default: steel-indigo (paleta corporativa LATAM-tech).
+   Los tokens --nx-* funcionan SIN necesidad de data-palette en HTML.
+   Si SÍ hay data-palette, palettes.css toma precedencia via cascade.
+   ============================================================ */
 :root {
-  --lava-core: var(--color-nx-primary);
-  --lava-edge: var(--color-nx-primary-soft);
-  --lava-deep: var(--color-nx-deep);
-  --lava-glow: rgba(255, 69, 0, 0.55);
-  --lava-glow-soft: rgba(255, 69, 0, 0.18);
-  --bg-void: var(--color-nx-bg);
-  --bg-ember: var(--color-nx-surface);
+  /* Primary lava (acento emocional — se mantiene como CTA) */
+  --nx-primary:         #ff4500;
+  --nx-primary-soft:    #ff6a00;
+  --nx-primary-deep:    #8b0000;
+  --nx-primary-glow:    rgba(255, 69, 0, 0.55);
+  --nx-primary-glow-soft: rgba(255, 69, 0, 0.18);
+
+  /* Secondary indigo (acento corporativo Linear-style) */
+  --nx-secondary:       #5e6ad2;
+  --nx-secondary-soft:  #818cf8;
+  --nx-secondary-deep:  #4338ca;
+
+  /* Accent coral (warm highlight) */
+  --nx-accent:          #ff6a00;
+  --nx-accent-soft:     #ffa07a;
+
+  /* Backgrounds (cool blue-tinted darks) */
+  --nx-bg:              #0b0b14;
+  --nx-surface:         #15172a;
+  --nx-surface-raised:  #1c1f3a;
+  --nx-surface-overlay: rgba(21, 23, 42, 0.92);
+
+  /* Borders (subtle blue) */
+  --nx-border:          rgba(94, 106, 210, 0.12);
+  --nx-border-strong:   rgba(94, 106, 210, 0.28);
+
+  /* Text (cool white scale) */
+  --nx-text:            #f1f1f4;
+  --nx-text-muted:      #9b9bad;
+  --nx-text-dim:        #4a4a60;
+  --nx-text-on-light:   #0b0b14;
+
+  /* Semantic (calibrados para dark + cool) */
+  --nx-success:         #22c55e;
+  --nx-success-bg:      rgba(34, 197, 94, 0.12);
+  --nx-warn:            #f59e0b;
+  --nx-warn-bg:         rgba(245, 158, 11, 0.12);
+  --nx-danger:          #f87171;
+  --nx-danger-bg:       rgba(248, 113, 113, 0.12);
+  --nx-info:            #5e6ad2;
+  --nx-info-bg:         rgba(94, 106, 210, 0.12);
+
+  /* Chart/data viz */
+  --nx-chart-1:         #5e6ad2;
+  --nx-chart-2:         #818cf8;
+  --nx-chart-3:         #ff6a00;
+  --nx-chart-4:         #22c55e;
+}
+
+/* Fallback compat — los --nx-* se mantienen igual con o sin data-palette */
+:root[data-palette] {
+  /* No override needed — palettes.css provides data-palette="*" versions */
+  /* que solo se activan cuando hay atributo presente */
 }
 
 /* ============================================================
@@ -291,11 +354,38 @@ code, kbd, .mono {
   transform: translateY(-2px);
 }
 
-/* Utilities */
-.text-lava { color: var(--lava-core); }
-.text-lava-edge { color: var(--lava-edge); }
-.bg-lava-soft { background: var(--lava-glow-soft); }
-.border-lava { border-color: var(--lava-edge); }
+/* ============================================================
+   Backward-compat: clases legacy -> sistema --nx-*
+   text-lava = primary, text-lava-edge/bg-lava-soft/border-lava = secondary (indigo)
+   Esto unifica el look bajo steel-indigo sin tocar cada componente.
+   ============================================================ */
+.text-lava {
+  color: var(--nx-primary);
+}
+.text-lava-edge {
+  color: var(--nx-secondary);
+}
+.bg-lava-soft {
+  background: var(--nx-info-bg);
+}
+.border-lava {
+  border-color: var(--nx-secondary);
+}
+
+/* ============================================================
+   Bridge para componentes que usan --lava-* legacy
+   Si data-palette activa = steel-indigo, redirigimos --lava-* al secondary
+   (indigo) para coherencia visual.
+   ============================================================ */
+:root {
+  --lava-core: var(--nx-primary);
+  --lava-edge: var(--nx-secondary);
+  --lava-deep: var(--nx-secondary-deep);
+  --lava-glow: var(--nx-info-bg);
+  --lava-glow-soft: rgba(94, 106, 210, 0.18);
+  --bg-void: var(--nx-bg);
+  --bg-ember: var(--nx-surface);
+}
 
 /* Scrollbar estilo Matrix */
 ::-webkit-scrollbar {

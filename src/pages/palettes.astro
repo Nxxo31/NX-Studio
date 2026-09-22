@@ -1,0 +1,305 @@
+---
+import Base from "../layouts/Base.astro";
+import Brand from "../components/Brand.astro";
+
+// 4 paletas a comparar
+const palettes = [
+  {
+    id: "lava-pure",
+    name: "Lava Pure",
+    tag: "warm · energetic",
+    desc: "Lava como acento dominante, neutros cálidos. Replit/Nium vibe.",
+    primary: "#ff4500",
+    secondary: "#d97706",
+    accent: "#c026d3",
+    bg: "#0a0608",
+    text: "#f5e6d3",
+    use: "Mantiene tu look v0.2 actual pero añade sistema completo (semánticos, chart, borders). El más cercano a tu identidad original.",
+  },
+  {
+    id: "steel-indigo",
+    name: "Steel Indigo",
+    tag: "corporate · fintech · DEFAULT",
+    desc: "Lava se reserva como acento emocional, indigo como acento corporativo. Linear vibe.",
+    primary: "#ff4500",
+    secondary: "#5e6ad2",
+    accent: "#ff6a00",
+    bg: "#0b0b14",
+    text: "#f1f1f4",
+    use: "✓ ESTA ES TU PALETA. Cuando quieres sentir más corporativo/fintech sin perder la lava. Buenos targets: enterprise SaaS, B2B premium.",
+  },
+  {
+    id: "obsidian-teal",
+    name: "Obsidian + Teal",
+    tag: "engineering · minimal",
+    desc: "Monochrome radical con teal como único acento. Lava solo en hero CTAs. Vercel vibe.",
+    primary: "#ff4500",
+    secondary: "#14b8a6",
+    accent: "#f59e0b",
+    bg: "#000000",
+    text: "#fafafa",
+    use: "Look enterprise engineering tool. Bueno si compites con Vercel/Linear en credibilidad técnica.",
+  },
+  {
+    id: "navy-gold",
+    name: "Deep Navy + Gold",
+    tag: "premium · enterprise",
+    desc: "Navy como base (autoridad), gold como acento premium (confianza). Lava como energía. Andela/Toptal vibe.",
+    primary: "#ff4500",
+    secondary: "#d4a574",
+    accent: "#3b82f6",
+    bg: "#0a0e1a",
+    text: "#faf7f0",
+    use: "Targets corporativos grandes / enterprise contracts. Comunica premium + confianza + energía.",
+  },
+];
+
+// Steel-indigo es la paleta default
+const defaultPalette = "steel-indigo";
+---
+
+<Base title="Palettes Preview · NX-Studio">
+  <main class="px-6 py-16">
+    <div class="mx-auto max-w-7xl">
+      <header class="mb-12">
+        <span class="lava-tag mb-3">// palettes-preview · v2</span>
+        <h1 class="font-display text-4xl lg:text-5xl font-bold tracking-tight">
+          4 paletas <span class="text-lava">empresariales</span>
+        </h1>
+        <p class="mt-4 text-nx-muted text-lg max-w-3xl">
+          Cada paleta es un sistema completo: primary + secondary + accent + 4 semánticos + 3 neutros + 4 chart.
+          Activa una con el switcher arriba para previsualizar en vivo cómo se siente el sitio con esa identidad.
+        </p>
+      </header>
+
+      <!-- Switcher (live) -->
+      <div class="mb-12 sticky top-20 z-40 lava-card lava-card-accent p-4">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="font-mono text-xs uppercase tracking-widest text-nx-dim">// cambiar paleta:</span>
+          {palettes.map((p) => (
+            <button
+              data-set-palette={p.id}
+              class={`palette-switch px-4 py-2 rounded-md font-mono text-xs uppercase tracking-widest transition border ${
+                p.id === defaultPalette
+                  ? 'border-lava-edge bg-lava-soft text-lava-edge'
+                  : 'border-nx-border text-nx-muted hover:border-lava-edge hover:text-lava-edge'
+              }`}
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Cards de identidad por paleta -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        {palettes.map((p) => (
+          <article
+            data-palette-card={p.id}
+            class={`lava-card p-6 ${p.id === defaultPalette ? 'lava-card-accent' : ''}`}
+          >
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <span class="lava-tag mb-2">// {p.tag}</span>
+                <h2 class="font-display text-2xl font-bold mt-2">{p.name}</h2>
+              </div>
+              <button
+                data-set-palette={p.id}
+                class="font-mono text-xs text-nx-dim hover:text-lava-edge transition"
+              >
+                activar →
+              </button>
+            </div>
+
+            <p class="text-sm text-nx-muted mb-4">{p.desc}</p>
+
+            <!-- Swatches -->
+            <div class="grid grid-cols-5 gap-2 mb-4">
+              <div class="space-y-1">
+                <div class="aspect-square rounded border border-nx-border" style={`background: ${p.primary}`}></div>
+                <div class="font-mono text-[10px] text-nx-dim">primary</div>
+              </div>
+              <div class="space-y-1">
+                <div class="aspect-square rounded border border-nx-border" style={`background: ${p.secondary}`}></div>
+                <div class="font-mono text-[10px] text-nx-dim">secondary</div>
+              </div>
+              <div class="space-y-1">
+                <div class="aspect-square rounded border border-nx-border" style={`background: ${p.accent}`}></div>
+                <div class="font-mono text-[10px] text-nx-dim">accent</div>
+              </div>
+              <div class="space-y-1">
+                <div class="aspect-square rounded border border-nx-border" style={`background: ${p.bg}`}></div>
+                <div class="font-mono text-[10px] text-nx-dim">bg</div>
+              </div>
+              <div class="space-y-1">
+                <div class="aspect-square rounded border border-nx-border" style={`background: ${p.text}`}></div>
+                <div class="font-mono text-[10px] text-nx-dim">text</div>
+              </div>
+            </div>
+
+            <!-- Uso recomendado -->
+            <div class="border-t border-nx-border pt-3">
+              <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">// recomendado para</div>
+              <p class="text-xs text-nx-muted">{p.use}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <!-- Specs técnicas (preview bajo la paleta activa) -->
+      <section class="lava-card lava-card-accent p-6 lg:p-8 mb-12">
+        <h2 class="font-display text-2xl font-bold mb-4">Cómo se ve la paleta activa en contexto</h2>
+        <p class="text-nx-muted mb-6 text-sm">
+          Estos elementos cambian automáticamente cuando activas una paleta arriba:
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Brand en acción -->
+          <div class="lava-card p-6">
+            <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim mb-3">// brand</div>
+            <Brand variant="lockup" size="md" />
+            <div class="mt-4">
+              <Brand variant="wordmark" size="sm" />
+            </div>
+          </div>
+
+          <!-- Botones + tags -->
+          <div class="lava-card p-6">
+            <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim mb-3">// components</div>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="lava-tag">// tag</span>
+              <span class="lava-tag" style="background: transparent; border-left-color: var(--nx-secondary); color: var(--nx-secondary);">
+                secondary
+              </span>
+              <span class="lava-tag" style="background: transparent; border-left-color: var(--nx-accent); color: var(--nx-accent);">
+                accent
+              </span>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <a href="#" class="lava-btn">Primary CTA</a>
+              <a href="#" class="lava-btn lava-btn-ghost">Ghost</a>
+            </div>
+          </div>
+
+          <!-- Semánticos -->
+          <div class="lava-card p-6">
+            <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim mb-3">// semantic states</div>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 p-2 rounded" style="background: var(--nx-success-bg)">
+                <span style="color: var(--nx-success)">✓</span>
+                <span class="text-sm">Success state — operación completada</span>
+              </div>
+              <div class="flex items-center gap-2 p-2 rounded" style="background: var(--nx-warn-bg)">
+                <span style="color: var(--nx-warn)">⚠</span>
+                <span class="text-sm">Warning — atención requerida</span>
+              </div>
+              <div class="flex items-center gap-2 p-2 rounded" style="background: var(--nx-danger-bg)">
+                <span style="color: var(--nx-danger)">✕</span>
+                <span class="text-sm">Danger — error crítico</span>
+              </div>
+              <div class="flex items-center gap-2 p-2 rounded" style="background: var(--nx-info-bg)">
+                <span style="color: var(--nx-info)">ⓘ</span>
+                <span class="text-sm">Info — contexto adicional</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart preview -->
+          <div class="lava-card p-6">
+            <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim mb-3">// data viz</div>
+            <div class="grid grid-cols-4 gap-2 items-end h-32">
+              <div class="rounded-t" style="background: var(--nx-chart-1); height: 80%"></div>
+              <div class="rounded-t" style="background: var(--nx-chart-2); height: 60%"></div>
+              <div class="rounded-t" style="background: var(--nx-chart-3); height: 90%"></div>
+              <div class="rounded-t" style="background: var(--nx-chart-4); height: 45%"></div>
+            </div>
+            <div class="flex justify-between mt-2 font-mono text-[10px] text-nx-dim">
+              <span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tokens CSS (referencia) -->
+      <section class="lava-card p-6 lg:p-8 mb-12">
+        <h2 class="font-display text-2xl font-bold mb-4">Sistema de tokens completo</h2>
+        <p class="text-nx-muted mb-6 text-sm">
+          Cada paleta define los mismos 25 tokens. Los archivos consumen variables CSS — nunca hex hardcoded.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+          <div class="lava-card p-4">
+            <div class="text-nx-dim uppercase tracking-widest text-[10px] mb-2">// Primary</div>
+            <div>--nx-primary · soft · deep · glow</div>
+          </div>
+          <div class="lava-card p-4">
+            <div class="text-nx-dim uppercase tracking-widest text-[10px] mb-2">// Secondary + Accent</div>
+            <div>--nx-secondary · soft · deep</div>
+            <div>--nx-accent · soft</div>
+          </div>
+          <div class="lava-card p-4">
+            <div class="text-nx-dim uppercase tracking-widest text-[10px] mb-2">// Backgrounds</div>
+            <div>--nx-bg · surface · raised · overlay</div>
+          </div>
+          <div class="lava-card p-4">
+            <div class="text-nx-dim uppercase tracking-widest text-[10px] mb-2">// Borders</div>
+            <div>--nx-border · border-strong</div>
+          </div>
+          <div class="lava-card p-4">
+            <div class="text-nx-dim uppercase tracking-widest text-[10px] mb-2">// Text</div>
+            <div>--nx-text · muted · dim · on-light</div>
+          </div>
+          <div class="lava-card p-4">
+            <div class="text-nx-dim uppercase tracking-widest text-[10px] mb-2">// Semantic</div>
+            <div>--nx-success/warn/danger/info (+ bg)</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer del preview -->
+      <div class="mt-8 text-center">
+        <a href="/NX-Studio/" class="font-mono text-xs text-nx-dim hover:text-lava-edge transition">
+          ← volver al sitio
+        </a>
+      </div>
+    </div>
+  </main>
+</Base>
+
+<style>
+  /* La paleta activa se aplica via data-palette en <html> */
+</style>
+
+<script>
+  // Live palette switcher
+  type Palette = 'lava-pure' | 'steel-indigo' | 'obsidian-teal' | 'navy-gold';
+  const STORAGE_KEY = 'nx-studio-palette-preview';
+
+  function setPalette(p: Palette) {
+    document.documentElement.setAttribute('data-palette', p);
+    try {
+      localStorage.setItem(STORAGE_KEY, p);
+    } catch {}
+    // Update button states
+    document.querySelectorAll('[data-set-palette]').forEach((btn) => {
+      const target = btn.getAttribute('data-set-palette');
+      btn.classList.toggle('border-lava-edge', target === p);
+      btn.classList.toggle('bg-lava-soft', target === p);
+      btn.classList.toggle('text-lava-edge', target === p);
+      btn.classList.toggle('border-nx-border', target !== p);
+      btn.classList.toggle('text-nx-muted', target !== p);
+    });
+  }
+
+  // Initialize
+  const stored = (typeof localStorage !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null) as Palette | null;
+  setPalette(stored || 'lava-pure');
+
+  // Bind buttons
+  document.querySelectorAll('[data-set-palette]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = (btn as HTMLElement).getAttribute('data-set-palette') as Palette;
+      if (target) setPalette(target);
+    });
+  });
+</script>

@@ -1,0 +1,230 @@
+/* ============================================================
+   NX-Studio · Brand Palettes v2
+   4 sistemas empresariales completos que extienden el lava core.
+   Aplican la filosofía Linear/Vercel: base neutra + acento controlado + semánticos.
+   Activar con `data-palette="..."` en <html> o <body>.
+   ============================================================ */
+
+/* ============================================================
+   PALETTE 01 — LAVA PURE (default recomendado)
+   Tu identidad actual expandida. Lava como acento, neutros cálidos.
+   Ref: Replit (orange accent + warm grays), Nium (monochrome + 1 accent).
+   ============================================================ */
+[data-palette="lava-pure"] {
+  /* Primary */
+  --nx-primary:        #ff4500;
+  --nx-primary-soft:   #ff6a00;
+  --nx-primary-deep:   #8b0000;
+  --nx-primary-glow:   rgba(255, 69, 0, 0.55);
+  --nx-primary-glow-soft: rgba(255, 69, 0, 0.18);
+
+  /* Secondary (ember brasas) */
+  --nx-secondary:      #d97706;   /* ambar/ember */
+  --nx-secondary-soft: #f59e0b;
+  --nx-secondary-deep: #92400e;
+
+  /* Accent (magenta para highlights raros) */
+  --nx-accent:         #c026d3;   /* purple-magenta para edge cases */
+  --nx-accent-soft:    #e879f9;
+
+  /* Backgrounds (warm-tinted darks) */
+  --nx-bg:             #0a0608;
+  --nx-surface:        #14090c;
+  --nx-surface-raised: #1f0e10;
+  --nx-surface-overlay: rgba(20, 9, 12, 0.92);
+
+  /* Borders */
+  --nx-border:         rgba(255, 90, 30, 0.12);
+  --nx-border-strong:  rgba(255, 90, 30, 0.28);
+
+  /* Text (warm cream) */
+  --nx-text:           #f5e6d3;
+  --nx-text-muted:     #a89580;
+  --nx-text-dim:       #5a4a40;
+  --nx-text-on-light:  #0a0608;
+
+  /* Semantic (calibrados para dark + warm) */
+  --nx-success:        #10b981;
+  --nx-success-bg:     rgba(16, 185, 129, 0.12);
+  --nx-warn:           #f59e0b;
+  --nx-warn-bg:        rgba(245, 158, 11, 0.12);
+  --nx-danger:         #ef4444;
+  --nx-danger-bg:      rgba(239, 68, 68, 0.12);
+  --nx-info:           #ff6a00;     /* info = lava edge (mismo sistema) */
+  --nx-info-bg:        rgba(255, 106, 0, 0.12);
+
+  /* Chart/data viz */
+  --nx-chart-1:        #ff4500;
+  --nx-chart-2:        #d97706;
+  --nx-chart-3:        #f5e6d3;
+  --nx-chart-4:        #c026d3;
+}
+
+/* ============================================================
+   PALETTE 02 — STEEL INDIGO (Linear-inspired)
+   Lava se mantiene como acento emocional, indigo como acento corporativo.
+   Ref: Linear (deep-dark + indigo accent), Stripe (precision + indigo).
+   Uso: si quieres sentir "más corporativo/fintech" sin perder la lava.
+   ============================================================ */
+[data-palette="steel-indigo"] {
+  /* Primary lava (conservado como acento emocional) */
+  --nx-primary:        #ff4500;
+  --nx-primary-soft:   #ff6a00;
+  --nx-primary-deep:   #8b0000;
+  --nx-primary-glow:   rgba(255, 69, 0, 0.55);
+  --nx-primary-glow-soft: rgba(255, 69, 0, 0.18);
+
+  /* Secondary indigo (Linear-style) */
+  --nx-secondary:      #5e6ad2;
+  --nx-secondary-soft: #818cf8;
+  --nx-secondary-deep: #4338ca;
+
+  /* Accent coral (lava) */
+  --nx-accent:         #ff6a00;
+  --nx-accent-soft:    #ffa07a;
+
+  /* Backgrounds (cool blue-tinted darks) */
+  --nx-bg:             #0b0b14;
+  --nx-surface:        #15172a;
+  --nx-surface-raised: #1c1f3a;
+  --nx-surface-overlay: rgba(21, 23, 42, 0.92);
+
+  /* Borders (subtle blue) */
+  --nx-border:         rgba(94, 106, 210, 0.12);
+  --nx-border-strong:  rgba(94, 106, 210, 0.28);
+
+  /* Text (cool white) */
+  --nx-text:           #f1f1f4;
+  --nx-text-muted:     #9b9bad;
+  --nx-text-dim:       #4a4a60;
+  --nx-text-on-light:  #0b0b14;
+
+  /* Semantic (calibrados para dark + cool) */
+  --nx-success:        #22c55e;
+  --nx-success-bg:     rgba(34, 197, 94, 0.12);
+  --nx-warn:           #f59e0b;
+  --nx-warn-bg:        rgba(245, 158, 11, 0.12);
+  --nx-danger:         #f87171;
+  --nx-danger-bg:      rgba(248, 113, 113, 0.12);
+  --nx-info:           #5e6ad2;
+  --nx-info-bg:        rgba(94, 106, 210, 0.12);
+
+  /* Chart/data viz */
+  --nx-chart-1:        #5e6ad2;
+  --nx-chart-2:        #818cf8;
+  --nx-chart-3:        #ff6a00;
+  --nx-chart-4:        #22c55e;
+}
+
+/* ============================================================
+   PALETTE 03 — OBSIDIAN + TEAL (Vercel-inspired)
+   Monochrome radical con teal como único acento. Lava se reserva
+   para CTAs heroicos únicamente.
+   Ref: Vercel (black/white + accent opcional), Nium (vibrant minimal).
+   Uso: cuando quieres look "enterprise engineering tool".
+   ============================================================ */
+[data-palette="obsidian-teal"] {
+  /* Primary lava (reservado para hero CTAs) */
+  --nx-primary:        #ff4500;
+  --nx-primary-soft:   #ff6a00;
+  --nx-primary-deep:   #8b0000;
+  --nx-primary-glow:   rgba(255, 69, 0, 0.45);
+  --nx-primary-glow-soft: rgba(255, 69, 0, 0.15);
+
+  /* Secondary teal (Vercel "blue" pero teal) */
+  --nx-secondary:      #14b8a6;
+  --nx-secondary-soft: #2dd4bf;
+  --nx-secondary-deep: #0f766e;
+
+  /* Accent amber (subtle highlight) */
+  --nx-accent:         #f59e0b;
+  --nx-accent-soft:    #fbbf24;
+
+  /* Backgrounds (pure monochrome) */
+  --nx-bg:             #000000;
+  --nx-surface:        #0a0a0a;
+  --nx-surface-raised: #171717;
+  --nx-surface-overlay: rgba(10, 10, 10, 0.92);
+
+  /* Borders (pure gray ramp) */
+  --nx-border:         rgba(255, 255, 255, 0.08);
+  --nx-border-strong:  rgba(255, 255, 255, 0.16);
+
+  /* Text (pure white scale) */
+  --nx-text:           #fafafa;
+  --nx-text-muted:     #a3a3a3;
+  --nx-text-dim:       #525252;
+  --nx-text-on-light:  #0a0a0a;
+
+  /* Semantic (Vercel-style, menos saturados) */
+  --nx-success:        #10b981;
+  --nx-success-bg:     rgba(16, 185, 129, 0.10);
+  --nx-warn:           #f59e0b;
+  --nx-warn-bg:        rgba(245, 158, 11, 0.10);
+  --nx-danger:         #ef4444;
+  --nx-danger-bg:      rgba(239, 68, 68, 0.10);
+  --nx-info:           #2dd4bf;
+  --nx-info-bg:        rgba(45, 212, 191, 0.10);
+
+  /* Chart/data viz */
+  --nx-chart-1:        #2dd4bf;
+  --nx-chart-2:        #fafafa;
+  --nx-chart-3:        #ff6a00;
+  --nx-chart-4:        #f59e0b;
+}
+
+/* ============================================================
+   PALETTE 04 — DEEP NAVY + GOLD (fintech-corporate premium)
+   Navy como base (autoridad), gold como acento premium (confianza),
+   lava como acento de energía. Ref: Andela, Toptal, fintech premium.
+   Uso: cuando el target son corporativos grandes / enterprise contracts.
+   ============================================================ */
+[data-palette="navy-gold"] {
+  /* Primary lava (acento de energía) */
+  --nx-primary:        #ff4500;
+  --nx-primary-soft:   #ff6a00;
+  --nx-primary-deep:   #8b0000;
+  --nx-primary-glow:   rgba(255, 69, 0, 0.50);
+  --nx-primary-glow-soft: rgba(255, 69, 0, 0.16);
+
+  /* Secondary gold (premium trust) */
+  --nx-secondary:      #d4a574;
+  --nx-secondary-soft: #f5c451;
+  --nx-secondary-deep: #a37840;
+
+  /* Accent navy glow (CTAs secundarios) */
+  --nx-accent:         #3b82f6;
+  --nx-accent-soft:    #60a5fa;
+
+  /* Backgrounds (deep navy tints) */
+  --nx-bg:             #0a0e1a;
+  --nx-surface:        #111827;
+  --nx-surface-raised: #1f2937;
+  --nx-surface-overlay: rgba(17, 24, 39, 0.92);
+
+  /* Borders (subtle navy/gold) */
+  --nx-border:         rgba(212, 165, 116, 0.14);
+  --nx-border-strong:  rgba(212, 165, 116, 0.30);
+
+  /* Text (warm ivory + gold highlights) */
+  --nx-text:           #faf7f0;
+  --nx-text-muted:     #b8a890;
+  --nx-text-dim:       #6b5d4e;
+  --nx-text-on-light:  #0a0e1a;
+
+  /* Semantic (premium fintech calibration) */
+  --nx-success:        #10b981;
+  --nx-success-bg:     rgba(16, 185, 129, 0.12);
+  --nx-warn:           #f59e0b;
+  --nx-warn-bg:        rgba(245, 158, 11, 0.12);
+  --nx-danger:         #ef4444;
+  --nx-danger-bg:      rgba(239, 68, 68, 0.12);
+  --nx-info:           #d4a574;
+  --nx-info-bg:        rgba(212, 165, 116, 0.12);
+
+  /* Chart/data viz */
+  --nx-chart-1:        #d4a574;
+  --nx-chart-2:        #ff6a00;
+  --nx-chart-3:        #faf7f0;
+  --nx-chart-4:        #3b82f6;
+}

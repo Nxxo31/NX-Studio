@@ -1,0 +1,101 @@
+---
+import Base from "../layouts/Base.astro";
+import Brand from "../components/Brand.astro";
+---
+
+<Base title="Brand Preview · NX-Studio">
+  <main class="px-6 py-16">
+    <div class="mx-auto max-w-6xl">
+      <header class="mb-12">
+        <span class="lava-tag mb-3">// brand-preview · v1</span>
+        <h1 class="font-display text-4xl lg:text-5xl font-bold tracking-tight">
+          Identidad visual <span class="text-lava">NX-Studio</span>
+        </h1>
+        <p class="mt-4 text-nx-muted text-lg max-w-2xl">
+          Sistema de logo como componente Astro (HTML+CSS+SVG vectorial).
+          Retina-ready, animable, zero-runtime. Tres variantes disponibles.
+        </p>
+      </header>
+
+      <!-- Variante 1: WORDMARK (para Nav) -->
+      <section class="mb-16">
+        <div class="font-mono text-xs uppercase tracking-widest text-nx-dim mb-3">// 01 · wordmark (nav, header)</div>
+        <div class="lava-card p-8 flex items-center gap-8">
+          <Brand variant="wordmark" size="lg" />
+          <Brand variant="wordmark" size="md" />
+          <Brand variant="wordmark" size="sm" />
+        </div>
+        <p class="mt-3 text-xs text-nx-dim">
+          Default. Glifo hexagonal + texto "NX-Studio" en una línea. Escala a 4 tamaños.
+        </p>
+      </section>
+
+      <!-- Variante 2: LOCKUP (para hero, footer, OG cards) -->
+      <section class="mb-16">
+        <div class="font-mono text-xs uppercase tracking-widest text-nx-dim mb-3">// 02 · lockup (hero, footer, OG)</div>
+        <div class="lava-card p-8 flex items-center gap-8">
+          <Brand variant="lockup" size="lg" />
+          <Brand variant="lockup" size="md" />
+        </div>
+        <p class="mt-3 text-xs text-nx-dim">
+          Glifo + texto + tagline "SOFTWARE STUDIO · LATAM". Para piezas grandes.
+        </p>
+      </section>
+
+      <!-- Variante 3: MARK (para favicon, badges) -->
+      <section class="mb-16">
+        <div class="font-mono text-xs uppercase tracking-widest text-nx-dim mb-3">// 03 · mark (favicon, badges, mini)</div>
+        <div class="lava-card p-8 flex items-center gap-8">
+          <Brand variant="mark" size="xl" />
+          <Brand variant="mark" size="lg" />
+          <Brand variant="mark" size="md" />
+          <Brand variant="mark" size="sm" />
+        </div>
+        <p class="mt-3 text-xs text-nx-dim">
+          Solo glifo hexagonal. Para favicon, badges de producto, marca de agua.
+        </p>
+      </section>
+
+      <!-- Sobre fondo oscuro (cómo se ve en producción) -->
+      <section class="mb-16">
+        <div class="font-mono text-xs uppercase tracking-widest text-nx-dim mb-3">// en contexto (navbar real)</div>
+        <div class="lava-card p-6">
+          <div class="sticky top-0 z-50 border-b border-nx-border bg-nx-bg/80 backdrop-blur-xl" style="position:relative;">
+            <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+              <Brand variant="wordmark" size="md" />
+              <ul class="hidden items-center gap-1 md:flex">
+                <li><span class="nav-link">Inicio</span></li>
+                <li><span class="nav-link">Servicios</span></li>
+                <li><span class="nav-link">Templates</span></li>
+              </ul>
+              <span class="lava-btn" style="padding: 0.5rem 1.25rem;">Pedir propuesta →</span>
+            </nav>
+          </div>
+          <div class="px-6 py-12 text-center text-nx-muted">
+            <p class="font-mono text-xs">[ contenido del sitio — placeholder ]</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Specs técnicas -->
+      <section class="lava-card lava-card-accent p-6 lg:p-8">
+        <h2 class="font-display text-2xl font-bold mb-4">Specs técnicas</h2>
+        <ul class="font-mono text-sm text-nx-muted space-y-2">
+          <li>· Render: SVG inline + CSS gradients (sin imágenes externas)</li>
+          <li>· Tamaños: 28px · 36px · 48px · 64px (sin pérdida)</li>
+          <li>· Paleta: <span style="color:#ff6a00">#ff6a00</span> → <span style="color:#ff4500">#ff4500</span> → <span style="color:#8b0000">#8b0000</span></li>
+          <li>· Tipografía: Space Grotesk 700 + JetBrains Mono 500</li>
+          <li>· Accesibilidad: aria-label, hover respeta prefers-reduced-motion</li>
+          <li>· Animación hover: rotación -8° + scale 1.05 (300ms cubic-bezier)</li>
+          <li>· Bundled JS: 0 bytes (todo CSS + SVG inline)</li>
+        </ul>
+      </section>
+
+      <div class="mt-8 text-center">
+        <a href="/NX-Studio/" class="font-mono text-xs text-nx-dim hover:text-lava-edge transition">
+          ← volver al sitio
+        </a>
+      </div>
+    </div>
+  </main>
+</Base>

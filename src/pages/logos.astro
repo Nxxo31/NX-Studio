@@ -1,0 +1,382 @@
+---
+import Base from "../layouts/Base.astro";
+
+const logos = [
+  // ───────────────────────────────────────────────────────────
+  // 01 — HEXAGON monolítico (nuestro actual, baseline)
+  // ───────────────────────────────────────────────────────────
+  {
+    id: "hexagon",
+    name: "Hex Monolith",
+    tag: "común · angular · tech",
+    desc: "Hexágono con N y X fusionadas dentro. Chamfer hard-edge. Aplicado hoy. Steel-indigo palette.",
+    feel: "Industrial, estable, tech puro. Vibe Linear / Prisma.",
+    svg: `
+      <svg viewBox="0 0 64 64" width="96" height="96">
+        <defs>
+          <linearGradient id="g-hex" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#818cf8"/>
+            <stop offset="55%" stop-color="#5e6ad2"/>
+            <stop offset="100%" stop-color="#4338ca"/>
+          </linearGradient>
+        </defs>
+        <polygon points="32,2 58,17 58,47 32,62 6,47 6,17" fill="none" stroke="url(#g-hex)" stroke-width="2"/>
+        <polygon points="32,8 52,20 52,44 32,56 12,44 12,20" fill="rgba(11,11,20,0.85)" stroke="#5e6ad2" stroke-opacity="0.35"/>
+        <g fill="none" stroke="url(#g-hex)" stroke-width="3" stroke-linecap="square">
+          <path d="M 18 44 L 18 20 L 30 38 L 30 20"/>
+          <path d="M 34 20 L 46 44 M 46 20 L 34 44"/>
+        </g>
+        <circle cx="32" cy="32" r="1.8" fill="#818cf8"/>
+      </svg>
+    `,
+    code: `<Brand variant="mark" colorway="hex" />`,
+  },
+
+  // ───────────────────────────────────────────────────────────
+  // 02 — CHEVRON diagonal (forward momentum)
+  // ───────────────────────────────────────────────────────────
+  {
+    id: "chevron",
+    name: "Chevron Forward",
+    tag: "dinámico · momentum",
+    desc: "Dos chevrons entrelazados formando N+X. Sugiere forward, progreso, deployment.",
+    feel: "Moderno, webdev, devops. Vibe Vercel / Railway / Turso.",
+    svg: `
+      <svg viewBox="0 0 72 72" width="96" height="96">
+        <defs>
+          <linearGradient id="g-che" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ff6a00"/>
+            <stop offset="100%" stop-color="#ff4500"/>
+          </linearGradient>
+          <linearGradient id="g-che2" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#818cf8"/>
+            <stop offset="100%" stop-color="#5e6ad2"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 12 56 L 32 16 L 40 34" stroke="url(#g-che)"/>
+          <path d="M 32 56 L 60 56" stroke="url(#g-che2)"/>
+          <path d="M 46 12 L 60 24 L 36 48" stroke="url(#g-che2)"/>
+        </g>
+      </svg>
+    `,
+    code: `<Brand variant="mark" colorway="chevron" />`,
+  },
+
+  // ───────────────────────────────────────────────────────────
+  // 03 — NEGATIVE SPACE (corte óptico)
+  // ───────────────────────────────────────────────────────────
+  {
+    id: "negative",
+    name: "Negative Space",
+    tag: "editorial · minimal",
+    desc: "N y X forman el espacio negativo entre dos bloques angulares. Solo la silueta del glyph.",
+    feel: "Editorial, diseñador, premium. Vibe Anthropic / OpenAI.",
+    svg: `
+      <svg viewBox="0 0 72 72" width="96" height="96">
+        <defs>
+          <linearGradient id="g-neg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#5e6ad2"/>
+            <stop offset="100%" stop-color="#4338ca"/>
+          </linearGradient>
+        </defs>
+        <rect width="72" height="72" fill="#0b0b14"/>
+        <g fill="url(#g-neg)">
+          <path d="M 14 14 L 26 14 L 26 32 L 18 14 L 14 14 Z"/>
+          <path d="M 26 14 L 34 14 L 26 36 L 26 32 L 18 58 L 14 58 L 14 14 Z M 20 58 L 26 42 L 30 58 Z"/>
+          <path d="M 38 14 L 56 58 L 50 58 L 47 46 L 41 46 L 38 58 L 32 58 L 40 36 L 33 14 Z"/>
+          <path d="M 46 46 L 49 28 L 58 58 Z" fill-rule="evenodd"/>
+        </g>
+      </svg>
+    `,
+    code: `<Brand variant="mark" colorway="negative" />`,
+  },
+
+  // ───────────────────────────────────────────────────────────
+  // 04 — CROSSHAIR terminal (CLI / devtools)
+  // ───────────────────────────────────────────────────────────
+  {
+    id: "crosshair",
+    name: "Crosshair",
+    tag: "CLI · terminal · dev-tools",
+    desc: "Cursor crosshair con N y X integradas. Para developer tools, agencias técnicas, infra.",
+    feel: "CLI, sysadmin, infra as code. Vibe Terraform / HashiCorp.",
+    svg: `
+      <svg viewBox="0 0 72 72" width="96" height="96">
+        <defs>
+          <linearGradient id="g-cross" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ff6a00"/>
+            <stop offset="100%" stop-color="#5e6ad2"/>
+          </linearGradient>
+        </defs>
+        <rect x="4" y="4" width="64" height="64" rx="0" fill="none" stroke="#5e6ad2" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <line x1="36" y1="8" x2="36" y2="28" stroke="#ff6a00" stroke-width="2"/>
+        <line x1="36" y1="44" x2="36" y2="64" stroke="#ff6a00" stroke-width="2"/>
+        <line x1="8" y1="36" x2="28" y2="36" stroke="#ff6a00" stroke-width="2"/>
+        <line x1="44" y1="36" x2="64" y2="36" stroke="#ff6a00" stroke-width="2"/>
+        <text x="36" y="42" font-family="JetBrains Mono, monospace" font-size="22" font-weight="700" fill="url(#g-cross)" text-anchor="middle">NX</text>
+      </svg>
+    `,
+    code: `<Brand variant="mark" colorway="crosshair" />`,
+  },
+
+  // ───────────────────────────────────────────────────────────
+  // 05 — PRISM (multicolor soporte)
+  // ───────────────────────────────────────────────────────────
+  {
+    id: "prism",
+    name: "Prism",
+    tag: "creativo · futurista",
+    desc: "Triángulo formando una X con las caras en lava + indigo + oro. Fractal, light-bending.",
+    feel: "Creativo, IA-first, visual. Vibe Suno / Udio / ideogramas.",
+    svg: `
+      <svg viewBox="0 0 72 72" width="96" height="96">
+        <defs>
+          <linearGradient id="g-pri1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ff6a00"/>
+            <stop offset="100%" stop-color="#ff4500"/>
+          </linearGradient>
+          <linearGradient id="g-pri2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#818cf8"/>
+            <stop offset="100%" stop-color="#5e6ad2"/>
+          </linearGradient>
+          <linearGradient id="g-pri3" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f59e0b"/>
+            <stop offset="100%" stop-color="#d97706"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke-width="3" stroke-linejoin="round">
+          <path d="M 14 56 L 36 16 L 58 56 Z" stroke="url(#g-pri1)"/>
+          <line x1="14" y1="56" x2="58" y2="56" stroke="url(#g-pri2)"/>
+          <line x1="36" y1="16" x2="36" y2="40" stroke="url(#g-pri3)"/>
+          <line x1="14" y1="56" x2="36" y2="40" stroke="url(#g-pri3)" stroke-opacity="0.6"/>
+          <line x1="58" y1="56" x2="36" y2="40" stroke="url(#g-pri1)" stroke-opacity="0.6"/>
+        </g>
+      </svg>
+    `,
+    code: `<Brand variant="mark" colorway="prism" />`,
+  },
+
+  // ───────────────────────────────────────────────────────────
+  // 06 — WAVE (audio/signal / LATAM music vibe)
+  // ───────────────────────────────────────────────────────────
+  {
+    id: "wave",
+    name: "Wave Signal",
+    tag: "música · personalidad",
+    desc: "Onda de audio que forma N+X entre peaks. Conecta con tu perfil DJ/productor en Neiva.",
+    feel: "Warm, personal, con alma. Vibe Monolith / Framer / Loop.",
+    svg: `
+      <svg viewBox="0 0 72 72" width="96" height="96">
+        <defs>
+          <linearGradient id="g-wave" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#ff6a00"/>
+            <stop offset="50%" stop-color="#818cf8"/>
+            <stop offset="100%" stop-color="#ff4500"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke-width="2.5" stroke-linecap="round">
+          <!-- Onda que forma N y X -->
+          <path d="M 4 36 L 4 24 Q 8 16 10 18 T 14 32 L 14 42 T 20 22 L 22 22 T 28 40 T 34 50 T 40 30 T 46 14 T 52 26 T 58 36 L 62 30" stroke="url(#g-wave)"/>
+          <circle cx="36" cy="36" r="1.5" fill="#818cf8"/>
+        </g>
+      </svg>
+    `,
+    code: `<Brand variant="mark" colorway="wave" />`,
+  },
+
+  // ───────────────────────────────────────────────────────────
+  // 07 — CIRCUIT (hardware/embedded feel)
+  // ───────────────────────────────────────────────────────────
+  {
+    id: "circuit",
+    name: "Circuit",
+    tag: "hardware · estructural",
+    desc: "Pads cuadrados con trace circuit que dibuja NX. Siente semiconductor, controlador.",
+    feel: "Hardware, firmware, edge computing. Vibe Arduino / Raspberry.",
+    svg: `
+      <svg viewBox="0 0 72 72" width="96" height="96">
+        <defs>
+          <linearGradient id="g-cir" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#5e6ad2"/>
+            <stop offset="100%" stop-color="#4338ca"/>
+          </linearGradient>
+        </defs>
+        <!-- Pads -->
+        <circle cx="36" cy="12" r="4" fill="#ff4500"/>
+        <circle cx="36" cy="60" r="4" fill="#ff4500"/>
+        <circle cx="12" cy="36" r="4" fill="#ff4500"/>
+        <circle cx="60" cy="36" r="4" fill="#ff4500"/>
+        <circle cx="12" cy="12" r="3" fill="#818cf8"/>
+        <circle cx="60" cy="60" r="3" fill="#818cf8"/>
+        <!-- Trace circuit NX -->
+        <path d="M 36 12 L 36 22 L 18 22 L 18 36 M 36 12 L 36 22 L 54 22 L 54 36 M 36 60 L 36 50 L 22 50 L 22 36 M 36 60 L 36 50 L 50 50 L 50 36" fill="none" stroke="url(#g-cir)" stroke-width="2" stroke-linecap="round"/>
+        <!-- Center X -->
+        <g stroke="#ff6a00" stroke-width="2" stroke-linecap="round">
+          <line x1="24" y1="24" x2="48" y2="48"/>
+          <line x1="48" y1="24" x2="24" y2="48"/>
+        </g>
+      </svg>
+    `,
+    code: `<Brand variant="mark" colorway="circuit" />`,
+  },
+
+  // ───────────────────────────────────────────────────────────
+  // 08 — MONOGRAM (clásico pero premium)
+  // ───────────────────────────────────────────────────────────
+  {
+    id: "monogram",
+    name: "NX Monogram",
+    tag: "clásico · premium · atemporal",
+    desc: "N y X tallados en un círculo con gradiente. Sin geometría forzada. Solo tipografía.",
+    feel: "Massimo Vignelli, editorial, atemporal. Vibe BMW / Audi / Porsche.",
+    svg: `
+      <svg viewBox="0 0 72 72" width="96" height="96">
+        <defs>
+          <linearGradient id="g-mon" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#818cf8"/>
+            <stop offset="55%" stop-color="#5e6ad2"/>
+            <stop offset="100%" stop-color="#4338ca"/>
+          </linearGradient>
+        </defs>
+        <circle cx="36" cy="36" r="30" fill="none" stroke="url(#g-mon)" stroke-width="1.5" stroke-dasharray="185" stroke-linecap="round"/>
+        <text x="36" y="46" font-family="Space Grotesk, system-ui, sans-serif" font-size="24" font-weight="700" letter-spacing="2" fill="url(#g-mon)" text-anchor="middle">NX</text>
+      </svg>
+    `,
+    code: `<Brand variant="mark" colorway="monogram" />`,
+  },
+];
+---
+
+<Base title="Logo Prototypes · NX-Studio">
+  <main class="px-6 py-16">
+    <div class="mx-auto max-w-7xl">
+      <header class="mb-12">
+        <span class="lava-tag mb-3">// brand-prototypes · 8 conceptos</span>
+        <h1 class="font-display text-4xl lg:text-5xl font-bold tracking-tight">
+          8 direcciones <span class="text-lava">visuales</span> para NX-Studio
+        </h1>
+        <p class="mt-4 text-nx-muted text-lg max-w-3xl">
+          SVG vectorial editables en código. El que apruebes se integra como prop `colorway` en `Brand.astro`.
+          Cada uno es single-source (camino SVG vectorial, scalable a cualquier tamaño).
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        {logos.map((l) => (
+          <article class="lava-card p-6 flex flex-col" data-logo={l.id}>
+            <div class="aspect-square grid place-items-center mb-4 bg-nx-bg rounded" set:html={l.svg} />
+            <span class="lava-tag mb-2">// {l.tag}</span>
+            <h3 class="font-display text-xl font-bold mb-2">{l.name}</h3>
+            <p class="text-xs text-nx-muted mb-3 flex-1">{l.desc}</p>
+            <div class="border-t border-nx-border pt-3">
+              <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim mb-1">// vibe</div>
+              <p class="text-xs text-nx-muted italic">{l.feel}</p>
+            </div>
+            <button class="mt-4 lava-btn lava-btn-ghost text-xs w-full" onclick={`navigator.clipboard.writeText('${l.code}')`}>
+              Copiar snippet
+            </button>
+          </article>
+        ))}
+      </div>
+
+      <!-- Selector para probar en Nav -->
+      <section class="lava-card lava-card-accent p-6 mb-8">
+        <h2 class="font-display text-2xl font-bold mb-4">Test en Nav (live)</h2>
+        <p class="text-xs text-nx-muted mb-4">Elige un logo y verás cómo se comporta en la barra superior reducida:</p>
+
+        <div class="grid grid-cols-4 md:grid-cols-8 gap-2 mb-6">
+          {logos.map((l) => (
+            <button
+              data-try-logo={l.id}
+              class="palette-chip aspect-square grid place-items-center p-2 rounded border border-nx-border hover:border-lava-edge transition"
+              title={l.name}
+              style="aspect-ratio: 1"
+            >
+              <div class="w-full h-full max-w-[48px] max-h-[48px]" set:html={l.svg} />
+            </button>
+          ))}
+        </div>
+
+        <div class="rounded-lg overflow-hidden border border-nx-border">
+          <div class="flex items-center justify-between px-6 py-3" style="background: rgba(21,23,42,0.92)">
+            <div class="flex items-center gap-3">
+              <div id="preview-glifo" class="w-9 h-9" style="display:inline-flex;">
+                <svg viewBox="0 0 72 72" width="36" height="36">
+                  <defs>
+                    <linearGradient id="g-preview" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#818cf8"/>
+                      <stop offset="55%" stop-color="#5e6ad2"/>
+                      <stop offset="100%" stop-color="#4338ca"/>
+                    </linearGradient>
+                  </defs>
+                  <polygon points="36,4 66,20 66,52 36,68 6,52 6,20" fill="none" stroke="url(#g-preview)" stroke-width="2"/>
+                  <polygon points="36,10 60,22 60,50 36,62 12,50 12,22" fill="rgba(11,11,20,0.85)" stroke="#5e6ad2" stroke-opacity="0.35"/>
+                  <g fill="none" stroke="url(#g-preview)" stroke-width="3" stroke-linecap="square">
+                    <path d="M 20 50 L 20 22 L 32 44 L 32 22"/>
+                    <path d="M 38 22 L 52 50 M 52 22 L 38 50"/>
+                  </g>
+                  <circle cx="36" cy="36" r="1.8" fill="#818cf8"/>
+                </svg>
+              </div>
+              <span class="font-display text-sm font-bold tracking-tight">NX<span style="color: var(--nx-primary)">-</span>Studio</span>
+            </div>
+            <a href="#" class="text-xs font-mono opacity-0 pointer-events-none">(CTA ghost)</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Specs por logo -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {logos.map((l) => (
+          <details class="lava-card p-6">
+            <summary class="font-display font-bold cursor-pointer hover:text-lava transition">
+              {l.id} · {l.name} — specs
+            </summary>
+            <div class="mt-4 space-y-2">
+              <div>
+                <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim">// código inline</div>
+                <pre class="text-xs overflow-x-auto p-3 bg-nx-bg rounded border border-nx-border mt-2 text-nx-muted">{l.svg.trim()}</pre>
+              </div>
+              <div>
+                <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim">// integra como</div>
+                <code class="text-xs font-mono text-lava-edge">{l.code}</code>
+              </div>
+            </div>
+          </details>
+        ))}
+      </section>
+
+      <!-- Footer -->
+      <div class="text-center mt-12">
+        <p class="text-xs text-nx-dim mb-3">
+          Cuando apruebes uno, lo integro en <code class="font-mono text-lava-edge">Brand.astro</code> como variante y lo comiteo.
+        </p>
+        <a href="/NX-Studio/brand" class="font-mono text-xs text-nx-dim hover:text-lava-edge transition">
+          ← volver a Brand system
+        </a>
+      </div>
+    </div>
+  </main>
+</Base>
+
+<script>
+  // Swap del glifo en el preview nav al hacer clic
+  const glifoSlot = document.getElementById('preview-glifo');
+  document.querySelectorAll('[data-try-logo]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-try-logo');
+      const sourceCard = document.querySelector(`[data-logo="${id}"]`);
+      if (!sourceCard || !glifoSlot) return;
+      const svg = sourceCard.querySelector('svg');
+      if (svg) {
+        // Clonar para no mutar el original
+        const clone = svg.cloneNode(true);
+        clone.setAttribute('width', '36');
+        clone.setAttribute('height', '36');
+        glifoSlot.innerHTML = '';
+        glifoSlot.appendChild(clone);
+      }
+    });
+  });
+</script>

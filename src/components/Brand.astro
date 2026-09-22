@@ -1,0 +1,215 @@
+---
+/**
+ * Brand.astro — Sistema de logo de NX-Studio
+ * Componente HTML+CSS puro. Tres variantes disponibles via prop `variant`.
+ * Vectorial, animable, retina-ready, zero-runtime.
+ *
+ * Variantes:
+ *   - "mark"      → solo el glifo hexagonal (para favicon, badges, mini)
+ *   - "wordmark"  → glifo + texto "NX-Studio" en una línea (default para nav)
+ *   - "lockup"    → glifo + texto + tagline "Software Studio" (hero/footer)
+ */
+
+interface Props {
+  variant?: 'mark' | 'wordmark' | 'lockup';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  href?: string;
+  class?: string;
+}
+
+const {
+  variant = 'wordmark',
+  size = 'md',
+  href,
+  class: className = '',
+} = Astro.props;
+
+// Tamaños en píxeles para el glifo
+const sizes = {
+  sm: { glyph: 28, text: '0.875rem', tag: '0.625rem', gap: '0.5rem' },
+  md: { glyph: 36, text: '1.0625rem', tag: '0.6875rem', gap: '0.625rem' },
+  lg: { glyph: 48, text: '1.375rem', tag: '0.75rem', gap: '0.75rem' },
+  xl: { glyph: 64, text: '1.75rem', tag: '0.8125rem', gap: '1rem' },
+};
+const s = sizes[size];
+
+// Glifo NX hexagonal — clip-path del texto "NX" sobre contenedor hexagonal
+// Vectorial, escala perfecto a cualquier tamaño
+// Los gradientes usan currentColor (definido en CSS por paleta activa).
+---
+
+<a
+  href={href ?? '/NX-Studio/'}
+  class={`brand brand--${variant} brand--${size} ${className}`}
+  aria-label="NX-Studio — Inicio"
+>
+  {/* GLIFO HEXAGONAL — letter N y X fusionadas dentro de un hexágono */}
+  {variant !== 'mark' || variant === 'mark' ? (
+    <span class="brand-glyph" aria-hidden="true">
+      <svg
+        viewBox="0 0 64 64"
+        width={s.glyph}
+        height={s.glyph}
+        xmlns="http://www.w3.org/2000/svg"
+        class="brand-glyph-svg"
+      >
+        <defs>
+          <linearGradient id="nx-brand-grad" class="brand-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" class="brand-grad-stop-1" />
+            <stop offset="55%" class="brand-grad-stop-2" />
+            <stop offset="100%" class="brand-grad-stop-3" />
+          </linearGradient>
+          <linearGradient id="nx-brand-grad-soft" class="brand-grad-soft" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="rgba(94, 106, 210, 0.0)" />
+            <stop offset="100%" stop-color="rgba(67, 56, 202, 0.4)" />
+          </linearGradient>
+          <filter id="nx-glow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="1.5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Hexágono exterior */}
+        <polygon
+          points="32,2 58,17 58,47 32,62 6,47 6,17"
+          fill="url(#nx-brand-grad-soft)"
+          stroke="url(#nx-brand-grad)"
+          stroke-width="2"
+          stroke-linejoin="miter"
+          filter="url(#nx-glow)"
+        />
+
+        {/* Hexágono interior biselado */}
+        <polygon
+          points="32,8 52,20 52,44 32,56 12,44 12,20"
+          fill="rgba(11, 11, 20, 0.85)"
+          stroke="rgba(94, 106, 210, 0.35)"
+          stroke-width="1"
+        />
+
+        {/* Monograma NX */}
+        <g
+          fill="none"
+          stroke="url(#nx-brand-grad)"
+          stroke-width="3.5"
+          stroke-linecap="square"
+          stroke-linejoin="miter"
+          filter="url(#nx-glow)"
+        >
+          <path d="M 18 44 L 18 20 L 30 38 L 30 20" />
+          <path d="M 34 20 L 46 44 M 46 20 L 34 44" />
+        </g>
+
+        {/* Punto de fusión central */}
+        <circle cx="32" cy="32" r="1.8" class="brand-dot" />
+      </svg>
+    </span>
+  ) : null}
+
+  {/* TEXTO — wordmark + tagline opcional */}
+  {variant !== 'mark' && (
+    <span class="brand-text">
+      <span class="brand-wordmark" style={`font-size: ${s.text}`}>
+        NX<span class="brand-dash">-</span>Studio
+      </span>
+      {variant === 'lockup' && (
+        <span class="brand-tagline" style={`font-size: ${s.tag}`}>
+          SOFTWARE STUDIO · LATAM
+        </span>
+      )}
+    </span>
+  )}
+</a>
+
+<style>
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--brand-gap, 0.625rem);
+    text-decoration: none;
+    color: inherit;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .brand--sm { --brand-gap: 0.5rem; }
+  .brand--md { --brand-gap: 0.625rem; }
+  .brand--lg { --brand-gap: 0.75rem; }
+  .brand--xl { --brand-gap: 1rem; }
+
+  /* Glifo */
+  .brand-glyph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .brand-glyph-svg { display: block; }
+  .brand:hover .brand-glyph {
+    transform: rotate(-8deg) scale(1.05);
+  }
+
+  /* Gradientes del glifo — definidos por la paleta activa.
+     Default steel-indigo, override via [data-palette="..."] si quieres. */
+  .brand-grad-stop-1 { stop-color: #818cf8; }   /* secondary-soft */
+  .brand-grad-stop-2 { stop-color: #5e6ad2; }   /* secondary */
+  .brand-grad-stop-3 { stop-color: #4338ca; }   /* secondary-deep */
+  .brand-dot { fill: #818cf8; }
+
+  /* Texto */
+  .brand-text {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    line-height: 1;
+  }
+
+  .brand-wordmark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--nx-text);
+    background: linear-gradient(
+      135deg,
+      var(--nx-text) 0%,
+      var(--nx-text) 40%,
+      var(--nx-secondary) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: filter 0.2s;
+  }
+
+  .brand:hover .brand-wordmark {
+    filter: brightness(1.15) drop-shadow(0 0 6px var(--nx-info-bg));
+  }
+
+  .brand-dash {
+    color: var(--nx-primary);
+    -webkit-text-fill-color: var(--nx-primary);
+  }
+
+  .brand-tagline {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    color: var(--nx-text-dim);
+    text-transform: uppercase;
+  }
+
+  /* Variante mark */
+  .brand--mark .brand-text {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand:hover .brand-glyph { transform: none; }
+    .brand-glyph { transition: none; }
+    .brand-wordmark { transition: none; }
+  }
+</style>
