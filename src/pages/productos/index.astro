@@ -1,0 +1,307 @@
+---
+import Base from "../../layouts/Base.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro";
+import { projects, categories } from "../../data/catalog";
+
+// Agrupa proyectos por categoría para organizar visualmente las secciones.
+// Mantenemos el orden de `categories` (mapa) para que "Todos" salga primero
+// y luego SaaS, IA, DevTools... en el orden definido en el archivo de datos.
+const grouped = categories
+  .filter((c) => c.id !== "all")
+  .map((cat) => ({
+    ...cat,
+    items: projects.filter((p) => p.category === cat.id),
+  }))
+  .filter((g) => g.items.length > 0);
+
+const total = projects.length;
+const live = projects.filter((p) => p.status === "live").length;
+const prototypes = projects.filter((p) => p.status === "prototype").length;
+---
+
+<Base
+  title="Productos — NX-Studio"
+  description="11 proyectos open source de Sebastian Velasco: SaaS, IA, DevTools, Seguridad, 3D, Web, Backend. Repos públicos en GitHub."
+>
+  <Nav />
+  <main>
+    <!-- ============================================================
+         Header
+         ============================================================ -->
+    <section class="relative px-6 pt-20 pb-12 md:pt-28 md:pb-16">
+      <div class="mx-auto max-w-6xl">
+        <header class="reveal">
+          <span class="lava-tag mb-4">// productos.v1</span>
+          <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]">
+            11 productos <span class="text-lava">open source</span>
+            <span class="block mt-2 text-nx-muted text-2xl sm:text-3xl lg:text-4xl font-normal">
+              construidos y publicados en GitHub.
+            </span>
+          </h1>
+          <p class="mt-6 max-w-2xl text-lg text-nx-muted leading-relaxed">
+            Cada producto es código real, deployable, sin caja negra. Lo que
+            entrego a clientes es lo mismo que publico: <b class="text-nx-text">stack verificable</b>,
+            código abierto, decisiones arquitectónicas documentadas.
+          </p>
+
+          <!-- Stats inline -->
+          <div class="mt-8 grid grid-cols-3 gap-3 max-w-xl">
+            <div class="lava-card p-4">
+              <div class="font-display text-2xl font-bold text-lava-edge">{total}</div>
+              <div class="text-xs font-mono text-nx-dim uppercase tracking-widest mt-1">repos</div>
+            </div>
+            <div class="lava-card p-4">
+              <div class="font-display text-2xl font-bold text-nx-success">{live}</div>
+              <div class="text-xs font-mono text-nx-dim uppercase tracking-widest mt-1">live</div>
+            </div>
+            <div class="lava-card p-4">
+              <div class="font-display text-2xl font-bold text-nx-warn">{prototypes}</div>
+              <div class="text-xs font-mono text-nx-dim uppercase tracking-widest mt-1">prototype</div>
+            </div>
+          </div>
+
+          <!-- Filter bar (client-side via JS nativo, zero deps) -->
+          <nav
+            id="cat-filter"
+            aria-label="Filtrar productos por categoría"
+            class="mt-10 flex flex-wrap gap-2"
+          >
+            <button data-cat="all" class="cat-chip cat-chip-active" type="button">
+              <span class="cat-chip-icon">✦</span> Todos
+            </button>
+            {categories.filter((c) => c.id !== "all").map((c) => (
+              <button data-cat={c.id} class="cat-chip" type="button">
+                <span class="cat-chip-icon">{c.icon}</span> {c.label}
+              </button>
+            ))}
+          </nav>
+        </header>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Grid de productos (agrupados por categoría, filtrables)
+         ============================================================ -->
+    <section class="relative px-6 pb-20">
+      <div class="mx-auto max-w-6xl">
+        {grouped.map((g) => (
+          <div class="cat-group" data-group={g.id} class:list={[ "mb-14" ]}>
+            <header class="flex items-center gap-3 mb-5 reveal">
+              <span class="font-display text-2xl text-lava-edge" aria-hidden="true">{g.icon}</span>
+              <h2 class="font-display text-xl lg:text-2xl font-bold tracking-tight">{g.label}</h2>
+              <span class="font-mono text-xs text-nx-dim">[{g.items.length}]</span>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {g.items.map((p) => (
+                <a
+                  href={`/NX-Studio/productos/${p.slug}`}
+                  class="lava-card p-5 lg:p-6 reveal flex flex-col card-hover group"
+                  data-project-card={p.category}
+                  aria-label={`Ver detalle de ${p.name}`}
+                >
+                  <!-- Header: code + status pill -->
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                      <span class="font-mono text-xs text-nx-dim">{p.code}</span>
+                      <span class="font-mono text-xs text-nx-border-strong">/</span>
+                      <span class={`status-pill status-${p.status}`}>
+                        {p.status === "live" ? "● live" : p.status === "prototype" ? "◐ proto" : "○ arch"}
+                      </span>
+                    </div>
+                    <span class="font-mono text-xs text-nx-dim">{p.year}</span>
+                  </div>
+
+                  <h3 class="font-display text-xl font-bold mb-1.5 text-nx-text group-hover:text-lava-edge transition">
+                    {p.name}
+                  </h3>
+                  <p class="text-sm text-lava-edge font-mono mb-3 leading-snug">{p.tagline}</p>
+                  <p class="text-sm text-nx-muted leading-relaxed flex-1 mb-4">{p.desc}</p>
+
+                  <!-- Stack tags (max 3 visibles, +N si hay más) -->
+                  <div class="flex flex-wrap gap-1.5 mb-3">
+                    {p.stack.slice(0, 3).map((s) => (
+                      <span class="text-xs font-mono text-nx-muted px-2 py-0.5 rounded border border-nx-border">
+                        {s}
+                      </span>
+                    ))}
+                    {p.stack.length > 3 && (
+                      <span class="text-xs font-mono text-nx-dim px-2 py-0.5">
+                        +{p.stack.length - 3}
+                      </span>
+                    )}
+                  </div>
+
+                  <div class="flex items-center justify-between mt-auto pt-3 border-t border-nx-border">
+                    <span class="font-mono text-xs text-nx-dim">{p.impact}</span>
+                    <span class="font-mono text-xs text-lava-edge group-hover:translate-x-0.5 transition">
+                      Ver detalle →
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CTA final: trabajar con Sebastian
+         ============================================================ -->
+    <section class="relative px-6 pb-24">
+      <div class="mx-auto max-w-4xl">
+        <div class="lava-card lava-card-accent p-8 lg:p-10 reveal text-center">
+          <span class="lava-tag mb-3">// siguiente paso</span>
+          <h2 class="font-display text-2xl lg:text-3xl font-bold mb-3">
+            ¿Quieres construir algo <span class="text-lava">así</span>?
+          </h2>
+          <p class="text-nx-muted max-w-2xl mx-auto mb-6">
+            Estos 11 proyectos son una muestra del stack y la calidad. Si tu
+            proyecto necesita el mismo nivel de rigor, hablemos.
+          </p>
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <a href="/NX-Studio/contacto" class="lava-btn">Iniciar conversación →</a>
+            <a href="/NX-Studio/cotizador" class="lava-btn lava-btn-ghost">Ver cotizador</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  /* ============================================================
+     Filter chips
+     ============================================================ */
+  .cat-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--nx-text-muted);
+    background: var(--nx-surface);
+    border: 1px solid var(--nx-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .cat-chip:hover {
+    color: var(--nx-text);
+    border-color: var(--nx-border-strong);
+  }
+  .cat-chip:focus-visible {
+    outline: 2px solid var(--nx-secondary);
+    outline-offset: 2px;
+  }
+  .cat-chip-active {
+    color: var(--nx-text);
+    background: color-mix(in oklab, var(--nx-primary) 12%, var(--nx-surface));
+    border-color: var(--nx-primary);
+  }
+  .cat-chip-icon {
+    color: var(--nx-primary-soft);
+    font-size: 0.95rem;
+    line-height: 1;
+  }
+
+  /* ============================================================
+     Status pills
+     ============================================================ */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.1rem 0.45rem;
+    border-radius: 3px;
+    border: 1px solid transparent;
+  }
+  .status-live {
+    color: var(--nx-success);
+    background: var(--nx-success-bg);
+    border-color: color-mix(in oklab, var(--nx-success) 30%, transparent);
+  }
+  .status-prototype {
+    color: var(--nx-warn);
+    background: var(--nx-warn-bg);
+    border-color: color-mix(in oklab, var(--nx-warn) 30%, transparent);
+  }
+  .status-archived {
+    color: var(--nx-text-dim);
+    background: color-mix(in oklab, var(--nx-text-dim) 12%, transparent);
+    border-color: var(--nx-border);
+  }
+
+  /* ============================================================
+     Hidden state para filtro (clase que aplica el JS)
+     ============================================================ */
+  :global(.cat-hidden) {
+    display: none !important;
+  }
+  :global(.cat-group-hidden) {
+    display: none !important;
+  }
+</style>
+
+<script>
+  // Filter client-side, ~25 líneas, sin dependencias.
+  // Acepta: click en chip → toggle visual + mostrar/ocultar cards.
+  const chips = document.querySelectorAll<HTMLButtonElement>("#cat-filter .cat-chip");
+  const groups = document.querySelectorAll<HTMLElement>(".cat-group");
+  const cards = document.querySelectorAll<HTMLElement>("[data-project-card]");
+
+  function applyFilter(cat: string) {
+    // Toggle active chip
+    chips.forEach((c) => {
+      c.classList.toggle("cat-chip-active", c.dataset.cat === cat);
+    });
+
+    // Show/hide groups + cards
+    groups.forEach((g) => {
+      const gCat = g.dataset.group;
+      if (cat === "all" || gCat === cat) {
+        g.classList.remove("cat-group-hidden");
+      } else {
+        g.classList.add("cat-group-hidden");
+      }
+    });
+
+    cards.forEach((card) => {
+      const cardCat = card.dataset.projectCard;
+      if (cat === "all" || cardCat === cat) {
+        card.classList.remove("cat-hidden");
+      } else {
+        card.classList.add("cat-hidden");
+      }
+    });
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const cat = chip.dataset.cat ?? "all";
+      applyFilter(cat);
+      // Persistir en URL hash para que el filtro sea compartible
+      if (cat === "all") {
+        history.replaceState(null, "", window.location.pathname);
+      } else {
+        history.replaceState(null, "", `#${cat}`);
+      }
+    });
+  });
+
+  // Restore filter desde hash en load
+  const hash = window.location.hash.replace("#", "");
+  if (hash && Array.from(chips).some((c) => c.dataset.cat === hash)) {
+    applyFilter(hash);
+  }
+</script>
