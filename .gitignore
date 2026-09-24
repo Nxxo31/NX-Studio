@@ -44,3 +44,8 @@ gh-pages/
 # Coverage / test artifacts
 coverage/
 .nyc_output/
+# Playwright
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.cache/

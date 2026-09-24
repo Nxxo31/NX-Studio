@@ -1,0 +1,30 @@
+{
+  "generatedAt": "2026-09-24T19:31:32.078Z",
+  "count": 6,
+  "projects": [
+    {
+      "slug": "nx-studio",
+      "status": "captured"
+    },
+    {
+      "slug": "portafolio",
+      "status": "captured"
+    },
+    {
+      "slug": "grani-usco",
+      "status": "captured"
+    },
+    {
+      "slug": "multra-eu",
+      "status": "captured"
+    },
+    {
+      "slug": "tic-tac-toe",
+      "status": "captured"
+    },
+    {
+      "slug": "triqui",
+      "status": "captured"
+    }
+  ]
+}

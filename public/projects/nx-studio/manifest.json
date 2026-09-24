@@ -1,0 +1,22 @@
+{
+  "slug": "nx-studio",
+  "name": "NX-Studio",
+  "desc": "Sitio empresarial de NX-Studio con cotizador interactivo y catálogo de servicios.",
+  "segment": "ia-agentes",
+  "stack": [
+    "Astro 7",
+    "Tailwind v4",
+    "TypeScript"
+  ],
+  "liveUrl": "https://nxxo31.github.io/NX-Studio/",
+  "repo": "https://github.com/Nxxo31/NX-Studio",
+  "year": 2026,
+  "baseUrl": "http://127.0.0.1:4321",
+  "capturedAt": "2026-09-24T19:30:52.684Z",
+  "assets": {
+    "desktopHome": "projects/nx-studio/desktop-home.png",
+    "desktopFull": "projects/nx-studio/desktop-full.png",
+    "mobileHome": "projects/nx-studio/mobile-home.png",
+    "mobileFull": "projects/nx-studio/mobile-full.png"
+  }
+}

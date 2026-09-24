@@ -1,0 +1,22 @@
+{
+  "slug": "grani-usco",
+  "name": "Grani USCO",
+  "desc": "Plataforma académica de la Universidad Surcolombiana con animaciones.",
+  "segment": "apps-saas",
+  "stack": [
+    "Next.js",
+    "Framer Motion",
+    "Tailwind"
+  ],
+  "liveUrl": "https://grani-usco.vercel.app",
+  "repo": null,
+  "year": 2025,
+  "baseUrl": "http://127.0.0.1:3002",
+  "capturedAt": "2026-09-24T19:31:10.169Z",
+  "assets": {
+    "desktopHome": "projects/grani-usco/desktop-home.png",
+    "desktopFull": "projects/grani-usco/desktop-full.png",
+    "mobileHome": "projects/grani-usco/mobile-home.png",
+    "mobileFull": "projects/grani-usco/mobile-full.png"
+  }
+}

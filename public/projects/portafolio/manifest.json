@@ -1,0 +1,24 @@
+{
+  "slug": "portafolio",
+  "name": "Portafolio personal",
+  "desc": "Portafolio personal con constelación interactiva, blog MDX y soporte i18n ES/EN.",
+  "segment": "ia-agentes",
+  "stack": [
+    "Next.js 16",
+    "React 19",
+    "next-intl",
+    "Three.js",
+    "Tailwind v4"
+  ],
+  "liveUrl": "https://sebastianvelasco.dev",
+  "repo": "https://github.com/Nxxo31/portafolio",
+  "year": 2026,
+  "baseUrl": "http://127.0.0.1:3000",
+  "capturedAt": "2026-09-24T19:31:01.566Z",
+  "assets": {
+    "desktopHome": "projects/portafolio/desktop-home.png",
+    "desktopFull": "projects/portafolio/desktop-full.png",
+    "mobileHome": "projects/portafolio/mobile-home.png",
+    "mobileFull": "projects/portafolio/mobile-full.png"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "slug": "multra-eu",
+  "name": "Multra E.U.",
+  "desc": "Sistema de gestión para CDA y gestoría vehicular en Neiva, Huila.",
+  "segment": "sitios-web",
+  "stack": [
+    "Node.js",
+    "Express",
+    "SQLite/MySQL",
+    "JWT",
+    "Vanilla JS"
+  ],
+  "liveUrl": "https://multra-eu.onrender.com",
+  "repo": null,
+  "year": 2025,
+  "baseUrl": "http://127.0.0.1:3003",
+  "capturedAt": "2026-09-24T19:31:21.956Z",
+  "assets": {
+    "desktopHome": "projects/multra-eu/desktop-home.png",
+    "desktopFull": "projects/multra-eu/desktop-full.png",
+    "mobileHome": "projects/multra-eu/mobile-home.png",
+    "mobileFull": "projects/multra-eu/mobile-full.png"
+  }
+}

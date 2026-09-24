@@ -1,0 +1,24 @@
+{
+  "slug": "tic-tac-toe",
+  "name": "Triqui · Tic-Tac-Toe",
+  "desc": "Tres en raya con IA invicta, PWA offline, zero dependencies.",
+  "segment": "juegos-3d",
+  "stack": [
+    "HTML",
+    "CSS",
+    "Vanilla JS",
+    "PWA",
+    "Minimax + Alpha-Beta"
+  ],
+  "liveUrl": "https://triqui-coral.vercel.app",
+  "repo": "https://github.com/Nxxo31/Tic-Tac-Toe",
+  "year": 2025,
+  "baseUrl": "https://triqui-coral.vercel.app",
+  "capturedAt": "2026-09-24T19:31:26.782Z",
+  "assets": {
+    "desktopHome": "projects/tic-tac-toe/desktop-home.png",
+    "desktopFull": "projects/tic-tac-toe/desktop-full.png",
+    "mobileHome": "projects/tic-tac-toe/mobile-home.png",
+    "mobileFull": "projects/tic-tac-toe/mobile-full.png"
+  }
+}

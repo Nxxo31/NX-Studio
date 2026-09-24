@@ -1,0 +1,23 @@
+{
+  "slug": "triqui",
+  "name": "Triqui (legacy)",
+  "desc": "Versión legacy de Triqui (alias Tic-Tac-Toe).",
+  "segment": "juegos-3d",
+  "stack": [
+    "HTML",
+    "CSS",
+    "Vanilla JS",
+    "PWA"
+  ],
+  "liveUrl": "https://triqui-coral.vercel.app",
+  "repo": "https://github.com/Nxxo31/triqui",
+  "year": 2025,
+  "baseUrl": "https://triqui-coral.vercel.app",
+  "capturedAt": "2026-09-24T19:31:31.567Z",
+  "assets": {
+    "desktopHome": "projects/triqui/desktop-home.png",
+    "desktopFull": "projects/triqui/desktop-full.png",
+    "mobileHome": "projects/triqui/mobile-home.png",
+    "mobileFull": "projects/triqui/mobile-full.png"
+  }
+}
