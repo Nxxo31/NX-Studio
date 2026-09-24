@@ -1,0 +1,577 @@
+---
+/**
+ * ProjectPreview.astro — Mockup CSS-only de un proyecto del catálogo
+ * Renderiza un "browser dashboard" del proyecto flagship con stats, sparkline
+ * y tabla resumida. Retina-ready, zero-JS, zero-asset.
+ *
+ * Decisión: elige el proyecto por categoría para que cada preview luzca
+ * relevante al stack del producto (ej. SaaS → dashboard, Seguridad → audit).
+ */
+
+import type { Project } from "../data/catalog";
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+
+// Variantes del preview según categoría del proyecto.
+// Todas son CSS+SVG puro, sin assets externos.
+const categoryPreview: Record<Project["category"], {
+  title: string;
+  url: string;
+  metricLabel: string;
+  metricValue: string;
+  metricDelta: string;
+  secondary: { label: string; value: string }[];
+  sparklinePoints: number[];
+  rows: { tag: string; sub: string; amount: string; state: "ok" | "warn" | "info" }[];
+}> = {
+  SaaS: {
+    title: "Dashboard · Overview",
+    url: "nexocore.app/dashboard",
+    metricLabel: "MRR",
+    metricValue: "$24.8k",
+    metricDelta: "+18.2% vs LM",
+    secondary: [
+      { label: "Tenants activos", value: "147" },
+      { label: "Churn", value: "1.4%" },
+    ],
+    sparklinePoints: [12, 18, 16, 22, 28, 24, 32, 38, 35, 42, 48, 52, 58, 62],
+    rows: [
+      { tag: "ACME · plan Pro", sub: "Renovación 14d", amount: "$1.2k", state: "ok" },
+      { tag: "Grani USCO",       sub: "Trial → Starter", amount: "$89",   state: "info" },
+      { tag: "Tatacoa NVA",      sub: "Factura pendiente", amount: "$640", state: "warn" },
+    ],
+  },
+  IA: {
+    title: "Auditoría · Análisis",
+    url: "e14.auditor.app/scan",
+    metricLabel: "Actas",
+    metricValue: "12,847",
+    metricDelta: "98.4% legibles",
+    secondary: [
+      { label: "Anomalías", value: "23" },
+      { label: "Precisión OCR", value: "98.4%" },
+    ],
+    sparklinePoints: [8, 12, 10, 14, 18, 22, 19, 24, 28, 32, 30, 36, 40, 44],
+    rows: [
+      { tag: "Mesa 0421·Bogotá",  sub: "Coherencia 96%", amount: "OK",    state: "ok" },
+      { tag: "Mesa 1188·Medellín",sub: "Outlier detectado", amount: "REVISAR", state: "warn" },
+      { tag: "Mesa 3304·Cali",    sub: "OCR completo", amount: "OK",    state: "ok" },
+    ],
+  },
+  DevTools: {
+    title: "CI Gate · Report",
+    url: "contract-guard.dev/runs",
+    metricLabel: "Contratos",
+    metricValue: "312",
+    metricDelta: "0 breaking changes",
+    secondary: [
+      { label: "Specs escaneados", value: "9" },
+      { label: "Checks/min", value: "1.4k" },
+    ],
+    sparklinePoints: [10, 14, 12, 16, 20, 18, 22, 24, 26, 30, 28, 32, 36, 38],
+    rows: [
+      { tag: "OpenAPI v3.1",       sub: "5 paths · 0 diff", amount: "PASS", state: "ok" },
+      { tag: "GraphQL · users",    sub: "1 deprecation", amount: "WARN", state: "warn" },
+      { tag: "gRPC · billing.proto", sub: "stable",        amount: "PASS", state: "ok" },
+    ],
+  },
+  Seguridad: {
+    title: "Supply · Scan",
+    url: "supply-radar.io/audit",
+    metricLabel: "Deps",
+    metricValue: "1,284",
+    metricDelta: "0 CVEs críticos",
+    secondary: [
+      { label: "Vulns totales", value: "7" },
+      { label: "SBOM generados", value: "32" },
+    ],
+    sparklinePoints: [14, 12, 18, 16, 22, 20, 26, 24, 28, 30, 26, 32, 30, 28],
+    rows: [
+      { tag: "go.mod · CVE-2024", sub: "patch pending", amount: "MED",  state: "warn" },
+      { tag: "package-lock.json", sub: "clean",          amount: "OK",   state: "ok" },
+      { tag: "go.sum",            sub: "no advisories",  amount: "OK",   state: "ok" },
+    ],
+  },
+  "3D": {
+    title: "Scene · Render",
+    url: "tatacoa-nva.app/lookdev",
+    metricLabel: "FPS",
+    metricValue: "60",
+    metricDelta: "GPU 38% load",
+    secondary: [
+      { label: "Triángulos", value: "1.2M" },
+      { label: "Shaders activos", value: "12" },
+    ],
+    sparklinePoints: [40, 44, 42, 48, 52, 50, 54, 58, 56, 60, 58, 62, 60, 64],
+    rows: [
+      { tag: "Terrain shader",  sub: "1.2M tris",     amount: "60fps", state: "ok" },
+      { tag: "Sky procedural",  sub: "noise OK",       amount: "60fps", state: "ok" },
+      { tag: "Particle fire",   sub: "512 sprites",   amount: "58fps", state: "info" },
+    ],
+  },
+  Web: {
+    title: "Landing · Analytics",
+    url: "graniusco.com/metrics",
+    metricLabel: "Conversión",
+    metricValue: "8.4%",
+    metricDelta: "+2.1% vs LW",
+    secondary: [
+      { label: "Sesiones/día", value: "412" },
+      { label: "Bounce", value: "31%" },
+    ],
+    sparklinePoints: [22, 28, 24, 30, 34, 32, 38, 42, 40, 44, 46, 48, 50, 52],
+    rows: [
+      { tag: "Hero CTA",         sub: "CTA visible",   amount: "12.3%", state: "ok" },
+      { tag: "Menu mobile",      sub: "drawer abierto", amount: "8.1%",  state: "info" },
+      { tag: "Form contacto",    sub: "envíos/sem",    amount: "47",    state: "ok" },
+    ],
+  },
+  Backend: {
+    title: "Service · Status",
+    url: "flag-edge.internal/health",
+    metricLabel: "Uptime",
+    metricValue: "99.98%",
+    metricDelta: "p99 · 12ms",
+    secondary: [
+      { label: "Tenants", value: "47" },
+      { label: "Flags activos", value: "1,184" },
+    ],
+    sparklinePoints: [48, 52, 50, 54, 58, 56, 60, 62, 58, 64, 62, 66, 68, 70],
+    rows: [
+      { tag: "feature.pay_v2",   sub: "rollout 24%",   amount: "ON",   state: "ok" },
+      { tag: "feature.checkout", sub: "internal only", amount: "ON",   state: "info" },
+      { tag: "feature.legacy_x", sub: "deprecated",    amount: "OFF",  state: "warn" },
+    ],
+  },
+};
+
+const pv = categoryPreview[project.category];
+
+// Genera polyline string para SVG sparkline (eje X 0..280, eje Y invertido)
+const W = 280;
+const H = 56;
+const max = Math.max(...pv.sparklinePoints);
+const min = Math.min(...pv.sparklinePoints);
+const range = max - min || 1;
+const stepX = W / (pv.sparklinePoints.length - 1);
+const polyPoints = pv.sparklinePoints
+  .map((v, i) => `${(i * stepX).toFixed(1)},${(H - ((v - min) / range) * H).toFixed(1)}`)
+  .join(" ");
+
+// Gradiente fill bajo el sparkline
+const fillPoints = `0,${H} ${polyPoints} ${W},${H}`;
+---
+
+<div
+  class="project-preview lava-card lava-card-accent relative overflow-hidden"
+  role="img"
+  aria-label={`Preview del proyecto ${project.name} (${project.category})`}
+>
+  {/* Halo glow superior */}
+  <div class="preview-halo" aria-hidden="true"></div>
+
+  {/* Browser chrome */}
+  <div class="preview-chrome">
+    <div class="preview-dots">
+      <span class="dot dot-red" aria-hidden="true"></span>
+      <span class="dot dot-yellow" aria-hidden="true"></span>
+      <span class="dot dot-green" aria-hidden="true"></span>
+    </div>
+    <div class="preview-url">{pv.url}</div>
+    <div class="preview-status">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span class="font-mono">{project.status}</span>
+    </div>
+  </div>
+
+  {/* Body */}
+  <div class="preview-body">
+    {/* Header con brand del producto + título */}
+    <div class="preview-header">
+      <div class="preview-brand">
+        <span class="preview-code" aria-hidden="true">{project.code}</span>
+        <div class="preview-titles">
+          <div class="preview-name">{project.name}</div>
+          <div class="preview-tag">{project.tagline}</div>
+        </div>
+      </div>
+      <div class="preview-pill">{project.category}</div>
+    </div>
+
+    {/* Metric principal + sparkline */}
+    <div class="preview-metric">
+      <div>
+        <div class="metric-label">{pv.metricLabel}</div>
+        <div class="metric-value">{pv.metricValue}</div>
+        <div class="metric-delta">{pv.metricDelta}</div>
+      </div>
+      <svg class="metric-spark" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id={`spark-fill-${project.slug}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--nx-secondary-soft)" stop-opacity="0.45" />
+            <stop offset="100%" stop-color="var(--nx-secondary-soft)" stop-opacity="0" />
+          </linearGradient>
+          <linearGradient id={`spark-stroke-${project.slug}`} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="var(--nx-secondary-soft)" />
+            <stop offset="100%" stop-color="var(--nx-primary-soft)" />
+          </linearGradient>
+        </defs>
+        <polygon points={fillPoints} fill={`url(#spark-fill-${project.slug})`} />
+        <polyline
+          points={polyPoints}
+          fill="none"
+          stroke={`url(#spark-stroke-${project.slug})`}
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+    {/* Stats secundarios */}
+    <div class="preview-secondary">
+      {pv.secondary.map((s) => (
+        <div class="preview-stat">
+          <div class="stat-value">{s.value}</div>
+          <div class="stat-label">{s.label}</div>
+        </div>
+      ))}
+      <div class="preview-stat">
+        <div class="stat-value">{project.stack.length}</div>
+        <div class="stat-label">stack</div>
+      </div>
+    </div>
+
+    {/* Mini tabla */}
+    <div class="preview-table">
+      <div class="table-head">
+        <span>recurso</span>
+        <span>estado</span>
+      </div>
+      {pv.rows.map((row) => (
+        <div class={`table-row row-${row.state}`}>
+          <div class="row-main">
+            <span class="row-tag">{row.tag}</span>
+            <span class="row-sub">{row.sub}</span>
+          </div>
+          <span class={`row-state state-${row.state}`}>{row.amount}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  {/* Footer badge */}
+  <div class="preview-footer">
+    <span class="footer-stack">{project.stack.slice(0, 3).join(" · ")}</span>
+    <span class="footer-impact">{project.impact}</span>
+  </div>
+</div>
+
+<style>
+  .project-preview {
+    position: relative;
+    isolation: isolate;
+    clip-path: polygon(
+      0 0,
+      calc(100% - 22px) 0,
+      100% 22px,
+      100% 100%,
+      22px 100%,
+      0 calc(100% - 22px)
+    );
+  }
+
+  /* Halo superior que da el efecto "live app" */
+  .preview-halo {
+    position: absolute;
+    inset: -40% -10% auto -10%;
+    height: 220px;
+    background:
+      radial-gradient(ellipse at top right,
+        color-mix(in oklab, var(--nx-secondary) 35%, transparent),
+        transparent 60%),
+      radial-gradient(ellipse at top left,
+        color-mix(in oklab, var(--nx-primary) 22%, transparent),
+        transparent 55%);
+    filter: blur(24px);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* === Browser chrome === */
+  .preview-chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.875rem;
+    border-bottom: 1px solid var(--nx-border);
+    background: color-mix(in oklab, var(--nx-bg) 70%, transparent);
+  }
+  .preview-dots {
+    display: inline-flex;
+    gap: 6px;
+  }
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot-red    { background: rgba(239, 68, 68, 0.75); }
+  .dot-yellow { background: rgba(234, 179, 8, 0.75); }
+  .dot-green  { background: rgba(34, 197, 94, 0.75); }
+
+  .preview-url {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--nx-text-muted);
+    background: color-mix(in oklab, var(--nx-surface) 80%, transparent);
+    border: 1px solid var(--nx-border);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .preview-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.625rem;
+    color: var(--nx-success);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--nx-success);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--nx-success) 25%, transparent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.5; }
+  }
+
+  /* === Body === */
+  .preview-body {
+    padding: 1rem 1rem 1.125rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .preview-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .preview-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+  .preview-code {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--nx-secondary-soft);
+    background: color-mix(in oklab, var(--nx-secondary) 14%, transparent);
+    border: 1px solid color-mix(in oklab, var(--nx-secondary) 30%, transparent);
+    border-radius: 4px;
+    padding: 0.25rem 0.4375rem;
+  }
+  .preview-titles {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  .preview-name {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--nx-text);
+    letter-spacing: -0.01em;
+  }
+  .preview-tag {
+    font-size: 0.75rem;
+    color: var(--nx-text-muted);
+    margin-top: 0.125rem;
+  }
+  .preview-pill {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--nx-primary-soft);
+    background: color-mix(in oklab, var(--nx-primary) 10%, transparent);
+    border: 1px solid color-mix(in oklab, var(--nx-primary) 28%, transparent);
+    border-radius: 999px;
+    padding: 0.1875rem 0.5625rem;
+    white-space: nowrap;
+  }
+
+  /* === Metric === */
+  .preview-metric {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: end;
+    padding: 0.75rem 0.875rem;
+    background: color-mix(in oklab, var(--nx-surface) 75%, transparent);
+    border: 1px solid var(--nx-border);
+    border-radius: 8px;
+  }
+  .metric-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--nx-text-dim);
+  }
+  .metric-value {
+    font-family: var(--font-display);
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--nx-text);
+    line-height: 1;
+    margin-top: 0.375rem;
+    background: linear-gradient(
+      135deg,
+      var(--nx-text) 0%,
+      var(--nx-secondary-soft) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .metric-delta {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--nx-success);
+    margin-top: 0.3125rem;
+  }
+  .metric-spark {
+    width: 140px;
+    height: 56px;
+    overflow: visible;
+  }
+
+  /* === Secondary stats === */
+  .preview-secondary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+  .preview-stat {
+    padding: 0.5rem 0.625rem;
+    background: color-mix(in oklab, var(--nx-surface) 60%, transparent);
+    border: 1px solid var(--nx-border);
+    border-radius: 6px;
+  }
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--nx-text);
+  }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--nx-text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.1875rem;
+  }
+
+  /* === Mini tabla === */
+  .preview-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    border-top: 1px dashed var(--nx-border);
+    padding-top: 0.75rem;
+  }
+  .table-head {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--nx-text-dim);
+    padding: 0 0.25rem;
+  }
+  .table-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.375rem 0.5rem;
+    border-radius: 4px;
+    background: color-mix(in oklab, var(--nx-surface) 50%, transparent);
+    border-left: 2px solid var(--nx-border);
+  }
+  .row-main {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.15;
+  }
+  .row-tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--nx-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .row-sub {
+    font-size: 0.625rem;
+    color: var(--nx-text-dim);
+    margin-top: 0.125rem;
+  }
+  .row-state {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .state-ok   { color: var(--nx-success); background: color-mix(in oklab, var(--nx-success) 12%, transparent); }
+  .state-warn { color: var(--nx-warn);    background: color-mix(in oklab, var(--nx-warn) 12%, transparent); }
+  .state-info { color: var(--nx-secondary-soft); background: color-mix(in oklab, var(--nx-secondary) 14%, transparent); }
+
+  .row-ok    { border-left-color: var(--nx-success); }
+  .row-warn  { border-left-color: var(--nx-warn); }
+  .row-info  { border-left-color: var(--nx-secondary); }
+
+  /* === Footer === */
+  .preview-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    border-top: 1px solid var(--nx-border);
+    background: color-mix(in oklab, var(--nx-bg) 70%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+  }
+  .footer-stack  { color: var(--nx-text-muted); letter-spacing: 0.04em; }
+  .footer-impact { color: var(--nx-text-dim);   letter-spacing: 0.04em; text-transform: uppercase; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .status-dot { animation: none; }
+  }
+</style>

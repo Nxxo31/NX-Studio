@@ -1,25 +1,140 @@
 ---
-// WebGLBackground — fondo visual lava neon.
-// Implementación: puro CSS (gradiente radial + grid lines).
-// Razón: NX-Studio es SSG en GitHub Pages — sin three.js, sin GSAP, sin lenis.
-// Beneficio: zero JS, mejor Core Web Vitals, sin superficie de ataque extra.
-// El fallback CSS ya existía en global.css; aquí consolidamos el overlay decorativo.
+/**
+ * WebGLBackground — fondo geométrico NX-Studio.
+ *
+ * Implementación 100% CSS, zero-JS, retina-ready.
+ * Capas (de abajo hacia arriba):
+ *   1. Gradiente radial cálido (lava glow superior)
+ *   2. Retícula hexagonal signature NX (clip-path inline SVG)
+ *   3. Diagonal scan lines (Matrix-style, baja opacidad)
+ *   4. Vignette que oscurece los bordes para legibilidad
+ *   5. Grain noise sutil (data-URI SVG, ya existía en global.css)
+ *
+ * Compatible con prefers-reduced-motion (desactiva scan line animado).
+ * Tokens --nx-* respetan data-palette, así que toda la textura se adapta
+ * automáticamente cuando el usuario cambia de paleta.
+ */
 ---
 
-<div id="nx-bg-fallback" aria-hidden="true" class="fixed inset-0 pointer-events-none" style="z-index: -2;"></div>
-
+<div id="nx-bg-fallback" aria-hidden="true"></div>
+<div class="nx-bg-hex" aria-hidden="true"></div>
+<div class="nx-bg-scan" aria-hidden="true"></div>
+<div class="nx-bg-glow nx-bg-glow-1" aria-hidden="true"></div>
+<div class="nx-bg-glow nx-bg-glow-2" aria-hidden="true"></div>
 <div class="lava-vignette-mask" aria-hidden="true"></div>
 
 <style>
+  /* === Capa 1: Gradiente radial cálido + grid lines === */
   #nx-bg-fallback {
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    pointer-events: none;
     background:
-      radial-gradient(ellipse at 50% 0%, #1f0a08 0%, #0a0608 50%),
-      linear-gradient(to right, rgba(255, 69, 0, 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 69, 0, 0.04) 1px, transparent 1px);
-    background-size: 100% 100%, 80px 56px, 80px 56px;
-    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
+      radial-gradient(ellipse 90% 60% at 50% 0%,
+        color-mix(in oklab, var(--nx-primary) 12%, var(--nx-bg)) 0%,
+        var(--nx-bg) 55%),
+      linear-gradient(to right,
+        color-mix(in oklab, var(--nx-secondary) 5%, transparent) 1px,
+        transparent 1px),
+      linear-gradient(to bottom,
+        color-mix(in oklab, var(--nx-secondary) 5%, transparent) 1px,
+        transparent 1px);
+    background-size: 100% 100%, 64px 64px, 64px 64px;
+    background-position: 0 0, 0 0, 0 0;
+    mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, black 30%, transparent 90%);
   }
+
+  /* === Capa 2: Hex grid signature NX === */
+  .nx-bg-hex {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='84' height='96' viewBox='0 0 84 96'><g fill='none' stroke='%235e6ad2' stroke-opacity='0.18' stroke-width='1'><path d='M42 1 L83 24 L83 72 L42 95 L1 72 L1 24 Z'/><path d='M42 13 L70 30 L70 66 L42 83 L14 66 L14 30 Z'/></g></svg>");
+    background-size: 84px 96px;
+    background-repeat: repeat;
+    mask-image: radial-gradient(ellipse 100% 80% at 50% 50%, black 20%, transparent 85%);
+  }
+
+  /* === Capa 3: Diagonal scan lines (Matrix-style, sutil) === */
+  .nx-bg-scan {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: repeating-linear-gradient(
+      115deg,
+      transparent 0,
+      transparent 12px,
+      color-mix(in oklab, var(--nx-primary-soft) 60%, transparent) 12px,
+      color-mix(in oklab, var(--nx-primary-soft) 60%, transparent) 13px
+    );
+    mix-blend-mode: screen;
+  }
+
+  /* === Capa 4: Glows flotantes (lavanda + lava) === */
+  .nx-bg-glow {
+    position: fixed;
+    z-index: -2;
+    pointer-events: none;
+    border-radius: 50%;
+    filter: blur(120px);
+    will-change: transform;
+  }
+  .nx-bg-glow-1 {
+    top: -10%;
+    left: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle,
+      color-mix(in oklab, var(--nx-secondary) 25%, transparent) 0%,
+      transparent 70%);
+    animation: nx-bg-drift-1 24s ease-in-out infinite alternate;
+  }
+  .nx-bg-glow-2 {
+    bottom: -20%;
+    right: -10%;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle,
+      color-mix(in oklab, var(--nx-primary) 18%, transparent) 0%,
+      transparent 70%);
+    animation: nx-bg-drift-2 32s ease-in-out infinite alternate;
+  }
+
+  @keyframes nx-bg-drift-1 {
+    from { transform: translate(0, 0); }
+    to   { transform: translate(6vw, 4vh); }
+  }
+  @keyframes nx-bg-drift-2 {
+    from { transform: translate(0, 0); }
+    to   { transform: translate(-5vw, -3vh); }
+  }
+
+  /* === Capa 5: Vignette para legibilidad === */
+  .lava-vignette-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 90% 70% at 50% 50%,
+        transparent 20%,
+        color-mix(in oklab, var(--nx-bg) 55%, transparent) 70%,
+        color-mix(in oklab, var(--nx-bg) 85%, transparent) 100%);
+  }
+
+  /* === Reduced motion: desactiva animación de glows === */
   @media (prefers-reduced-motion: reduce) {
-    #nx-bg-fallback { opacity: 0.6; }
+    .nx-bg-glow-1,
+    .nx-bg-glow-2 {
+      animation: none;
+    }
+    .nx-bg-scan {
+      opacity: 0.04;
+    }
   }
 </style>

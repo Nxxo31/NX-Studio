@@ -31,7 +31,8 @@ animation opcional, monospace para números/códigos.
 ## Estructura de páginas
 
 ```
-/                           # Home (Hero, Servicios, Pricing CTA, Licitar CTA)
+/                           # Home (Hero con ProjectPreview, Servicios, Confianza,
+                              #          Proceso, 2 CTAs)
 /servicios                  # Índice de servicios especializados
   ├── /osint                # OSINT: due diligence, brand threat, leak monitoring
   └── /testing              # QA: tiers Foundation/Accelerator/Strategic
@@ -40,6 +41,9 @@ animation opcional, monospace para números/códigos.
 /cotizador                  # ★ Pricing engine (state local, tiempo real)
 /laboratorio                # Chat IA + mockup preview
 /contacto                   # Formulario WhatsApp + email
+/brand                      # Preview del Brand component (3 variantes)  [sprint v0.3.0]
+/logos                      # 8 prototipos con selector live                [sprint v0.3.0]
+/palettes                   # 4 paletas con switcher sticky                 [sprint v0.3.0]
 ```
 
 ## Servicios ofrecidos
@@ -89,30 +93,51 @@ UI con state local vanilla JS en `/cotizador`. Cálculo client-side — sin back
 | Phase 3 | Laboratorio IA (chatbot + Pollinations) | `77ce0b8` |
 | Phase 4 | Pricing engine + Servicios especializados + Templates | `5282fff` |
 | Phase 5 | Migración a SSG estático puro (GitHub Pages) | `3b97b1c` ★ |
-| Phase 6 | Páginas /servicios + /templates marketplace | TBD ★ |
-| Phase 7 | (futuro) /proceso, /precios, /productos, /docs | — |
+| Phase 6 | Servicios + templates marketplace + brand/logos/palettes | `53130aa`, `b5b2c7e` ✓ |
+| Phase 7 | Reimaginación Home narrativa + WebGL hex/scan + ProjectPreview | (este commit) ✓ |
+| Phase 8 | (futuro) /proceso, /precios, /productos, /docs, i18n | — |
 
 ## Sprint actual
 
-**Sprint v0.3.0 — SSG migration + servicios/templates pages (en progreso)**
+**Sprint v0.4.0 — Reimaginación narrativa del Home (cerrado en este commit)**
 
 Tareas completadas:
+- [x] Reescribir Home (`src/pages/index.astro`) con narrativa 3 bloques:
+      ¿Qué hacemos? → ¿Por qué confiar? → ¿Cómo trabajamos? → 2 CTAs finales
+- [x] Reemplazar terminal animado del Hero por `<ProjectPreview>` del flagship NexoCore
+- [x] Reescribir `WebGLBackground.astro` con 4 capas CSS+SVG (hex grid, scan lines,
+      2 glows lavanda/lava, vignette). Sigue siendo 100% CSS+SVG, zero JS.
+- [x] Crear `src/components/ProjectPreview.astro` — mockup browser-dashboard por
+      categoría (SaaS/IA/DevTools/Seguridad/3D/Web/Backend), 576 líneas, 0 JS, 0 canvas
+- [x] Crear `scripts/preview-clean.mjs` — limpia lockfiles stale de Astro
+      (`.astro/dev.json`, `.astro/preview.json`). Resuelve `Another astro server is
+      already running` cuando se mata el wrapper bash sin liberar node.
+- [x] `package.json`: scripts `dev:clean` y `preview:clean` que invocan el script
+- [x] Tuning visual en `global.css`: grid 0.5→0.25, grain 0.25→0.35
+- [x] Nav: Brand variant `wordmark` → `lockup`
+- [x] Build exit 0, 14 páginas estáticas (incluye /brand /logos /palettes del sprint previo)
+- [x] Smoke test 12/12 HTTP 200
+- [x] Cero dependencias nuevas — sigue siendo solo `astro` + `tailwindcss`
+
+**Sprint v0.3.0 — SSG + servicios/templates + brand system (cerrado en `b5b2c7e`)**
+
+Tareas completadas (referencia):
 - [x] Migrar a output: 'static' (sin @astrojs/node, sin SSR)
 - [x] Quitar dependencias innecesarias (three, gsap, lenis, resend, better-sqlite3)
 - [x] Borrar archivos runtime (data/nx-studio.db*, src/lib/db.ts, src/pages/api/*)
-- [x] Reescribir WebGLBackground como CSS-only (zero JS)
+- [x] Reescribir WebGLBackground como CSS-only (zero JS) — primera iteración
 - [x] Refactor Nav a data-driven, agregar Servicios + Templates
 - [x] Crear /servicios/{index, osint, testing}.astro
 - [x] Crear /templates/{index, [slug]}.astro
-- [x] Build exit 0, 11 páginas estáticas
-- [x] Smoke test 11/11 HTTP 200
-- [x] Headers de seguridad en Base.astro (X-Content-Type-Options, referrer, canonical, OG)
+- [x] Crear /brand, /logos, /palettes (Brand component + palette switcher)
+- [x] Build exit 0, 14 páginas estáticas
+- [x] Smoke test HTTP 200
+- [x] Headers de seguridad en Base.astro
 
-Pendientes:
-- [ ] /proceso (metodología 5 fases)
-- [ ] /precios (engagement shapes + tiers)
-- [ ] /productos (catálogo 11 repos)
-- [ ] /productos/[slug] (detalle por proyecto)
+Pendientes (futuros sprints):
+- [ ] /proceso (metodología 5 fases) — la versión inline del Home ya cubre esto
+- [ ] /precios (engagement shapes + tiers) — el cotizador ya cubre pricing
+- [ ] /productos (catálogo 11 repos) + /productos/[slug]
 - [ ] /docs (research-pricing-patterns.md)
 - [ ] Decidir i18n (ES vs ES+EN) — pendiente AGENTS.md
 
@@ -172,4 +197,5 @@ Pendientes:
 ---
 
 *Generado por SophIA — Sebastian Velasco's autonomous operating system*
+*v0.4.0: 2026-09-24 — Reimaginación narrativa del Home + WebGL hex/scan + ProjectPreview + scripts/preview-clean.*
 *v0.3.0: 2026-09-19 — Migración a SSG estático puro + páginas de servicios y marketplace.*

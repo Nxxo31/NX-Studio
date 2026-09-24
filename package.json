@@ -8,8 +8,10 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "dev:clean": "node scripts/preview-clean.mjs dev",
     "build": "astro build",
     "preview": "astro preview",
+    "preview:clean": "node scripts/preview-clean.mjs preview",
     "astro": "astro"
   },
   "dependencies": {
