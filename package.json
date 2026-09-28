@@ -18,7 +18,11 @@
     "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
-    "astro": "^7.3.2"
+    "@astrojs/cloudflare": "^14.3.3",
+    "@astrojs/db": "^0.21.3",
+    "astro": "^7.3.2",
+    "resend": "^6.30.0",
+    "zod": "^4.6.5"
   },
   "allowScripts": {
     "esbuild": true

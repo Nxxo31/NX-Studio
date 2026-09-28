@@ -1,18 +1,23 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
+import cloudflare from '@astrojs/cloudflare';
 
-// NX-Studio se despliega como sitio estático en GitHub Pages.
-// output: 'static' genera HTML en /dist sin necesidad de runtime serverless.
-// Seguridad: headers estrictos, sin endpoints dinámicos (no API routes, no SSR).
+// NX-Studio deploy: Cloudflare Pages con SSR + Resend para contacto.
+// Output 'server' = SSR, /api/* routes se ejecutan como Pages Functions en el edge.
+// Migración 2026-09-28 desde GitHub Pages static (decision operador AGENTS.md override).
+// DB persistence via Cloudflare D1 (TODO Fase 2). Por ahora email-only via Resend.
 export default defineConfig({
-  site: 'https://nxxo31.github.io',
-  base: '/NX-Studio/',
-  output: 'static',
+  site: 'https://nx-studio.pages.dev',
+  output: 'server',
   trailingSlash: 'ignore',
   build: {
     inlineStylesheets: 'auto',
   },
+  adapter: cloudflare({
+    imageService: 'compile',
+    platformProxy: { enabled: true },
+  }),
   vite: {
     plugins: [tailwindcss()],
   },
@@ -20,7 +25,5 @@ export default defineConfig({
     host: '127.0.0.1',
     port: 4321,
   },
-  // Security headers (ciberseguridad best-practice: defense-in-depth en el edge)
-  // GitHub Pages aplica automáticamente algunas políticas; reforzamos donde es posible.
   compressHTML: true,
 });

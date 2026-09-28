@@ -212,7 +212,7 @@ import Layout from '../layouts/Base.astro';
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Enviando...'; }
 
       try {
-        const res = await fetch('/NX-Studio/api/licitacion', {
+        const res = await fetch('/api/licitacion', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
