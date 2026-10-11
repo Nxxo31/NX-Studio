@@ -1,5 +1,6 @@
 ---
 import Brand from './Brand.astro';
+import PaletteSwitcher from './PaletteSwitcher.astro';
 
 const path = Astro.url.pathname;
 const base = '/NX-Studio';
@@ -31,6 +32,7 @@ const links = [
           <a href={l.href} class={`nav-link ${isActive(l.href) ? 'nav-active' : ''}`}>{l.label}</a>
         </li>
       ))}
+      <li class="ml-2"><PaletteSwitcher /></li>
     </ul>
 
     <a href={`${base}/contacto`} class="hidden md:inline-flex items-center gap-2 lava-btn" style="padding: 0.5rem 1.25rem;">
@@ -52,6 +54,9 @@ const links = [
         <li><a href={l.href} class="nav-link block">{l.label}</a></li>
       ))}
     </ul>
+    <div class="px-6 pb-4">
+      <PaletteSwitcher variant="mobile" />
+    </div>
   </div>
 </header>
 

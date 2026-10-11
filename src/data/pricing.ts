@@ -1,7 +1,7 @@
 // Cotizador por features — data layer
 // Patrón estructural: base fee + features seleccionables + modifiers
 // Output: rango indicativo USD, no precio fijo (alineado con industria: "no publicamos precio exacto")
-// Referencia de patrones: Vertex pricing engine, Toptal engagement shapes, OSINT role-based
+// Referencia de patrones: Vertex pricing engine, Toptal engagement shapes, QA role-based
 
 export type FeatureCategory = 'core' | 'design' | 'backend' | 'growth' | 'ops';
 
@@ -56,7 +56,7 @@ export const ENGAGEMENT_SHAPES: Record<EngagementShape, {
   tm: {
     id: 'tm',
     name: 'Hourly / T&M',
-    description: 'Para OSINT, auditoría o investigación donde el alcance evoluciona.',
+    description: 'Para auditoría, soporte evolutivo o tareas puntuales donde el alcance cambia.',
     baseHours: 0,
     baseFee: 200,
   },
@@ -77,7 +77,6 @@ export const FEATURES: Feature[] = [
   { id: 'api',           name: 'API REST/GraphQL',         description: 'Endpoints, validación Zod, OpenAPI spec, rate limiting',             hours: 24, rate: BASE_RATE, category: 'backend' },
   { id: 'db',            name: 'Database + ORM',           description: 'Postgres + Prisma/Drizzle, migraciones, seeds, RLS opcional',       hours: 16, rate: BASE_RATE, category: 'backend' },
   { id: 'integrations',  name: 'Integraciones externas',   description: 'Stripe/Resend/Twilio/S3/OpenAI/etc.',                              hours: 12, rate: BASE_RATE, category: 'backend', optional: true },
-  { id: 'osint',         name: 'OSINT (investigación)',    description: 'Personas, empresas, dominios, redes, dark web leak monitoring',      hours: 24, rate: 110,       category: 'backend', optional: true },
   // Growth / ops
   { id: 'analytics',     name: 'Analytics + Métricas',     description: 'PostHog/Plausible, eventos custom, funnels',                       hours: 8,  rate: BASE_RATE, category: 'growth',  optional: true },
   { id: 'seo',           name: 'SEO técnico + OG',         description: 'Sitemap, robots, JSON-LD, hreflang, OG cards',                     hours: 8,  rate: BASE_RATE, category: 'growth' },

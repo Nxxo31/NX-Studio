@@ -1,0 +1,131 @@
+---
+/**
+ * PaletteSwitcher v2 · 2 temas (dark + light).
+ * - Click cambia data-palette en <html> + persiste en localStorage.
+ * - Auto-detecta prefers-color-scheme la primera visita.
+ * - Props:
+ *     variant: 'desktop' (default) | 'mobile'
+ */
+
+interface Props {
+  variant?: 'desktop' | 'mobile';
+}
+const { variant = 'desktop' } = Astro.props;
+
+// Solo 2 paletas: dark default + light. Botones con icono para reconocer
+// el modo sin necesidad de leer la etiqueta.
+const palettes = [
+  { id: "steel-indigo", label: "Dark",  icon: "🌙" },
+  { id: "azure-light",  label: "Light", icon: "☀️" },
+];
+
+const isDesktop = variant === 'desktop';
+---
+
+{isDesktop ? (
+  <div
+    id="nx-palette-bar"
+    class="hidden md:inline-flex items-center gap-1 rounded-lg border border-nx-border bg-nx-bg/60 backdrop-blur-md p-1"
+    role="group"
+    aria-label="Cambiar tema claro / oscuro"
+  >
+    {palettes.map((p) => (
+      <button
+        type="button"
+        data-set-palette={p.id}
+        title={p.label}
+        aria-label={`Tema ${p.label}`}
+        class="palette-chip inline-flex items-center justify-center min-w-[34px] h-7 px-2 gap-1 rounded font-mono text-[10px] uppercase border border-nx-border hover:border-nx-primary hover:text-nx-primary transition"
+      >
+        <span aria-hidden="true">{p.icon}</span>
+        <span>{p.label}</span>
+      </button>
+    ))}
+  </div>
+) : (
+  <div
+    id="nx-palette-bar-mobile"
+    class="flex md:hidden items-center gap-1 flex-wrap"
+    role="group"
+    aria-label="Cambiar tema claro / oscuro"
+  >
+    <span class="font-mono text-[9px] uppercase tracking-widest text-nx-dim w-full mb-1" aria-hidden="true">// tema</span>
+    {palettes.map((p) => (
+      <button
+        type="button"
+        data-set-palette={p.id}
+        title={p.label}
+        aria-label={`Tema ${p.label}`}
+        class="palette-chip-mobile inline-flex items-center justify-center min-w-[80px] h-10 px-3 gap-2 rounded font-mono text-[11px] uppercase border border-nx-border hover:border-nx-primary hover:text-nx-primary transition"
+      >
+        <span aria-hidden="true">{p.icon}</span>
+        <span>{p.label}</span>
+      </button>
+    ))}
+  </div>
+)}
+
+<script is:inline>
+  (function() {
+    if (window.__nxPaletteSwitcherInit) return;
+    window.__nxPaletteSwitcherInit = true;
+
+    const STORAGE_KEY = 'nx-studio-theme';
+    const DEFAULT_DARK = 'steel-indigo';
+    const DEFAULT_LIGHT = 'azure-light';
+    const VALID = ['steel-indigo', 'azure-light'];
+    const ALL_BTN_SELECTOR = '[data-set-palette]';
+
+    function systemPrefersDark() {
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    function applyPalette(p) {
+      document.documentElement.setAttribute('data-palette', p);
+      try { localStorage.setItem(STORAGE_KEY, p); } catch(e) {}
+      highlightActive(p);
+    }
+
+    function highlightActive(activeId) {
+      document.querySelectorAll(ALL_BTN_SELECTOR).forEach((btn) => {
+        const target = btn.getAttribute('data-set-palette');
+        if (target === activeId) {
+          btn.classList.add('border-nx-primary', 'bg-nx-info-bg', 'text-nx-primary');
+          btn.classList.remove('border-nx-border');
+          btn.setAttribute('aria-pressed', 'true');
+        } else {
+          btn.classList.remove('border-nx-primary', 'bg-nx-info-bg', 'text-nx-primary');
+          btn.classList.add('border-nx-border');
+          btn.setAttribute('aria-pressed', 'false');
+        }
+      });
+    }
+
+    // 1. Anti-FOUC: si ya hay data-palette puesto por el script inline del <head>,
+    //    respetarlo.
+    const existing = document.documentElement.getAttribute('data-palette');
+    if (existing && VALID.indexOf(existing) !== -1) {
+      highlightActive(existing);
+    } else {
+      // 2. Override del usuario en localStorage
+      let stored = null;
+      try { stored = localStorage.getItem(STORAGE_KEY); } catch(e) {}
+      if (stored && VALID.indexOf(stored) !== -1) {
+        applyPalette(stored);
+      } else {
+        // 3. Auto-detectar system preference la primera visita
+        const initial = systemPrefersDark() ? DEFAULT_DARK : DEFAULT_LIGHT;
+        applyPalette(initial);
+      }
+    }
+
+    // 4. Bind de los botones (desktop + mobile)
+    document.querySelectorAll(ALL_BTN_SELECTOR).forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const p = btn.getAttribute('data-set-palette');
+        if (p && VALID.indexOf(p) !== -1) applyPalette(p);
+      });
+    });
+  })();
+</script>

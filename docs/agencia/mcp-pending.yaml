@@ -1,0 +1,209 @@
+# ─── MCPs Pendientes de Activación ─────────────────────────────────────
+# Actualizado: 2026-09-29 23:00 UTC-05
+# NO incluido en config.yaml activo (protegido por Hermes).
+# Para activar: pegar cada bloque bajo mcp_servers: en config.yaml
+# y setear las env vars correspondientes en C:\Users\sebas\AppData\Local\hermes\.env
+#
+# Ver docs/agencia/MCP-ACTIVATION.md para instrucciones paso a paso.
+# Ver docs/agencia/PAYMENTS-SEGMENTS.md para mapeo segmento × método.
+# Ver docs/agencia/ROUTING-RULES.md para lógica de smart routing.
+
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║ MCPs DE INVESTIGACIÓN Y MENSAJERÍA                                   ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+
+# ── Exa (research semántica) ───────────────────────────────────────────
+# ✅ LISTO: EXA_API_KEY ya existe en .env
+# Comando: hosted remote (no instala nada local)
+exa:
+  command: npx
+  args:
+    - -y
+    - mcp-remote
+    - https://mcp.exa.ai/mcp
+  env:
+    EXA_API_KEY: ${EXA_API_KEY}
+  enabled: true
+
+# ── Wompi — Fortaleza Colombia ─────────────────────────────────────────
+# ❌ PENDIENTE: signup en comercios.wompi.co
+# Métodos: PSE, Nequi, Botón Bancolombia, tarjeta débito/crédito
+# Segmentos: Empresas B2B colombianas, alto valor COP, gobierno
+# Docs: https://docs.wompi.co/
+wompi:
+  command: npx
+  args:
+    - -y
+    - '@codespar/mcp-wompi'
+  env:
+    WOMPI_PUBLIC_KEY: ${WOMPI_PUBLIC_KEY}
+    WOMPI_PRIVATE_KEY: ${WOMPI_PRIVATE_KEY}
+    WOMPI_EVENTS_KEY: ${WOMPI_EVENTS_KEY}
+  enabled: false  # cambiar a true después de poblar .env
+
+# ── MercadoPago — Cobertura LATAM universal ────────────────────────────
+# ✅ LISTO: signup gratuito, sandbox inmediato
+# Métodos: Nequi, Daviplata, PSE, Efecty, Baloto, tarjeta, Pix, SPEI, OXXO, Yape
+# Segmentos: TODOS los colombianos bancarizados + no bancarizados
+# Docs: https://www.mercadopago.com.co/developers/en/docs/ai-resources
+mercadopago:
+  command: npx
+  args:
+  - -y
+  - '@codespar/mcp-mercado-pago'
+  env:
+      MERCADOPAGO_ACCESS_TOKEN: ${MERCADOPAGO_ACCESS_TOKEN}
+  enabled: false
+# Alternativa hosted oficial: https://mcp.mercadopago.com/mcp
+
+# ── Stripe — Internacional + suscripciones USD ──────────────────────────
+# ✅ LISTO: signup en dashboard.stripe.com
+# Métodos: Tarjeta global, ACH, SEPA, Klarna, Apple/Google Pay, USDC
+# Segmentos: USA/EU/UK, suscripciones, freelancers recibiendo USD
+# Docs: https://docs.stripe.com/mcp
+stripe:
+  command: npx
+  args:
+  - -y
+  - mcp-remote
+  - https://mcp.stripe.com
+  env:
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+  enabled: false
+
+# ── Asaas — Brasil profundo (Pix + Boleto) ─────────────────────────────
+# ❌ PENDIENTE: requiere CNPJ o CPF
+# Métodos: Pix (44% e-commerce BR), Boleto, cartão parcelado, recorrente
+# Segmentos: Empresas BR, freelancers BR, e-commerce BR
+# Docs: https://docs.asaas.com/
+asaas:
+  command: npx
+  args:
+  - -y
+  - '@codespar/mcp-asaas'
+  env:
+      ASAAS_API_KEY: ${ASAAS_API_KEY}
+  enabled: false
+
+# ── Coinbase Commerce — USDC/crypto sin fricción ───────────────────────
+# ❌ PENDIENTE: API key + wallet
+# Métodos: USDC (Base, Ethereum, Polygon), BTC, ETH
+# Segmentos: Clientes crypto-friendly, freelancers recibiendo stablecoins
+# Docs: https://commerce.coinbase.com/docs/
+coinbase-commerce:
+  command: npx
+  args:
+  - -y
+  - '@coinbase/commerce-mcp'
+  env:
+      COINBASE_COMMERCE_API_KEY: ${COINBASE_COMMERCE_API_KEY}
+  enabled: false
+
+# ── Payoneer — Freelancers recibiendo USD/EUR global ──────────────────
+# ❌ PENDIENTE: verificación identidad + bancaria
+# Métodos: Recibir USD/EUR/GBP de clientes globales, payouts a banco local
+# Segmentos: Freelancers CO→US/EU, agencies exportadoras de servicios
+# Docs: https://developer.payoneer.com/
+payoneer:
+  command: npx
+  args:
+  - -y
+  - '@codespar/mcp-payoneer'
+  env:
+      PAYONEER_CLIENT_ID: ${PAYONEER_CLIENT_ID}
+      PAYONEER_CLIENT_SECRET: ${PAYONEER_CLIENT_SECRET}
+  enabled: false
+
+# ── Wise — FX mid-market (mejor rate para transferencias) ──────────────
+# ❌ PENDIENTE: signup + verificación
+# Métodos: Transferencias multi-moneda con rate real, multi-currency account
+# Segmentos: Freelancers recibiendo >$1k/mes, agencies con costos EUR
+# Docs: https://docs.wise.com/
+wise:
+  command: npx
+  args:
+  - -y
+  - mcp-remote
+  - https://mcp.wise.com/v1/mcp
+  env:
+      WISE_API_TOKEN: ${WISE_API_TOKEN}
+  enabled: false
+
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║ TIER 3 — ENTERPRISE (solo con clientes corporativos grandes)         ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+# dLocal   → @codespar/mcp-dlocal    (cross-border LATAM)
+# Khipu    → @codespar/mcp-khipu     (Chile Webpay/transferencias)
+# Rapyd    → @codespar/mcp-rapyd     (100+ países unified)
+# Adyen    → @codespar/mcp-adyen     (enterprise global)
+# Ver https://github.com/codespar/mcp-dev-latam/tree/main/packages/payments
+
+# ── 3. WhatsApp Business Cloud API ──────────────────────────────────────
+# ❌ PENDIENTE: requiere cuenta Meta Business + WABA + phone number
+# Wizard oficial: hermes whatsapp-cloud (interactivo)
+# Pasos:
+#   1. Crear app en https://developers.facebook.com/apps/
+#   2. Agregar producto "WhatsApp" → API Setup
+#   3. Obtener: WHATSAPP_TOKEN (system user permanent), WHATSAPP_PHONE_ID,
+#      WHATSAPP_BUSINESS_ID (WABA ID)
+#   4. Webhook público obligatorio para recibir mensajes (usar
+#      cloudflared tunnel o deploy en Cloudflare Workers)
+#   5. Correr: hermes whatsapp-cloud → sigue el wizard
+#   6. El wizard modifica config.yaml automáticamente
+whatsapp-cloud:
+  command: npx
+  args:
+    - -y
+    - wbmcp@latest
+  env:
+    WHATSAPP_TOKEN: ${WHATSAPP_TOKEN}
+    WHATSAPP_PHONE_ID: ${WHATSAPP_PHONE_ID}
+    WHATSAPP_BUSINESS_ID: ${WHATSAPP_BUSINESS_ID}
+  enabled: false
+
+# ── 4. Apify (scraping + 8000+ actors) ─────────────────────────────────
+# ❌ PENDIENTE: requiere APIFY_TOKEN
+#   1. Crear cuenta en https://apify.com (free tier $5/mes)
+#   2. Settings → Integrations → copiar APIFY_TOKEN (empieza con apify_api_)
+#   3. Agregar APIFY_TOKEN=apify_api_xxx al .env
+#   4. Alternativa hosted con OAuth: https://mcp.apify.com (más features)
+apify:
+  command: npx
+  args:
+    - -y
+    - '@apify/actors-mcp-server'
+    - '--tools'
+    - 'actors,docs,apify/rag-web-browser,apify/web-fetch'
+  env:
+    APIFY_TOKEN: ${APIFY_TOKEN}
+  enabled: false
+
+# ── 5. Sentry (QA + monitoring producción) ──────────────────────────────
+# ❌ PENDIENTE: requiere OAuth con cuenta Sentry en primer uso
+# Sentry usa hosted MCP con OAuth — no requiere npm local
+# Pasos:
+#   1. Crear org/proyecto en https://sentry.io
+#   2. Pegar bloque abajo en config.yaml con enabled: true
+#   3. Primer tool call dispara flujo OAuth → autorizar en browser
+sentry:
+  command: npx
+  args:
+    - -y
+    - mcp-remote
+    - https://mcp.sentry.dev/mcp
+  enabled: false
+
+# ── 6. Cloudflare (deploy Workers) ──────────────────────────────────────
+# ⚠️ NO es un MCP npm — es plataforma para deployar tu PROPIO MCP server
+# Cuando lo necesites:
+#   1. npm create cloudflare@latest -- my-mcp --template=cloudflare/ai/demos/remote-mcp-authless
+#   2. Editar src/index.ts y agregar tools custom
+#   3. npm run deploy → URL: my-mcp.<cuenta>.workers.dev/sse
+#   4. Pegar abajo con la URL resultante:
+# cloudflare:
+#   command: npx
+#   args:
+#     - -y
+#     - mcp-remote
+#     - https://my-mcp.<cuenta>.workers.dev/sse
+#   enabled: false

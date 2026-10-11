@@ -1,0 +1,26 @@
+name = "nx-studio"
+compatibility_date = "2025-10-01"
+compatibility_flags = ["nodejs_compat"]
+# Para Pages, no se necesita `main` — el runtime lo detecta desde dist/_worker.js
+# automáticamente. Sí necesitamos la lista de páginas (público) desde `dist/`.
+
+[vars]
+BETTER_AUTH_URL = "https://nx-studio.pages.dev"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nx-studio-db"
+database_id = "PLACEHOLDER-replace-after-creation"
+migrations_dir = "drizzle/migrations"
+
+[observability]
+enabled = true
+
+# .dev.vars (gitignored) se usa para secretos locales:
+#   BETTER_AUTH_SECRET=...
+#   RESEND_API_KEY=...
+#   CONTACT_EMAIL=...
+#   GOOGLE_CLIENT_ID=...
+#   GOOGLE_CLIENT_SECRET=...
+# En producción: wrangler pages secret put <NAME> --project-name nx-studio
+

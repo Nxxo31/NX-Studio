@@ -4,6 +4,8 @@ import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
 import { projects } from "../../data/catalog";
 
+export const prerender = true;
+
 // SSG: una página HTML por cada proyecto en `catalog.ts`.
 // Si el slug no existe, redirect al índice (defensa en profundidad).
 export function getStaticPaths() {

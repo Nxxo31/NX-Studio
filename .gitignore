@@ -17,6 +17,14 @@ pnpm-debug.log*
 .env.production
 .env.local
 .env.*.local
+.dev.vars
+
+# Cloudflare local state (Miniflare / wrangler)
+.wrangler/
+
+# Seed SQLs generated (regenerate with npm run seed:proyectos / seed:templates)
+_seed-*.sql
+
 
 # macOS-specific files
 .DS_Store

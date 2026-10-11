@@ -1,0 +1,105 @@
+---
+/**
+ * TexturedPanel — fondo texturizado para secciones/cards.
+ *
+ * Variantes:
+ *   - 'dot-grid'    : patrón de puntos (1px cada 24px) — minimal, técnico
+ *   - 'line-grid'  : grilla de líneas (56px) — el divisor del sitio
+ *   - 'mesh'       : mesh gradient SVG (3 blobs de color) — hero / destacados
+ *   - 'noise'      : sólo el grain noise (sin grid) — efecto papel impreso
+ *   - 'paper'      : dot-grid denso + grain — look editorial
+ *
+ * Props:
+ *   variant: nombre de la variante (default 'dot-grid')
+ *   intensity: 'subtle' | 'normal' | 'strong' (default 'normal')
+ *   as: 'div' | 'section' | 'aside' | 'article' (default 'div')
+ *   class: clases extra del wrapper
+ */
+
+interface Props {
+  variant?: 'dot-grid' | 'line-grid' | 'mesh' | 'noise' | 'paper';
+  intensity?: 'subtle' | 'normal' | 'strong';
+  as?: 'div' | 'section' | 'aside' | 'article';
+  class?: string;
+}
+
+const {
+  variant = 'dot-grid',
+  intensity = 'normal',
+  as = 'div',
+  class: extraClass = '',
+} = Astro.props;
+
+const opacityByIntensity: Record<string, { grid: number; noise: number; mesh: number }> = {
+  subtle: { grid: 0.30, noise: 0.10, mesh: 0.20 },
+  normal: { grid: 0.60, noise: 0.25, mesh: 0.35 },
+  strong: { grid: 1.00, noise: 0.40, mesh: 0.55 },
+};
+const op = opacityByIntensity[intensity] ?? opacityByIntensity.normal;
+
+const Tag = as as keyof HTMLElementTagNameMap;
+---
+
+{variant === 'dot-grid' && (
+  <Tag class:list={['relative', extraClass]}>
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0"
+      style={`opacity:${op.grid}; background-image: radial-gradient(circle, var(--nx-texture-color) 1px, transparent 1.5px); background-size: 24px 24px;`}
+    ></div>
+    <slot />
+  </Tag>
+)}
+
+{variant === 'line-grid' && (
+  <Tag class:list={['relative', extraClass]}>
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0"
+      style={`opacity:${op.grid}; background-image: linear-gradient(to right, var(--nx-texture-color) 1px, transparent 1px), linear-gradient(to bottom, var(--nx-texture-color) 1px, transparent 1px); background-size: 56px 56px; mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 80%);`}
+    ></div>
+    <slot />
+  </Tag>
+)}
+
+{variant === 'mesh' && (
+  <Tag class:list={['relative overflow-hidden', extraClass]}>
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0"
+      style={`opacity:${op.mesh}; background:
+        radial-gradient(at 20% 20%, var(--nx-primary-glow-soft) 0%, transparent 50%),
+        radial-gradient(at 80% 0%, var(--nx-info-bg) 0%, transparent 50%),
+        radial-gradient(at 80% 80%, var(--nx-primary-glow-soft) 0%, transparent 50%),
+        radial-gradient(at 20% 80%, var(--nx-info-bg) 0%, transparent 50%);`}
+    ></div>
+    <slot />
+  </Tag>
+)}
+
+{variant === 'noise' && (
+  <Tag class:list={['relative', extraClass]}>
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0"
+      style={`opacity:${op.noise}; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.10'/></svg>");`}
+    ></div>
+    <slot />
+  </Tag>
+)}
+
+{variant === 'paper' && (
+  <Tag class:list={['relative', extraClass]}>
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0"
+      style={`opacity:${op.grid}; background-image: radial-gradient(circle, var(--nx-texture-color) 1px, transparent 1.5px); background-size: 18px 18px;`}
+    ></div>
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0"
+      style={`opacity:${op.noise}; background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/></svg>");`}
+    ></div>
+    <slot />
+  </Tag>
+)}

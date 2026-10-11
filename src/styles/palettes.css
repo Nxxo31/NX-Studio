@@ -1,71 +1,17 @@
 /* ============================================================
-   NX-Studio · Brand Palettes v2
-   4 sistemas empresariales completos que extienden el lava core.
-   Aplican la filosofía Linear/Vercel: base neutra + acento controlado + semánticos.
-   Activar con `data-palette="..."` en <html> o <body>.
+   NX-Studio · Brand Palettes v3
+   Solo 2 paletas: steel-indigo (dark, default) + azure-light (light).
+   Activar con `data-palette="azure-light"` en <html>; sin atributo = dark.
+   Auto-respecta prefers-color-scheme en la primera visita (Base.astro).
    ============================================================ */
 
 /* ============================================================
-   PALETTE 01 — LAVA PURE (default recomendado)
-   Tu identidad actual expandida. Lava como acento, neutros cálidos.
-   Ref: Replit (orange accent + warm grays), Nium (monochrome + 1 accent).
+   PALETTE 01 — STEEL INDIGO (default · dark)
+   Linear-inspired: lava como acento emocional, indigo como acento
+   corporativo. Backgrounds navy con grilla sutil + grain noise.
    ============================================================ */
-[data-palette="lava-pure"] {
-  /* Primary */
-  --nx-primary:        #ff4500;
-  --nx-primary-soft:   #ff6a00;
-  --nx-primary-deep:   #8b0000;
-  --nx-primary-glow:   rgba(255, 69, 0, 0.55);
-  --nx-primary-glow-soft: rgba(255, 69, 0, 0.18);
-
-  /* Secondary (ember brasas) */
-  --nx-secondary:      #d97706;   /* ambar/ember */
-  --nx-secondary-soft: #f59e0b;
-  --nx-secondary-deep: #92400e;
-
-  /* Accent (magenta para highlights raros) */
-  --nx-accent:         #c026d3;   /* purple-magenta para edge cases */
-  --nx-accent-soft:    #e879f9;
-
-  /* Backgrounds (warm-tinted darks) */
-  --nx-bg:             #0a0608;
-  --nx-surface:        #14090c;
-  --nx-surface-raised: #1f0e10;
-  --nx-surface-overlay: rgba(20, 9, 12, 0.92);
-
-  /* Borders */
-  --nx-border:         rgba(255, 90, 30, 0.12);
-  --nx-border-strong:  rgba(255, 90, 30, 0.28);
-
-  /* Text (warm cream) */
-  --nx-text:           #f5e6d3;
-  --nx-text-muted:     #a89580;
-  --nx-text-dim:       #5a4a40;
-  --nx-text-on-light:  #0a0608;
-
-  /* Semantic (calibrados para dark + warm) */
-  --nx-success:        #10b981;
-  --nx-success-bg:     rgba(16, 185, 129, 0.12);
-  --nx-warn:           #f59e0b;
-  --nx-warn-bg:        rgba(245, 158, 11, 0.12);
-  --nx-danger:         #ef4444;
-  --nx-danger-bg:      rgba(239, 68, 68, 0.12);
-  --nx-info:           #ff6a00;     /* info = lava edge (mismo sistema) */
-  --nx-info-bg:        rgba(255, 106, 0, 0.12);
-
-  /* Chart/data viz */
-  --nx-chart-1:        #ff4500;
-  --nx-chart-2:        #d97706;
-  --nx-chart-3:        #f5e6d3;
-  --nx-chart-4:        #c026d3;
-}
-
-/* ============================================================
-   PALETTE 02 — STEEL INDIGO (Linear-inspired)
-   Lava se mantiene como acento emocional, indigo como acento corporativo.
-   Ref: Linear (deep-dark + indigo accent), Stripe (precision + indigo).
-   Uso: si quieres sentir "más corporativo/fintech" sin perder la lava.
-   ============================================================ */
+:root,
+:root[data-palette="steel-indigo"],
 [data-palette="steel-indigo"] {
   /* Primary lava (conservado como acento emocional) */
   --nx-primary:        #ff4500;
@@ -74,12 +20,12 @@
   --nx-primary-glow:   rgba(255, 69, 0, 0.55);
   --nx-primary-glow-soft: rgba(255, 69, 0, 0.18);
 
-  /* Secondary indigo (Linear-style) */
-  --nx-secondary:      #5e6ad2;
-  --nx-secondary-soft: #818cf8;
+  /* Secondary indigo — bumped to #7c84e8 para WCAG AA sobre navy */
+  --nx-secondary:      #7c84e8;
+  --nx-secondary-soft: #a5acef;
   --nx-secondary-deep: #4338ca;
 
-  /* Accent coral (lava) */
+  /* Accent coral */
   --nx-accent:         #ff6a00;
   --nx-accent-soft:    #ffa07a;
 
@@ -90,8 +36,8 @@
   --nx-surface-overlay: rgba(21, 23, 42, 0.92);
 
   /* Borders (subtle blue) */
-  --nx-border:         rgba(94, 106, 210, 0.12);
-  --nx-border-strong:  rgba(94, 106, 210, 0.28);
+  --nx-border:         rgba(124, 132, 232, 0.12);
+  --nx-border-strong:  rgba(124, 132, 232, 0.28);
 
   /* Text (cool white) */
   --nx-text:           #f1f1f4;
@@ -99,132 +45,189 @@
   --nx-text-dim:       #4a4a60;
   --nx-text-on-light:  #0b0b14;
 
-  /* Semantic (calibrados para dark + cool) */
+  /* Semantic */
   --nx-success:        #22c55e;
   --nx-success-bg:     rgba(34, 197, 94, 0.12);
   --nx-warn:           #f59e0b;
   --nx-warn-bg:        rgba(245, 158, 11, 0.12);
   --nx-danger:         #f87171;
   --nx-danger-bg:      rgba(248, 113, 113, 0.12);
-  --nx-info:           #5e6ad2;
-  --nx-info-bg:        rgba(94, 106, 210, 0.12);
+  --nx-info:           #7c84e8;
+  --nx-info-bg:        rgba(124, 132, 232, 0.12);
 
   /* Chart/data viz */
-  --nx-chart-1:        #5e6ad2;
-  --nx-chart-2:        #818cf8;
+  --nx-chart-1:        #7c84e8;
+  --nx-chart-2:        #a5acef;
   --nx-chart-3:        #ff6a00;
   --nx-chart-4:        #22c55e;
+
+  /* Textura de fondo (ver #nx-texture en global.css) */
+  --nx-texture-color:  rgba(124, 132, 232, 0.04);
+  --nx-texture-accent: rgba(255, 90, 30, 0.05);
+  --nx-texture-grain-opacity: 0.30;
+  --nx-texture-vignette: radial-gradient(ellipse 90% 70% at 50% 50%, transparent 20%, rgba(10, 6, 8, 0.55) 70%, rgba(10, 6, 8, 0.85) 100%);
 }
 
 /* ============================================================
-   PALETTE 03 — OBSIDIAN + TEAL (Vercel-inspired)
-   Monochrome radical con teal como único acento. Lava se reserva
-   para CTAs heroicos únicamente.
-   Ref: Vercel (black/white + accent opcional), Nium (vibrant minimal).
-   Uso: cuando quieres look "enterprise engineering tool".
+   PALETTE 02 — AZURE LIGHT (light · B2B)
+   Light mode con azul como acento. Linear/Stripe/Vercel landing.
+   Backgrounds blancos con grilla sutil azul + grain noise muy tenue.
    ============================================================ */
-[data-palette="obsidian-teal"] {
-  /* Primary lava (reservado para hero CTAs) */
-  --nx-primary:        #ff4500;
-  --nx-primary-soft:   #ff6a00;
-  --nx-primary-deep:   #8b0000;
-  --nx-primary-glow:   rgba(255, 69, 0, 0.45);
-  --nx-primary-glow-soft: rgba(255, 69, 0, 0.15);
+:root[data-palette="azure-light"],
+[data-palette="azure-light"] {
+  /* Primary — sky blue (trust signal primario, B2B) */
+  --nx-primary:        #2563eb;
+  --nx-primary-soft:   #3b82f6;
+  --nx-primary-deep:   #1d4ed8;
+  --nx-primary-glow:   rgba(37, 99, 235, 0.45);
+  --nx-primary-glow-soft: rgba(37, 99, 235, 0.12);
 
-  /* Secondary teal (Vercel "blue" pero teal) */
-  --nx-secondary:      #14b8a6;
-  --nx-secondary-soft: #2dd4bf;
-  --nx-secondary-deep: #0f766e;
+  /* Secondary — indigo para acentos secundarios / hover */
+  --nx-secondary:      #6366f1;
+  --nx-secondary-soft: #818cf8;
+  --nx-secondary-deep: #4338ca;
 
-  /* Accent amber (subtle highlight) */
-  --nx-accent:         #f59e0b;
-  --nx-accent-soft:    #fbbf24;
+  /* Accent — cyan para highlights raros */
+  --nx-accent:         #06b6d4;
+  --nx-accent-soft:    #67e8f9;
 
-  /* Backgrounds (pure monochrome) */
-  --nx-bg:             #000000;
-  --nx-surface:        #0a0a0a;
-  --nx-surface-raised: #171717;
-  --nx-surface-overlay: rgba(10, 10, 10, 0.92);
+  /* Backgrounds (white scale, levemente cool) */
+  --nx-bg:             #ffffff;
+  --nx-surface:        #f8fafc;
+  --nx-surface-raised: #f1f5f9;
+  --nx-surface-overlay: rgba(255, 255, 255, 0.96);
 
-  /* Borders (pure gray ramp) */
-  --nx-border:         rgba(255, 255, 255, 0.08);
-  --nx-border-strong:  rgba(255, 255, 255, 0.16);
+  /* Borders (sutiles, azul-tinted) */
+  --nx-border:         rgba(37, 99, 235, 0.10);
+  --nx-border-strong:  rgba(37, 99, 235, 0.22);
 
-  /* Text (pure white scale) */
-  --nx-text:           #fafafa;
-  --nx-text-muted:     #a3a3a3;
-  --nx-text-dim:       #525252;
-  --nx-text-on-light:  #0a0a0a;
+  /* Text (slate oscuro, contraste WCAG AA sobre blanco) */
+  --nx-text:           #0f172a;
+  --nx-text-muted:     #475569;
+  --nx-text-dim:       #64748b;
+  --nx-text-on-light:  #ffffff;
 
-  /* Semantic (Vercel-style, menos saturados) */
-  --nx-success:        #10b981;
-  --nx-success-bg:     rgba(16, 185, 129, 0.10);
-  --nx-warn:           #f59e0b;
-  --nx-warn-bg:        rgba(245, 158, 11, 0.10);
-  --nx-danger:         #ef4444;
-  --nx-danger-bg:      rgba(239, 68, 68, 0.10);
-  --nx-info:           #2dd4bf;
-  --nx-info-bg:        rgba(45, 212, 191, 0.10);
+  /* Semantic (calibrados para light) */
+  --nx-success:        #16a34a;
+  --nx-success-bg:     rgba(22, 163, 74, 0.10);
+  --nx-warn:           #d97706;
+  --nx-warn-bg:        rgba(217, 119, 6, 0.10);
+  --nx-danger:         #dc2626;
+  --nx-danger-bg:      rgba(220, 38, 38, 0.10);
+  --nx-info:           #2563eb;
+  --nx-info-bg:        rgba(37, 99, 235, 0.10);
 
   /* Chart/data viz */
-  --nx-chart-1:        #2dd4bf;
-  --nx-chart-2:        #fafafa;
-  --nx-chart-3:        #ff6a00;
-  --nx-chart-4:        #f59e0b;
+  --nx-chart-1:        #2563eb;
+  --nx-chart-2:        #6366f1;
+  --nx-chart-3:        #06b6d4;
+  --nx-chart-4:        #16a34a;
+
+  /* Tailwind v4 --color-nx-* overrides */
+  --color-nx-bg:       #ffffff;
+  --color-nx-surface:  #f8fafc;
+  --color-nx-raised:   #f1f5f9;
+  --color-nx-text:     #0f172a;
+  --color-nx-muted:    #475569;
+  --color-nx-dim:      #64748b;
+  --color-nx-primary:  #2563eb;
+  --color-nx-accent:   #6366f1;
+  --color-nx-border:   rgba(37, 99, 235, 0.10);
+  --color-nx-border-strong: rgba(37, 99, 235, 0.22);
+
+  /* Textura de fondo (light variant) — valores SUBIDOS para que el fondo
+     domine sobre los componentes. Grilla azul más visible, grain más
+     perceptible, vignette con tinte más fuerte. */
+  --nx-texture-color:  rgba(37, 99, 235, 0.10);   /* subido 0.045 → 0.10 */
+  --nx-texture-accent: rgba(37, 99, 235, 0.06);   /* subido 0.03 → 0.06 */
+  --nx-texture-grain-opacity: 0.28;               /* subido 0.15 → 0.28 */
+  /* Vignette con degradado azul/indigo en las esquinas para dar profundidad */
+  --nx-texture-vignette: radial-gradient(ellipse 90% 70% at 50% 50%, transparent 50%, rgba(37, 99, 235, 0.05) 80%, rgba(99, 102, 241, 0.10) 100%);
+  /* Color del blob decorativo (mesh) — más saturado para que destaque */
+  --nx-texture-blob-1: rgba(37, 99, 235, 0.08);
+  --nx-texture-blob-2: rgba(99, 102, 241, 0.06);
+  --nx-texture-blob-3: rgba(6, 182, 212, 0.05);
 }
 
 /* ============================================================
-   PALETTE 04 — DEEP NAVY + GOLD (fintech-corporate premium)
-   Navy como base (autoridad), gold como acento premium (confianza),
-   lava como acento de energía. Ref: Andela, Toptal, fintech premium.
-   Uso: cuando el target son corporativos grandes / enterprise contracts.
+   Overrides específicos para azure-light
+   Componentes que usan tokens hardcoded en global.css (lava-core, #btn,
+   #tag, scrollbar…) necesitan neutralización para verse bien sobre blanco.
    ============================================================ */
-[data-palette="navy-gold"] {
-  /* Primary lava (acento de energía) */
-  --nx-primary:        #ff4500;
-  --nx-primary-soft:   #ff6a00;
-  --nx-primary-deep:   #8b0000;
-  --nx-primary-glow:   rgba(255, 69, 0, 0.50);
-  --nx-primary-glow-soft: rgba(255, 69, 0, 0.16);
 
-  /* Secondary gold (premium trust) */
-  --nx-secondary:      #d4a574;
-  --nx-secondary-soft: #f5c451;
-  --nx-secondary-deep: #a37840;
+/* Bridge retrocompat */
+[data-palette="azure-light"] {
+  --lava-core: #2563eb;
+  --lava-edge: #2563eb;
+  --lava-deep: #1d4ed8;
+  --lava-glow: rgba(37, 99, 235, 0.25);
+  --lava-glow-soft: rgba(37, 99, 235, 0.10);
+  --bg-void: #ffffff;
+  --bg-ember: #f8fafc;
+}
 
-  /* Accent navy glow (CTAs secundarios) */
-  --nx-accent:         #3b82f6;
-  --nx-accent-soft:    #60a5fa;
+/* Botones primarios: texto blanco sobre bg azul (5.94:1 sobre #2563eb) */
+[data-palette="azure-light"] .lava-btn {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--nx-primary), var(--nx-primary-deep));
+}
+[data-palette="azure-light"] .lava-btn-ghost {
+  color: var(--nx-primary);
+  background: transparent;
+  border-color: var(--nx-primary);
+}
 
-  /* Backgrounds (deep navy tints) */
-  --nx-bg:             #0a0e1a;
-  --nx-surface:        #111827;
-  --nx-surface-raised: #1f2937;
-  --nx-surface-overlay: rgba(17, 24, 39, 0.92);
+/* Scrollbar light */
+[data-palette="azure-light"] ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+[data-palette="azure-light"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--nx-primary-soft), var(--nx-primary));
+  border-radius: 6px;
+}
 
-  /* Borders (subtle navy/gold) */
-  --nx-border:         rgba(212, 165, 116, 0.14);
-  --nx-border-strong:  rgba(212, 165, 116, 0.30);
+/* Badges legibles sobre blanco */
+[data-palette="azure-light"] .lava-tag {
+  color: var(--nx-primary);
+  background: var(--nx-info-bg);
+  border-left-color: var(--nx-primary);
+}
 
-  /* Text (warm ivory + gold highlights) */
-  --nx-text:           #faf7f0;
-  --nx-text-muted:     #b8a890;
-  --nx-text-dim:       #6b5d4e;
-  --nx-text-on-light:  #0a0e1a;
+/* Cards light — surface semi-transparente y sombras suaves para que
+   el fondo texturizado se透过. Sin backdrop-filter (caro en repintado
+   al cambiar tema — compromete fluidez del switch). */
+[data-palette="azure-light"] .lava-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.85));
+  border-color: rgba(37, 99, 235, 0.08);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+}
+[data-palette="azure-light"] .lava-card:hover {
+  border-color: rgba(37, 99, 235, 0.30);
+  box-shadow: 0 4px 12px -2px rgba(37, 99, 235, 0.10), 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+}
 
-  /* Semantic (premium fintech calibration) */
-  --nx-success:        #10b981;
-  --nx-success-bg:     rgba(16, 185, 129, 0.12);
-  --nx-warn:           #f59e0b;
-  --nx-warn-bg:        rgba(245, 158, 11, 0.12);
-  --nx-danger:         #ef4444;
-  --nx-danger-bg:      rgba(239, 68, 68, 0.12);
-  --nx-info:           #d4a574;
-  --nx-info-bg:        rgba(212, 165, 116, 0.12);
+/* Nav links light */
+[data-palette="azure-light"] .nav-link {
+  color: var(--color-nx-muted);
+}
+[data-palette="azure-light"] .nav-link:hover {
+  color: var(--nx-primary);
+  background: var(--nx-info-bg);
+}
+[data-palette="azure-light"] .nav-active {
+  color: var(--nx-primary);
+  background: var(--nx-info-bg);
+}
+[data-palette="azure-light"] .card-hover:hover {
+  border-color: var(--nx-primary);
+}
 
-  /* Chart/data viz */
-  --nx-chart-1:        #d4a574;
-  --nx-chart-2:        #ff6a00;
-  --nx-chart-3:        #faf7f0;
-  --nx-chart-4:        #3b82f6;
+/* Hairline + selection light */
+[data-palette="azure-light"] .hairline {
+  background: linear-gradient(90deg, transparent, var(--nx-primary), transparent);
+  opacity: 0.4;
+}
+[data-palette="azure-light"] ::selection {
+  background: rgba(37, 99, 235, 0.20);
+  color: #0f172a;
 }
