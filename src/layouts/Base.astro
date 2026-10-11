@@ -2,22 +2,39 @@
 import "../styles/global.css";
 import WebGLBackground from "../components/WebGLBackground.astro";
 import BackgroundDecor from "../components/BackgroundDecor.astro";
+import { getLocale, getT, localeUrl, LOCALES, DEFAULT_LOCALE } from "../i18n";
 
 interface Props {
   title?: string;
   description?: string;
 }
 
+const locale = getLocale(Astro);
+const t = getT(locale);
+
 const {
-  title = "NX-Studio — Software que escala contigo",
-  description = "Estudio de desarrollo LATAM. Arquitectura de software a medida, QA as a service, templates comprables. Cotizador interactivo.",
+  title = t("meta.defaultTitle"),
+  description = t("meta.defaultDescription"),
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://nxxo31.github.io").toString();
+const site = Astro.site ?? "https://nx-studio.pages.dev";
+// Canonical sin prefijo de locale para 'es' (prefixDefaultLocale=false).
+const barePath = (() => {
+  const seg = Astro.url.pathname.split("/")[1];
+  return seg === "en" || seg === "pt" || seg === "es"
+    ? Astro.url.pathname.slice(seg.length + 1) || "/"
+    : Astro.url.pathname;
+})();
+const canonical = new URL(localeUrl(barePath, locale), site).toString();
+// hreflang: una entrada por locale + x-default al default.
+const alternates = LOCALES.map((l) => ({
+  lang: l,
+  href: new URL(localeUrl(barePath, l), site).toString(),
+}));
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,6 +45,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://nxxo31.gith
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <link rel="icon" type="image/svg+xml" href="/NX-Studio/favicon.svg" />
     <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(localeUrl(barePath, DEFAULT_LOCALE), site).toString()} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />

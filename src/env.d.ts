@@ -26,5 +26,8 @@ interface ENV {
 type Runtime = import('@astrojs/cloudflare').Runtime<ENV>;
 
 declare namespace App {
-  interface Locals extends Runtime {}
+  interface Locals extends Runtime {
+    /** Locale activo del request, seteado por src/middleware.ts (memo #191). */
+    locale?: import('./i18n/country-map').Locale;
+  }
 }

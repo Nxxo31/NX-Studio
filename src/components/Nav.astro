@@ -1,24 +1,33 @@
 ---
 import Brand from './Brand.astro';
 import PaletteSwitcher from './PaletteSwitcher.astro';
+import { getLocale, getT, localeUrl } from '../i18n';
 
-const path = Astro.url.pathname;
+const locale = getLocale(Astro);
+const t = getT(locale);
+
+// Path actual sin prefijo de locale para comparativas de "activo".
+const rawPath = Astro.url.pathname;
+const seg = rawPath.split('/')[1];
+const path = (seg === 'en' || seg === 'pt' || seg === 'es') ? rawPath.slice(seg.length + 1) || '/' : rawPath;
 const base = '/NX-Studio';
 const isActive = (href: string) => {
-  if (href === `${base}/`) {
+  // href ya viene con prefijo de locale; comparamos contra el path "lógico".
+  const logicalHref = href.replace(new RegExp(`^${base}/(en|pt|es)`), base);
+  if (logicalHref === `${base}/`) {
     return path === `${base}/` || path === `${base}` || path === '/' || path === '/NX-Studio/';
   }
-  return path.startsWith(href);
+  return path.startsWith(logicalHref) || rawPath.startsWith(href);
 };
 
 const links = [
-  { href: `${base}/`,           label: 'Inicio' },
-  { href: `${base}/servicios/`, label: 'Servicios' },
-  { href: `${base}/productos/`, label: 'Productos' },
-  { href: `${base}/cotizador`,  label: 'Cotizador' },
-  { href: `${base}/templates`,  label: 'Templates' },
-  { href: `${base}/laboratorio`,label: 'Laboratorio' },
-  { href: `${base}/contacto`,   label: 'Licitar' },
+  { href: localeUrl('/',           locale), label: t('nav.inicio') },
+  { href: localeUrl('/servicios/', locale), label: t('nav.servicios') },
+  { href: localeUrl('/productos/', locale), label: t('nav.productos') },
+  { href: localeUrl('/cotizador',  locale), label: t('nav.cotizador') },
+  { href: localeUrl('/templates',  locale), label: t('nav.templates') },
+  { href: localeUrl('/laboratorio',locale), label: t('nav.laboratorio') },
+  { href: localeUrl('/contacto',   locale), label: t('nav.contacto') },
 ];
 ---
 
@@ -35,11 +44,11 @@ const links = [
       <li class="ml-2"><PaletteSwitcher /></li>
     </ul>
 
-    <a href={`${base}/contacto`} class="hidden md:inline-flex items-center gap-2 lava-btn" style="padding: 0.5rem 1.25rem;">
-      Pedir propuesta →
+    <a href={localeUrl('/contacto', locale)} class="hidden md:inline-flex items-center gap-2 lava-btn" style="padding: 0.5rem 1.25rem;">
+      {t('nav.cta')}
     </a>
 
-    <button id="mobile-toggle" class="md:hidden rounded-md border border-nx-border p-2" aria-label="Menu">
+    <button id="mobile-toggle" class="md:hidden rounded-md border border-nx-border p-2" aria-label={t('nav.menu')}>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <line x1="3" y1="6" x2="21" y2="6"></line>
         <line x1="3" y1="12" x2="21" y2="12"></line>

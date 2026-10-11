@@ -1,6 +1,9 @@
 name = "nx-studio"
-compatibility_date = "2025-10-01"
-compatibility_flags = ["nodejs_compat"]
+compatibility_date = "2026-10-01"
+# nodejs_compat activa un falso-positivo de isNode en workerd (astro#14511):
+# las rutas SSR devuelven "[object Object]". disable_nodejs_process_v2 evita
+# que el process nativo v2 quede expuesto antes del polyfill de unenv.
+compatibility_flags = ["nodejs_compat", "disable_nodejs_process_v2"]
 # Para Pages, no se necesita `main` — el runtime lo detecta desde dist/_worker.js
 # automáticamente. Sí necesitamos la lista de páginas (público) desde `dist/`.
 

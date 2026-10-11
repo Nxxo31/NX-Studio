@@ -11,6 +11,24 @@ export default defineConfig({
   site: 'https://nx-studio.pages.dev',
   output: 'server',
   trailingSlash: 'ignore',
+  // i18n auto-detect by location (memo #191): set ES (LATAM default) +
+  // EN (internacional) + PT (Brasil). prefixDefaultLocale=false → 'es' va
+  // sin prefijo; /en/* y /pt/* los maneja src/middleware.ts (rewrite interno).
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'en', 'pt'],
+    routing: {
+      prefixDefaultLocale: false,
+      // El redirect por geolocalización lo hace el middleware (cf-ipcountry
+      // → Accept-Language → 'es'); el router built-in no redirige.
+      redirectToDefaultLocale: false,
+      // Fallback nativo: /en/* y /pt/* sirven las rutas ES con la URL
+      // localizada (rewrite interno de Astro, status 200). El locale activo
+      // llega vía Astro.currentLocale.
+      fallbackType: 'rewrite',
+    },
+    fallback: { en: 'es', pt: 'es' },
+  },
   build: {
     inlineStylesheets: 'auto',
   },

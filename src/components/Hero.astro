@@ -1,6 +1,10 @@
 ---
 import { projects } from "../data/catalog";
 import ProjectPreview from "./ProjectPreview.astro";
+import { getLocale, getT, localeUrl } from "../i18n";
+
+const locale = getLocale(Astro);
+const t = getT(locale);
 
 const totalStack = Array.from(new Set(projects.flatMap((p) => p.stack))).length;
 
@@ -18,46 +22,45 @@ const heroProject = projects.find((p) => p.slug === "nexocore")!;
         <!-- Status badge -->
         <div class="reveal inline-flex items-center gap-2 lava-tag">
           <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>online · disponibilidad Q4 2026</span>
+          <span>{t('hero.badge')}</span>
         </div>
 
         <!-- Headline -->
         <h1 class="reveal mt-6 font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.05] tracking-tight">
-          Software que <span class="text-lava">funciona</span>,
-          <span class="block mt-2">no solo se ve bien.</span>
+          {t('hero.headlineA')} <span class="text-lava">{t('hero.headlineEm')}</span>,
+          <span class="block mt-2">{t('hero.headlineB')}</span>
         </h1>
 
         <!-- Subtitulo dual: técnico + accesible -->
         <p class="reveal mt-6 max-w-2xl text-lg text-nx-muted leading-relaxed">
-          Estudio de desarrollo <b class="text-nx-text">LATAM-first</b>.
-          Construimos aplicaciones, QA y plantillas listas para producción.
-          Tú ves el código desde el día uno. Sin caja negra.
+          {t('hero.sub1')} <b class="text-nx-text">{t('hero.subStrong')}</b>.
+          {t('hero.sub2')}
         </p>
 
         <!-- Spec badges -->
         <div class="reveal mt-8 flex flex-wrap gap-2">
           <span class="lava-tag" style="background: transparent; border-left-color: var(--lava-edge); color: var(--lava-edge);">
-            11 productos OSS
+            {t('hero.chip1')}
           </span>
           <span class="lava-tag" style="background: transparent; border-left-color: var(--lava-edge); color: var(--lava-edge);">
-            24+ tecnologías
+            {t('hero.chip2')}
           </span>
           <span class="lava-tag" style="background: transparent; border-left-color: var(--lava-edge); color: var(--lava-edge);">
-            LATAM remote-first
+            {t('hero.chip3')}
           </span>
           <span class="lava-tag" style="background: transparent; border-left-color: var(--lava-edge); color: var(--lava-edge);">
-            Engagement flexible
+            {t('hero.chip4')}
           </span>
         </div>
 
         <!-- CTAs -->
         <div class="reveal mt-10 flex flex-wrap gap-3">
-          <a href="/NX-Studio/cotizador" class="lava-btn">
-            <span>Cotizar proyecto</span>
+          <a href={localeUrl('/cotizador', locale)} class="lava-btn">
+            <span>{t('hero.ctaPrimary')}</span>
             <span>→</span>
           </a>
-          <a href="/NX-Studio/productos" class="lava-btn lava-btn-ghost">
-            Ver productos OSS
+          <a href={localeUrl('/productos', locale)} class="lava-btn lava-btn-ghost">
+            {t('hero.ctaSecondary')}
           </a>
         </div>
 
@@ -65,15 +68,15 @@ const heroProject = projects.find((p) => p.slug === "nexocore")!;
         <div class="reveal mt-12 grid grid-cols-3 gap-6 border-t border-nx-border pt-6 max-w-2xl">
           <div>
             <div class="font-display text-3xl font-bold text-lava">{projects.length}</div>
-            <div class="mt-1 font-mono text-xs text-nx-dim">productos</div>
+            <div class="mt-1 font-mono text-xs text-nx-dim">{t('hero.stat1')}</div>
           </div>
           <div>
             <div class="font-display text-3xl font-bold text-lava">{totalStack}+</div>
-            <div class="mt-1 font-mono text-xs text-nx-dim">tecnologías</div>
+            <div class="mt-1 font-mono text-xs text-nx-dim">{t('hero.stat2')}</div>
           </div>
           <div>
             <div class="font-display text-3xl font-bold text-lava">4 sem</div>
-            <div class="mt-1 font-mono text-xs text-nx-dim">ciclo MVP</div>
+            <div class="mt-1 font-mono text-xs text-nx-dim">{t('hero.stat3')}</div>
           </div>
         </div>
       </div>
@@ -84,8 +87,8 @@ const heroProject = projects.find((p) => p.slug === "nexocore")!;
 
         <!-- Helper link -->
         <div class="mt-3 text-center">
-          <a href="/NX-Studio/productos" class="font-mono text-xs text-nx-dim hover:text-nx-text transition">
-            // ver los 11 productos OSS →
+          <a href={localeUrl('/productos', locale)} class="font-mono text-xs text-nx-dim hover:text-nx-text transition">
+            {t('hero.previewLink')}
           </a>
         </div>
       </div>

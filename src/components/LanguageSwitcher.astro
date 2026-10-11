@@ -1,0 +1,55 @@
+---
+import { getT, getLocale, localeUrl, type Locale } from '../i18n';
+import { LOCALE_COOKIE } from '../i18n/detect';
+
+const locale = getLocale(Astro);
+const t = getT(locale);
+
+// Path actual sin prefijo de locale, para regenerar links al cambiar idioma.
+const path = Astro.url.pathname;
+const seg = path.split('/')[1];
+const barePath =
+  (seg === 'en' || seg === 'pt' || seg === 'es') ? path.slice(seg.length + 1) || '/' : path;
+
+const options: Array<{ locale: Locale; label: string; href: string; current: boolean }> = [
+  { locale: 'es', label: t('langSwitcher.es'), href: barePath, current: locale === 'es' },
+  { locale: 'en', label: t('langSwitcher.en'), href: localeUrl(barePath, 'en'), current: locale === 'en' },
+  { locale: 'pt', label: t('langSwitcher.pt'), href: localeUrl(barePath, 'pt'), current: locale === 'pt' },
+];
+---
+
+<div class="flex items-center gap-2" data-lang-switcher data-cookie={LOCALE_COOKIE}>
+  <span class="font-mono text-xs uppercase tracking-widest text-nx-dim">{t('langSwitcher.label')}</span>
+  <ul class="flex items-center gap-1">
+    {options.map((o) => (
+      <li>
+        <a
+          href={o.href}
+          data-set-locale={o.locale}
+          hreflang={o.locale}
+          aria-current={o.current ? 'true' : undefined}
+          class:list={[
+            'rounded-md border px-2 py-1 font-mono text-xs transition',
+            o.current
+              ? 'border-[var(--lava-edge)] text-nx-text'
+              : 'border-nx-border text-nx-muted hover:text-nx-text',
+          ]}
+        >
+          {o.locale.toUpperCase()}
+        </a>
+      </li>
+    ))}
+  </ul>
+  <script>
+    // Persiste la elección manual en cookie (TTL 365d) sin bloquear la navegación.
+    document.querySelectorAll('[data-lang-switcher]').forEach((root) => {
+      const name = root.getAttribute('data-cookie')!;
+      root.querySelectorAll('a[data-set-locale]').forEach((a) => {
+        a.addEventListener('click', () => {
+          const v = a.getAttribute('data-set-locale');
+          document.cookie = `${name}=${v}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+        });
+      });
+    });
+  </script>
+</div>
