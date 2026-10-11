@@ -1,0 +1,761 @@
+{
+  "meta": {
+    "siteName": "NX-Studio",
+    "defaultTitle": "NX-Studio — Software que escala contigo",
+    "defaultDescription": "Estudio de desarrollo LATAM. Arquitectura de software a medida, QA as a service, templates comprables. Cotizador interactivo."
+  },
+  "nav": {
+    "inicio": "Inicio",
+    "servicios": "Servicios",
+    "productos": "Productos",
+    "cotizador": "Cotizador",
+    "templates": "Templates",
+    "laboratorio": "Laboratorio",
+    "contacto": "Licitar",
+    "cta": "Pedir propuesta →",
+    "menu": "Menú"
+  },
+  "hero": {
+    "badge": "online · disponibilidad Q4 2026",
+    "headlineA": "Software que",
+    "headlineEm": "funciona",
+    "headlineB": "no solo se ve bien.",
+    "sub1": "Estudio de desarrollo",
+    "subStrong": "LATAM-first",
+    "sub2": "Construimos aplicaciones, QA y plantillas listas para producción. Tú ves el código desde el día uno. Sin caja negra.",
+    "chip1": "11 productos OSS",
+    "chip2": "24+ tecnologías",
+    "chip3": "LATAM remote-first",
+    "chip4": "Engagement flexible",
+    "ctaPrimary": "Cotizar proyecto",
+    "ctaSecondary": "Ver productos OSS",
+    "stat1": "productos",
+    "stat2": "tecnologías",
+    "stat3": "ciclo MVP",
+    "previewLink": "// ver los 11 productos OSS →"
+  },
+  "footer": {
+    "tagline": "Estudio de software LATAM. Producto + servicio. Bots de trading, ERP multi-tenant, auditoría electoral, experiencias 3D y más. Neiva, Colombia · Servicio remoto global.",
+    "author": "Sebastian Velasco Ocampo · Full-stack + IA",
+    "colSitio": "Sitio",
+    "linkCotizador": "Cotizador",
+    "linkLaboratorio": "Laboratorio IA",
+    "linkContacto": "Licitar / Contacto",
+    "linkDocs": "Docs · cómo trabajamos",
+    "colContacto": "Contacto directo",
+    "built": "Built with Astro + Tailwind + ⚡ Hermes",
+    "langLabel": "Idioma"
+  },
+  "langSwitcher": {
+    "label": "Idioma",
+    "es": "Español",
+    "en": "English",
+    "pt": "Português"
+  },
+  "common": {
+    "verMas": "Ver más",
+    "volver": "Volver",
+    "enviar": "Enviar",
+    "cargando": "Cargando…"
+  },
+  "pages": {
+    "index": {
+      "title": "NX-Studio — Software que escala contigo",
+      "description": "Estudio de desarrollo LATAM. Arquitectura de software a medida, QA as a service, templates comprables. Cotizador interactivo.",
+      "services": {
+        "tag": "// servicios",
+        "headingA": "Lo que",
+        "headingEm": "hacemos",
+        "headingB": "por ti",
+        "sub": "Cuatro líneas de trabajo. Cada una con un resultado concreto que puedes explicar a tu equipo.",
+        "items": {
+          "0": {
+            "title": "Aplicaciones a medida",
+            "resultado": "Sistemas web y móviles que escalan con tu negocio.",
+            "precio": "Desde $5,000"
+          },
+          "1": {
+            "title": "Testing y QA",
+            "resultado": "Tu software validado antes de que lo use tu cliente.",
+            "precio": "Desde $3,000/sprint"
+          },
+          "2": {
+            "title": "IA aplicada",
+            "resultado": "Chatbots y agentes que entregan valor real, no demos.",
+            "precio": "Desde $4,000"
+          }
+        },
+        "cta": "Ver todos los servicios →"
+      },
+      "trust": {
+        "tag": "// por qué nosotros",
+        "headingA": "Razones",
+        "headingEm": "concretas",
+        "headingB": ", no promesas",
+        "sub": "Si algo de esto no te convence, te recomendamos otro estudio. Preferimos perder un cliente a entregar algo mediocre.",
+        "items": {
+          "0": {
+            "label": "productos de código abierto publicados en GitHub"
+          },
+          "1": {
+            "label": "tecnologías en stack verificable"
+          },
+          "2": {
+            "label": "equipo remoto-first, timezone UTC-05"
+          },
+          "3": {
+            "label": "caja negra: ves el código desde el día uno"
+          }
+        }
+      },
+      "process": {
+        "tag": "// proceso",
+        "headingA": "De la idea al",
+        "headingEm": "código en producción",
+        "sub": "Tres pasos. Sin jerga, sin sorpresas en la factura.",
+        "items": {
+          "0": {
+            "titulo": "Cuéntanos qué necesitas",
+            "detalle": "30 minutos de llamada. Sin formulario interminable."
+          },
+          "1": {
+            "titulo": "Recibe una propuesta clara",
+            "detalle": "Alcance, tiempo y rango de inversión. Sin sorpresas."
+          },
+          "2": {
+            "titulo": "Construimos y entregamos",
+            "detalle": "Sprints cortos, demo semanal, código abierto desde el inicio."
+          }
+        }
+      },
+      "start": {
+        "tag": "// siguiente paso",
+        "headingA": "Elige cómo quieres",
+        "headingEm": "empezar",
+        "optionA": {
+          "tag": "// opción A · self-service",
+          "title": "Calcula tu presupuesto",
+          "desc": "Selecciona lo que necesitas. El rango de inversión se actualiza al instante. Sin registro, sin compromiso.",
+          "cta": "Abrir cotizador →"
+        },
+        "optionB": {
+          "tag": "// opción B · guiado",
+          "title": "Pide una propuesta formal",
+          "desc": "Cuéntanos tu proyecto. Te enviamos alcance detallado, mockup y opciones de agendamiento en menos de 24h.",
+          "cta": "Iniciar conversación →"
+        }
+      }
+    },
+    "servicios": {
+      "title": "Servicios — NX-Studio",
+      "description": "Desarrollo a medida, QA as a service y consultoría de arquitectura. Delivery LATAM-first con estándares internacionales.",
+      "headingA": "Servicios",
+      "headingEm": "especializados",
+      "sub": "Capacidades core para construir productos digitales y servicios verticales de calidad profesional para validar software antes de que lo use tu cliente.",
+      "coreTitle": "Capacidades core",
+      "core": {
+        "0": {
+          "tag": "// arquitectura",
+          "desc": "Diseño y construcción de sistemas que escalan con tu negocio. Web, mobile, ERP, integraciones."
+        },
+        "1": {
+          "tag": "// ia",
+          "desc": "Chatbots, RAG, agentes, automatización con LLMs. Soluciones que entregan valor real, no demos."
+        }
+      },
+      "specializedTitle": "Servicios especializados",
+      "items": {
+        "testing": {
+          "tag": "// qa.v1",
+          "title": "Testing & QA",
+          "desc": "QA as a service con tiers Foundation / Accelerator / Strategic. Manual + automation, performance, accesibilidad WCAG 2.1 AA, security pen-testing."
+        }
+      },
+      "viewDetail": "Ver detalle →",
+      "ctaBox": {
+        "title": "¿No estás seguro cuál encaja?",
+        "desc": "Usa el cotizador para obtener un rango indicativo según las capacidades que necesitas, o contáctanos directamente para una sesión de descubrimiento gratuita.",
+        "primary": "Abrir cotizador",
+        "secondary": "Sesión de descubrimiento"
+      }
+    },
+    "templates": {
+      "title": "Templates — NX-Studio",
+      "description": "Plantillas de software listas para producción: compra, despliega y personaliza.",
+      "headingA": "Templates",
+      "headingEm": "comprables",
+      "sub": "Starters production-ready para desafíos comunes. Código MIT-licensed, one-time payment, sin royalties. Compra el template y lánzalo en menos de 1 sprint.",
+      "featuredTitle": "Destacados",
+      "othersTitle": "Otros",
+      "viewDetail": "Ver detalle →",
+      "faq": {
+        "title": "Cómo funciona la compra",
+        "steps": {
+          "0": "Seleccionas el template y nos contactas.",
+          "1": "Te enviamos el repo privado + invoice (one-time).",
+          "2": "Setup guiado: deploy, env vars, dominio, integraciones.",
+          "3": "Handover con Q&A de 60 minutos."
+        },
+        "cta": "Iniciar compra →"
+      },
+      "items": {
+        "landing-converter": {
+          "name": "Landing Converter",
+          "tagline": "Landing de alta conversión con A/B testing integrado",
+          "desc": "Landing page con hero animado, secciones modulares, copy técnico, integraciones con Resend y Plausible, A/B testing nativo, OG cards dinámicas.",
+          "includes": {
+            "0": "Código fuente completo MIT-licensed",
+            "1": "Setup en Vercel guiado paso a paso",
+            "2": "A/B testing nativo (2 variants baked)",
+            "3": "Plausible analytics preconfigurado",
+            "4": "Resend integration (3 templates de email)",
+            "5": "Documentación + video walkthrough 20min"
+          },
+          "excludes": {
+            "0": "Diseño custom (la plantilla viene con identidad lava neon)",
+            "1": "Copywriting",
+            "2": "Hosting mensual (Vercel free tier OK)",
+            "3": "Soporte post-compra"
+          }
+        },
+        "dashboard-starter": {
+          "name": "Dashboard Starter",
+          "tagline": "Panel admin con auth, tablas, charts y RBAC",
+          "desc": "Dashboard multi-tenant con autenticación, tablas con filtros server-side, charts (Recharts), exports CSV/PDF, RBAC, dark/light mode.",
+          "includes": {
+            "0": "Multi-tenant schema + RLS",
+            "1": "NextAuth (credentials + OAuth)",
+            "2": "RBAC con 3 roles (admin/editor/viewer)",
+            "3": "Tablas con paginación + filtros + sorts",
+            "4": "4 tipos de charts (line/bar/pie/area)",
+            "5": "Exports CSV + PDF",
+            "6": "Seed script + DB migrations"
+          },
+          "excludes": {
+            "0": "Auth provider custom",
+            "1": "Diseño fuera del tema lava neon",
+            "2": "Deployment"
+          }
+        },
+        "ecommerce-headless": {
+          "name": "Headless E-commerce",
+          "tagline": "Storefront con Stripe + Medusa backend",
+          "desc": "E-commerce headless: storefront Next.js + backend Medusa, Stripe payments, inventory, cart persistente, checkout optimizado.",
+          "includes": {
+            "0": "Storefront + admin panel básico",
+            "1": "Stripe checkout + webhooks",
+            "2": "Inventory tracking",
+            "3": "Cart persistente (localStorage + DB)",
+            "4": "Catálogo con filtros + búsqueda",
+            "5": "Orders management"
+          },
+          "excludes": {
+            "0": "Shipping integrations (UPS/FedEx/DHL)",
+            "1": "Multi-currency / multi-locale",
+            "2": "Subscriptions",
+            "3": "Diseño custom"
+          }
+        }
+      }
+    },
+    "cotizador": {
+      "title": "Cotizador — NX-Studio",
+      "description": "Cotiza tu proyecto de software en minutos: alcance, stack y engagement con precio estimado.",
+      "headingA": "Cotizador por",
+      "headingEm": "features",
+      "sub": "Selecciona las capacidades que necesita tu proyecto. El rango de inversión se calcula en tiempo real según horas estimadas, tarifa blended, modifiers de urgencia y engagement shape.",
+      "disclaimer": "⚠ Rango indicativo. No publicamos precio exacto — depende de scope, complejidad y evoluciones.",
+      "step1": "01 / Engagement shape",
+      "step2": "02 / Selecciona features",
+      "step3": "03 / Modifiers",
+      "optional": "optional",
+      "panel": {
+        "range": "Rango indicativo",
+        "estimated": "estimadas",
+        "selected": "seleccionadas",
+        "cta": "Solicitar scoping →",
+        "breakdown": "Ver desglose"
+      },
+      "bands": {
+        "Starter": "Starter",
+        "Standard": "Standard",
+        "Growth": "Growth",
+        "Enterprise": "Enterprise"
+      },
+      "breakdown": {
+        "shape": "Shape",
+        "subtotalFeatures": "Subtotal features",
+        "baseFee": "Base fee (kickoff)",
+        "multiplier": "Multiplier total"
+      },
+      "categories": {
+        "core": {
+          "name": "Core",
+          "description": "Imprescindibles para que el proyecto exista"
+        },
+        "design": {
+          "name": "Diseño + UX",
+          "description": "Visual, interacción, responsive"
+        },
+        "backend": {
+          "name": "Backend",
+          "description": "API, datos, auth, integraciones"
+        },
+        "growth": {
+          "name": "Growth",
+          "description": "SEO, analytics, i18n"
+        },
+        "ops": {
+          "name": "QA + Ops",
+          "description": "Testing, accesibilidad, deploy, docs"
+        }
+      },
+      "shapes": {
+        "fixed": {
+          "name": "Per-sprint / Fixed",
+          "description": "Alcance definido, precio fijo por release. Ideal para MVPs y entregables puntuales."
+        },
+        "retainer": {
+          "name": "Monthly Retainer",
+          "description": "Equipo continuo, cuota mensual predecible. Para productos que shippean cada sprint."
+        },
+        "dedicated": {
+          "name": "Dedicated Team",
+          "description": "Equipo exclusivo full-time. Solo si el roadmap justifica retención anual."
+        },
+        "tm": {
+          "name": "Hourly / T&M",
+          "description": "Para auditoría, soporte evolutivo o tareas puntuales donde el alcance cambia."
+        }
+      },
+      "modifiers": {
+        "rush": {
+          "name": "Rush (+25%)",
+          "description": "Entrega en menos de 2 semanas o trabajo en fines de semana"
+        },
+        "bundle": {
+          "name": "Bundle discount (-10%)",
+          "description": "Más de 80 horas seleccionadas"
+        },
+        "longterm": {
+          "name": "Compromiso anual (-15%)",
+          "description": "Retainer o dedicated con contrato ≥ 12 meses"
+        }
+      },
+      "features": {
+        "discovery": {
+          "name": "Discovery + Scoping",
+          "description": "Workshop inicial, modelo de datos, sitemap, arquitectura de solución"
+        },
+        "design-system": {
+          "name": "Design System base",
+          "description": "Tokens, componentes, theming, accesibilidad WCAG 2.1 AA"
+        },
+        "responsive": {
+          "name": "Responsive + Mobile",
+          "description": "Breakpoints, optimización táctil, PWA opcional"
+        },
+        "landing": {
+          "name": "Landing page",
+          "description": "Hero, secciones, CTA, copy técnico, animaciones scroll"
+        },
+        "dashboard": {
+          "name": "Dashboard / Admin panel",
+          "description": "Tablas, filtros, charts, exports, roles"
+        },
+        "auth": {
+          "name": "Auth + Roles",
+          "description": "NextAuth / Clerk, OAuth, magic links, RBAC"
+        },
+        "api": {
+          "name": "API REST/GraphQL",
+          "description": "Endpoints, validación Zod, OpenAPI spec, rate limiting"
+        },
+        "db": {
+          "name": "Database + ORM",
+          "description": "Postgres + Prisma/Drizzle, migraciones, seeds, RLS opcional"
+        },
+        "integrations": {
+          "name": "Integraciones externas",
+          "description": "Stripe/Resend/Twilio/S3/OpenAI/etc."
+        },
+        "analytics": {
+          "name": "Analytics + Métricas",
+          "description": "PostHog/Plausible, eventos custom, funnels"
+        },
+        "seo": {
+          "name": "SEO técnico + OG",
+          "description": "Sitemap, robots, JSON-LD, hreflang, OG cards"
+        },
+        "i18n": {
+          "name": "i18n (multi-idioma)",
+          "description": "ES/EN + extracción de strings + hreflang"
+        },
+        "testing": {
+          "name": "Testing (unit + e2e)",
+          "description": "Vitest/Playwright, CI gate, coverage report"
+        },
+        "a11y": {
+          "name": "Auditoría a11y WCAG 2.1 AA",
+          "description": "Lighthouse, axe-core, remediación priorizada"
+        },
+        "security": {
+          "name": "Pen-testing básico",
+          "description": "OWASP top10, dependency audit, headers CSP"
+        },
+        "deploy": {
+          "name": "Deploy + CI/CD",
+          "description": "Vercel/GH Pages, GitHub Actions, environments, dominio custom"
+        },
+        "docs": {
+          "name": "Docs técnicas",
+          "description": "README, AGENTS.md, runbooks, onboarding 30min"
+        }
+      }
+    },
+    "laboratorio": {
+      "title": "Laboratorio IA — NX-Studio",
+      "description": "Experimentos de IA aplicada: agentes, RAG y automatización probados en producción real.",
+      "tag": "/ laboratorio · beta",
+      "heading": "Describe tu idea → recibe un mockup visual",
+      "sub": "Conversamos sobre lo que quieres construir, te hago preguntas de refinamiento y generamos una imagen conceptual de tu producto en segundos. Sin registro, sin backend, todo en tu navegador.",
+      "chat": {
+        "title": "◈ Chat de ideación",
+        "sub": "Refinamos tu idea en 3–5 mensajes",
+        "reset": "Reiniciar",
+        "inputPh": "Escribe tu idea...",
+        "greeting": "¡Hola! Soy el asistente de NX-Studio. Cuéntame: ¿qué producto o sistema quieres construir?",
+        "greetingAgain": "¡Hola de nuevo! Soy el asistente de NX-Studio. Cuéntame: ¿qué producto o sistema quieres construir?",
+        "questions": {
+          "0": "Interesante. ¿Quién es el usuario principal y qué problema concreto le resuelve?",
+          "1": "Perfecto. ¿En qué plataforma lo imaginas: web app, mobile, desktop, o algo físico/digital combinado?",
+          "2": "Genial. ¿Cuál es la sensación que quieres transmitir al usuario cuando lo usa: profesional y minimalista, colorido y divertido, futurista, o algo más cálido/orgánico?",
+          "3": "Casi listo. ¿Tienes referencia visual que te guste? Si no, dime 2-3 palabras clave de estilo (ej: \"estilo Apple, colores neutros, mucho espacio\").",
+          "4": "¡Ya tengo todo! Dame un segundo para generar tu mockup..."
+        }
+      },
+      "mockup": {
+        "title": "◎ Mockup generado",
+        "sub": "Imagen conceptual con IA · Pollinations.ai",
+        "regenerate": "Regenerar",
+        "waiting": "Esperando...",
+        "placeholderA": "Tu mockup aparecerá aquí",
+        "placeholderB": "mínimo 3 mensajes de conversación",
+        "generating": "Generando...",
+        "generatingLong": "Generando mockup...",
+        "promptLabel": "Prompt",
+        "generated": "✓ Generado",
+        "errorStatus": "✗ Error",
+        "errorBody": "Pollinations.ai no respondió. Intenta regenerar."
+      },
+      "disclaimer": "⚠ Este laboratorio es un prototipo sin backend: tu conversación no se guarda en ningún servidor. Las imágenes son generadas por Pollinations.ai, una API pública gratuita.",
+      "cta": {
+        "title": "¿Te gustó lo que ves en el mockup?",
+        "desc": "Reservamos 30 minutos gratis. Me lo describes en persona, lo refino contigo y te entrego un prototipo funcional en 72 horas.",
+        "button": "Reservar consulta gratis →"
+      },
+      "pricingCta": {
+        "title": "¿Listo para estimar tu proyecto?",
+        "descA": "Cuando tengas la idea clara, el ",
+        "descEm": "cotizador por features",
+        "descB": " te da un rango de inversión en tiempo real. Seleccionas las capacidades que necesitas, eliges engagement shape, y ves el desglose.",
+        "button": "Abrir cotizador →"
+      }
+    },
+    "contacto": {
+      "title": "Licitar / Contacto — NX-Studio",
+      "description": "Cuéntanos qué necesitas construir. Respuesta en menos de 24h hábiles.",
+      "back": "← Inicio",
+      "tag": "// licitacion · backend 24/7",
+      "headingA": "Inicia tu",
+      "headingEm": "licitacion",
+      "sub": "Completa el formulario. Tu peticion se guarda en nuestra base, el agente IA de NX-Studio la lee y te envia una propuesta detallada con presupuesto, mockup preview HTML y link de agendamiento.",
+      "form": {
+        "nombre": "Nombre",
+        "nombrePh": "Tu nombre completo",
+        "emailPh": "tu@empresa.com",
+        "empresa": "Empresa",
+        "telefono": "Teléfono",
+        "pais": "País",
+        "paisPh": "Colombia",
+        "tipo": "Tipo de proyecto",
+        "tipoOptions": {
+          "webapp": "Webapp",
+          "landing": "Landing page",
+          "mobile": "App mobile",
+          "testing": "QA / Testing",
+          "template": "Comprar template",
+          "otro": "Otro"
+        },
+        "engagement": "Engagement",
+        "engagementOptions": {
+          "fixed": "Per-sprint / Fixed",
+          "retainer": "Monthly retainer",
+          "dedicated": "Dedicated team",
+          "tm": "Hourly / T&M"
+        },
+        "urgencia": "Urgencia",
+        "urgenciaOptions": {
+          "normal": "Normal",
+          "rush": "Rush (2 semanas)",
+          "flexible": "Flexible"
+        },
+        "featuresLabel": "Capacidades (marca las que necesitas)",
+        "descripcion": "Descripción del proyecto",
+        "descripcionPh": "Cuéntanos qué necesitas construir, qué problema resuelve, para quién...",
+        "honeypot": "Si eres humano, deja esto vacío",
+        "privacyA": "Tu peticion se guarda",
+        "privacyEm1": "encriptada",
+        "privacyB": "y se procesa",
+        "privacyEm2": "24/7",
+        "submit": "Enviar propuesta"
+      },
+      "alt": {
+        "tagAlt": "// alternativa",
+        "tagDirect": "// directo",
+        "cotizador": {
+          "title": "Cotizador interactivo",
+          "desc": "Calcula el rango de inversion sin compromiso"
+        },
+        "laboratorio": {
+          "title": "Laboratorio IA",
+          "desc": "Genera mockups HTML desde tu idea"
+        }
+      },
+      "script": {
+        "sending": "Enviando...",
+        "successTag": "// licitacion · status: nueva",
+        "successTitle": "Propuesta recibida ✓",
+        "range": "Rango estimado",
+        "hours": "Horas",
+        "band": "Banda",
+        "nextSteps": "// próximos pasos",
+        "savedIdA": "// Tu peticion ID es",
+        "savedIdB": "Guarda este número para seguimiento.",
+        "errorTag": "// error",
+        "networkError": "Error de red"
+      }
+    },
+    "brand": {
+      "title": "Marca — NX-Studio",
+      "description": "Identidad de marca NX-Studio: logotipos, uso y lineamientos.",
+      "tag": "// brand-preview · v1",
+      "heading": "Identidad visual",
+      "sub": "Sistema de logo como componente Astro (HTML+CSS+SVG vectorial). Retina-ready, animable, zero-runtime. Tres variantes disponibles.",
+      "v1": {
+        "tag": "// 01 · wordmark (nav, header)",
+        "note": "Default. Glifo hexagonal + texto \"NX-Studio\" en una línea. Escala a 4 tamaños."
+      },
+      "v2": {
+        "tag": "// 02 · lockup (hero, footer, OG)",
+        "note": "Glifo + texto + tagline \"SOFTWARE STUDIO · LATAM\". Para piezas grandes."
+      },
+      "v3": {
+        "tag": "// 03 · mark (favicon, badges, mini)",
+        "note": "Solo glifo hexagonal. Para favicon, badges de producto, marca de agua."
+      },
+      "context": {
+        "tag": "// en contexto (navbar real)",
+        "placeholder": "[ contenido del sitio — placeholder ]"
+      },
+      "specs": {
+        "title": "Specs técnicas",
+        "render": "Render: SVG inline + CSS gradients (sin imágenes externas)",
+        "sizes": "Tamaños: 28px · 36px · 48px · 64px (sin pérdida)",
+        "palette": "Paleta:",
+        "typography": "Tipografía: Space Grotesk 700 + JetBrains Mono 500",
+        "a11y": "Accesibilidad: aria-label, hover respeta prefers-reduced-motion",
+        "anim": "Animación hover: rotación -8° + scale 1.05 (300ms cubic-bezier)",
+        "js": "Bundled JS: 0 bytes (todo CSS + SVG inline)"
+      },
+      "back": "← volver al sitio"
+    },
+    "logos": {
+      "title": "Logos — NX-Studio",
+      "description": "Variantes del logotipo NX-Studio y descargas en alta resolución.",
+      "tag": "// brand-prototypes · 8 conceptos",
+      "headingA": "8 direcciones",
+      "headingEm": "visuales",
+      "headingB": "para NX-Studio",
+      "sub": "SVG vectorial editables en código. El que apruebes se integra como prop `colorway` en `Brand.astro`. Cada uno es single-source (camino SVG vectorial, scalable a cualquier tamaño).",
+      "vibeLabel": "// vibe",
+      "copySnippet": "Copiar snippet",
+      "testNav": {
+        "title": "Test en Nav (live)",
+        "desc": "Elige un logo y verás cómo se comporta en la barra superior reducida:"
+      },
+      "specsSuffix": "specs",
+      "inlineCode": "// código inline",
+      "integrateAs": "// integra como",
+      "footerNoteA": "Cuando apruebes uno, lo integro en",
+      "footerNoteB": "como variante y lo comiteo.",
+      "back": "← volver a Brand system",
+      "items": {
+        "hexagon": {
+          "tag": "común · angular · tech",
+          "desc": "Hexágono con N y X fusionadas dentro. Chamfer hard-edge. Aplicado hoy. Steel-indigo palette.",
+          "feel": "Industrial, estable, tech puro. Vibe Linear / Prisma."
+        },
+        "chevron": {
+          "tag": "dinámico · momentum",
+          "desc": "Dos chevrons entrelazados formando N+X. Sugiere forward, progreso, deployment.",
+          "feel": "Moderno, webdev, devops. Vibe Vercel / Railway / Turso."
+        },
+        "negative": {
+          "tag": "editorial · minimal",
+          "desc": "N y X forman el espacio negativo entre dos bloques angulares. Solo la silueta del glyph.",
+          "feel": "Editorial, diseñador, premium. Vibe Anthropic / OpenAI."
+        },
+        "crosshair": {
+          "tag": "CLI · terminal · dev-tools",
+          "desc": "Cursor crosshair con N y X integradas. Para developer tools, agencias técnicas, infra.",
+          "feel": "CLI, sysadmin, infra as code. Vibe Terraform / HashiCorp."
+        },
+        "prism": {
+          "tag": "creativo · futurista",
+          "desc": "Triángulo formando una X con las caras en lava + indigo + oro. Fractal, light-bending.",
+          "feel": "Creativo, IA-first, visual. Vibe Suno / Udio / ideogramas."
+        },
+        "wave": {
+          "tag": "música · personalidad",
+          "desc": "Onda de audio que forma N+X entre peaks. Conecta con tu perfil DJ/productor en Neiva.",
+          "feel": "Warm, personal, con alma. Vibe Monolith / Framer / Loop."
+        },
+        "circuit": {
+          "tag": "hardware · estructural",
+          "desc": "Pads cuadrados con trace circuit que dibuja NX. Siente semiconductor, controlador.",
+          "feel": "Hardware, firmware, edge computing. Vibe Arduino / Raspberry."
+        },
+        "monogram": {
+          "tag": "clásico · premium · atemporal",
+          "desc": "N y X tallados en un círculo con gradiente. Sin geometría forzada. Solo tipografía.",
+          "feel": "Massimo Vignelli, editorial, atemporal. Vibe BMW / Audi / Porsche."
+        }
+      }
+    },
+    "palettes": {
+      "title": "Paletas — NX-Studio",
+      "description": "Sistema de paletas de color NX-Studio: tokens y preview de temas.",
+      "tag": "// palettes-preview · v2",
+      "headingA": "4 paletas",
+      "headingEm": "empresariales",
+      "sub": "Cada paleta es un sistema completo: primary + secondary + accent + 4 semánticos + 3 neutros + 4 chart. Activa una con el switcher arriba para previsualizar en vivo cómo se siente el sitio con esa identidad.",
+      "switcher": "// cambiar paleta:",
+      "activate": "activar →",
+      "recommendedFor": "// recomendado para",
+      "preview": {
+        "title": "Cómo se ve la paleta activa en contexto",
+        "desc": "Estos elementos cambian automáticamente cuando activas una paleta arriba:"
+      },
+      "semantic": {
+        "success": "Success state — operación completada",
+        "warn": "Warning — atención requerida",
+        "danger": "Danger — error crítico",
+        "info": "Info — contexto adicional"
+      },
+      "tokens": {
+        "title": "Sistema de tokens completo",
+        "desc": "Cada paleta define los mismos 25 tokens. Los archivos consumen variables CSS — nunca hex hardcoded."
+      },
+      "back": "← volver al sitio",
+      "items": {
+        "lava-pure": {
+          "tag": "warm · energetic",
+          "desc": "Lava como acento dominante, neutros cálidos. Replit/Nium vibe.",
+          "use": "Mantiene tu look v0.2 actual pero añade sistema completo (semánticos, chart, borders). El más cercano a tu identidad original."
+        },
+        "steel-indigo": {
+          "tag": "corporate · fintech · DEFAULT",
+          "desc": "Lava se reserva como acento emocional, indigo como acento corporativo. Linear vibe.",
+          "use": "✓ ESTA ES TU PALETA. Cuando quieres sentir más corporativo/fintech sin perder la lava. Buenos targets: enterprise SaaS, B2B premium."
+        },
+        "obsidian-teal": {
+          "tag": "engineering · minimal",
+          "desc": "Monochrome radical con teal como único acento. Lava solo en hero CTAs. Vercel vibe.",
+          "use": "Look enterprise engineering tool. Bueno si compites con Vercel/Linear en credibilidad técnica."
+        },
+        "navy-gold": {
+          "tag": "premium · enterprise",
+          "desc": "Navy como base (autoridad), gold como acento premium (confianza). Lava como energía. Andela/Toptal vibe.",
+          "use": "Targets corporativos grandes / enterprise contracts. Comunica premium + confianza + energía."
+        }
+      }
+    },
+    "serviciosTesting": {
+      "title": "Testing & QA as a service — NX-Studio",
+      "description": "QA embedido con tiers Foundation / Accelerator / Strategic. Automation, performance, accesibilidad WCAG 2.1 AA, pen-testing.",
+      "headingA": "Testing &",
+      "headingEm": "QA as a service",
+      "sub": "QA embedido con tiers por outcome (no por horas). Platform fee separado de seat licenses para máxima transparencia. Pricing orientativo: sesión de descubrimiento.",
+      "featured": "featured",
+      "tiers": {
+        "foundation": {
+          "tag": "// qa · starter",
+          "name": "Foundation",
+          "desc": "QA reactivo para equipos que recién empiezan a invertir en testing.",
+          "bullets": {
+            "0": "Manual testing de regresión por sprint",
+            "1": "Bug reports con repro steps + severidad",
+            "2": "Smoke tests en CI por PR",
+            "3": "Reporte semanal de métricas básicas"
+          },
+          "platformNote": "Platform fee + 1 QA part-time"
+        },
+        "accelerator": {
+          "tag": "// qa · growth",
+          "name": "Accelerator",
+          "desc": "QA embedido con automation, performance y accesibilidad. Ideal para series A.",
+          "bullets": {
+            "0": "Todo Foundation, más:",
+            "1": "Automation suite (Playwright + visual regression)",
+            "2": "Performance budgets + Core Web Vitals tracking",
+            "3": "Accesibilidad WCAG 2.1 AA audits",
+            "4": "Security baseline (OWASP top 10)",
+            "5": "Dedicado 1 QA senior full-time"
+          },
+          "platformNote": "Platform fee + seat licenses (Playwright/axe/Lighthouse)"
+        },
+        "strategic": {
+          "tag": "// qa · scale",
+          "name": "Strategic",
+          "desc": "Managed pod con QA lead, dedicated team y reporting ejecutivo.",
+          "bullets": {
+            "0": "Todo Accelerator, más:",
+            "1": "QA lead dedicado",
+            "2": "Pen-testing básico en cada release",
+            "3": "Reporte ejecutivo mensual",
+            "4": "On-call rotation",
+            "5": "Integration con Linear/Jira/Notion"
+          },
+          "platformNote": "Platform fee + managed pod (2-4 QAs)"
+        }
+      },
+      "pricingModel": {
+        "title": "Modelo de pricing",
+        "p1a": "Cada tier combina un ",
+        "platformFee": "platform fee mensual",
+        "p1b": " (cobertura del servicio, on-call, reporting) más el costo de los seat licenses de las herramientas utilizadas. Cero horas facturadas: pagas por capacidad desplegada, no por ticket.",
+        "warning": "⚠ Pricing exacto requiere scoping del codebase, stack y volumen de releases."
+      },
+      "ctaBox": {
+        "title": "¿Cuál tier encaja con tu equipo?",
+        "desc": "Sesión gratuita de 30-45 minutos. Analizamos tu stack, volumen de releases y pain points actuales, y recomendamos el tier con ROI esperado.",
+        "cta": "Agendar scoping QA →"
+      }
+    },
+    "templateSlug": {
+      "metaSuffix": "Templates NX-Studio",
+      "back": "← Volver a templates",
+      "oneTime": "One-time",
+      "licenseNote": "USD · MIT licensed",
+      "includesTitle": "Incluye",
+      "excludesTitle": "No incluye",
+      "cta": {
+        "title": "¿Listo para comprar?",
+        "desc": "Te enviamos el repo privado + invoice en menos de 24 horas. Setup guiado incluido. Sin suscripción, sin royalties, sin vendor lock-in.",
+        "buy": "Comprar",
+        "custom": "O pedir custom →"
+      }
+    }
+  }
+}

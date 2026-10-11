@@ -1,102 +1,125 @@
 ---
 import Layout from '../layouts/Base.astro';
+import { FEATURES } from '../data/pricing';
+import { getT, getLocale, localeUrl } from '~/i18n';
+
+const t = getT(Astro);
+const locale = getLocale(Astro);
+
+// Labels de features para el grid client-side (reusa keys del cotizador).
+const i18nFeatureNames = Object.fromEntries(FEATURES.map((f) => [f.id, t(`pages.cotizador.features.${f.id}.name`)]));
+
+// Strings del script client-side (panel de resultado, estados de botón).
+const i18nScript = {
+  sending: t('pages.contacto.script.sending'),
+  submit: t('pages.contacto.form.submit'),
+  successTag: t('pages.contacto.script.successTag'),
+  successTitle: t('pages.contacto.script.successTitle'),
+  range: t('pages.contacto.script.range'),
+  hours: t('pages.contacto.script.hours'),
+  band: t('pages.contacto.script.band'),
+  nextSteps: t('pages.contacto.script.nextSteps'),
+  savedIdA: t('pages.contacto.script.savedIdA'),
+  savedIdB: t('pages.contacto.script.savedIdB'),
+  errorTag: t('pages.contacto.script.errorTag'),
+  networkError: t('pages.contacto.script.networkError'),
+};
 ---
 
-<Layout title="Contactar · NX-Studio" description="Inicia una licitacion. Tu peticion se guarda, el agente IA de NX-Studio te envia una propuesta detallada con presupuesto y mockup preview.">
+<Layout title={t('pages.contacto.title')} description={t('pages.contacto.description')}>
   <section class="relative px-6 py-16 lg:py-20">
     <div class="mx-auto max-w-3xl">
       <header class="mb-10 reveal">
-        <a href="/NX-Studio/" class="font-mono text-xs text-nx-dim hover:text-lava-edge transition mb-3 inline-block">← Inicio</a>
-        <span class="lava-tag mb-3">// licitacion · backend 24/7</span>
+        <a href={localeUrl('/', locale)} class="font-mono text-xs text-nx-dim hover:text-lava-edge transition mb-3 inline-block">{t('pages.contacto.back')}</a>
+        <span class="lava-tag mb-3">{t('pages.contacto.tag')}</span>
         <h1 class="font-display text-4xl lg:text-5xl font-bold tracking-tight mb-4">
-          Inicia tu <span class="text-lava">licitacion</span>
+          {t('pages.contacto.headingA')} <span class="text-lava">{t('pages.contacto.headingEm')}</span>
         </h1>
         <p class="text-nx-muted text-lg">
-          Completa el formulario. Tu peticion se guarda en nuestra base, el agente IA de NX-Studio la lee y te
-          envia una propuesta detallada con presupuesto, mockup preview HTML y link de agendamiento.
+          {t('pages.contacto.sub')}
         </p>
       </header>
 
       <form id="licitacion-form" class="lava-card p-6 lg:p-8 reveal space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">Nombre *</label>
-            <input name="nombre" required minlength="2" class="nx-input" placeholder="Tu nombre completo" />
+            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">{t('pages.contacto.form.nombre')} *</label>
+            <input name="nombre" required minlength="2" class="nx-input" placeholder={t('pages.contacto.form.nombrePh')} />
           </div>
           <div>
             <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">Email *</label>
-            <input name="email" type="email" required class="nx-input" placeholder="tu@empresa.com" />
+            <input name="email" type="email" required class="nx-input" placeholder={t('pages.contacto.form.emailPh')} />
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">Empresa</label>
+            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">{t('pages.contacto.form.empresa')}</label>
             <input name="empresa" class="nx-input" placeholder="Acme Corp" />
           </div>
           <div>
-            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">Teléfono</label>
+            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">{t('pages.contacto.form.telefono')}</label>
             <input name="telefono" class="nx-input" placeholder="+57 1 234 5678" />
           </div>
           <div>
-            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">País</label>
-            <input name="pais" class="nx-input" placeholder="Colombia" />
+            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">{t('pages.contacto.form.pais')}</label>
+            <input name="pais" class="nx-input" placeholder={t('pages.contacto.form.paisPh')} />
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">Tipo de proyecto *</label>
+            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">{t('pages.contacto.form.tipo')} *</label>
             <select name="tipo" required class="nx-input">
-              <option value="webapp">Webapp</option>
-              <option value="landing">Landing page</option>
-              <option value="mobile">App mobile</option>
-              <option value="testing">QA / Testing</option>
-              <option value="template">Comprar template</option>
-              <option value="otro">Otro</option>
+              <option value="webapp">{t('pages.contacto.form.tipoOptions.webapp')}</option>
+              <option value="landing">{t('pages.contacto.form.tipoOptions.landing')}</option>
+              <option value="mobile">{t('pages.contacto.form.tipoOptions.mobile')}</option>
+              <option value="testing">{t('pages.contacto.form.tipoOptions.testing')}</option>
+              <option value="template">{t('pages.contacto.form.tipoOptions.template')}</option>
+              <option value="otro">{t('pages.contacto.form.tipoOptions.otro')}</option>
             </select>
           </div>
           <div>
-            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">Engagement *</label>
+            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">{t('pages.contacto.form.engagement')} *</label>
             <select name="engagement" required class="nx-input">
-              <option value="fixed">Per-sprint / Fixed</option>
-              <option value="retainer">Monthly retainer</option>
-              <option value="dedicated">Dedicated team</option>
-              <option value="tm">Hourly / T&M</option>
+              <option value="fixed">{t('pages.contacto.form.engagementOptions.fixed')}</option>
+              <option value="retainer">{t('pages.contacto.form.engagementOptions.retainer')}</option>
+              <option value="dedicated">{t('pages.contacto.form.engagementOptions.dedicated')}</option>
+              <option value="tm">{t('pages.contacto.form.engagementOptions.tm')}</option>
             </select>
           </div>
           <div>
-            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">Urgencia</label>
+            <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">{t('pages.contacto.form.urgencia')}</label>
             <select name="urgencia" class="nx-input">
-              <option value="normal">Normal</option>
-              <option value="rush">Rush (2 semanas)</option>
-              <option value="flexible">Flexible</option>
+              <option value="normal">{t('pages.contacto.form.urgenciaOptions.normal')}</option>
+              <option value="rush">{t('pages.contacto.form.urgenciaOptions.rush')}</option>
+              <option value="flexible">{t('pages.contacto.form.urgenciaOptions.flexible')}</option>
             </select>
           </div>
         </div>
 
         <div>
-          <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-3 block">Capacidades (marca las que necesitas)</label>
+          <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-3 block">{t('pages.contacto.form.featuresLabel')}</label>
           <div id="features-grid" class="grid grid-cols-1 md:grid-cols-2 gap-2"></div>
         </div>
 
         <div>
-          <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">Descripción del proyecto *</label>
-          <textarea name="descripcion" required minlength="20" rows="5" class="nx-input" placeholder="Cuéntanos qué necesitas construir, qué problema resuelve, para quién..."></textarea>
+          <label class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2 block">{t('pages.contacto.form.descripcion')} *</label>
+          <textarea name="descripcion" required minlength="20" rows="5" class="nx-input" placeholder={t('pages.contacto.form.descripcionPh')}></textarea>
         </div>
 
         <!-- Honeypot anti-bot -->
         <div style="position:absolute; left:-9999px;" aria-hidden="true">
-          <label>Si eres humano, deja esto vacío</label>
+          <label>{t('pages.contacto.form.honeypot')}</label>
           <input name="honeypot" tabindex="-1" autocomplete="off" />
         </div>
 
         <div class="flex items-center justify-between pt-4 border-t border-nx-border">
           <div class="font-mono text-xs text-nx-dim">
-            Tu peticion se guarda <span class="text-lava-edge">encriptada</span> y se procesa <span class="text-lava-edge">24/7</span>.
+            {t('pages.contacto.form.privacyA')} <span class="text-lava-edge">{t('pages.contacto.form.privacyEm1')}</span> {t('pages.contacto.form.privacyB')} <span class="text-lava-edge">{t('pages.contacto.form.privacyEm2')}</span>.
           </div>
           <button type="submit" class="lava-btn">
-            <span>Enviar propuesta</span>
+            <span>{t('pages.contacto.form.submit')}</span>
             <span>→</span>
           </button>
         </div>
@@ -107,18 +130,18 @@ import Layout from '../layouts/Base.astro';
 
       <!-- Feature quotes shortcuts -->
       <aside class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-3 reveal">
-        <a href="/NX-Studio/cotizador" class="lava-card p-4 hover:border-lava transition block">
-          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">// alternativa</div>
-          <div class="font-display font-semibold text-sm">Cotizador interactivo</div>
-          <div class="text-xs text-nx-muted mt-1">Calcula el rango de inversion sin compromiso</div>
+        <a href={localeUrl('/cotizador', locale)} class="lava-card p-4 hover:border-lava transition block">
+          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">{t('pages.contacto.alt.tagAlt')}</div>
+          <div class="font-display font-semibold text-sm">{t('pages.contacto.alt.cotizador.title')}</div>
+          <div class="text-xs text-nx-muted mt-1">{t('pages.contacto.alt.cotizador.desc')}</div>
         </a>
-        <a href="/NX-Studio/laboratorio" class="lava-card p-4 hover:border-lava transition block">
-          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">// alternativa</div>
-          <div class="font-display font-semibold text-sm">Laboratorio IA</div>
-          <div class="text-xs text-nx-muted mt-1">Genera mockups HTML desde tu idea</div>
+        <a href={localeUrl('/laboratorio', locale)} class="lava-card p-4 hover:border-lava transition block">
+          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">{t('pages.contacto.alt.tagAlt')}</div>
+          <div class="font-display font-semibold text-sm">{t('pages.contacto.alt.laboratorio.title')}</div>
+          <div class="text-xs text-nx-muted mt-1">{t('pages.contacto.alt.laboratorio.desc')}</div>
         </a>
         <div class="lava-card p-4">
-          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">// directo</div>
+          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">{t('pages.contacto.alt.tagDirect')}</div>
           <div class="font-display font-semibold text-sm">WhatsApp / email</div>
           <div class="text-xs text-nx-muted mt-1">+57 1 234 5678 · hola@nxstudio.dev</div>
         </div>
@@ -149,27 +172,35 @@ import Layout from '../layouts/Base.astro';
   }
 </style>
 
+<script define:vars={{ i18nFeatureNames, i18nScript }} is:inline>
+  window.__contactoI18n = { names: i18nFeatureNames, s: i18nScript };
+</script>
 <script>
-  // Features from pricing module
+  // Features from pricing module — labels localizados via window.__contactoI18n.names
   const FEATURES = [
-    { id: 'discovery', name: 'Discovery + Scoping', cat: 'core' },
-    { id: 'design-system', name: 'Design System', cat: 'design' },
-    { id: 'responsive', name: 'Responsive + Mobile', cat: 'design' },
-    { id: 'landing', name: 'Landing page', cat: 'design' },
-    { id: 'dashboard', name: 'Dashboard / Admin', cat: 'design' },
-    { id: 'auth', name: 'Auth + Roles', cat: 'backend' },
-    { id: 'api', name: 'API REST/GraphQL', cat: 'backend' },
-    { id: 'db', name: 'Database + ORM', cat: 'backend' },
-    { id: 'integrations', name: 'Integraciones externas', cat: 'backend' },
-    { id: 'analytics', name: 'Analytics + Métricas', cat: 'growth' },
-    { id: 'seo', name: 'SEO técnico', cat: 'growth' },
-    { id: 'i18n', name: 'i18n multi-idioma', cat: 'growth' },
-    { id: 'testing', name: 'Testing (unit + e2e)', cat: 'ops' },
-    { id: 'a11y', name: 'Auditoría a11y', cat: 'ops' },
-    { id: 'security', name: 'Pen-testing básico', cat: 'ops' },
-    { id: 'deploy', name: 'Deploy + CI/CD', cat: 'ops' },
-    { id: 'docs', name: 'Docs técnicas', cat: 'ops' },
+    { id: 'discovery', cat: 'core' },
+    { id: 'design-system', cat: 'design' },
+    { id: 'responsive', cat: 'design' },
+    { id: 'landing', cat: 'design' },
+    { id: 'dashboard', cat: 'design' },
+    { id: 'auth', cat: 'backend' },
+    { id: 'api', cat: 'backend' },
+    { id: 'db', cat: 'backend' },
+    { id: 'integrations', cat: 'backend' },
+    { id: 'analytics', cat: 'growth' },
+    { id: 'seo', cat: 'growth' },
+    { id: 'i18n', cat: 'growth' },
+    { id: 'testing', cat: 'ops' },
+    { id: 'a11y', cat: 'ops' },
+    { id: 'security', cat: 'ops' },
+    { id: 'deploy', cat: 'ops' },
+    { id: 'docs', cat: 'ops' },
   ];
+
+  const I18N = (window as any).__contactoI18n as {
+    names: Record<string, string>;
+    s: Record<string, string>;
+  };
 
   const grid = document.getElementById('features-grid');
   if (grid) {
@@ -177,7 +208,7 @@ import Layout from '../layouts/Base.astro';
     grid.innerHTML = FEATURES.map((f) => `
       <label class="flex items-center gap-3 p-3 border border-nx-border bg-nx-bg cursor-pointer hover:border-lava-edge transition" data-cat="${f.cat}">
         <input type="checkbox" name="features" value="${f.id}" ${defaults.has(f.id) ? 'checked' : ''} class="nx-feature-cb" />
-        <span class="font-mono text-sm">${f.name}</span>
+        <span class="font-mono text-sm">${I18N.names[f.id] ?? f.id}</span>
       </label>
     `).join('');
   }
@@ -185,6 +216,7 @@ import Layout from '../layouts/Base.astro';
   const form = document.getElementById('licitacion-form') as HTMLFormElement | null;
   const panel = document.getElementById('result-panel');
   if (form && panel) {
+    const defaults = new Set(['discovery', 'design-system', 'api', 'db', 'auth', 'testing', 'deploy']);
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const fd = new FormData(form);
@@ -207,7 +239,7 @@ import Layout from '../layouts/Base.astro';
       };
 
       const submitBtn = form.querySelector<HTMLButtonElement>('button[type=submit]');
-      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Enviando...'; }
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = I18N.s.sending; }
 
       try {
         const res = await fetch('/api/licitacion', {
@@ -219,30 +251,30 @@ import Layout from '../layouts/Base.astro';
         if (data.ok) {
           panel.innerHTML = `
             <div class="lava-card lava-card-accent p-6">
-              <span class="lava-tag mb-3">// licitacion #${data.licitacion_id} · status: nueva</span>
-              <h3 class="font-display text-2xl font-bold mb-3">Propuesta recibida ✓</h3>
+              <span class="lava-tag mb-3">${I18N.s.successTag} #${data.licitacion_id}</span>
+              <h3 class="font-display text-2xl font-bold mb-3">${I18N.s.successTitle}</h3>
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div>
-                  <div class="font-mono text-xs text-nx-muted">Rango estimado</div>
+                  <div class="font-mono text-xs text-nx-muted">${I18N.s.range}</div>
                   <div class="font-display text-2xl text-lava">$${data.cotizacion.total_low.toLocaleString()} - $${data.cotizacion.total_high.toLocaleString()}</div>
                 </div>
                 <div>
-                  <div class="font-mono text-xs text-nx-muted">Horas</div>
+                  <div class="font-mono text-xs text-nx-muted">${I18N.s.hours}</div>
                   <div class="font-display text-2xl text-lava-edge">${data.cotizacion.total_hours}h</div>
                 </div>
                 <div>
-                  <div class="font-mono text-xs text-nx-muted">Banda</div>
+                  <div class="font-mono text-xs text-nx-muted">${I18N.s.band}</div>
                   <div class="font-display text-2xl">${data.cotizacion.band}</div>
                 </div>
               </div>
               <div class="border-t border-nx-border pt-4">
-                <div class="font-mono text-xs uppercase tracking-widest text-lava-edge mb-2">// próximos pasos</div>
+                <div class="font-mono text-xs uppercase tracking-widest text-lava-edge mb-2">${I18N.s.nextSteps}</div>
                 <ul class="text-sm text-nx-muted space-y-1">
                   ${data.next_steps.map((s: string) => `<li class="flex gap-2"><span class="text-lava">▸</span>${s}</li>`).join('')}
                 </ul>
               </div>
               <div class="mt-4 pt-4 border-t border-nx-border text-xs text-nx-dim font-mono">
-                // Tu peticion ID es <b class="text-lava-edge">#${data.licitacion_id}</b>. Guarda este número para seguimiento.
+                ${I18N.s.savedIdA} <b class="text-lava-edge">#${data.licitacion_id}</b>. ${I18N.s.savedIdB}
               </div>
             </div>`;
           panel.classList.remove('hidden');
@@ -253,18 +285,18 @@ import Layout from '../layouts/Base.astro';
           });
         } else {
           panel.innerHTML = `<div class="lava-card p-6" style="border-color:#ef4444;">
-            <div class="font-mono text-xs text-red-400 mb-2">// error · ${data.error || 'unknown'}</div>
+            <div class="font-mono text-xs text-red-400 mb-2">${I18N.s.errorTag} · ${data.error || 'unknown'}</div>
             <div class="text-sm">${JSON.stringify(data.issues || data.detail || '')}</div>
           </div>`;
           panel.classList.remove('hidden');
         }
       } catch (err) {
         panel.innerHTML = `<div class="lava-card p-6" style="border-color:#ef4444;">
-          <div class="text-sm">Error de red: ${String(err)}</div>
+          <div class="text-sm">${I18N.s.networkError}: ${String(err)}</div>
         </div>`;
         panel.classList.remove('hidden');
       } finally {
-        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<span>Enviar propuesta</span><span>→</span>'; }
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = `<span>${I18N.s.submit}</span><span>→</span>`; }
       }
     });
   }

@@ -2,21 +2,40 @@
 import Base from "../layouts/Base.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import { getT, getLocale, localeUrl } from "~/i18n";
+
+const t = getT(Astro);
+const locale = getLocale(Astro);
+
+// Strings del chatbot client-side (preguntas del flujo + estados del mockup).
+const i18nLab = {
+  questions: [0, 1, 2, 3, 4].map((i) => t(`pages.laboratorio.chat.questions.${i}`)),
+  greeting: t('pages.laboratorio.chat.greeting'),
+  greetingAgain: t('pages.laboratorio.chat.greetingAgain'),
+  generating: t('pages.laboratorio.mockup.generating'),
+  generatingLong: t('pages.laboratorio.mockup.generatingLong'),
+  promptLabel: t('pages.laboratorio.mockup.promptLabel'),
+  generated: t('pages.laboratorio.mockup.generated'),
+  errorStatus: t('pages.laboratorio.mockup.errorStatus'),
+  errorBody: t('pages.laboratorio.mockup.errorBody'),
+  waiting: t('pages.laboratorio.mockup.waiting'),
+  placeholderA: t('pages.laboratorio.mockup.placeholderA'),
+  placeholderB: t('pages.laboratorio.mockup.placeholderB'),
+};
 ---
 
-<Base title="Laboratorio IA — NX-Studio">
+<Base title={t('pages.laboratorio.title')} description={t('pages.laboratorio.description')}>
   <Nav />
 
   <main class="px-6 py-16">
     <div class="mx-auto max-w-7xl">
       <header class="text-center">
-        <p class="font-mono text-sm uppercase tracking-widest text-nx-accent">/ laboratorio · beta</p>
+        <p class="font-mono text-sm uppercase tracking-widest text-nx-accent">{t('pages.laboratorio.tag')}</p>
         <h1 class="mt-3 font-display text-5xl font-bold md:text-6xl">
-          Describe tu idea → recibe un mockup visual
+          {t('pages.laboratorio.heading')}
         </h1>
         <p class="mx-auto mt-4 max-w-2xl text-lg text-nx-muted">
-          Conversamos sobre lo que quieres construir, te hago preguntas de refinamiento
-          y generamos una imagen conceptual de tu producto en segundos. Sin registro, sin backend, todo en tu navegador.
+          {t('pages.laboratorio.sub')}
         </p>
       </header>
 
@@ -25,11 +44,11 @@ import Footer from "../components/Footer.astro";
         <div class="rounded-2xl border border-nx-border bg-nx-surface p-6">
           <div class="flex items-center justify-between border-b border-nx-border pb-4">
             <div>
-              <h2 class="font-display text-lg font-semibold">◈ Chat de ideación</h2>
-              <p class="font-mono text-xs text-nx-dim">Refinamos tu idea en 3–5 mensajes</p>
+              <h2 class="font-display text-lg font-semibold">{t('pages.laboratorio.chat.title')}</h2>
+              <p class="font-mono text-xs text-nx-dim">{t('pages.laboratorio.chat.sub')}</p>
             </div>
             <button id="reset-btn" class="rounded-md border border-nx-border px-3 py-1 font-mono text-xs hover:border-nx-accent transition">
-              Reiniciar
+              {t('pages.laboratorio.chat.reset')}
             </button>
           </div>
 
@@ -38,7 +57,7 @@ import Footer from "../components/Footer.astro";
             <div class="flex gap-3">
               <div class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-nx-accent to-nx-purple font-mono text-xs text-white">NX</div>
               <div class="rounded-2xl rounded-tl-sm bg-nx-bg p-3 text-sm">
-                ¡Hola! Soy el asistente de NX-Studio. Cuéntame: <strong>¿qué producto o sistema quieres construir?</strong>
+                {i18nLab.greeting}
               </div>
             </div>
           </div>
@@ -47,7 +66,7 @@ import Footer from "../components/Footer.astro";
             <input
               id="chat-input"
               type="text"
-              placeholder="Escribe tu idea..."
+              placeholder={t('pages.laboratorio.chat.inputPh')}
               autocomplete="off"
               class="flex-1 rounded-xl border border-nx-border bg-nx-bg px-4 py-3 text-sm outline-none focus:border-nx-accent"
             />
@@ -55,7 +74,7 @@ import Footer from "../components/Footer.astro";
               type="submit"
               class="rounded-xl bg-gradient-to-r from-nx-accent to-nx-purple px-5 py-3 text-sm font-semibold text-white hover:shadow-lg hover:shadow-nx-accent/30"
             >
-              Enviar
+              {t('common.enviar')}
             </button>
           </form>
         </div>
@@ -64,24 +83,24 @@ import Footer from "../components/Footer.astro";
         <div class="rounded-2xl border border-nx-border bg-nx-surface p-6">
           <div class="flex items-center justify-between border-b border-nx-border pb-4">
             <div>
-              <h2 class="font-display text-lg font-semibold">◎ Mockup generado</h2>
-              <p class="font-mono text-xs text-nx-dim">Imagen conceptual con IA · Pollinations.ai</p>
+              <h2 class="font-display text-lg font-semibold">{t('pages.laboratorio.mockup.title')}</h2>
+              <p class="font-mono text-xs text-nx-dim">{t('pages.laboratorio.mockup.sub')}</p>
             </div>
             <button id="regenerate" class="hidden rounded-md border border-nx-border px-3 py-1 font-mono text-xs hover:border-nx-accent transition">
-              Regenerar
+              {t('pages.laboratorio.mockup.regenerate')}
             </button>
           </div>
 
           <div id="mockup-area" class="mt-4 grid aspect-square place-items-center rounded-xl border border-dashed border-nx-border bg-nx-bg/50">
             <div class="text-center text-nx-dim">
               <div class="text-5xl">◇</div>
-              <p class="mt-3 font-mono text-xs">Tu mockup aparecerá aquí</p>
-              <p class="mt-1 font-mono text-xs">mínimo 3 mensajes de conversación</p>
+              <p class="mt-3 font-mono text-xs">{i18nLab.placeholderA}</p>
+              <p class="mt-1 font-mono text-xs">{i18nLab.placeholderB}</p>
             </div>
           </div>
 
           <div class="mt-4 flex items-center justify-between font-mono text-xs text-nx-dim">
-            <span id="mockup-status">Esperando...</span>
+            <span id="mockup-status">{i18nLab.waiting}</span>
             <a href="https://pollinations.ai" target="_blank" rel="noopener" class="hover:text-nx-accent">
               powered by pollinations.ai ↗
             </a>
@@ -91,21 +110,20 @@ import Footer from "../components/Footer.astro";
 
       <!-- Disclaimer -->
       <p class="mx-auto mt-8 max-w-2xl text-center font-mono text-xs text-nx-dim">
-        ⚠ Este laboratorio es un prototipo sin backend: tu conversación no se guarda en ningún servidor.
-        Las imágenes son generadas por Pollinations.ai, una API pública gratuita.
+        {t('pages.laboratorio.disclaimer')}
       </p>
 
       <!-- CTA -->
       <section class="mt-16 rounded-3xl border border-nx-border bg-gradient-to-br from-nx-accent/10 via-nx-bg to-nx-purple/10 p-12 text-center">
-        <h2 class="font-display text-3xl font-bold md:text-4xl">¿Te gustó lo que ves en el mockup?</h2>
+        <h2 class="font-display text-3xl font-bold md:text-4xl">{t('pages.laboratorio.cta.title')}</h2>
         <p class="mx-auto mt-3 max-w-xl text-nx-muted">
-          Reservamos 30 minutos gratis. Me lo describes en persona, lo refino contigo y te entrego un prototipo funcional en 72 horas.
+          {t('pages.laboratorio.cta.desc')}
         </p>
         <a
-          href="/NX-Studio/contacto"
+          href={localeUrl('/contacto', locale)}
           class="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-nx-accent to-nx-purple px-6 py-3 text-sm font-semibold text-white hover:shadow-lg hover:shadow-nx-accent/30"
         >
-          Reservar consulta gratis →
+          {t('pages.laboratorio.cta.button')}
         </a>
       </section>
     </div>
@@ -114,10 +132,27 @@ import Footer from "../components/Footer.astro";
   <Footer />
 </Base>
 
+<script define:vars={{ i18nLab }} is:inline>
+  window.__labI18n = i18nLab;
+</script>
 <script>
   // ============================================================
   // LABORATORIO — Chatbot + Generador de Mockups (sin backend)
   // ============================================================
+  const LAB = (window as any).__labI18n as {
+    questions: string[];
+    greeting: string;
+    greetingAgain: string;
+    generating: string;
+    generatingLong: string;
+    promptLabel: string;
+    generated: string;
+    errorStatus: string;
+    errorBody: string;
+    waiting: string;
+    placeholderA: string;
+    placeholderB: string;
+  };
 
   type Msg = { role: 'user' | 'bot'; text: string };
   const state: { messages: Msg[]; turn: number; prompt: string } = {
@@ -126,13 +161,7 @@ import Footer from "../components/Footer.astro";
     prompt: '',
   };
 
-  const questions = [
-    'Interesante. ¿Quién es el usuario principal y qué problema concreto le resuelve?',
-    'Perfecto. ¿En qué plataforma lo imaginas: web app, mobile, desktop, o algo físico/digital combinado?',
-    'Genial. ¿Cuál es la sensación que quieres transmitir al usuario cuando lo usa: profesional y minimalista, colorido y divertido, futurista, o algo más cálido/orgánico?',
-    'Casi listo. ¿Tienes referencia visual que te guste? Si no, dime 2-3 palabras clave de estilo (ej: "estilo Apple, colores neutros, mucho espacio").',
-    '¡Ya tengo todo! Dame un segundo para generar tu mockup...',
-  ];
+  const questions = LAB.questions;
 
   const log = document.getElementById('chat-log') as HTMLDivElement;
   const form = document.getElementById('chat-form') as HTMLFormElement;
@@ -176,7 +205,7 @@ import Footer from "../components/Footer.astro";
 
   async function generateMockup() {
     state.prompt = buildPrompt();
-    statusEl.textContent = 'Generando...';
+    statusEl.textContent = LAB.generating;
 
     const encoded = encodeURIComponent(state.prompt);
     const seed = Math.floor(Math.random() * 99999);
@@ -185,8 +214,8 @@ import Footer from "../components/Footer.astro";
     mockupArea.innerHTML = `
       <div class="text-center">
         <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-nx-accent border-t-transparent"></div>
-        <p class="mt-4 font-mono text-xs text-nx-dim">Generando mockup...</p>
-        <p class="mt-1 font-mono text-xs text-nx-dim">Prompt: ${state.prompt.slice(0, 80)}...</p>
+        <p class="mt-4 font-mono text-xs text-nx-dim">${LAB.generatingLong}</p>
+        <p class="mt-1 font-mono text-xs text-nx-dim">${LAB.promptLabel}: ${state.prompt.slice(0, 80)}...</p>
       </div>
     `;
 
@@ -198,21 +227,21 @@ import Footer from "../components/Footer.astro";
       img.onload = () => {
         mockupArea.innerHTML = '';
         mockupArea.appendChild(img);
-        statusEl.textContent = '✓ Generado';
+        statusEl.textContent = LAB.generated;
         regenBtn.classList.remove('hidden');
       };
       img.onerror = () => {
         mockupArea.innerHTML = `
           <div class="text-center text-rose-400">
             <div class="text-5xl">⚠</div>
-            <p class="mt-3 font-mono text-xs">Pollinations.ai no respondió. Intenta regenerar.</p>
+            <p class="mt-3 font-mono text-xs">${LAB.errorBody}</p>
           </div>
         `;
-        statusEl.textContent = '✗ Error';
+        statusEl.textContent = LAB.errorStatus;
       };
       img.src = url;
     } catch (e) {
-      statusEl.textContent = '✗ Error';
+      statusEl.textContent = LAB.errorStatus;
     }
   }
 
@@ -245,13 +274,13 @@ import Footer from "../components/Footer.astro";
     mockupArea.innerHTML = `
       <div class="text-center text-nx-dim">
         <div class="text-5xl">◇</div>
-        <p class="mt-3 font-mono text-xs">Tu mockup aparecerá aquí</p>
-        <p class="mt-1 font-mono text-xs">mínimo 3 mensajes de conversación</p>
+        <p class="mt-3 font-mono text-xs">${LAB.placeholderA}</p>
+        <p class="mt-1 font-mono text-xs">${LAB.placeholderB}</p>
       </div>
     `;
-    statusEl.textContent = 'Esperando...';
+    statusEl.textContent = LAB.waiting;
     regenBtn.classList.add('hidden');
-    addMsg('bot', '¡Hola de nuevo! Soy el asistente de NX-Studio. Cuéntame: ¿qué producto o sistema quieres construir?');
+    addMsg('bot', LAB.greetingAgain);
   });
 </script>
 
@@ -260,13 +289,13 @@ import Footer from "../components/Footer.astro";
   <div class="lava-card lava-card-accent p-8 text-center">
     <div class="lava-tag mb-3 mx-auto">// pricing-engine · live preview</div>
     <h2 class="font-display text-3xl font-bold mb-3">
-      ¿Listo para estimar tu proyecto?
+      {t('pages.laboratorio.pricingCta.title')}
     </h2>
     <p class="text-nx-muted mb-6 max-w-xl mx-auto">
-      Cuando tengas la idea clara, el <b class="text-lava-edge">cotizador por features</b> te da un rango
-      de inversión en tiempo real. Seleccionas las capacidades que necesitas, eliges engagement shape, y
-      ves el desglose.
+      {t('pages.laboratorio.pricingCta.descA')}
+      <b class="text-lava-edge">{t('pages.laboratorio.pricingCta.descEm')}</b>
+      {t('pages.laboratorio.pricingCta.descB')}
     </p>
-    <a href="/cotizador" class="lava-btn">Abrir cotizador →</a>
+    <a href={localeUrl('/cotizador', locale)} class="lava-btn">{t('pages.laboratorio.pricingCta.button')}</a>
   </div>
 </section>

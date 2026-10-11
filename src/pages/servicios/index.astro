@@ -2,27 +2,22 @@
 import Base from "../../layouts/Base.astro";
 import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
+import { getT, getLocale, localeUrl } from "~/i18n";
 
-// Índice de servicios especializados.
-// Estructura preparada para crecer: cada servicio es un objeto { slug, summary }.
+const t = getT(Astro);
+const locale = getLocale(Astro);
+
+// Índice de servicios especializados; copy vía i18n (pages.servicios.*).
 // Las páginas individuales viven en /servicios/<slug>.astro.
 const servicios = [
   {
     slug: 'testing',
-    tag: '// qa.v1',
-    title: 'Testing & QA',
-    desc: 'QA as a service con tiers Foundation / Accelerator / Strategic. Manual + automation, performance, accesibilidad WCAG 2.1 AA, security pen-testing.',
     icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
   },
 ];
-
-const capacidadesCore = [
-  { tag: '// arquitectura', desc: 'Diseño y construcción de sistemas que escalan con tu negocio. Web, mobile, ERP, integraciones.' },
-  { tag: '// ia',          desc: 'Chatbots, RAG, agentes, automatización con LLMs. Soluciones que entregan valor real, no demos.' },
-];
 ---
 
-<Base title="Servicios · NX-Studio" description="Servicios especializados: Testing & QA con tiers Foundation / Accelerator / Strategic. Pricing transparente y engagement shapes claros.">
+<Base title={t('pages.servicios.title')} description={t('pages.servicios.description')}>
   <Nav />
   <main>
     <section class="relative px-6 py-20 lg:py-28">
@@ -30,40 +25,39 @@ const capacidadesCore = [
         <header class="mb-14 reveal">
           <span class="lava-tag mb-4">// servicios.v0.4</span>
           <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
-            Servicios <span class="text-lava">especializados</span>
+            {t('pages.servicios.headingA')} <span class="text-lava">{t('pages.servicios.headingEm')}</span>
           </h1>
           <p class="text-nx-muted max-w-2xl text-lg">
-            Capacidades core para construir productos digitales y servicios verticales
-            de calidad profesional para validar software antes de que lo use tu cliente.
+            {t('pages.servicios.sub')}
           </p>
         </header>
 
         <div class="mb-14">
-          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">Capacidades core</h2>
+          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">{t('pages.servicios.coreTitle')}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {capacidadesCore.map((s) => (
+            {[0, 1].map((i) => (
               <article class="lava-card p-6 reveal">
-                <span class="lava-tag mb-3">{s.tag}</span>
-                <p class="text-nx-muted leading-relaxed">{s.desc}</p>
+                <span class="lava-tag mb-3">{t(`pages.servicios.core.${i}.tag`)}</span>
+                <p class="text-nx-muted leading-relaxed">{t(`pages.servicios.core.${i}.desc`)}</p>
               </article>
             ))}
           </div>
         </div>
 
         <div>
-          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">Servicios especializados</h2>
+          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">{t('pages.servicios.specializedTitle')}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {servicios.map((s) => (
-              <a href={`/NX-Studio/servicios/${s.slug}`} class="lava-card p-6 reveal flex flex-col gap-3 card-hover">
+              <a href={localeUrl(`/servicios/${s.slug}`, locale)} class="lava-card p-6 reveal flex flex-col gap-3 card-hover">
                 <div class="flex items-start justify-between">
-                  <span class="lava-tag">{s.tag}</span>
+                  <span class="lava-tag">{t(`pages.servicios.items.${s.slug}.tag`)}</span>
                   <svg class="w-5 h-5 text-lava-edge shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d={s.icon} />
                   </svg>
                 </div>
-                <h3 class="font-display text-xl font-semibold">{s.title}</h3>
-                <p class="text-sm text-nx-muted leading-relaxed flex-1">{s.desc}</p>
-                <span class="font-mono text-xs text-lava-edge">Ver detalle →</span>
+                <h3 class="font-display text-xl font-semibold">{t(`pages.servicios.items.${s.slug}.title`)}</h3>
+                <p class="text-sm text-nx-muted leading-relaxed flex-1">{t(`pages.servicios.items.${s.slug}.desc`)}</p>
+                <span class="font-mono text-xs text-lava-edge">{t('pages.servicios.viewDetail')}</span>
               </a>
             ))}
           </div>
@@ -72,15 +66,14 @@ const capacidadesCore = [
         <div class="mt-16 lava-card lava-card-accent p-8 lg:p-10 reveal">
           <span class="lava-tag mb-3">// pricing</span>
           <h2 class="font-display text-2xl lg:text-3xl font-bold mb-3">
-            ¿No estás seguro cuál encaja?
+            {t('pages.servicios.ctaBox.title')}
           </h2>
           <p class="text-nx-muted mb-6 max-w-2xl">
-            Usa el cotizador para obtener un rango indicativo según las capacidades que necesitas,
-            o contáctanos directamente para una sesión de descubrimiento gratuita.
+            {t('pages.servicios.ctaBox.desc')}
           </p>
           <div class="flex flex-wrap gap-3">
-            <a href="/NX-Studio/cotizador" class="lava-btn">Abrir cotizador</a>
-            <a href="/NX-Studio/contacto" class="lava-btn lava-btn-ghost">Sesión de descubrimiento</a>
+            <a href={localeUrl('/cotizador', locale)} class="lava-btn">{t('pages.servicios.ctaBox.primary')}</a>
+            <a href={localeUrl('/contacto', locale)} class="lava-btn lava-btn-ghost">{t('pages.servicios.ctaBox.secondary')}</a>
           </div>
         </div>
       </div>

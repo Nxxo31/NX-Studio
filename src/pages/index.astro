@@ -4,70 +4,31 @@ import Base from "../layouts/Base.astro";
 import Nav from "../components/Nav.astro";
 import Hero from "../components/Hero.astro";
 import Footer from "../components/Footer.astro";
+import { getT, getLocale, localeUrl } from "~/i18n";
 
-// Pregunta 1: ¿Qué hacemos? → 4 servicios principales con beneficio claro
+const t = getT(Astro);
+const locale = getLocale(Astro);
+
+// Pregunta 1: ¿Qué hacemos? → iconos estables; copy vía i18n (pages.index.services.items.N.*)
 const servicios = [
-  {
-    icon: 'M4 6h16M4 12h16M4 18h16',
-    title: 'Aplicaciones a medida',
-    resultado: 'Sistemas web y móviles que escalan con tu negocio.',
-    precio: 'Desde $5,000',
-  },
-  {
-    icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
-    title: 'Testing y QA',
-    resultado: 'Tu software validado antes de que lo use tu cliente.',
-    precio: 'Desde $3,000/sprint',
-  },
-  {
-    icon: 'M13 10V3L4 14h7v7l9-11h-7z',
-    title: 'IA aplicada',
-    resultado: 'Chatbots y agentes que entregan valor real, no demos.',
-    precio: 'Desde $4,000',
-  },
+  { icon: 'M4 6h16M4 12h16M4 18h16' },
+  { icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+  { icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
 ];
 
-// Pregunta 2: ¿Por qué confiar? → razones concretas, no adjetivos
+// Pregunta 2: ¿Por qué confiar? → stats estables, label vía i18n
 const confianza = [
-  {
-    stat: '11',
-    label: 'productos de código abierto publicados en GitHub',
-  },
-  {
-    stat: '24+',
-    label: 'tecnologías en stack verificable',
-  },
-  {
-    stat: 'LATAM',
-    label: 'equipo remoto-first, timezone UTC-05',
-  },
-  {
-    stat: '0',
-    label: 'caja negra: ves el código desde el día uno',
-  },
+  { stat: '11' },
+  { stat: '24+' },
+  { stat: 'LATAM' },
+  { stat: '0' },
 ];
 
-// Pregunta 3: ¿Cómo trabajamos? → 3 pasos lineales
-const pasos = [
-  {
-    n: '01',
-    titulo: 'Cuéntanos qué necesitas',
-    detalle: '30 minutos de llamada. Sin formulario interminable.',
-  },
-  {
-    n: '02',
-    titulo: 'Recibe una propuesta clara',
-    detalle: 'Alcance, tiempo y rango de inversión. Sin sorpresas.',
-  },
-  {
-    n: '03',
-    titulo: 'Construimos y entregamos',
-    detalle: 'Sprints cortos, demo semanal, código abierto desde el inicio.',
-  },
-];
+// Pregunta 3: ¿Cómo trabajamos? → copy vía i18n
+const pasos = [{ n: '01' }, { n: '02' }, { n: '03' }];
 ---
 
-<Base title="NX-Studio · Software que escala contigo">
+<Base title={t('pages.index.title')} description={t('pages.index.description')}>
   <Nav />
   <main>
 
@@ -78,35 +39,35 @@ const pasos = [
     <section class="relative px-6 py-16 lg:py-24">
       <div class="mx-auto max-w-6xl">
         <header class="mb-12">
-          <span class="lava-tag mb-3">// servicios</span>
+          <span class="lava-tag mb-3">{t('pages.index.services.tag')}</span>
           <h2 class="font-display text-3xl lg:text-5xl font-bold tracking-tight max-w-3xl">
-            Lo que <span class="text-lava">hacemos</span> por ti
+            {t('pages.index.services.headingA')} <span class="text-lava">{t('pages.index.services.headingEm')}</span> {t('pages.index.services.headingB')}
           </h2>
           <p class="mt-4 max-w-2xl text-nx-muted text-lg">
-            Cuatro líneas de trabajo. Cada una con un resultado concreto que puedes explicar a tu equipo.
+            {t('pages.index.services.sub')}
           </p>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {servicios.map((s) => (
+          {servicios.map((s, i) => (
             <article class="lava-card p-6 flex flex-col group hover:border-nx-border-strong transition">
               <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-lg border border-nx-border bg-nx-surface text-lava-edge">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d={s.icon} />
                 </svg>
               </div>
-              <h3 class="font-display font-semibold text-lg mb-2 text-nx-text">{s.title}</h3>
-              <p class="text-sm text-nx-muted leading-relaxed flex-1">{s.resultado}</p>
+              <h3 class="font-display font-semibold text-lg mb-2 text-nx-text">{t(`pages.index.services.items.${i}.title`)}</h3>
+              <p class="text-sm text-nx-muted leading-relaxed flex-1">{t(`pages.index.services.items.${i}.resultado`)}</p>
               <div class="mt-5 pt-4 border-t border-nx-border font-mono text-xs text-lava-edge">
-                {s.precio}
+                {t(`pages.index.services.items.${i}.precio`)}
               </div>
             </article>
           ))}
         </div>
 
         <div class="mt-8">
-          <a href="/NX-Studio/servicios" class="lava-btn lava-btn-ghost">
-            Ver todos los servicios →
+          <a href={localeUrl('/servicios', locale)} class="lava-btn lava-btn-ghost">
+            {t('pages.index.services.cta')}
           </a>
         </div>
       </div>
@@ -116,23 +77,22 @@ const pasos = [
     <section class="relative px-6 py-16 lg:py-24 border-t border-nx-border">
       <div class="mx-auto max-w-6xl">
         <header class="mb-12">
-          <span class="lava-tag mb-3">// por qué nosotros</span>
+          <span class="lava-tag mb-3">{t('pages.index.trust.tag')}</span>
           <h2 class="font-display text-3xl lg:text-5xl font-bold tracking-tight max-w-3xl">
-            Razones <span class="text-lava">concretas</span>, no promesas
+            {t('pages.index.trust.headingA')} <span class="text-lava">{t('pages.index.trust.headingEm')}</span>{t('pages.index.trust.headingB')}
           </h2>
           <p class="mt-4 max-w-2xl text-nx-muted text-lg">
-            Si algo de esto no te convence, te recomendamos otro estudio. Preferimos perder un cliente a entregar algo mediocre.
+            {t('pages.index.trust.sub')}
           </p>
         </header>
-
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {confianza.map((c) => (
+          {confianza.map((c, i) => (
             <div class="border-l-2 border-lava-edge pl-5 py-2">
               <div class="font-display text-4xl lg:text-5xl font-bold text-nx-text leading-none">
                 {c.stat}
               </div>
               <div class="mt-3 text-sm text-nx-muted leading-snug">
-                {c.label}
+                {t(`pages.index.trust.items.${i}.label`)}
               </div>
             </div>
           ))}
@@ -144,23 +104,22 @@ const pasos = [
     <section class="relative px-6 py-16 lg:py-24">
       <div class="mx-auto max-w-6xl">
         <header class="mb-12">
-          <span class="lava-tag mb-3">// proceso</span>
+          <span class="lava-tag mb-3">{t('pages.index.process.tag')}</span>
           <h2 class="font-display text-3xl lg:text-5xl font-bold tracking-tight max-w-3xl">
-            De la idea al <span class="text-lava">código en producción</span>
+            {t('pages.index.process.headingA')} <span class="text-lava">{t('pages.index.process.headingEm')}</span>
           </h2>
           <p class="mt-4 max-w-2xl text-nx-muted text-lg">
-            Tres pasos. Sin jerga, sin sorpresas en la factura.
+            {t('pages.index.process.sub')}
           </p>
         </header>
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          {pasos.map((p) => (
+          {pasos.map((p, i) => (
             <article class="relative">
               <div class="font-display text-6xl lg:text-7xl font-bold text-nx-surface-raised leading-none mb-4 select-none">
                 {p.n}
               </div>
-              <h3 class="font-display font-semibold text-xl mb-3 text-nx-text">{p.titulo}</h3>
-              <p class="text-nx-muted leading-relaxed">{p.detalle}</p>
+              <h3 class="font-display font-semibold text-xl mb-3 text-nx-text">{t(`pages.index.process.items.${i}.titulo`)}</h3>
+              <p class="text-nx-muted leading-relaxed">{t(`pages.index.process.items.${i}.detalle`)}</p>
             </article>
           ))}
         </div>
@@ -171,34 +130,34 @@ const pasos = [
     <section class="relative px-6 py-16 lg:py-24">
       <div class="mx-auto max-w-6xl">
         <header class="mb-12 text-center">
-          <span class="lava-tag mb-3">// siguiente paso</span>
+          <span class="lava-tag mb-3">{t('pages.index.start.tag')}</span>
           <h2 class="font-display text-3xl lg:text-5xl font-bold tracking-tight max-w-3xl mx-auto">
-            Elige cómo quieres <span class="text-lava">empezar</span>
+            {t('pages.index.start.headingA')} <span class="text-lava">{t('pages.index.start.headingEm')}</span>
           </h2>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Opción A: Cotizador */}
-          <a href="/NX-Studio/cotizador" class="lava-card lava-card-accent p-8 block group hover:border-lava-edge transition">
-            <div class="font-mono text-xs text-nx-dim mb-3">// opción A · self-service</div>
-            <h3 class="font-display text-2xl font-bold mb-3 text-nx-text">Calcula tu presupuesto</h3>
+          <a href={localeUrl('/cotizador', locale)} class="lava-card lava-card-accent p-8 block group hover:border-lava-edge transition">
+            <div class="font-mono text-xs text-nx-dim mb-3">{t('pages.index.start.optionA.tag')}</div>
+            <h3 class="font-display text-2xl font-bold mb-3 text-nx-text">{t('pages.index.start.optionA.title')}</h3>
             <p class="text-nx-muted mb-6 leading-relaxed">
-              Selecciona lo que necesitas. El rango de inversión se actualiza al instante. Sin registro, sin compromiso.
+              {t('pages.index.start.optionA.desc')}
             </p>
             <span class="lava-btn">
-              Abrir cotizador →
+              {t('pages.index.start.optionA.cta')}
             </span>
           </a>
 
           {/* Opción B: Propuesta formal */}
-          <a href="/NX-Studio/contacto" class="lava-card p-8 block group hover:border-lava-edge transition">
-            <div class="font-mono text-xs text-nx-dim mb-3">// opción B · guiado</div>
-            <h3 class="font-display text-2xl font-bold mb-3 text-nx-text">Pide una propuesta formal</h3>
+          <a href={localeUrl('/contacto', locale)} class="lava-card p-8 block group hover:border-lava-edge transition">
+            <div class="font-mono text-xs text-nx-dim mb-3">{t('pages.index.start.optionB.tag')}</div>
+            <h3 class="font-display text-2xl font-bold mb-3 text-nx-text">{t('pages.index.start.optionB.title')}</h3>
             <p class="text-nx-muted mb-6 leading-relaxed">
-              Cuéntanos tu proyecto. Te enviamos alcance detallado, mockup y opciones de agendamiento en menos de 24h.
+              {t('pages.index.start.optionB.desc')}
             </p>
             <span class="lava-btn lava-btn-ghost">
-              Iniciar conversación →
+              {t('pages.index.start.optionB.cta')}
             </span>
           </a>
         </div>

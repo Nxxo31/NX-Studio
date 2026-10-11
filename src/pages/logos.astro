@@ -1,5 +1,9 @@
 ---
 import Base from "../layouts/Base.astro";
+import { getT, getLocale, localeUrl } from "~/i18n";
+
+const t = getT(Astro);
+const locale = getLocale(Astro);
 
 const logos = [
   // ───────────────────────────────────────────────────────────
@@ -8,9 +12,6 @@ const logos = [
   {
     id: "hexagon",
     name: "Hex Monolith",
-    tag: "común · angular · tech",
-    desc: "Hexágono con N y X fusionadas dentro. Chamfer hard-edge. Aplicado hoy. Steel-indigo palette.",
-    feel: "Industrial, estable, tech puro. Vibe Linear / Prisma.",
     svg: `
       <svg viewBox="0 0 64 64" width="96" height="96">
         <defs>
@@ -38,9 +39,6 @@ const logos = [
   {
     id: "chevron",
     name: "Chevron Forward",
-    tag: "dinámico · momentum",
-    desc: "Dos chevrons entrelazados formando N+X. Sugiere forward, progreso, deployment.",
-    feel: "Moderno, webdev, devops. Vibe Vercel / Railway / Turso.",
     svg: `
       <svg viewBox="0 0 72 72" width="96" height="96">
         <defs>
@@ -69,9 +67,6 @@ const logos = [
   {
     id: "negative",
     name: "Negative Space",
-    tag: "editorial · minimal",
-    desc: "N y X forman el espacio negativo entre dos bloques angulares. Solo la silueta del glyph.",
-    feel: "Editorial, diseñador, premium. Vibe Anthropic / OpenAI.",
     svg: `
       <svg viewBox="0 0 72 72" width="96" height="96">
         <defs>
@@ -98,9 +93,6 @@ const logos = [
   {
     id: "crosshair",
     name: "Crosshair",
-    tag: "CLI · terminal · dev-tools",
-    desc: "Cursor crosshair con N y X integradas. Para developer tools, agencias técnicas, infra.",
-    feel: "CLI, sysadmin, infra as code. Vibe Terraform / HashiCorp.",
     svg: `
       <svg viewBox="0 0 72 72" width="96" height="96">
         <defs>
@@ -126,9 +118,6 @@ const logos = [
   {
     id: "prism",
     name: "Prism",
-    tag: "creativo · futurista",
-    desc: "Triángulo formando una X con las caras en lava + indigo + oro. Fractal, light-bending.",
-    feel: "Creativo, IA-first, visual. Vibe Suno / Udio / ideogramas.",
     svg: `
       <svg viewBox="0 0 72 72" width="96" height="96">
         <defs>
@@ -163,9 +152,6 @@ const logos = [
   {
     id: "wave",
     name: "Wave Signal",
-    tag: "música · personalidad",
-    desc: "Onda de audio que forma N+X entre peaks. Conecta con tu perfil DJ/productor en Neiva.",
-    feel: "Warm, personal, con alma. Vibe Monolith / Framer / Loop.",
     svg: `
       <svg viewBox="0 0 72 72" width="96" height="96">
         <defs>
@@ -191,9 +177,6 @@ const logos = [
   {
     id: "circuit",
     name: "Circuit",
-    tag: "hardware · estructural",
-    desc: "Pads cuadrados con trace circuit que dibuja NX. Siente semiconductor, controlador.",
-    feel: "Hardware, firmware, edge computing. Vibe Arduino / Raspberry.",
     svg: `
       <svg viewBox="0 0 72 72" width="96" height="96">
         <defs>
@@ -227,9 +210,6 @@ const logos = [
   {
     id: "monogram",
     name: "NX Monogram",
-    tag: "clásico · premium · atemporal",
-    desc: "N y X tallados en un círculo con gradiente. Sin geometría forzada. Solo tipografía.",
-    feel: "Massimo Vignelli, editorial, atemporal. Vibe BMW / Audi / Porsche.",
     svg: `
       <svg viewBox="0 0 72 72" width="96" height="96">
         <defs>
@@ -248,17 +228,16 @@ const logos = [
 ];
 ---
 
-<Base title="Logo Prototypes · NX-Studio">
+<Base title={t('pages.logos.title')} description={t('pages.logos.description')}>
   <main class="px-6 py-16">
     <div class="mx-auto max-w-7xl">
       <header class="mb-12">
-        <span class="lava-tag mb-3">// brand-prototypes · 8 conceptos</span>
+        <span class="lava-tag mb-3">{t('pages.logos.tag')}</span>
         <h1 class="font-display text-4xl lg:text-5xl font-bold tracking-tight">
-          8 direcciones <span class="text-lava">visuales</span> para NX-Studio
+          {t('pages.logos.headingA')} <span class="text-lava">{t('pages.logos.headingEm')}</span> {t('pages.logos.headingB')}
         </h1>
         <p class="mt-4 text-nx-muted text-lg max-w-3xl">
-          SVG vectorial editables en código. El que apruebes se integra como prop `colorway` en `Brand.astro`.
-          Cada uno es single-source (camino SVG vectorial, scalable a cualquier tamaño).
+          {t('pages.logos.sub')}
         </p>
       </header>
 
@@ -266,15 +245,15 @@ const logos = [
         {logos.map((l) => (
           <article class="lava-card p-6 flex flex-col" data-logo={l.id}>
             <div class="aspect-square grid place-items-center mb-4 bg-nx-bg rounded" set:html={l.svg} />
-            <span class="lava-tag mb-2">// {l.tag}</span>
+            <span class="lava-tag mb-2">// {t(`pages.logos.items.${l.id}.tag`)}</span>
             <h3 class="font-display text-xl font-bold mb-2">{l.name}</h3>
-            <p class="text-xs text-nx-muted mb-3 flex-1">{l.desc}</p>
+            <p class="text-xs text-nx-muted mb-3 flex-1">{t(`pages.logos.items.${l.id}.desc`)}</p>
             <div class="border-t border-nx-border pt-3">
-              <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim mb-1">// vibe</div>
-              <p class="text-xs text-nx-muted italic">{l.feel}</p>
+              <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim mb-1">{t('pages.logos.vibeLabel')}</div>
+              <p class="text-xs text-nx-muted italic">{t(`pages.logos.items.${l.id}.feel`)}</p>
             </div>
             <button class="mt-4 lava-btn lava-btn-ghost text-xs w-full" onclick={`navigator.clipboard.writeText('${l.code}')`}>
-              Copiar snippet
+              {t('pages.logos.copySnippet')}
             </button>
           </article>
         ))}
@@ -282,8 +261,8 @@ const logos = [
 
       <!-- Selector para probar en Nav -->
       <section class="lava-card lava-card-accent p-6 mb-8">
-        <h2 class="font-display text-2xl font-bold mb-4">Test en Nav (live)</h2>
-        <p class="text-xs text-nx-muted mb-4">Elige un logo y verás cómo se comporta en la barra superior reducida:</p>
+        <h2 class="font-display text-2xl font-bold mb-4">{t('pages.logos.testNav.title')}</h2>
+        <p class="text-xs text-nx-muted mb-4">{t('pages.logos.testNav.desc')}</p>
 
         <div class="grid grid-cols-4 md:grid-cols-8 gap-2 mb-6">
           {logos.map((l) => (
@@ -331,15 +310,15 @@ const logos = [
         {logos.map((l) => (
           <details class="lava-card p-6">
             <summary class="font-display font-bold cursor-pointer hover:text-lava transition">
-              {l.id} · {l.name} — specs
+              {l.id} · {l.name} — {t('pages.logos.specsSuffix')}
             </summary>
             <div class="mt-4 space-y-2">
               <div>
-                <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim">// código inline</div>
+                <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim">{t('pages.logos.inlineCode')}</div>
                 <pre class="text-xs overflow-x-auto p-3 bg-nx-bg rounded border border-nx-border mt-2 text-nx-muted">{l.svg.trim()}</pre>
               </div>
               <div>
-                <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim">// integra como</div>
+                <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim">{t('pages.logos.integrateAs')}</div>
                 <code class="text-xs font-mono text-lava-edge">{l.code}</code>
               </div>
             </div>
@@ -350,10 +329,10 @@ const logos = [
       <!-- Footer -->
       <div class="text-center mt-12">
         <p class="text-xs text-nx-dim mb-3">
-          Cuando apruebes uno, lo integro en <code class="font-mono text-lava-edge">Brand.astro</code> como variante y lo comiteo.
+          {t('pages.logos.footerNoteA')} <code class="font-mono text-lava-edge">Brand.astro</code> {t('pages.logos.footerNoteB')}
         </p>
-        <a href="/NX-Studio/brand" class="font-mono text-xs text-nx-dim hover:text-lava-edge transition">
-          ← volver a Brand system
+        <a href={localeUrl('/brand', locale)} class="font-mono text-xs text-nx-dim hover:text-lava-edge transition">
+          {t('pages.logos.back')}
         </a>
       </div>
     </div>

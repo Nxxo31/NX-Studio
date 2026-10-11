@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { env as runtimeEnv } from 'cloudflare:workers';
 import { createDb } from '~/db';
 import { createEmailService } from '~/lib/email';
 import { handleLicitacionSubmit, type SubmitDeps } from '~/server/licitacion-handler';
@@ -19,8 +20,14 @@ export const prerender = false;
  * engine server-side (computeQuote desde ~/data/pricing), persistencia en D1,
  * notificación por email no bloqueante.
  */
-export const POST: APIRoute = async ({ request, locals }) => {
-  const env = locals.runtime.env;
+export const POST: APIRoute = async ({ request }) => {
+  // Astro v6+: locals.runtime.env fue removido — se usa el binding global
+  // `cloudflare:workers` (ver https://docs.astro.build/en/guides/integrations-guide/cloudflare/).
+  const env = runtimeEnv as unknown as {
+    DB: D1Database;
+    RESEND_API_KEY?: string;
+    CONTACT_EMAIL?: string;
+  } & Record<string, unknown>;
 
   const db = createDb(env.DB);
   const email = createEmailService({

@@ -1,15 +1,31 @@
 ---
 import Layout from '../layouts/Base.astro';
-import { FEATURES, MODIFIERS, ENGAGEMENT_SHAPES, CATEGORIES, computeQuote, type EngagementShape } from '../data/pricing';
+import { FEATURES, MODIFIERS, ENGAGEMENT_SHAPES, CATEGORIES, type EngagementShape } from '../data/pricing';
+import { getT, getLocale, localeUrl } from '~/i18n';
 
-const featuresByCategory = Object.entries(CATEGORIES).map(([id, meta]) => ({
+const t = getT(Astro);
+const locale = getLocale(Astro);
+
+// Data-driven copy: pricing.ts es request-invariante — labels via t() por id estable.
+const featuresByCategory = Object.entries(CATEGORIES).map(([id]) => ({
   id,
-  meta,
   items: FEATURES.filter((f) => f.category === id),
 }));
+
+// Mapas id → label traducido para el script client-side (breakdown + band).
+const i18nFeatures = Object.fromEntries(FEATURES.map((f) => [f.id, t(`pages.cotizador.features.${f.id}.name`)]));
+const i18nShapes = Object.fromEntries(Object.keys(ENGAGEMENT_SHAPES).map((id) => [id, t(`pages.cotizador.shapes.${id}.name`)]));
+const i18nModifiers = Object.fromEntries(MODIFIERS.map((m) => [m.id, t(`pages.cotizador.modifiers.${m.id}.name`)]));
+const i18nBands = Object.fromEntries(['Starter', 'Standard', 'Growth', 'Enterprise'].map((b) => [b, t(`pages.cotizador.bands.${b}`)]));
+const i18nLabels = {
+  shape: t('pages.cotizador.breakdown.shape'),
+  subtotalFeatures: t('pages.cotizador.breakdown.subtotalFeatures'),
+  baseFee: t('pages.cotizador.breakdown.baseFee'),
+  multiplier: t('pages.cotizador.breakdown.multiplier'),
+};
 ---
 
-<Layout title="Cotizador · NX-Studio" description="Estimador de proyectos por features. Selecciona capacidades, ve el rango de inversión en tiempo real.">
+<Layout title={t('pages.cotizador.title')} description={t('pages.cotizador.description')}>
   <section class="relative px-6 py-20 lg:py-28">
     <div class="mx-auto max-w-6xl">
 
@@ -17,20 +33,19 @@ const featuresByCategory = Object.entries(CATEGORIES).map(([id, meta]) => ({
       <header class="mb-12 reveal">
         <span class="lava-tag mb-4">// pricing-engine v0.1</span>
         <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
-          Cotizador por <span class="text-lava">features</span>
+          {t('pages.cotizador.headingA')} <span class="text-lava">{t('pages.cotizador.headingEm')}</span>
         </h1>
         <p class="text-nx-muted max-w-2xl text-lg">
-          Selecciona las capacidades que necesita tu proyecto. El rango de inversión se calcula en tiempo real
-          según horas estimadas, tarifa blended, modifiers de urgencia y engagement shape.
+          {t('pages.cotizador.sub')}
         </p>
         <p class="text-nx-dim text-sm mt-4 font-mono">
-          ⚠ Rango indicativo. No publicamos precio exacto — depende de scope, complejidad y evoluciones.
+          {t('pages.cotizador.disclaimer')}
         </p>
       </header>
 
       <!-- Engagement shape selector -->
       <div class="mb-10 reveal">
-        <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-4">01 / Engagement shape</h2>
+        <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-4">{t('pages.cotizador.step1')}</h2>
         <div id="shapes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           {Object.values(ENGAGEMENT_SHAPES).map((s) => (
             <button
@@ -40,8 +55,8 @@ const featuresByCategory = Object.entries(CATEGORIES).map(([id, meta]) => ({
               aria-pressed="false"
             >
               <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">{s.id}</div>
-              <div class="font-display font-semibold mb-2">{s.name}</div>
-              <div class="text-xs text-nx-muted leading-relaxed">{s.description}</div>
+              <div class="font-display font-semibold mb-2">{t(`pages.cotizador.shapes.${s.id}.name`)}</div>
+              <div class="text-xs text-nx-muted leading-relaxed">{t(`pages.cotizador.shapes.${s.id}.description`)}</div>
               <div class="mt-3 font-mono text-xs text-nx-dim">
                 base ${s.baseFee} · {s.baseHours || '–'}h
               </div>
@@ -52,13 +67,13 @@ const featuresByCategory = Object.entries(CATEGORIES).map(([id, meta]) => ({
 
       <!-- Features por categoría -->
       <div class="mb-10 reveal">
-        <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-4">02 / Selecciona features</h2>
+        <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-4">{t('pages.cotizador.step2')}</h2>
         <div class="space-y-8">
           {featuresByCategory.map((cat) => (
             <div>
               <div class="mb-3">
-                <div class="font-display font-semibold text-lg">{cat.meta.name}</div>
-                <div class="text-xs text-nx-muted">{cat.meta.description}</div>
+                <div class="font-display font-semibold text-lg">{t(`pages.cotizador.categories.${cat.id}.name`)}</div>
+                <div class="text-xs text-nx-muted">{t(`pages.cotizador.categories.${cat.id}.description`)}</div>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {cat.items.map((f) => (
@@ -74,12 +89,12 @@ const featuresByCategory = Object.entries(CATEGORIES).map(([id, meta]) => ({
                     </div>
                     <div class="flex-1">
                       <div class="flex items-baseline justify-between gap-2 mb-1">
-                        <div class="font-display font-medium text-sm">{f.name}</div>
+                        <div class="font-display font-medium text-sm">{t(`pages.cotizador.features.${f.id}.name`)}</div>
                         <div class="font-mono text-xs text-nx-dim shrink-0">{f.hours}h · ${f.hours * f.rate}</div>
                       </div>
-                      <p class="text-xs text-nx-muted leading-relaxed">{f.description}</p>
+                      <p class="text-xs text-nx-muted leading-relaxed">{t(`pages.cotizador.features.${f.id}.description`)}</p>
                       {f.optional && (
-                        <span class="lava-tag mt-2" style="font-size: 0.625rem;">optional</span>
+                        <span class="lava-tag mt-2" style="font-size: 0.625rem;">{t('pages.cotizador.optional')}</span>
                       )}
                     </div>
                   </label>
@@ -92,7 +107,7 @@ const featuresByCategory = Object.entries(CATEGORIES).map(([id, meta]) => ({
 
       <!-- Modifiers -->
       <div class="mb-10 reveal">
-        <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-4">03 / Modifiers</h2>
+        <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-4">{t('pages.cotizador.step3')}</h2>
         <div id="modifiers" class="grid grid-cols-1 md:grid-cols-3 gap-3">
           {MODIFIERS.map((m) => (
             <label
@@ -102,8 +117,8 @@ const featuresByCategory = Object.entries(CATEGORIES).map(([id, meta]) => ({
               <input type="checkbox" class="sr-only peer" />
               <div class="mt-0.5 h-4 w-4 shrink-0 border border-nx-border-strong rounded-sm peer-checked:bg-lava peer-checked:border-lava transition"></div>
               <div class="flex-1">
-                <div class="font-display font-medium text-sm mb-1">{m.name}</div>
-                <p class="text-xs text-nx-muted leading-relaxed">{m.description}</p>
+                <div class="font-display font-medium text-sm mb-1">{t(`pages.cotizador.modifiers.${m.id}.name`)}</div>
+                <p class="text-xs text-nx-muted leading-relaxed">{t(`pages.cotizador.modifiers.${m.id}.description`)}</p>
               </div>
             </label>
           ))}
@@ -115,34 +130,34 @@ const featuresByCategory = Object.entries(CATEGORIES).map(([id, meta]) => ({
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
 
           <div class="md:col-span-2">
-            <div class="font-mono text-xs uppercase tracking-widest text-lava-edge mb-2">Rango indicativo</div>
+            <div class="font-mono text-xs uppercase tracking-widest text-lava-edge mb-2">{t('pages.cotizador.panel.range')}</div>
             <div class="flex items-baseline gap-2 flex-wrap">
               <span id="q-low"  class="font-display text-3xl lg:text-4xl font-bold">$0</span>
               <span class="text-nx-dim text-2xl">—</span>
               <span id="q-high" class="font-display text-3xl lg:text-4xl font-bold">$0</span>
-              <span id="q-band" class="lava-tag ml-2">Starter</span>
+              <span id="q-band" class="lava-tag ml-2">{t('pages.cotizador.bands.Starter')}</span>
             </div>
             <div class="text-xs text-nx-muted mt-2 font-mono">
-              <span id="q-hours">0h</span> estimadas · base fee <span id="q-base">$0</span>
+              <span id="q-hours">0h</span> {t('pages.cotizador.panel.estimated')} · base fee <span id="q-base">$0</span>
             </div>
           </div>
 
           <div class="md:col-span-1">
             <div class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2">Features</div>
             <div id="q-count" class="font-display text-2xl">0</div>
-            <div class="text-xs text-nx-muted">seleccionadas</div>
+            <div class="text-xs text-nx-muted">{t('pages.cotizador.panel.selected')}</div>
           </div>
 
           <div class="md:col-span-1 flex md:justify-end">
-            <a href="/contacto" class="lava-btn">
-              Solicitar scoping →
+            <a href={localeUrl('/contacto', locale)} class="lava-btn">
+              {t('pages.cotizador.panel.cta')}
             </a>
           </div>
         </div>
 
         <details class="mt-6">
           <summary class="font-mono text-xs uppercase tracking-widest text-nx-muted cursor-pointer hover:text-lava-edge transition">
-            Ver desglose
+            {t('pages.cotizador.panel.breakdown')}
           </summary>
           <div id="q-breakdown" class="mt-4 space-y-2 font-mono text-xs"></div>
         </details>
@@ -152,6 +167,11 @@ const featuresByCategory = Object.entries(CATEGORIES).map(([id, meta]) => ({
   </section>
 </Layout>
 
+<script define:vars={{ i18nFeatures, i18nShapes, i18nModifiers, i18nBands, i18nLabels }} is:inline>
+  // define:vars declara los mapas i18n como consts en este scope; los expongo
+  // para el script module (el breakdown client-side los consume).
+  window.__cotizadorI18n = { i18nFeatures, i18nShapes, i18nModifiers, i18nBands, i18nLabels };
+</script>
 <script>
   import { computeQuote, ENGAGEMENT_SHAPES, type EngagementShape } from '../data/pricing';
 
@@ -172,6 +192,15 @@ const featuresByCategory = Object.entries(CATEGORIES).map(([id, meta]) => ({
 
   const fmt = new Intl.NumberFormat('en-US');
 
+  // Labels i18n inyectados server-side por define:vars en el script is:inline anterior
+  const L = (window as any).__cotizadorI18n as {
+    i18nFeatures: Record<string, string>;
+    i18nShapes: Record<string, string>;
+    i18nModifiers: Record<string, string>;
+    i18nBands: Record<string, string>;
+    i18nLabels: { shape: string; subtotalFeatures: string; baseFee: string; multiplier: string };
+  };
+
   function render() {
     const quote = computeQuote(state);
 
@@ -181,26 +210,26 @@ const featuresByCategory = Object.entries(CATEGORIES).map(([id, meta]) => ({
     $('#q-hours').textContent = fmt.format(quote.totalHours) + 'h';
     $('#q-base').textContent  = '$' + fmt.format(quote.baseFee);
     $('#q-count').textContent = String(state.featureIds.length);
-    $('#q-band').textContent  = quote.bandLabel;
+    $('#q-band').textContent  = L.i18nBands[quote.bandLabel] ?? quote.bandLabel;
 
     // Breakdown
     const bd = $('#q-breakdown');
     if (bd) {
       bd.innerHTML = `
-        <div class="flex justify-between"><span>Shape: <b>${quote.shape.name}</b></span><span>$${fmt.format(quote.baseFee)}</span></div>
+        <div class="flex justify-between"><span>${L.i18nLabels.shape}: <b>${L.i18nShapes[quote.shape.id] ?? quote.shape.name}</b></span><span>$${fmt.format(quote.baseFee)}</span></div>
         ${quote.features.map(({ feature, subtotal }) => `
           <div class="flex justify-between text-nx-muted">
-            <span>· ${feature.name} <span class="text-nx-dim">(${feature.hours}h × $${feature.rate})</span></span>
+            <span>· ${L.i18nFeatures[feature.id] ?? feature.name} <span class="text-nx-dim">(${feature.hours}h × $${feature.rate})</span></span>
             <span>$${fmt.format(subtotal)}</span>
           </div>
         `).join('')}
         ${quote.modifiers.length ? `<div class="hairline my-2"></div>` + quote.modifiers.map((m) =>
-          `<div class="flex justify-between text-lava-edge"><span>· ${m.name}</span><span>×${m.multiplier.toFixed(2)}</span></div>`
+          `<div class="flex justify-between text-lava-edge"><span>· ${L.i18nModifiers[m.id] ?? m.name}</span><span>×${m.multiplier.toFixed(2)}</span></div>`
         ).join('') : ''}
         <div class="hairline my-2"></div>
-        <div class="flex justify-between"><span>Subtotal features</span><span>$${fmt.format(quote.subtotalFeatures)}</span></div>
-        <div class="flex justify-between text-nx-muted"><span>Base fee (kickoff)</span><span>$${fmt.format(quote.baseFee)}</span></div>
-        <div class="flex justify-between text-nx-muted"><span>Multiplier total</span><span>×${quote.multiplier.toFixed(3)}</span></div>
+        <div class="flex justify-between"><span>${L.i18nLabels.subtotalFeatures}</span><span>$${fmt.format(quote.subtotalFeatures)}</span></div>
+        <div class="flex justify-between text-nx-muted"><span>${L.i18nLabels.baseFee}</span><span>$${fmt.format(quote.baseFee)}</span></div>
+        <div class="flex justify-between text-nx-muted"><span>${L.i18nLabels.multiplier}</span><span>×${quote.multiplier.toFixed(3)}</span></div>
       `;
     }
 

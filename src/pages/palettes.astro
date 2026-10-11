@@ -1,56 +1,48 @@
 ---
 import Base from "../layouts/Base.astro";
 import Brand from "../components/Brand.astro";
+import { getT, getLocale, localeUrl } from "~/i18n";
 
-// 4 paletas a comparar
+const t = getT(Astro);
+const locale = getLocale(Astro);
+
+// 4 paletas a comparar (copy descriptivo via i18n: pages.palettes.items.{id}.*)
 const palettes = [
   {
     id: "lava-pure",
     name: "Lava Pure",
-    tag: "warm · energetic",
-    desc: "Lava como acento dominante, neutros cálidos. Replit/Nium vibe.",
     primary: "#ff4500",
     secondary: "#d97706",
     accent: "#c026d3",
     bg: "#0a0608",
     text: "#f5e6d3",
-    use: "Mantiene tu look v0.2 actual pero añade sistema completo (semánticos, chart, borders). El más cercano a tu identidad original.",
   },
   {
     id: "steel-indigo",
     name: "Steel Indigo",
-    tag: "corporate · fintech · DEFAULT",
-    desc: "Lava se reserva como acento emocional, indigo como acento corporativo. Linear vibe.",
     primary: "#ff4500",
     secondary: "#5e6ad2",
     accent: "#ff6a00",
     bg: "#0b0b14",
     text: "#f1f1f4",
-    use: "✓ ESTA ES TU PALETA. Cuando quieres sentir más corporativo/fintech sin perder la lava. Buenos targets: enterprise SaaS, B2B premium.",
   },
   {
     id: "obsidian-teal",
     name: "Obsidian + Teal",
-    tag: "engineering · minimal",
-    desc: "Monochrome radical con teal como único acento. Lava solo en hero CTAs. Vercel vibe.",
     primary: "#ff4500",
     secondary: "#14b8a6",
     accent: "#f59e0b",
     bg: "#000000",
     text: "#fafafa",
-    use: "Look enterprise engineering tool. Bueno si compites con Vercel/Linear en credibilidad técnica.",
   },
   {
     id: "navy-gold",
     name: "Deep Navy + Gold",
-    tag: "premium · enterprise",
-    desc: "Navy como base (autoridad), gold como acento premium (confianza). Lava como energía. Andela/Toptal vibe.",
     primary: "#ff4500",
     secondary: "#d4a574",
     accent: "#3b82f6",
     bg: "#0a0e1a",
     text: "#faf7f0",
-    use: "Targets corporativos grandes / enterprise contracts. Comunica premium + confianza + energía.",
   },
 ];
 
@@ -58,24 +50,23 @@ const palettes = [
 const defaultPalette = "steel-indigo";
 ---
 
-<Base title="Palettes Preview · NX-Studio">
+<Base title={t('pages.palettes.title')} description={t('pages.palettes.description')}>
   <main class="px-6 py-16">
     <div class="mx-auto max-w-7xl">
       <header class="mb-12">
-        <span class="lava-tag mb-3">// palettes-preview · v2</span>
+        <span class="lava-tag mb-3">{t('pages.palettes.tag')}</span>
         <h1 class="font-display text-4xl lg:text-5xl font-bold tracking-tight">
-          4 paletas <span class="text-lava">empresariales</span>
+          {t('pages.palettes.headingA')} <span class="text-lava">{t('pages.palettes.headingEm')}</span>
         </h1>
         <p class="mt-4 text-nx-muted text-lg max-w-3xl">
-          Cada paleta es un sistema completo: primary + secondary + accent + 4 semánticos + 3 neutros + 4 chart.
-          Activa una con el switcher arriba para previsualizar en vivo cómo se siente el sitio con esa identidad.
+          {t('pages.palettes.sub')}
         </p>
       </header>
 
       <!-- Switcher (live) -->
       <div class="mb-12 sticky top-20 z-40 lava-card lava-card-accent p-4">
         <div class="flex flex-wrap items-center gap-3">
-          <span class="font-mono text-xs uppercase tracking-widest text-nx-dim">// cambiar paleta:</span>
+          <span class="font-mono text-xs uppercase tracking-widest text-nx-dim">{t('pages.palettes.switcher')}</span>
           {palettes.map((p) => (
             <button
               data-set-palette={p.id}
@@ -100,18 +91,18 @@ const defaultPalette = "steel-indigo";
           >
             <div class="flex items-start justify-between mb-4">
               <div>
-                <span class="lava-tag mb-2">// {p.tag}</span>
+                <span class="lava-tag mb-2">// {t(`pages.palettes.items.${p.id}.tag`)}</span>
                 <h2 class="font-display text-2xl font-bold mt-2">{p.name}</h2>
               </div>
               <button
                 data-set-palette={p.id}
                 class="font-mono text-xs text-nx-dim hover:text-lava-edge transition"
               >
-                activar →
+                {t('pages.palettes.activate')}
               </button>
             </div>
 
-            <p class="text-sm text-nx-muted mb-4">{p.desc}</p>
+            <p class="text-sm text-nx-muted mb-4">{t(`pages.palettes.items.${p.id}.desc`)}</p>
 
             <!-- Swatches -->
             <div class="grid grid-cols-5 gap-2 mb-4">
@@ -139,8 +130,8 @@ const defaultPalette = "steel-indigo";
 
             <!-- Uso recomendado -->
             <div class="border-t border-nx-border pt-3">
-              <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">// recomendado para</div>
-              <p class="text-xs text-nx-muted">{p.use}</p>
+              <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">{t('pages.palettes.recommendedFor')}</div>
+              <p class="text-xs text-nx-muted">{t(`pages.palettes.items.${p.id}.use`)}</p>
             </div>
           </article>
         ))}
@@ -148,9 +139,9 @@ const defaultPalette = "steel-indigo";
 
       <!-- Specs técnicas (preview bajo la paleta activa) -->
       <section class="lava-card lava-card-accent p-6 lg:p-8 mb-12">
-        <h2 class="font-display text-2xl font-bold mb-4">Cómo se ve la paleta activa en contexto</h2>
+        <h2 class="font-display text-2xl font-bold mb-4">{t('pages.palettes.preview.title')}</h2>
         <p class="text-nx-muted mb-6 text-sm">
-          Estos elementos cambian automáticamente cuando activas una paleta arriba:
+          {t('pages.palettes.preview.desc')}
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -187,19 +178,19 @@ const defaultPalette = "steel-indigo";
             <div class="space-y-2">
               <div class="flex items-center gap-2 p-2 rounded" style="background: var(--nx-success-bg)">
                 <span style="color: var(--nx-success)">✓</span>
-                <span class="text-sm">Success state — operación completada</span>
+                <span class="text-sm">{t('pages.palettes.semantic.success')}</span>
               </div>
               <div class="flex items-center gap-2 p-2 rounded" style="background: var(--nx-warn-bg)">
                 <span style="color: var(--nx-warn)">⚠</span>
-                <span class="text-sm">Warning — atención requerida</span>
+                <span class="text-sm">{t('pages.palettes.semantic.warn')}</span>
               </div>
               <div class="flex items-center gap-2 p-2 rounded" style="background: var(--nx-danger-bg)">
                 <span style="color: var(--nx-danger)">✕</span>
-                <span class="text-sm">Danger — error crítico</span>
+                <span class="text-sm">{t('pages.palettes.semantic.danger')}</span>
               </div>
               <div class="flex items-center gap-2 p-2 rounded" style="background: var(--nx-info-bg)">
                 <span style="color: var(--nx-info)">ⓘ</span>
-                <span class="text-sm">Info — contexto adicional</span>
+                <span class="text-sm">{t('pages.palettes.semantic.info')}</span>
               </div>
             </div>
           </div>
@@ -222,9 +213,9 @@ const defaultPalette = "steel-indigo";
 
       <!-- Tokens CSS (referencia) -->
       <section class="lava-card p-6 lg:p-8 mb-12">
-        <h2 class="font-display text-2xl font-bold mb-4">Sistema de tokens completo</h2>
+        <h2 class="font-display text-2xl font-bold mb-4">{t('pages.palettes.tokens.title')}</h2>
         <p class="text-nx-muted mb-6 text-sm">
-          Cada paleta define los mismos 25 tokens. Los archivos consumen variables CSS — nunca hex hardcoded.
+          {t('pages.palettes.tokens.desc')}
         </p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
           <div class="lava-card p-4">
@@ -257,8 +248,8 @@ const defaultPalette = "steel-indigo";
 
       <!-- Footer del preview -->
       <div class="mt-8 text-center">
-        <a href="/NX-Studio/" class="font-mono text-xs text-nx-dim hover:text-lava-edge transition">
-          ← volver al sitio
+        <a href={localeUrl('/', locale)} class="font-mono text-xs text-nx-dim hover:text-lava-edge transition">
+          {t('pages.palettes.back')}
         </a>
       </div>
     </div>
