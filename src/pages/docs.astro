@@ -1,0 +1,88 @@
+---
+// /docs — documentación pública: cómo trabajamos y cómo cotizamos.
+// Contenido derivado de docs/research-pricing-patterns.md (secciones
+// aplicables a la oferta vigente; OSINT quedó fuera del catálogo el
+// 2026-10-09 y no se documenta públicamente).
+import Base from '~/layouts/Base.astro';
+import Nav from '~/components/Nav.astro';
+import Footer from '~/components/Footer.astro';
+
+// Página 100% estática — se prerrenderiza en build (SEO + velocidad).
+export const prerender = true;
+---
+
+<Base title="Docs — cómo trabajamos — NX-Studio" description="Documentación pública de NX-Studio: modelo de pricing, formas de engagement y licencia de templates.">
+  <Nav />
+  <main class="mx-auto max-w-3xl px-6 py-24">
+    <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--lava-edge);">Docs</p>
+    <h1 class="mt-2 font-display text-3xl font-bold">Cómo trabajamos</h1>
+    <p class="mt-3 text-sm text-nx-muted">
+      Transparencia estructural: así calculamos rangos, así se ve un engagement y
+      así funciona la licencia de templates. Sin precios fijos publicados —
+      alineado con la práctica de la industria.
+    </p>
+
+    <article class="mt-12 space-y-12">
+      <section class="reveal">
+        <h2 class="font-display text-xl font-bold">1 · Pricing por features</h2>
+        <div class="lava-card mt-4 space-y-3 p-6 text-sm text-nx-muted">
+          <p>El <a href="/cotizador" class="text-nx-text underline decoration-[var(--lava-edge)]">cotizador</a> descompone cada proyecto en features seleccionables con horas estimadas:</p>
+          <ul class="list-inside list-disc space-y-1">
+            <li><strong class="text-nx-text">Precio base</strong> (kickoff / scoping) — siempre presente</li>
+            <li><strong class="text-nx-text">Features</strong> con horas estimadas — el total se actualiza en tiempo real</li>
+            <li><strong class="text-nx-text">Modificadores</strong>: urgencia (rush +25%), bundle (−10% &gt;80h), largo plazo (−15% ≥12 meses)</li>
+            <li><strong class="text-nx-text">Output</strong>: rango indicativo ±15% en USD con banda Starter / Standard / Growth / Enterprise</li>
+          </ul>
+          <p>El cálculo se re-valida en el servidor al enviar el formulario — el número final nunca depende del cliente.</p>
+        </div>
+      </section>
+
+      <section class="reveal">
+        <h2 class="font-display text-xl font-bold">2 · Cuatro formas de engagement</h2>
+        <div class="lava-card mt-4 p-6">
+          <ul class="space-y-4 text-sm text-nx-muted">
+            <li><strong class="text-nx-text">Fixed / por release</strong> — alcance definido y precio fijo. Ideal para entregas puntuales.</li>
+            <li><strong class="text-nx-text">Retainer mensual</strong> — equipo continuo con cuota predecible.</li>
+            <li><strong class="text-nx-text">Dedicated team</strong> — equipo exclusivo full-time para producto continuo.</li>
+            <li><strong class="text-nx-text">Time &amp; materials</strong> — por horas, para alcances que evolucionan.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="reveal">
+        <h2 class="font-display text-xl font-bold">3 · Testing &amp; QA as a service</h2>
+        <div class="lava-card mt-4 space-y-3 p-6 text-sm text-nx-muted">
+          <p>Nuestros tiers entregan <em>outcomes</em>, no horas facturadas:</p>
+          <ul class="list-inside list-disc space-y-1">
+            <li><strong class="text-nx-text">Foundation</strong> — suscripción de estabilidad</li>
+            <li><strong class="text-nx-text">Accelerator</strong> — velocidad + CI/CD</li>
+            <li><strong class="text-nx-text">Strategic</strong> — enterprise, security y accesibilidad WCAG 2.1 AA</li>
+          </ul>
+          <p>Platform fee separado de seat licenses, para total transparencia. Todo engagement puede abrir con un scoping sprint fixed-fee de riesgo cero.</p>
+          <p>Detalle en <a href="/servicios/testing" class="text-nx-text underline decoration-[var(--lava-edge)]">/servicios/testing</a>.</p>
+        </div>
+      </section>
+
+      <section class="reveal">
+        <h2 class="font-display text-xl font-bold">4 · Templates: licencia y cobro</h2>
+        <div class="lava-card mt-4 space-y-3 p-6 text-sm text-nx-muted">
+          <p>
+            Los <a href="/templates" class="text-nx-text underline decoration-[var(--lava-edge)]">templates</a> se venden con
+            <strong class="text-nx-text">pago único y licencia MIT</strong> sobre el código entregado.
+          </p>
+          <ul class="list-inside list-disc space-y-1">
+            <li>Cada template declara explícitamente qué incluye y qué no incluye</li>
+            <li>El cobro se confirma manualmente con el operador (sin checkout automático por ahora)</li>
+            <li>Soporte de implementación disponible como add-on opcional</li>
+          </ul>
+        </div>
+      </section>
+    </article>
+
+    <div class="mt-16 flex flex-wrap gap-3">
+      <a href="/cotizador" class="lava-btn">Cotizar proyecto</a>
+      <a href="/contacto" class="lava-btn-ghost">Hablar con nosotros</a>
+    </div>
+  </main>
+  <Footer />
+</Base>

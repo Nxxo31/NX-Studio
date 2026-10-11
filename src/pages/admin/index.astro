@@ -1,0 +1,96 @@
+---
+// /admin — panel del operador.
+//
+// Control de acceso: Cloudflare Access sobre /admin/* y /api/admin/*
+// (decisión operador 2026-10-11 — ver PROJECT.md §Phase 11). La app NO
+// implementa auth propia en esta ruta; en local/preview el panel queda
+// abierto y la protección se materializa en producción vía Access policy.
+import Base from '~/layouts/Base.astro';
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { createDb } from '~/db';
+import * as licitacionRepo from '~/server/licitacion-repo';
+import type { Licitacion } from '~/db/schema';
+
+// Astro v6+: locals.runtime.env fue removido — binding global cloudflare:workers.
+const env = runtimeEnv as unknown as { DB: D1Database };
+const db = createDb(env.DB);
+let items: Licitacion[] = [];
+try {
+  items = await licitacionRepo.listAll(db);
+} catch {
+  items = [];
+}
+
+const filter = Astro.url.searchParams.get('status');
+const visible = filter ? items.filter((l) => l.status === filter) : items;
+
+const STATUS = ['nueva', 'contactada', 'propuesta_enviada', 'aceptada', 'rechazada', 'completada'] as const;
+const counts = new Map<string, number>();
+for (const it of items) counts.set(it.status, (counts.get(it.status) ?? 0) + 1);
+
+const fmt = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const updated = Astro.url.searchParams.get('updated');
+---
+
+<Base title="Admin — NX-Studio" description="Panel del operador. Gestión de licitaciones.">
+  <main class="mx-auto max-w-6xl px-6 py-16">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--lava-edge);">Operador</p>
+        <h1 class="mt-2 font-display text-3xl font-bold">Licitaciones</h1>
+        <p class="mt-1 text-sm text-nx-muted">{items.length} totales · protegido por Cloudflare Access</p>
+      </div>
+      <a href="/" class="lava-btn-ghost">← Sitio público</a>
+    </div>
+
+    {updated && (
+      <p class="lava-tag mt-6 inline-block" role="status">Estado actualizado ({updated})</p>
+    )}
+
+    <nav class="mt-8 flex flex-wrap gap-2 font-mono text-xs uppercase tracking-widest" aria-label="Filtro por estado">
+      <a class={filter ? 'lava-btn-ghost' : 'lava-btn'} href="/admin">Todas ({items.length})</a>
+      {STATUS.map((s) => (
+        <a class={filter === s ? 'lava-btn' : 'lava-btn-ghost'} href={`/admin?status=${s}`}>
+          {s} ({counts.get(s) ?? 0})
+        </a>
+      ))}
+    </nav>
+
+    {visible.length === 0 ? (
+      <div class="lava-card mt-8 p-8 text-center text-nx-muted">Sin licitaciones en este estado.</div>
+    ) : (
+      <ul class="mt-8 space-y-4">
+        {visible.map((l) => (
+          <li class="lava-card p-6">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p class="font-mono text-xs text-nx-dim">
+                  {l.id.slice(0, 8)} · {new Date(l.createdAt).toLocaleString('es-CO')} · {l.tipo} · {l.engagement} · urgencia {l.urgencia}
+                </p>
+                <h2 class="mt-1 font-display text-lg font-bold">
+                  <a href={`/admin/licitacion/${l.id}`} class="hover:underline" style="text-decoration-color: var(--lava-edge);">{l.nombre}</a> <span class="font-normal text-nx-muted">&lt;{l.email}&gt;</span>
+                </h2>
+                <p class="mt-1 text-sm text-nx-muted">
+                  {[l.empresa, l.telefono, l.pais].filter(Boolean).join(' · ') || 'Sin datos de empresa'}
+                </p>
+              </div>
+              <p class="font-mono text-sm">{fmt.format(l.precioMin)} – {fmt.format(l.precioMax)} <span class="text-nx-dim">· {l.banda}</span></p>
+            </div>
+            <p class="mt-3 text-sm text-nx-muted">{l.descripcion}</p>
+            <form method="POST" action="/api/admin/update-status" class="mt-4 flex flex-wrap items-center gap-3">
+              <input type="hidden" name="id" value={l.id} />
+              <label class="sr-only" for={`status-${l.id}`}>Estado</label>
+              <select id={`status-${l.id}`} name="status"
+                class="border border-nx-border bg-transparent px-3 py-2 font-mono text-sm text-nx-text focus:border-[var(--lava-core)] focus:outline-none">
+                {STATUS.map((s) => (
+                  <option value={s} selected={s === l.status}>{s}</option>
+                ))}
+              </select>
+              <button type="submit" class="lava-btn">Actualizar</button>
+            </form>
+          </li>
+        ))}
+      </ul>
+    )}
+  </main>
+</Base>

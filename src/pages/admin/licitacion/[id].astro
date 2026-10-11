@@ -1,0 +1,110 @@
+---
+// /admin/licitacion/[id] — detalle de una licitacion (operador).
+// Protección vía Cloudflare Access (misma política que /admin/*).
+import Base from '~/layouts/Base.astro';
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { createDb } from '~/db';
+import { getById } from '~/server/licitacion-repo';
+import { FEATURES } from '~/data/pricing';
+
+export const prerender = false;
+
+// Astro v6+: locals.runtime.env fue removido — binding global cloudflare:workers.
+const env = runtimeEnv as unknown as { DB: D1Database };
+const db = createDb(env.DB);
+const row = await getById(db, Astro.params.id ?? '');
+
+const STATUS = ['nueva', 'contactada', 'propuesta_enviada', 'aceptada', 'rechazada', 'completada'] as const;
+const ENGAGEMENT_LABEL: Record<string, string> = {
+  fixed: 'Fixed / por release',
+  retainer: 'Retainer mensual',
+  dedicated: 'Dedicated team',
+  tm: 'Time & materials',
+};
+const fmt = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+
+let featureNames: string[] = [];
+if (row) {
+  try {
+    const ids = JSON.parse(row.featuresJson) as string[];
+    featureNames = ids.map((id) => FEATURES.find((f) => f.id === id)?.name ?? id);
+  } catch {
+    featureNames = [];
+  }
+}
+---
+
+<Base title={row ? `Licitación ${row.id.slice(0, 8)} — Admin` : 'No encontrada — Admin'}>
+  <main class="mx-auto max-w-3xl px-6 py-16">
+    <a href="/admin" class="font-mono text-xs uppercase tracking-widest text-nx-muted hover:text-nx-text">← Volver al panel</a>
+
+    {!row ? (
+      <div class="lava-card mt-8 p-8 text-center">
+        <h1 class="font-display text-xl font-bold">Licitación no encontrada</h1>
+        <p class="mt-2 font-mono text-sm text-nx-dim">{Astro.params.id}</p>
+      </div>
+    ) : (
+      <article class="lava-card mt-8 p-8">
+        <div class="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p class="font-mono text-xs text-nx-dim">{row.id}</p>
+            <h1 class="mt-1 font-display text-2xl font-bold">{row.nombre}</h1>
+            <p class="mt-1 text-sm text-nx-muted">
+              <a href={`mailto:${row.email}`} class="underline decoration-[var(--lava-edge)]">{row.email}</a>
+              {row.telefono ? ` · ${row.telefono}` : ''}
+            </p>
+            <p class="mt-1 text-sm text-nx-muted">
+              {[row.empresa, row.pais].filter(Boolean).join(' · ') || 'Sin empresa/país'}
+            </p>
+          </div>
+          <span class="lava-tag">{row.status}</span>
+        </div>
+
+        <dl class="mt-8 grid gap-4 border-t border-nx-border pt-6 text-sm sm:grid-cols-2">
+          <div><dt class="font-mono text-xs uppercase tracking-widest text-nx-dim">Tipo</dt><dd class="capitalize">{row.tipo}</dd></div>
+          <div><dt class="font-mono text-xs uppercase tracking-widest text-nx-dim">Engagement</dt><dd>{ENGAGEMENT_LABEL[row.engagement] ?? row.engagement}</dd></div>
+          <div><dt class="font-mono text-xs uppercase tracking-widest text-nx-dim">Urgencia</dt><dd class="capitalize">{row.urgencia}</dd></div>
+          <div><dt class="font-mono text-xs uppercase tracking-widest text-nx-dim">Banda</dt><dd>{row.banda}</dd></div>
+          <div>
+            <dt class="font-mono text-xs uppercase tracking-widest text-nx-dim">Rango estimado</dt>
+            <dd class="font-mono">{fmt.format(row.precioMin)} – {fmt.format(row.precioMax)}</dd>
+          </div>
+          <div>
+            <dt class="font-mono text-xs uppercase tracking-widest text-nx-dim">Recibida</dt>
+            <dd>{new Date(row.createdAt).toLocaleString('es-CO')}</dd>
+          </div>
+        </dl>
+
+        <div class="mt-6 border-t border-nx-border pt-6">
+          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-dim">Descripción</h2>
+          <p class="mt-2 whitespace-pre-line text-sm text-nx-muted">{row.descripcion}</p>
+        </div>
+
+        {featureNames.length > 0 && (
+          <div class="mt-6 border-t border-nx-border pt-6">
+            <h2 class="font-mono text-xs uppercase tracking-widest text-nx-dim">Features cotizadas ({featureNames.length})</h2>
+            <ul class="mt-3 flex flex-wrap gap-2">
+              {featureNames.map((n) => <li class="lava-tag">{n}</li>)}
+            </ul>
+          </div>
+        )}
+
+        <form method="POST" action="/api/admin/update-status" class="mt-8 flex flex-wrap items-center gap-3 border-t border-nx-border pt-6">
+          <input type="hidden" name="id" value={row.id} />
+          <label class="font-mono text-xs uppercase tracking-widest text-nx-dim" for="status-detail">Cambiar estado</label>
+          <select id="status-detail" name="status"
+            class="border border-nx-border bg-transparent px-3 py-2 font-mono text-sm text-nx-text focus:border-[var(--lava-core)] focus:outline-none">
+            {STATUS.map((s) => (
+              <option value={s} selected={s === row.status}>{s}</option>
+            ))}
+          </select>
+          <button type="submit" class="lava-btn">Actualizar</button>
+        </form>
+
+        {row.userId && (
+          <p class="mt-4 font-mono text-xs text-nx-dim">Vinculada a cuenta de cliente: {row.userId.slice(0, 8)}</p>
+        )}
+      </article>
+    )}
+  </main>
+</Base>

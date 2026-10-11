@@ -161,11 +161,11 @@ Desde v0.5.0 hay un backend SSR en Cloudflare Pages (`output=server`):
 | Phase 8 | Migración a Cloudflare Pages SSR + Resend + /api/licitacion | `7000794` ★ |
 | Phase 9 | QA playwright suite + project screenshot capture pipeline | `8b88180` |
 | Phase 10 | Backend foundation: D1, better-auth, schema, repos, seeds, tests | (este commit) ★ |
-| Phase 11 | (futuro) /admin panel + /portal + i18n + docs | — |
+| Phase 11 | /admin panel (list + detail + status) + /docs público. Portal e i18n diferidos (decisión operador 2026-10-11) | — |
 
-## Sprint actual
+## Sprint v0.4.0 (cerrado)
 
-**Sprint v0.4.0 — Reimaginación narrativa del Home (cerrado en este commit)**
+**Reimaginación narrativa del Home**
 
 Tareas completadas:
 - [x] Reescribir Home (`src/pages/index.astro`) con narrativa 3 bloques:
@@ -201,11 +201,47 @@ Tareas completadas (referencia):
 - [x] Headers de seguridad en Base.astro
 
 Pendientes (futuros sprints):
+- [ ] /portal/* portal cliente — diferido por decisión operador 2026-10-11
+      (requiere better-auth verificado E2E en Pages Functions antes de exponerse)
+- [ ] i18n — BLOQUEADO hasta decisión operador (ES-only por ahora)
 - [ ] /proceso (metodología 5 fases) — la versión inline del Home ya cubre esto
-- [ ] /precios (engagement shapes + tiers) — el cotizador ya cubre pricing
+- [ ] /precios (engagement shapes + tiers) — el cotizador y /docs ya cubren pricing
 - [ ] /productos (catálogo 11 repos) + /productos/[slug]
-- [ ] /docs (research-pricing-patterns.md)
-- [ ] Decidir i18n (ES vs ES+EN) — pendiente AGENTS.md
+
+## Sprint actual
+
+**Sprint v0.6.0 — Phase 11 acotada: /admin panel + /docs público (2026-10-11)**
+
+Scope definido por el operador (kanban t_c45baff3): Phase 11 original era
+demasiado amplio (admin + portal + i18n + docs). Se acotó a:
+
+- [x] `src/pages/admin/index.astro` — listado de licitaciones con filtro por
+      status, contadores, rango de precios, update inline de estado
+- [x] `src/pages/admin/licitacion/[id].astro` — detalle completo de una
+      licitacion (contacto, engagement, features cotizadas, descripción, estado)
+- [x] `src/pages/api/admin/update-status.ts` — POST form/JSON, validación Zod,
+      redirect 303 al panel; protección por Cloudflare Access (no auth in-app,
+      decisión operador)
+- [x] `src/pages/docs.astro` — documentación pública derivada de
+      `docs/research-pricing-patterns.md` (pricing por features, 4 engagement
+      shapes, tiers QA, licencia de templates). Sin sección OSINT (fuera de
+      catálogo desde 2026-10-09)
+- [x] Footer: link a /docs en columna "Sitio"
+- [x] Build exit 0 (`npx astro build --outDir .build-check` — el outDir
+      temporal evita un lock EPERM de `dist/` por proceso huérfano; `dist/`
+      es gitignored así que no afecta el commit)
+- [x] vitest 80/80 tests verdes
+
+Decisiones registradas:
+- **Auth de /admin**: Cloudflare Access sobre `/admin*` y `/api/admin*`
+  (no better-auth). Documentado como decisión operador. Nota de deploy:
+  requiere crear la Access policy en el dashboard Cloudflare antes de
+  exponer producción — sin esa policy las rutas quedan abiertas.
+- **/portal cliente**: NO implementado en este sprint. El scaffolding de
+  better-auth existe (Phase 10) pero el portal requiere pruebas E2E antes
+  de exponer a clientes. Queda como pendiente.
+- **i18n**: NO decidido. El sitio queda ES-only (consistente con AGENTS.md
+  "Español exclusivo"). La decisión ES vs ES+EN queda con el operador.
 
 ## Stack técnico
 
@@ -248,8 +284,9 @@ Pendientes (futuros sprints):
 2. **Templates sin payment real**: el botón de comprar redirige a
    `/contacto?topic=template&slug=X` — no hay Stripe checkout (supuesto de cobro
    manual, respeta preferencia del operador).
-3. **Sin portal de cliente en UI pública**: el portal `/portal/*` está implementado
-   pero no linkeado desde la UI pública. Los clientes reciben el link por email.
+3. **Sin portal de cliente**: diferido (decisión operador 2026-10-11). El
+   scaffolding better-auth existe (Phase 10) pero el portal no se expone hasta
+   tener pruebas E2E sobre Pages Functions.
 4. **Seed de producción se aplica manualmente**: `npm run db:seed:remote` requiere
    `wrangler` + auth Cloudflare. No hay CI/CD todavía.
 5. **Sin i18n**: solo ES. Pendiente decisión.
