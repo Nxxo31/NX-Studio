@@ -10,8 +10,8 @@ import { test, expect } from "@playwright/test";
 
 // Base URL del preview server (debe coincidir con playwright.config.ts).
 // Importante: SIN trailing slash para que `page.goto("/brand/")` concatene
-// correctamente (con slash genera `…/NX-Studio//brand/` que rompe el routing).
-const BASE = "http://127.0.0.1:4322/NX-Studio";
+// correctamente (con slash genera `…:4322//brand/` que rompe el routing).
+const BASE = "http://127.0.0.1:4322";
 
 const routes = [
   { path: "/",                              titleIncludes: "NX-Studio" },

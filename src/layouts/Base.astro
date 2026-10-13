@@ -17,7 +17,7 @@ const {
   description = t("meta.defaultDescription"),
 } = Astro.props;
 
-const site = Astro.site ?? "https://nx-studio.pages.dev";
+const site = Astro.site ?? "https://nx-studio.nx-studio.workers.dev";
 // Canonical sin prefijo de locale para 'es' (prefixDefaultLocale=false).
 const barePath = (() => {
   const seg = Astro.url.pathname.split("/")[1];
@@ -43,7 +43,7 @@ const alternates = LOCALES.map((l) => ({
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="robots" content="index,follow" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <link rel="icon" type="image/svg+xml" href="/NX-Studio/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonical} />
     {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
     <link rel="alternate" hreflang="x-default" href={new URL(localeUrl(barePath, DEFAULT_LOCALE), site).toString()} />
@@ -52,7 +52,7 @@ const alternates = LOCALES.map((l) => ({
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="NX-Studio" />
-    <meta property="og:image" content="https://raw.githubusercontent.com/Nxxo31/NX-Studio/master/public/og-image.svg" />
+    <meta property="og:image" content={new URL('/projects/nx-studio/desktop-home.png', site).toString()} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />

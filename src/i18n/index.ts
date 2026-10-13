@@ -14,9 +14,6 @@ export type Messages = typeof es;
 
 const DICTS: Record<Locale, Messages> = { es, en, pt };
 
-/** Base path legacy del sitio (home GitHub Pages); las rutas UI lo incluyen. */
-const BASE = '/NX-Studio';
-
 type AstroLike = Pick<AstroGlobal, 'locals'> & Partial<Pick<AstroGlobal, 'currentLocale'>>;
 
 /** Locale activo del request: Astro.currentLocale (routing i18n) o
@@ -56,13 +53,12 @@ export function getT(AstroOrLocale: AstroLike | Locale) {
 
 /**
  * URL con prefijo de locale. 'es' va sin prefijo (prefixDefaultLocale=false).
- * Preserva el base path legacy '/NX-Studio' que ya usan Nav/Footer/Hero.
- *   localeUrl('/servicios/', 'en') → '/NX-Studio/en/servicios/'
+ *   localeUrl('/servicios/', 'en') → '/en/servicios/'
  */
 export function localeUrl(path: string, locale: Locale): string {
   const p = path.startsWith('/') ? path : `/${path}`;
-  if (locale === DEFAULT_LOCALE) return `${BASE}${p}`.replace(/\/{2,}/g, '/');
-  return `${BASE}${joinLocale(locale, p)}`.replace(/\/{2,}/g, '/');
+  if (locale === DEFAULT_LOCALE) return p.replace(/\/{2,}/g, '/');
+  return joinLocale(locale, p).replace(/\/{2,}/g, '/');
 }
 
 export { DEFAULT_LOCALE, LOCALES, isValidLocale } from './country-map';

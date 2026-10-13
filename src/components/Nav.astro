@@ -10,12 +10,12 @@ const t = getT(locale);
 const rawPath = Astro.url.pathname;
 const seg = rawPath.split('/')[1];
 const path = (seg === 'en' || seg === 'pt' || seg === 'es') ? rawPath.slice(seg.length + 1) || '/' : rawPath;
-const base = '/NX-Studio';
+const base = '';
 const isActive = (href: string) => {
   // href ya viene con prefijo de locale; comparamos contra el path "lógico".
   const logicalHref = href.replace(new RegExp(`^${base}/(en|pt|es)`), base);
-  if (logicalHref === `${base}/`) {
-    return path === `${base}/` || path === `${base}` || path === '/' || path === '/NX-Studio/';
+  if (logicalHref === '/') {
+    return path === '/';
   }
   return path.startsWith(logicalHref) || rawPath.startsWith(href);
 };

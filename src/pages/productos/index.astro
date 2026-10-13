@@ -96,7 +96,7 @@ const prototypes = projects.filter((p) => p.status === "prototype").length;
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {g.items.map((p) => (
                 <a
-                  href={`/NX-Studio/productos/${p.slug}`}
+                  href={`/productos/${p.slug}`}
                   class="lava-card p-5 lg:p-6 reveal flex flex-col card-hover group"
                   data-project-card={p.category}
                   aria-label={`Ver detalle de ${p.name}`}
@@ -162,8 +162,8 @@ const prototypes = projects.filter((p) => p.status === "prototype").length;
             proyecto necesita el mismo nivel de rigor, hablemos.
           </p>
           <div class="flex flex-wrap items-center justify-center gap-3">
-            <a href="/NX-Studio/contacto" class="lava-btn">Iniciar conversación →</a>
-            <a href="/NX-Studio/cotizador" class="lava-btn lava-btn-ghost">Ver cotizador</a>
+            <a href="/contacto" class="lava-btn">Iniciar conversación →</a>
+            <a href="/cotizador" class="lava-btn lava-btn-ghost">Ver cotizador</a>
           </div>
         </div>
       </div>

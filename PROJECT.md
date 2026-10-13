@@ -161,7 +161,8 @@ Desde v0.5.0 hay un backend SSR en Cloudflare Pages (`output=server`):
 | Phase 8 | Migración a Cloudflare Pages SSR + Resend + /api/licitacion | `7000794` ★ |
 | Phase 9 | QA playwright suite + project screenshot capture pipeline | `8b88180` |
 | Phase 10 | Backend foundation: D1, better-auth, schema, repos, seeds, tests | (este commit) ★ |
-| Phase 11 | /admin panel (list + detail + status) + /docs público. Portal e i18n diferidos (decisión operador 2026-10-11) | — |
+| Phase 11 | /admin panel (list + detail + status) + /docs público. Portal diferido (re-confirmado 2026-10-13) | `ec901fd` |
+| i18n | ES/EN/PT auto-detect cf-ipcountry + cookie override + switcher footer + traducción completa (memo #192) | `32f01d8`, `82506a1` |
 
 ## Sprint v0.4.0 (cerrado)
 
@@ -201,9 +202,11 @@ Tareas completadas (referencia):
 - [x] Headers de seguridad en Base.astro
 
 Pendientes (futuros sprints):
-- [ ] /portal/* portal cliente — diferido por decisión operador 2026-10-11
-      (requiere better-auth verificado E2E en Pages Functions antes de exponerse)
-- [ ] i18n — BLOQUEADO hasta decisión operador (ES-only por ahora)
+- [ ] /portal/* portal cliente — diferido por decisión operador 2026-10-11,
+      re-confirmado 2026-10-13 (requiere better-auth verificado E2E en Pages
+      Functions antes de exponerse)
+- [x] i18n — decidido e implementado: ES/EN/PT auto-detect (memo #192),
+      commits `32f01d8` (infraestructura) + `82506a1` (traducción)
 - [ ] /proceso (metodología 5 fases) — la versión inline del Home ya cubre esto
 - [ ] /precios (engagement shapes + tiers) — el cotizador y /docs ya cubren pricing
 - [ ] /productos (catálogo 11 repos) + /productos/[slug]
@@ -240,8 +243,72 @@ Decisiones registradas:
 - **/portal cliente**: NO implementado en este sprint. El scaffolding de
   better-auth existe (Phase 10) pero el portal requiere pruebas E2E antes
   de exponer a clientes. Queda como pendiente.
-- **i18n**: NO decidido. El sitio queda ES-only (consistente con AGENTS.md
-  "Español exclusivo"). La decisión ES vs ES+EN queda con el operador.
+- **i18n**: DECIDIDO 2026-10-11 (memo #192): ES/EN/PT con auto-detect
+  cf-ipcountry + override por cookie `nx-studio-locale` + switcher en footer.
+  Implementado en `32f01d8` (infraestructura: detect.ts, country-map.ts,
+  middleware, LanguageSwitcher) y `82506a1` (traducción de body copy en las
+  páginas públicas). Supersede el "ES-only" de este sprint: el contenido del
+  sitio es trilingüe; la comunicación con el operador sigue en español.
+
+### Sprint v0.6.1 — i18n ES/EN/PT (2026-10-11 → 2026-10-12)
+
+- [x] Infraestructura auto-detect: `src/i18n/{detect,country-map,index}.ts`,
+      `src/middleware.ts` (cf-ipcountry → Accept-Language → default es),
+      cookie `nx-studio-locale` TTL 365d, `LanguageSwitcher.astro` en Footer
+- [x] Traducción body copy: `src/i18n/{es,en,pt}.json` aplicada a las páginas
+      públicas
+- [x] NO TOCAR respetado: /api/*, /admin, /docs (quedan ES-only deliberadamente)
+- [x] Verificación 2026-10-13 (operador, sesión opencode): `npm run build`
+      exit 0 (adapter Cloudflare), vitest **107/107**
+
+### Deploy 2026-10-13 — Cloudflare Workers + limpieza base path
+
+**URL pública: https://nx-studio.nx-studio.workers.dev** (el subdomain de la
+cuenta CF ya era "nx-studio"). El "pages.dev NXDOMAIN" quedó explicado: el
+adapter @astrojs/cloudflare v14.3.3 targetea **Workers con static assets**
+(dist/client + dist/server + wrangler.json generado), NO Pages clásico —
+pages.dev nunca fue el destino de este build.
+
+Provisioning creado (primera vez):
+- D1 `nx-studio-db` id `9e19c8e0-57fb-4ab0-b572-80889c292987` + migrations
+  (8 tablas) + seeds (proyectos + templates) aplicados en remoto.
+- KV namespace `SESSION` id `f091bf1a355141128fad68a23cab69b3` — binding que
+  el adapter agrega para Astro sessions (sin id el deploy falla con
+  "SESSION bindings must have an id field").
+- Secrets producción: `BETTER_AUTH_SECRET` (aleatorio 48B) +
+  `CONTACT_EMAIL`. **FALTA `RESEND_API_KEY`** (el form /contacto persiste en
+  D1 pero no envía email hasta que el operador cree la cuenta/key Resend).
+- `workers_dev = true` + var `BETTER_AUTH_URL` actualizadas al dominio real.
+
+Limpieza base path legacy `/NX-Studio` (33 ediciones, 16 archivos):
+- `src/i18n/index.ts`: `localeUrl()` ya no inyecta BASE → links, canonical y
+  hreflang limpios.
+- Nav/Footer/Brand/Lab/Base.astro, productos/{index,[slug]}, templates/[slug],
+  playwright.config + 2 specs, capture-projects.mjs, manifest nx-studio.
+- `src/middleware.ts` conserva el BASE solo para normalizar inbound viejos.
+- og:image: apuntaba a `raw.githubusercontent.../master/public/og-image.svg`
+  (archivo inexistente → 404). Ahora usa el screenshot propio
+  `/projects/nx-studio/desktop-home.png`.
+- `astro.config.mjs` site → URL real (canonical/hreflang/og correctos).
+
+Verificación en vivo: `/`, `/servicios`, `/en/docs/`, `/favicon.svg`,
+og-image → todos 200; canonical `https://nx-studio.nx-studio.workers.dev/`.
+Build exit 0 + vitest 107/107 tras la limpieza.
+
+**PENDIENTES del deploy:**
+1. **KNOWN ISSUE — SSR i18n 302**: las páginas SSR bajo `/en/*` y `/pt/*`
+   devuelven status 302 (sin Location) con el contenido correcto; las
+   pre-renderizadas (docs/productos/templates) sirven 200. Peculiaridad del
+   fallback rewrite runtime + adapter (cf. withastro/astro#13964 familia).
+   Decisión operador: prerender de páginas públicas (+ run_worker_first
+   para mantener auto-detect), patch upstream, o convivir.
+2. **Cloudflare Access policy** para `/admin*` + `/api/admin*` en el
+   dashboard CF — sin ella esas rutas quedan expuestas.
+3. `RESEND_API_KEY` cuando exista cuenta Resend.
+4. PAT del remote de GitHub ya limpiado (era cleartext); **rotar el PAT**
+   recomendado — quedó expuesto en configs de workers previos.
+5. Env var User-level `CLOUDFLARE_API_TOKEN` INVÁLIDO (not_before 2027-05-31)
+   — regenerarlo desbloquea mymochis OCI y el MCP Code Mode.
 
 ## Stack técnico
 
@@ -250,7 +317,7 @@ Decisiones registradas:
 | Framework | Astro | 7.3.2 |
 | Styling | Tailwind CSS (vía Vite plugin) | 4.3.3 |
 | TypeScript | | 5.7 |
-| Hosting | GitHub Pages | (base: /NX-Studio/) |
+| Hosting | Cloudflare Workers (SSR + static assets) | nx-studio.nx-studio.workers.dev |
 | Identity | Lava neon (palette naranja/rojizo + chamfers + scan lines) | v0.3.0 |
 
 ## Decisiones arquitectónicas
@@ -258,7 +325,7 @@ Decisiones registradas:
 | Decisión | Elegida | Razón |
 |----------|---------|-------|
 | Framework | Astro 7 | SSG + islands, ideal para sitios con poco JS |
-| Output | `static` | GitHub Pages no soporta SSR; SSG es lo correcto |
+| Output | serverless SSR en Cloudflare Pages | Phase 8 (`7000794`): /api/licitacion + D1 requieren runtime; el SSG de Phase 5 quedó atrás |
 | Pricing engine | Client-side (state local vanilla JS) | Sin backend, cálculo instantáneo, deploy simple |
 | Engagement shapes | 4 formas (fixed/retainer/dedicated/tm) | Patrón consistente en B2B dev shops |
 | OSINT pricing | Role-based (analyst/senior/specialist) | Alineado con benchmarks Smart Intelligence |
@@ -268,7 +335,9 @@ Decisiones registradas:
 
 ## Seguridad
 
-- Site 100% estático: sin endpoints dinámicos, sin superficie de ataque runtime
+- SSR en Cloudflare Pages: endpoints dinámicos bajo /api/* (licitacion, auth,
+  admin) con validación Zod; /admin* y /api/admin* protegidos por Cloudflare
+  Access (policy en el dashboard — pendiente crear antes de producción)
 - Headers via `<meta>`: `X-Content-Type-Options: nosniff`, `referrer: strict-origin-when-cross-origin`
 - Canonical URLs por página (evita contenido duplicado en Google index)
 - `robots: index, follow`
@@ -289,13 +358,13 @@ Decisiones registradas:
    tener pruebas E2E sobre Pages Functions.
 4. **Seed de producción se aplica manualmente**: `npm run db:seed:remote` requiere
    `wrangler` + auth Cloudflare. No hay CI/CD todavía.
-5. **Sin i18n**: solo ES. Pendiente decisión.
+5. **i18n resuelto** (v0.6.1): ES/EN/PT auto-detect + switcher. /admin y /docs
+   quedan ES-only deliberadamente.
 6. **Catálogo sin videos**: `videoUrl` queda undefined en la seed por ahora.
 7. **Tests: vitest + playwright: 80 unit/integration tests + E2E Playwright. Arquitectura
    de tests con fake D1 + vitest para backend, Playwright para UI.
-8. **Working tree con cambios sin commitear** (Nav.astro, Base.astro, global.css,
-   palettes.css, Brand.astro, productos/[slug], templates/[slug]): migración
-   parcial a nueva paleta / decoraciones / DESIGN.md — no pushear sin revisar.
+8. **Working tree limpio** (verificado 2026-10-13): los cambios de paleta /
+   decoraciones antes listados aquí ya están commiteados.
 
 ## Referencias
 

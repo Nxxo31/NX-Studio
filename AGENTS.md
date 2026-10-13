@@ -2,7 +2,7 @@
 
 **Proyecto:** Sitio web empresarial de NX-Studio (estudio de desarrollo LATAM)
 **Stack:** Astro 7.3.2 + Tailwind v4 (vía @tailwindcss/vite) + TypeScript
-**Output:** SSG estático, desplegado en GitHub Pages (`nxxo31.github.io/NX-Studio/`)
+**Output:** Cloudflare Workers SSR (D1 + Resend + better-auth) — https://nx-studio.nx-studio.workers.dev
 **Identidad:** Lava neon naranja/rojizo con geometría angular Matrix-style
 
 ## Reglas del proyecto
@@ -10,6 +10,7 @@
 ### Idioma y comunicación
 
 - **Comunicación con Sebastian:** Español exclusivo
+- **Contenido del sitio:** trilingüe ES/EN/PT (i18n auto-detect, memo #192); /admin y /docs quedan ES-only
 - **Comentarios de código y docs:** Español
 - **Nombres de variables, funciones, archivos:** Inglés
 - **Términos técnicos estándar:** Inglés (commit, deploy, middleware, endpoint)
@@ -37,13 +38,13 @@ Tokens centralizados en `src/styles/global.css`:
 
 ### Ciberseguridad / seguridad
 
-- Site 100% estático: **sin endpoints dinámicos, sin SSR, sin runtime serverless**
+- SSR en Cloudflare Pages: runtime serverless con /api/* (licitacion, auth, admin) — cada endpoint nuevo requiere validación Zod + revisión de auth
 - Headers de seguridad en `Base.astro`: `X-Content-Type-Options: nosniff`, `referrer: strict-origin-when-cross-origin`
 - Canonical URLs por página (defense-in-depth para SEO anti-duplicación)
 - `.gitignore` estricto: `.env*`, SQLite artifacts, IDE/editor temp, coverage
-- **Secrets NUNCA en código fuente** — solo en runtime env vars del deploy (GitHub Pages los lee del repo config, no de `.env`)
+- **Secrets NUNCA en código fuente** — producción: `wrangler pages secret put <NAME> --project-name nx-studio`; local: `.dev.vars` (gitignored)
 - Scripts third-party: revisar licencias antes de agregar dependencias
-- Validar inputs en formularios client-side (HTML5) — los envíos de contacto van a WhatsApp/email externo, no hay backend que validar
+- Validación en dos capas: HTML5 client-side + Zod server-side en /api/* — los envíos de contacto persisten en D1 y notifican vía Resend
 
 ### Flujo de trabajo
 
@@ -83,7 +84,7 @@ Tokens centralizados en `src/styles/global.css`:
 4. Para tareas >1 archivo o UI work: pensar primero qué construir, mostrar mockups si es UI, luego escribir código
 5. **Build gate**: `npm run build` debe dar exit 0 con todas las páginas compiladas
 7. **Smoke test gate**: levantar `npm run preview` y curl a todas las rutas afectadas, verificar HTTP 200
-8. **No tests automatizados por ahora** — verificación manual con curl + inspección visual
+8. **Test gates**: `npm run test` (vitest, 107 tests) + `npm run test:e2e` (playwright) en verde antes de commit
 9. Update PROJECT.md con resultados ANTES de commit
 10. Commit atómico con conventional message (type(scope): description)
 11. `git push origin main`
@@ -96,8 +97,8 @@ Tokens centralizados en `src/styles/global.css`:
 - **NUNCA** publicar precio fijo en OSINT/Testing — solo rangos o tiers
 - **NUNCA** copiar estilo visual de Vertex/Toptal/etc. — solo patrones estructurales
 - **NUNCA** saltarse el smoke test después de añadir páginas nuevas
-- **NUNCA** introducir dependencias pesadas (three.js, gsap, lenis) — el sitio es static
-- **NUNCA** agregar endpoints/API routes — el sitio no tiene backend
+- **NUNCA** introducir dependencias pesadas (three.js, gsap, lenis) en el client bundle — el frontend sigue siendo mínimo
+- **NUNCA** agregar endpoints/API routes sin validación Zod + secret scan + test — el backend vive en Pages Functions
 
 ## Comandos frecuentes
 
@@ -108,13 +109,18 @@ npm run dev -- --port 4321 --host 127.0.0.1
 # Build producción
 npm run build
 
-# Smoke test
-npm run preview -- --port 4321 --host 127.0.0.1 &
-sleep 4
-for path in / /cotizador /laboratorio /contacto /servicios /servicios/osint /servicios/testing /templates /templates/landing-converter; do
-  curl -s -o /dev/null -w "$path: %{http_code}\n" "http://127.0.0.1:4321/NX-Studio$path"
-done
-pkill -f "astro preview"
+# Smoke test SSR local (el adapter cloudflare requiere wrangler para preview)
+npm run build
+npx wrangler pages dev dist --port 4321
+# en otra terminal:
+curl -s -o /dev/null -w "/ %{http_code}\n" http://127.0.0.1:4321/
+
+# Suites
+npm run test       # vitest 107 tests
+npm run test:e2e   # playwright
+
+# Deploy producción (Workers con static assets)
+npx wrangler deploy --config dist/server/wrangler.json
 
 # Push
 git push origin main
@@ -133,4 +139,4 @@ dark-memory · playwright · context7 · github
 
 ---
 
-*v0.4.0 — 2026-09-19: actualizadas reglas con SSG estático, seguridad, dependencias mínimas, sin API routes.*
+*v0.6.1 — 2026-10-13: actualizadas reglas post-migración a Cloudflare Pages SSR (D1 + Resend + better-auth) e i18n ES/EN/PT.*

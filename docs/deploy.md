@@ -1,8 +1,10 @@
-# Deploy: NX-Studio Backend a Cloudflare Pages
+# Deploy: NX-Studio Backend a Cloudflare Workers
 
 ## Pre-requisitos
 
-1. Cuenta Cloudflare con Pages habilitado
+1. Cuenta Cloudflare con Workers habilitado (OAuth vía `npx wrangler login`;
+   ojo: si `CLOUDFLARE_API_TOKEN` está en el environment y es inválido,
+   wrangler falla con 9109 — unsetearlo para usar OAuth)
 2. `wrangler` CLI instalado globalmente (`npm install -g wrangler`)
 3. Cuenta Resend con dominio verificado
 
@@ -38,13 +40,13 @@ npm run dev
 # 1. Build
 npm run build
 
-# 2. Deploy (wrangler detecta Pages automáticamente)
-wrangler pages deploy dist --project-name nx-studio
+# 2. Deploy — Workers con static assets (el adapter @astrojs/cloudflare v14
+#    genera dist/server/wrangler.json con bindings del wrangler.toml raíz)
+npx wrangler deploy --config dist/server/wrangler.json
 
-# 3. Configurar secrets de producción
-wrangler pages secret put BETTER_AUTH_SECRET --project-name nx-studio
-wrangler pages secret put RESEND_API_KEY --project-name nx-studio
-wrangler pages secret put CONTACT_EMAIL --project-name nx-studio
+# 3. Secrets de producción (BETTER_AUTH_SECRET y CONTACT_EMAIL ya seteados
+#    2026-10-13; falta RESEND_API_KEY cuando exista cuenta Resend)
+npx wrangler secret put RESEND_API_KEY --config dist/server/wrangler.json
 
 # 4. Aplicar schema + seed a D1 de producción
 npm run db:migrate:remote
@@ -55,10 +57,10 @@ npm run db:seed:remote
 
 ```bash
 # Listar deploys
-wrangler pages deployment list --project-name nx-studio
+npx wrangler deployments list --config dist/server/wrangler.json
 
-# Rollback a un deploy anterior
-wrangler pages deployment rollback <deployment-id> --project-name nx-studio
+# Rollback a una versión anterior
+npx wrangler versions rollback --config dist/server/wrangler.json
 ```
 
 ## Endpoints activos

@@ -14,9 +14,9 @@ import type { Locale } from './i18n/country-map';
  * - Sin prefijo: cookie manual > cf-ipcountry > Accept-Language > 'es'.
  *   Locale no-default detectado → 302 al path prefijado.
  *
- * Base path legacy '/NX-Studio' (home GitHub Pages): los links UI lo
- * incluyen; el middleware lo preserva en redirects y lo elimina en el
- * rewrite interno para matchear las rutas reales de src/pages.
+ * Base path legacy '/NX-Studio' (home GitHub Pages): los links UI ya NO lo
+ * incluyen (limpiado 2026-10-13); se conserva solo para normalizar inbound
+ * links viejos del deploy anterior.
  *
  * La cookie 'nx-studio-locale' (TTL 365d) la setea LanguageSwitcher
  * cuando el usuario elige idioma manualmente; aquí solo se lee

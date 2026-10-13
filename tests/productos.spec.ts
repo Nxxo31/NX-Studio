@@ -29,7 +29,7 @@ test.describe("/productos/[slug]", () => {
     await expect(repoLink).toHaveAttribute("rel", /noopener/);
 
     // CTA interno
-    await expect(page.locator('a[href="/NX-Studio/contacto"]').first()).toBeVisible();
+    await expect(page.locator('a[href="/contacto"]').first()).toBeVisible();
   });
 
   test("nexocore: status pill muestra 'live'", async ({ page }) => {
@@ -49,7 +49,7 @@ test.describe("/productos/[slug]", () => {
     // Cada link lleva a un /productos/<slug>/ válido
     const hrefs = await prevNextLinks.evaluateAll((els) => els.map((e) => e.getAttribute("href")));
     for (const href of hrefs) {
-      expect(href).toMatch(/^\/NX-Studio\/productos\/[a-z0-9-]+\/?$/);
+      expect(href).toMatch(/^\/productos\/[a-z0-9-]+\/?$/);
     }
   });
 
@@ -58,14 +58,14 @@ test.describe("/productos/[slug]", () => {
 
     // La sección "otros productos de IA" debe tener al menos 1 card
     const relatedSection = page.locator("text=otros productos de IA").locator("..");
-    const relatedCards = relatedSection.locator("a[href^='/NX-Studio/productos/']");
+    const relatedCards = relatedSection.locator("a[href^='/productos/']");
     await expect(relatedCards.first()).toBeVisible();
 
     // Verifica que NO se incluye a sí mismo
     const relatedHrefs = await relatedCards.evaluateAll((els) =>
       els.map((e) => e.getAttribute("href")),
     );
-    expect(relatedHrefs).not.toContain("/NX-Studio/productos/tic-tac-toe/");
+    expect(relatedHrefs).not.toContain("/productos/tic-tac-toe/");
   });
 
   test("nva-demons: categoría 3D sin related (único en su categoría)", async ({ page }) => {
@@ -77,7 +77,7 @@ test.describe("/productos/[slug]", () => {
 
   test("cualquier producto: el link del breadcrumb vuelve a /productos/", async ({ page }) => {
     await page.goto("/productos/nexocore/");
-    const backLink = page.locator('a[href="/NX-Studio/productos"]').first();
+    const backLink = page.locator('a[href="/productos"]').first();
     await backLink.click();
     await expect(page).toHaveURL(/\/productos\/?$/);
   });

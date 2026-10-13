@@ -4,16 +4,21 @@ compatibility_date = "2026-10-01"
 # las rutas SSR devuelven "[object Object]". disable_nodejs_process_v2 evita
 # que el process nativo v2 quede expuesto antes del polyfill de unenv.
 compatibility_flags = ["nodejs_compat", "disable_nodejs_process_v2"]
+workers_dev = true
 # Para Pages, no se necesita `main` — el runtime lo detecta desde dist/_worker.js
 # automáticamente. Sí necesitamos la lista de páginas (público) desde `dist/`.
 
 [vars]
-BETTER_AUTH_URL = "https://nx-studio.pages.dev"
+BETTER_AUTH_URL = "https://nx-studio.nx-studio.workers.dev"
+
+[[kv_namespaces]]
+binding = "SESSION"
+id = "f091bf1a355141128fad68a23cab69b3"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "nx-studio-db"
-database_id = "PLACEHOLDER-replace-after-creation"
+database_id = "9e19c8e0-57fb-4ab0-b572-80889c292987"
 migrations_dir = "drizzle/migrations"
 
 [observability]

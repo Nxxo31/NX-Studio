@@ -8,7 +8,7 @@ import cloudflare from '@astrojs/cloudflare';
 // Migración 2026-09-28 desde GitHub Pages static (decision operador AGENTS.md override).
 // DB persistence via Cloudflare D1 (TODO Fase 2). Por ahora email-only via Resend.
 export default defineConfig({
-  site: 'https://nx-studio.pages.dev',
+  site: 'https://nx-studio.nx-studio.workers.dev',
   output: 'server',
   trailingSlash: 'ignore',
   // i18n auto-detect by location (memo #191): set ES (LATAM default) +

@@ -6,7 +6,7 @@ import { defineConfig, devices } from "@playwright/test";
  * Estrategia:
  * - Dev server (no preview) — corre cambios sin necesidad de re-build,
  *   útil durante desarrollo de tests. Para CI usar `npm run preview` (build).
- * - Base URL apunta a 127.0.0.1:4321 (dev server Astro) con base /NX-Studio/.
+ * - Base URL apunta a 127.0.0.1:4322 (preview server) en la raíz.
  * - Channel: 'chrome' usa el Chrome instalado en el sistema (ya está disponible,
  *   evita descargar el Chromium bundleado de Playwright).
  * - Single worker, no retries: NX-Studio es sitio estático, los flakos vienen
@@ -23,10 +23,10 @@ export default defineConfig({
   use: {
     // baseURL SIN trailing slash — con slash y path que empieza con "/",
     // Playwright concatena y genera "//brand" (doble slash). Sin trailing
-    // slash, `/brand/` queda como `…/NX-Studio/brand/` (single slash).
+    // slash, `/brand/` queda como `…:4322/brand/` (single slash).
     // Para HTTP `request.get`, construimos la URL absoluta en el spec.
     // Puerto 4322: preview server (4321 está ocupado por dev server).
-    baseURL: "http://127.0.0.1:4322/NX-Studio",
+    baseURL: "http://127.0.0.1:4322",
     // trace/screenshot deshabilitados por defecto (requieren binarios extra que
     // no pudimos descargar de cdn.playwright.dev en este entorno).
     // Reactivar cuando se ejecute en CI con `npx playwright install chromium` OK.

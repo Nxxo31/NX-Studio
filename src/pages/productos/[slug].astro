@@ -17,7 +17,7 @@ export function getStaticPaths() {
 
 const { project } = Astro.props;
 if (!project) {
-  return Astro.redirect("/NX-Studio/productos");
+  return Astro.redirect("/productos");
 }
 
 // Otros proyectos de la misma categoría (excluyendo el actual) — sugeridos.
@@ -50,7 +50,7 @@ const statusLabel = {
     <section class="relative px-6 pt-20 pb-8 md:pt-28 md:pb-12">
       <div class="mx-auto max-w-5xl">
         <a
-          href="/NX-Studio/productos"
+          href="/productos"
           class="font-mono text-xs text-nx-muted hover:text-lava-edge transition inline-flex items-center gap-2 mb-6"
         >
           ← Volver a productos
@@ -176,7 +176,7 @@ const statusLabel = {
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             {related.map((r) => (
               <a
-                href={`/NX-Studio/productos/${r.slug}`}
+                href={`/productos/${r.slug}`}
                 class="lava-card p-5 reveal flex flex-col card-hover group"
                 aria-label={`Ver detalle de ${r.name}`}
               >
@@ -205,7 +205,7 @@ const statusLabel = {
       <div class="mx-auto max-w-5xl">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <a
-            href={`/NX-Studio/productos/${prev.slug}`}
+            href={`/productos/${prev.slug}`}
             class="lava-card p-5 reveal flex flex-col card-hover group"
             aria-label={`Producto anterior: ${prev.name}`}
           >
@@ -216,7 +216,7 @@ const statusLabel = {
             <span class="text-sm text-nx-muted font-mono mt-1">{prev.tagline}</span>
           </a>
           <a
-            href={`/NX-Studio/productos/${next.slug}`}
+            href={`/productos/${next.slug}`}
             class="lava-card p-5 reveal flex flex-col card-hover group text-right"
             aria-label={`Producto siguiente: ${next.name}`}
           >
@@ -244,8 +244,8 @@ const statusLabel = {
             partiendo desde este stack, hablemos.
           </p>
           <div class="flex flex-wrap items-center justify-center gap-3">
-            <a href="/NX-Studio/contacto" class="lava-btn">Iniciar conversación →</a>
-            <a href="/NX-Studio/cotizador" class="lava-btn lava-btn-ghost">Ver cotizador</a>
+            <a href="/contacto" class="lava-btn">Iniciar conversación →</a>
+            <a href="/cotizador" class="lava-btn lava-btn-ghost">Ver cotizador</a>
           </div>
         </div>
       </div>
