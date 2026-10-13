@@ -139,6 +139,21 @@ const i18nLabels = {
             </div>
             <div class="text-xs text-nx-muted mt-2 font-mono">
               <span id="q-hours">0h</span> {t('pages.cotizador.panel.estimated')} · base fee <span id="q-base">$0</span>
+              <span id="q-usd" class="text-nx-dim"></span>
+            </div>
+            <div class="mt-3 flex items-center gap-2">
+              <label for="q-currency" class="font-mono text-[10px] uppercase tracking-widest text-nx-muted">{t('pages.cotizador.panel.currency')}</label>
+              <select id="q-currency" class="font-mono text-xs bg-transparent border border-nx-border px-2 py-1 text-nx-text">
+                <option value="COP" selected>COP</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="MXN">MXN</option>
+                <option value="BRL">BRL</option>
+                <option value="ARS">ARS</option>
+                <option value="CLP">CLP</option>
+                <option value="PEN">PEN</option>
+                <option value="GBP">GBP</option>
+              </select>
             </div>
           </div>
 
@@ -148,9 +163,12 @@ const i18nLabels = {
             <div class="text-xs text-nx-muted">{t('pages.cotizador.panel.selected')}</div>
           </div>
 
-          <div class="md:col-span-1 flex md:justify-end">
-            <a href={localeUrl('/contacto', locale)} class="lava-btn">
+          <div class="md:col-span-1 flex flex-col md:items-end gap-2">
+            <a id="q-cta" href={localeUrl('/contacto', locale)} class="lava-btn text-center">
               {t('pages.cotizador.panel.cta')}
+            </a>
+            <a id="q-whatsapp" href="https://wa.me/573103312705" target="_blank" rel="noopener" class="lava-btn lava-btn-ghost text-center text-sm">
+              {t('pages.cotizador.panel.whatsappCta')}
             </a>
           </div>
         </div>
@@ -179,18 +197,51 @@ const i18nLabels = {
     shape: EngagementShape;
     featureIds: string[];
     modifierIds: string[];
+    currency: string;
   };
 
   const state: State = {
     shape: 'fixed',
     featureIds: ['discovery', 'design-system', 'api', 'db', 'auth', 'responsive', 'testing', 'deploy', 'docs'],
     modifierIds: [],
+    currency: 'COP',
   };
 
   const $ = <T extends HTMLElement = HTMLElement>(sel: string) =>
     document.querySelector<T>(sel);
 
   const fmt = new Intl.NumberFormat('en-US');
+
+  const FALLBACK_RATES: Record<string, number> = {
+    USD: 1, COP: 3900, EUR: 0.92, MXN: 17.2, BRL: 5.4, ARS: 1150, CLP: 940, PEN: 3.75, GBP: 0.79,
+  };
+  let rates: Record<string, number> = { ...FALLBACK_RATES };
+
+  function fmtCurrency(amount: number, cur: string): string {
+    try {
+      return new Intl.NumberFormat(cur === 'COP' ? 'es-CO' : 'en-US', {
+        style: 'currency', currency: cur, maximumFractionDigits: 0,
+      }).format(amount);
+    } catch {
+      return `${cur} ${fmt.format(Math.round(amount))}`;
+    }
+  }
+
+  async function loadRates(): Promise<void> {
+    try {
+      const cached = localStorage.getItem('nx-fx-rates');
+      if (cached) {
+        const { ts, r } = JSON.parse(cached) as { ts: number; r: Record<string, number> };
+        if (Date.now() - ts < 24 * 60 * 60 * 1000) { rates = { ...FALLBACK_RATES, ...r }; return; }
+      }
+      const res = await fetch('https://open.er-api.com/v6/latest/USD');
+      const data = await res.json() as { rates?: Record<string, number> };
+      if (data?.rates) {
+        rates = { ...FALLBACK_RATES, ...data.rates };
+        localStorage.setItem('nx-fx-rates', JSON.stringify({ ts: Date.now(), r: data.rates }));
+      }
+    } catch { /* API caída u offline: se quedan las tasas fallback */ }
+  }
 
   // Labels i18n inyectados server-side por define:vars en el script is:inline anterior
   const L = (window as any).__cotizadorI18n as {
@@ -204,13 +255,45 @@ const i18nLabels = {
   function render() {
     const quote = computeQuote(state);
 
-    // Panel header
-    $('#q-low').textContent  = '$' + fmt.format(quote.totalLow);
-    $('#q-high').textContent = '$' + fmt.format(quote.totalHigh);
+    // Panel header (moneda seleccionada + ancla USD)
+    const rate = rates[state.currency] ?? 1;
+    const lowConverted = Math.round(quote.totalLow * rate);
+    const highConverted = Math.round(quote.totalHigh * rate);
+    $('#q-low').textContent  = fmtCurrency(lowConverted, state.currency);
+    $('#q-high').textContent = fmtCurrency(highConverted, state.currency);
     $('#q-hours').textContent = fmt.format(quote.totalHours) + 'h';
     $('#q-base').textContent  = '$' + fmt.format(quote.baseFee);
     $('#q-count').textContent = String(state.featureIds.length);
     $('#q-band').textContent  = L.i18nBands[quote.bandLabel] ?? quote.bandLabel;
+    const usdNote = $('#q-usd');
+    if (usdNote) usdNote.textContent = state.currency === 'USD' ? '' : ` · ≈ $${fmt.format(quote.totalLow)}-$${fmt.format(quote.totalHigh)} USD`;
+
+    // CTAs: /contacto con el contexto completo + WhatsApp prefilled
+    const cta = document.getElementById('q-cta') as HTMLAnchorElement | null;
+    if (cta) {
+      const url = new URL(cta.getAttribute('href') || '/contacto', window.location.origin);
+      url.search = new URLSearchParams({
+        from: 'cotizador',
+        shape: state.shape,
+        features: state.featureIds.join(','),
+        mods: state.modifierIds.join(','),
+        cur: state.currency,
+        low: String(lowConverted),
+        high: String(highConverted),
+      }).toString();
+      cta.setAttribute('href', url.pathname + url.search);
+    }
+    const wa = document.getElementById('q-whatsapp') as HTMLAnchorElement | null;
+    if (wa) {
+      const msg = [
+        'Hola NX-Studio, quiero cotizar un proyecto.',
+        `Engagement: ${L.i18nShapes[state.shape] ?? state.shape}`,
+        `Moneda: ${state.currency}`,
+        `Rango: ${fmtCurrency(lowConverted, state.currency)} - ${fmtCurrency(highConverted, state.currency)}`,
+        `Features: ${state.featureIds.map((id) => L.i18nFeatures[id] ?? id).join(', ') || '(base)'}`,
+      ].join('\n');
+      wa.href = `https://wa.me/573103312705?text=${encodeURIComponent(msg)}`;
+    }
 
     // Breakdown
     const bd = $('#q-breakdown');
@@ -301,6 +384,12 @@ const i18nLabels = {
     });
   });
 
+  // Wire currency selector
+  const curSel = document.getElementById('q-currency') as HTMLSelectElement | null;
+  curSel?.addEventListener('change', () => {
+    if (curSel.value) { state.currency = curSel.value; render(); }
+  });
+
   // Scroll reveal observer (si no está global)
   const reveals = document.querySelectorAll<HTMLElement>('.reveal');
   if ('IntersectionObserver' in window) {
@@ -318,4 +407,5 @@ const i18nLabels = {
   }
 
   render();
+  loadRates().then(() => render());
 </script>

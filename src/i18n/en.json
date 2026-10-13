@@ -274,7 +274,9 @@
         "estimated": "estimated",
         "selected": "selected",
         "cta": "Request scoping →",
-        "breakdown": "View breakdown"
+        "breakdown": "View breakdown",
+        "currency": "Currency",
+        "whatsappCta": "Direct WhatsApp"
       },
       "bands": {
         "Starter": "Starter",
@@ -510,6 +512,7 @@
         "privacyEm2": "24/7",
         "submit": "Send proposal"
       },
+      "quoteBanner": "Your quote",
       "alt": {
         "tagAlt": "// alternative",
         "tagDirect": "// direct",
@@ -533,7 +536,8 @@
         "savedIdA": "// Your request ID is",
         "savedIdB": "Keep this number for follow-up.",
         "errorTag": "// error",
-        "networkError": "Network error"
+        "networkError": "Network error",
+        "whatsappCta": "Message on WhatsApp with this request"
       }
     },
     "brand": {

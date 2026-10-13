@@ -295,7 +295,44 @@ Verificación en vivo: `/`, `/servicios`, `/en/docs/`, `/favicon.svg`,
 og-image → todos 200; canonical `https://nx-studio.nx-studio.workers.dev/`.
 Build exit 0 + vitest 107/107 tras la limpieza.
 
-**PENDIENTES del deploy:**
+### Sprint v0.7.0 — canales de contacto + monedas display (2026-10-13)
+
+Requisitos operador: WhatsApp +57 310 331 2705 como canal de cotizaciones,
+peticiones a sebasvelascodev3101@gmail.com, info organizada al operador,
+Laboratorio + Cotizador funcionando, precios en COP u otra moneda.
+
+- [x] **Cotizador multi-moneda**: selector COP (default) / USD / EUR / MXN /
+      BRL / ARS / CLP / PEN / GBP con tasas live de open.er-api.com (cache
+      localStorage 24h, fallback estático si la API cae) + ancla "≈ USD"
+      bajo el rango.
+- [x] **Contexto cotizador→contacto**: el CTA lleva `?from=cotizador&shape=
+      &features=&mods=&cur=&low=&high=`; /contacto pre-marca features, setea
+      engagement/urgencia y muestra banner "Tu cotización €X — Y".
+- [x] **WhatsApp integrado**: botón en cotizador con resumen prefilled,
+      tarjeta directa en /contacto y footer, CTA en el panel de éxito.
+- [x] **Moneda display persistida**: schema licitacion + columnas
+      `display_currency/display_min/display_max` (ALTER remoto + local +
+      init.sql + fixture tests); el admin muestra "vista cliente: EUR X – Y"
+      junto al rango USD canónico.
+- [x] **Email al operador mejorado**: features con nombres legibles (no IDs),
+      horas estimadas, rango que vio el cliente. `CONTACT_EMAIL` secret
+      actualizado a sebasvelascodev3101@gmail.com.
+- [x] **Fix bug pre-existente**: respuesta del handler nunca incluyó
+      `total_hours` (el form mostraba "undefinedh") — ahora se computa via
+      computeQuote y viaja en cotizacion.total_hours.
+- [x] Limpieza: stray `</Layout>` en contacto.astro; placeholders de contacto
+      (`+57 1 234 5678`, `hola@nxstudio.dev`) reemplazados por datos reales.
+- [x] i18n: keys nuevas en es/en/pt (currency, whatsappCta, quoteBanner).
+- [x] Verificación Playwright en vivo: cotizador COP/EUR con tasas live,
+      prefill, submit E2E con display EUR persistido en D1 (fila probe
+      eliminada tras verificar), **Laboratorio completo: 5 mensajes →
+      mockup Pollinations 768px renderizado**, 0 errores de consola.
+
+PENDIENTE: `RESEND_API_KEY` — sin cuenta Resend el email queda en modo mock
+(el form persiste en D1 y el admin lo muestra; WhatsApp funciona ya).
+
+**PENDIENTES del deploy (sección anterior):**
+
 1. ~~KNOWN ISSUE — SSR i18n 302~~ **RESUELTO 2026-10-13** (aprobación operador
    "Prerender + worker-first"): output `'static'` + `prerender=false` explícito
    en las 5 rutas on-demand (api/licitacion, api/auth/[...all],

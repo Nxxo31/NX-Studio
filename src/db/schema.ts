@@ -94,6 +94,11 @@ export const licitacion = sqliteTable('licitacion', {
   precioMin: real('precio_min').notNull(),
   precioMax: real('precio_max').notNull(),
   banda: text('banda', { enum: ['Starter', 'Standard', 'Growth', 'Enterprise'] }).notNull(),
+  // Moneda que vio el cliente en el cotizador (COP u otra) + rango convertido,
+  // para que el operador sepa el contexto exacto de la solicitud
+  displayCurrency: text('display_currency'),
+  displayMin: real('display_min'),
+  displayMax: real('display_max'),
   // Status gestionado por el operador
   status: text('status', { enum: ['nueva', 'contactada', 'propuesta_enviada', 'aceptada', 'rechazada', 'completada'] })
     .notNull()

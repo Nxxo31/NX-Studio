@@ -27,7 +27,7 @@ cat > .dev.vars <<EOF
 BETTER_AUTH_SECRET=$(openssl rand -base64 48)
 BETTER_AUTH_URL=http://127.0.0.1:4321
 RESEND_API_KEY=re_xxxxxxxxxxxx
-CONTACT_EMAIL=nxstudioing31@gmail.com
+CONTACT_EMAIL=sebasvelascodev3101@gmail.com
 EOF
 
 # 5. Dev server
@@ -88,7 +88,7 @@ npx wrangler versions rollback --config dist/server/wrangler.json
 | `BETTER_AUTH_SECRET`   | Cloudflare Pages secret | Secret de firma para sessions (openssl rand -base64 48) |
 | `BETTER_AUTH_URL`      | `wrangler.toml` vars    | https://nx-studio.pages.dev            |
 | `RESEND_API_KEY`       | Cloudflare Pages secret | re_xxxxxxxxxxxx                        |
-| `CONTACT_EMAIL`        | Cloudflare Pages secret | nxstudioing31@gmail.com                |
+| `CONTACT_EMAIL`        | Worker secret (ya seteado) | sebasvelascodev3101@gmail.com          |
 | `GOOGLE_CLIENT_ID`     | Cloudflare Pages secret (opcional) | OAuth para login social |
 | `GOOGLE_CLIENT_SECRET` | Cloudflare Pages secret (opcional) | OAuth para login social |
 

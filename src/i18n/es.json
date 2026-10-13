@@ -274,7 +274,9 @@
         "estimated": "estimadas",
         "selected": "seleccionadas",
         "cta": "Solicitar scoping →",
-        "breakdown": "Ver desglose"
+        "breakdown": "Ver desglose",
+        "currency": "Moneda",
+        "whatsappCta": "WhatsApp directo"
       },
       "bands": {
         "Starter": "Starter",
@@ -510,6 +512,7 @@
         "privacyEm2": "24/7",
         "submit": "Enviar propuesta"
       },
+      "quoteBanner": "Tu cotización",
       "alt": {
         "tagAlt": "// alternativa",
         "tagDirect": "// directo",
@@ -533,7 +536,8 @@
         "savedIdA": "// Tu peticion ID es",
         "savedIdB": "Guarda este número para seguimiento.",
         "errorTag": "// error",
-        "networkError": "Error de red"
+        "networkError": "Error de red",
+        "whatsappCta": "Escribir por WhatsApp con esta solicitud"
       }
     },
     "brand": {

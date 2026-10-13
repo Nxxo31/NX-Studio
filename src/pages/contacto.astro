@@ -23,6 +23,8 @@ const i18nScript = {
   savedIdB: t('pages.contacto.script.savedIdB'),
   errorTag: t('pages.contacto.script.errorTag'),
   networkError: t('pages.contacto.script.networkError'),
+  whatsappCta: t('pages.contacto.script.whatsappCta'),
+  quoteBanner: t('pages.contacto.quoteBanner'),
 };
 ---
 
@@ -39,6 +41,8 @@ const i18nScript = {
           {t('pages.contacto.sub')}
         </p>
       </header>
+
+      <div id="quote-banner" class="hidden lava-card lava-card-accent p-4 lg:p-5 mb-6 font-mono text-sm reveal"></div>
 
       <form id="licitacion-form" class="lava-card p-6 lg:p-8 reveal space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -140,11 +144,11 @@ const i18nScript = {
           <div class="font-display font-semibold text-sm">{t('pages.contacto.alt.laboratorio.title')}</div>
           <div class="text-xs text-nx-muted mt-1">{t('pages.contacto.alt.laboratorio.desc')}</div>
         </a>
-        <div class="lava-card p-4">
+        <a href="https://wa.me/573103312705" target="_blank" rel="noopener" class="lava-card p-4 hover:border-lava transition block">
           <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">{t('pages.contacto.alt.tagDirect')}</div>
-          <div class="font-display font-semibold text-sm">WhatsApp / email</div>
-          <div class="text-xs text-nx-muted mt-1">+57 1 234 5678 · hola@nxstudio.dev</div>
-        </div>
+          <div class="font-display font-semibold text-sm">WhatsApp +57 310 331 2705</div>
+          <div class="text-xs text-nx-muted mt-1">sebasvelascodev3101@gmail.com</div>
+        </a>
       </aside>
     </div>
   </section>
@@ -213,6 +217,47 @@ const i18nScript = {
     `).join('');
   }
 
+  // Prefill desde el cotizador: ?from=cotizador&shape=&features=&mods=&cur=&low=&high=
+  const quoteCtx: { currency?: string; low?: number; high?: number } = {};
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('from') === 'cotizador') {
+    const feats = (params.get('features') || '').split(',').filter(Boolean);
+    if (feats.length) {
+      document.querySelectorAll<HTMLInputElement>('input[name=features]').forEach((cb) => {
+        cb.checked = feats.includes(cb.value);
+      });
+    }
+    const shape = params.get('shape');
+    const engSel = document.querySelector<HTMLSelectElement>('select[name=engagement]');
+    if (shape && engSel && [...engSel.options].some((o) => o.value === shape)) engSel.value = shape;
+    const mods = (params.get('mods') || '').split(',');
+    if (mods.includes('rush')) {
+      const urgSel = document.querySelector<HTMLSelectElement>('select[name=urgencia]');
+      if (urgSel) urgSel.value = 'rush';
+    }
+    const cur = params.get('cur');
+    const low = params.get('low');
+    const high = params.get('high');
+    if (cur && low && high) {
+      quoteCtx.currency = cur;
+      quoteCtx.low = Number(low);
+      quoteCtx.high = Number(high);
+      const banner = document.getElementById('quote-banner');
+      if (banner) {
+        const fmtCur = (n: number) => {
+          try {
+            return new Intl.NumberFormat(cur === 'COP' ? 'es-CO' : 'en-US', { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(n);
+          } catch { return `${cur} ${n.toLocaleString()}`; }
+        };
+        banner.innerHTML = `
+          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">${I18N.s.quoteBanner ?? '// cotización'}</div>
+          <div class="font-display text-xl font-bold text-lava">${fmtCur(Number(low))} — ${fmtCur(Number(high))}</div>
+        `;
+        banner.classList.remove('hidden');
+      }
+    }
+  }
+
   const form = document.getElementById('licitacion-form') as HTMLFormElement | null;
   const panel = document.getElementById('result-panel');
   if (form && panel) {
@@ -223,7 +268,7 @@ const i18nScript = {
       const features: string[] = [];
       form.querySelectorAll<HTMLInputElement>('input[name=features]:checked').forEach((cb) => features.push(cb.value));
 
-      const payload = {
+      const payload: Record<string, unknown> = {
         nombre: String(fd.get('nombre') || ''),
         email: String(fd.get('email') || ''),
         empresa: fd.get('empresa') || null,
@@ -237,6 +282,11 @@ const i18nScript = {
         modifiers: [],
         honeypot: String(fd.get('honeypot') || ''),
       };
+      if (quoteCtx.currency) {
+        payload.display_currency = quoteCtx.currency;
+        payload.display_total_low = quoteCtx.low;
+        payload.display_total_high = quoteCtx.high;
+      }
 
       const submitBtn = form.querySelector<HTMLButtonElement>('button[type=submit]');
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = I18N.s.sending; }
@@ -249,6 +299,18 @@ const i18nScript = {
         });
         const data = await res.json();
         if (data.ok) {
+          const fmtDisp = (n: number, cur: string) => {
+            try {
+              return new Intl.NumberFormat(cur === 'COP' ? 'es-CO' : 'en-US', { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(n);
+            } catch { return `${cur} ${n.toLocaleString()}`; }
+          };
+          const d = data.display;
+          const dispRange = d && d.currency
+            ? `${fmtDisp(d.low, d.currency)} - ${fmtDisp(d.high, d.currency)}`
+            : `$${data.cotizacion.total_low.toLocaleString()} - $${data.cotizacion.total_high.toLocaleString()}`;
+          const waMsg = encodeURIComponent(
+            `Hola NX-Studio, acabo de enviar la solicitud #${data.licitacion_id} desde la web.`
+          );
           panel.innerHTML = `
             <div class="lava-card lava-card-accent p-6">
               <span class="lava-tag mb-3">${I18N.s.successTag} #${data.licitacion_id}</span>
@@ -256,7 +318,7 @@ const i18nScript = {
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div>
                   <div class="font-mono text-xs text-nx-muted">${I18N.s.range}</div>
-                  <div class="font-display text-2xl text-lava">$${data.cotizacion.total_low.toLocaleString()} - $${data.cotizacion.total_high.toLocaleString()}</div>
+                  <div class="font-display text-2xl text-lava">${dispRange}</div>
                 </div>
                 <div>
                   <div class="font-mono text-xs text-nx-muted">${I18N.s.hours}</div>
@@ -272,6 +334,9 @@ const i18nScript = {
                 <ul class="text-sm text-nx-muted space-y-1">
                   ${data.next_steps.map((s: string) => `<li class="flex gap-2"><span class="text-lava">▸</span>${s}</li>`).join('')}
                 </ul>
+                <a href="https://wa.me/573103312705?text=${waMsg}" target="_blank" rel="noopener" class="lava-btn lava-btn-ghost mt-4 inline-flex text-sm">
+                  ${I18N.s.whatsappCta ?? 'WhatsApp'} →
+                </a>
               </div>
               <div class="mt-4 pt-4 border-t border-nx-border text-xs text-nx-dim font-mono">
                 ${I18N.s.savedIdA} <b class="text-lava-edge">#${data.licitacion_id}</b>. ${I18N.s.savedIdB}
@@ -301,4 +366,3 @@ const i18nScript = {
     });
   }
 </script>
-</Layout>

@@ -274,7 +274,9 @@
         "estimated": "estimadas",
         "selected": "selecionadas",
         "cta": "Solicitar scoping →",
-        "breakdown": "Ver detalhamento"
+        "breakdown": "Ver detalhamento",
+        "currency": "Moeda",
+        "whatsappCta": "WhatsApp direto"
       },
       "bands": {
         "Starter": "Starter",
@@ -510,6 +512,7 @@
         "privacyEm2": "24/7",
         "submit": "Enviar proposta"
       },
+      "quoteBanner": "Sua cotação",
       "alt": {
         "tagAlt": "// alternativa",
         "tagDirect": "// direto",
@@ -533,7 +536,8 @@
         "savedIdA": "// O ID da sua solicitação é",
         "savedIdB": "Guarde este número para acompanhamento.",
         "errorTag": "// erro",
-        "networkError": "Erro de rede"
+        "networkError": "Erro de rede",
+        "whatsappCta": "Falar no WhatsApp com esta solicitação"
       }
     },
     "brand": {

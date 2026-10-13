@@ -27,6 +27,9 @@ export type CreateLicitacionInput = {
   descripcion: string;
   modifierIds: string[];
   userId?: string | null;
+  displayCurrency?: string | null;
+  displayMin?: number | null;
+  displayMax?: number | null;
 };
 
 export async function create(db: DB, input: CreateLicitacionInput): Promise<Licitacion> {
@@ -53,6 +56,9 @@ export async function create(db: DB, input: CreateLicitacionInput): Promise<Lici
     precioMin: quote.totalLow,
     precioMax: quote.totalHigh,
     banda: quote.bandLabel as 'Starter' | 'Standard' | 'Growth' | 'Enterprise',
+    displayCurrency: input.displayCurrency ?? null,
+    displayMin: input.displayMin ?? null,
+    displayMax: input.displayMax ?? null,
     userId: input.userId ?? null,
     createdAt: now,
     updatedAt: now,

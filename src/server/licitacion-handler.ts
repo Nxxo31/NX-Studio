@@ -4,6 +4,7 @@
 import { z } from 'zod';
 import type { DB } from '~/db';
 import { create } from '~/server/licitacion-repo';
+import { FEATURES, computeQuote } from '~/data/pricing';
 import type { EmailService } from '~/lib/email';
 import type { AuthEnv } from '~/lib/auth';
 import { getUserIdFromRequest } from '~/lib/session';
@@ -20,6 +21,9 @@ export const licitacionSchema = z.object({
   features: z.array(z.string()).default([]),
   descripcion: z.string().min(20, 'Descripción mínimo 20 chars'),
   honeypot: z.string().optional(),
+  display_currency: z.string().min(1).max(8).optional().nullable(),
+  display_total_low: z.number().nonnegative().optional().nullable(),
+  display_total_high: z.number().nonnegative().optional().nullable(),
 });
 
 export type LicitacionInput = z.infer<typeof licitacionSchema>;
@@ -102,9 +106,25 @@ export async function handleLicitacionSubmit(
       descripcion: data.descripcion,
       modifierIds: [],
       userId,
+      displayCurrency: data.display_currency ?? null,
+      displayMin: data.display_total_low ?? null,
+      displayMax: data.display_total_high ?? null,
+    });
+
+    // Metadatos del quote (el repo computa pricing para persistir; aquí se
+    // re-computa para la respuesta — computeQuote es puro y barato)
+    const quoteMeta = computeQuote({
+      shape: data.engagement,
+      featureIds: data.features,
+      modifierIds: [],
     });
 
     // Email al operador — NO debe romper el submit si falla
+    const featureNames = data.features.map(
+      (id) => FEATURES.find((f) => f.id === id)?.name ?? id
+    );
+    const fmtNum = (n?: number | null) =>
+      n != null ? n.toLocaleString('en-US', { maximumFractionDigits: 0 }) : '?';
     try {
       await deps.email.send({
         to: deps.contactEmail,
@@ -117,8 +137,9 @@ export async function handleLicitacionSubmit(
           ${data.telefono ? `<p><b>Teléfono:</b> ${escapeHtml(data.telefono)}</p>` : ''}
           ${data.pais ? `<p><b>País:</b> ${escapeHtml(data.pais)}</p>` : ''}
           <p><b>Tipo:</b> ${data.tipo} · <b>Engagement:</b> ${data.engagement} · <b>Urgencia:</b> ${data.urgencia}</p>
-          <p><b>Rango:</b> $${row.precioMin.toLocaleString()} - $${row.precioMax.toLocaleString()} (${row.banda})</p>
-          <p><b>Features:</b> ${data.features.join(', ') || '(ninguna)'}</p>
+          <p><b>Rango:</b> $${row.precioMin.toLocaleString()} - $${row.precioMax.toLocaleString()} (${row.banda}) · ${quoteMeta.totalHours}h estimadas</p>
+          ${data.display_currency ? `<p><b>Visto por el cliente en:</b> ${escapeHtml(data.display_currency)} ${fmtNum(data.display_total_low)} – ${fmtNum(data.display_total_high)}</p>` : ''}
+          <p><b>Features:</b> ${featureNames.map(escapeHtml).join(', ') || '(ninguna)'}</p>
           ${userId ? `<p><b>User ID:</b> ${userId}</p>` : ''}
           <hr/>
           <p>${escapeHtml(data.descripcion).replace(/\n/g, '<br/>')}</p>
@@ -135,7 +156,15 @@ export async function handleLicitacionSubmit(
         total_low: row.precioMin,
         total_high: row.precioMax,
         band: row.banda, // frontend usa .band, no .banda
+        total_hours: quoteMeta.totalHours,
       },
+      display: data.display_currency
+        ? {
+            currency: data.display_currency,
+            low: data.display_total_low ?? null,
+            high: data.display_total_high ?? null,
+          }
+        : undefined,
       next_steps: [
         'Revisión de scope por Sebastian en 24h hábiles',
         'Propuesta detallada con mockup preview HTML',

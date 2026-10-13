@@ -67,7 +67,12 @@ if (row) {
           <div><dt class="font-mono text-xs uppercase tracking-widest text-nx-dim">Banda</dt><dd>{row.banda}</dd></div>
           <div>
             <dt class="font-mono text-xs uppercase tracking-widest text-nx-dim">Rango estimado</dt>
-            <dd class="font-mono">{fmt.format(row.precioMin)} – {fmt.format(row.precioMax)}</dd>
+            <dd class="font-mono">US$ {fmt.format(row.precioMin)} – US$ {fmt.format(row.precioMax)}</dd>
+            {row.displayCurrency && (
+              <dd class="font-mono text-xs text-nx-dim">
+                vista cliente: {row.displayCurrency} {row.displayMin?.toLocaleString('es-CO')} – {row.displayMax?.toLocaleString('es-CO')}
+              </dd>
+            )}
           </div>
           <div>
             <dt class="font-mono text-xs uppercase tracking-widest text-nx-dim">Recibida</dt>
