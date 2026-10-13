@@ -11,6 +11,8 @@ import { createDb } from '~/db';
 import * as licitacionRepo from '~/server/licitacion-repo';
 import type { Licitacion } from '~/db/schema';
 
+export const prerender = false;
+
 // Astro v6+: locals.runtime.env fue removido — binding global cloudflare:workers.
 const env = runtimeEnv as unknown as { DB: D1Database };
 const db = createDb(env.DB);

@@ -9,7 +9,7 @@ import cloudflare from '@astrojs/cloudflare';
 // DB persistence via Cloudflare D1 (TODO Fase 2). Por ahora email-only via Resend.
 export default defineConfig({
   site: 'https://nx-studio.nx-studio.workers.dev',
-  output: 'server',
+  output: 'static',
   trailingSlash: 'ignore',
   // i18n auto-detect by location (memo #191): set ES (LATAM default) +
   // EN (internacional) + PT (Brasil). prefixDefaultLocale=false → 'es' va

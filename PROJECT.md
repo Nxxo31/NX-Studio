@@ -296,12 +296,14 @@ og-image → todos 200; canonical `https://nx-studio.nx-studio.workers.dev/`.
 Build exit 0 + vitest 107/107 tras la limpieza.
 
 **PENDIENTES del deploy:**
-1. **KNOWN ISSUE — SSR i18n 302**: las páginas SSR bajo `/en/*` y `/pt/*`
-   devuelven status 302 (sin Location) con el contenido correcto; las
-   pre-renderizadas (docs/productos/templates) sirven 200. Peculiaridad del
-   fallback rewrite runtime + adapter (cf. withastro/astro#13964 familia).
-   Decisión operador: prerender de páginas públicas (+ run_worker_first
-   para mantener auto-detect), patch upstream, o convivir.
+1. ~~KNOWN ISSUE — SSR i18n 302~~ **RESUELTO 2026-10-13** (aprobación operador
+   "Prerender + worker-first"): output `'static'` + `prerender=false` explícito
+   en las 5 rutas on-demand (api/licitacion, api/auth/[...all],
+   api/admin/update-status, admin/index, admin/licitacion/[id]) + `[assets]
+   run_worker_first = true` en wrangler.toml — el middleware i18n ve cada
+   request (auto-detect cf-ipcountry) y las páginas pre-renderizadas se
+   sirven vía el binding ASSETS. Verificado en vivo: `/`, `/en/`, `/pt/`,
+   `/en/servicios`, `/en/docs/` → todos 200 (antes las SSR devolvían 302).
 2. **Cloudflare Access policy** para `/admin*` + `/api/admin*` en el
    dashboard CF — sin ella esas rutas quedan expuestas.
 3. `RESEND_API_KEY` cuando exista cuenta Resend.

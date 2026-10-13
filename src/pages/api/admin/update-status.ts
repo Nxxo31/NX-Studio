@@ -14,6 +14,8 @@ import { z } from 'zod';
 import { createDb } from '~/db';
 import { updateStatus } from '~/server/licitacion-repo';
 
+export const prerender = false;
+
 const BodySchema = z.object({
   id: z.string().min(1),
   status: z.enum(['nueva', 'contactada', 'propuesta_enviada', 'aceptada', 'rechazada', 'completada']),

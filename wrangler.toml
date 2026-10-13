@@ -5,6 +5,12 @@ compatibility_date = "2026-10-01"
 # que el process nativo v2 quede expuesto antes del polyfill de unenv.
 compatibility_flags = ["nodejs_compat", "disable_nodejs_process_v2"]
 workers_dev = true
+
+# El worker corre ANTES que los assets estáticos: el middleware i18n necesita
+# ver cada request (cf-ipcountry → 302 al locale) aunque la página final sea
+# un archivo pre-renderizado servido vía el binding ASSETS.
+[assets]
+run_worker_first = true
 # Para Pages, no se necesita `main` — el runtime lo detecta desde dist/_worker.js
 # automáticamente. Sí necesitamos la lista de páginas (público) desde `dist/`.
 
