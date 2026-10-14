@@ -30,9 +30,13 @@
   "dependencies": {
     "@astrojs/cloudflare": "^14.3.3",
     "@astrojs/db": "^0.21.3",
+    "@astrojs/react": "^4.4.2",
     "astro": "^7.3.2",
     "better-auth": "^1.7.7",
     "drizzle-orm": "^0.45.4",
+    "framer-motion": "^11.18.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "resend": "^6.30.0",
     "zod": "^4.6.5"
   },
@@ -46,6 +50,7 @@
     "@types/better-sqlite3": "^9.6.0",
     "better-sqlite3": "^13.0.3",
     "drizzle-kit": "^0.31.11",
+    "glob": "^13.0.6",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.20.5",
     "vitest": "^5.0.3"

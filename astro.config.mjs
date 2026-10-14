@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import cloudflare from '@astrojs/cloudflare';
+import react from '@astrojs/react';
 
 // NX-Studio deploy: Cloudflare Pages con SSR + Resend para contacto.
 // Output 'server' = SSR, /api/* routes se ejecutan como Pages Functions en el edge.
@@ -36,6 +37,7 @@ export default defineConfig({
     imageService: 'compile',
     platformProxy: { enabled: true },
   }),
+  integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
     resolve: {

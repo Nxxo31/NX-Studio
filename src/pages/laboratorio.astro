@@ -55,7 +55,7 @@ const i18nLab = {
       <div class="mt-12 grid gap-6 lg:grid-cols-2">
         <!-- Chat panel -->
         <section class="lava-card p-6" aria-labelledby="lab-chat-title">
-          <div class="flex items-center justify-between border-b-[3px] border-nx-border-strong pb-4">
+          <div class="flex items-center justify-between border-b border-nx-border pb-4">
             <div>
               <h2 id="lab-chat-title" class="font-display text-lg font-bold">{t('pages.laboratorio.chat.title')}</h2>
               <p class="font-mono text-xs text-nx-dim">{t('pages.laboratorio.chat.sub')}</p>
@@ -67,8 +67,8 @@ const i18nLab = {
 
           <div id="chat-log" class="mt-4 h-[420px] overflow-y-auto space-y-3 pr-2">
             <div class="flex gap-3">
-              <div class="grid h-8 w-8 shrink-0 place-items-center border-2 border-nx-ink bg-nx-primary font-mono text-xs font-bold text-nx-text-on-primary">NX</div>
-              <div class="border-2 border-nx-ink bg-nx-bg p-3 text-sm max-w-[85%]">
+              <div class="grid h-8 w-8 shrink-0 place-items-center border-2 border-nx-border-strong bg-nx-primary font-mono text-xs font-bold text-nx-text-on-primary">NX</div>
+              <div class="border-2 border-nx-border-strong bg-nx-bg p-3 text-sm max-w-[85%]">
                 {i18nLab.greeting}
               </div>
             </div>
@@ -84,7 +84,7 @@ const i18nLab = {
             />
             <button
               type="submit"
-              class="border-[3px] border-nx-ink bg-nx-primary px-5 py-3 text-sm font-bold uppercase text-nx-text-on-primary shadow-[4px_4px_0_var(--nx-ink)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_var(--nx-ink)]"
+              class="lava-btn"
             >
               {t('common.enviar')}
             </button>
@@ -93,7 +93,7 @@ const i18nLab = {
 
         <!-- Mockup panel -->
         <section class="lava-card p-6" aria-labelledby="lab-mockup-title">
-          <div class="flex items-center justify-between border-b-[3px] border-nx-border-strong pb-4">
+          <div class="flex items-center justify-between border-b border-nx-border pb-4">
             <div>
               <h2 id="lab-mockup-title" class="font-display text-lg font-bold">{t('pages.laboratorio.mockup.title')}</h2>
               <p class="font-mono text-xs text-nx-dim">{t('pages.laboratorio.mockup.sub')}</p>
@@ -103,7 +103,7 @@ const i18nLab = {
             </button>
           </div>
 
-          <div id="mockup-area" class="mt-4 aspect-square w-full border-[3px] border-dashed border-nx-border-strong bg-nx-bg grid place-items-center">
+          <div id="mockup-area" class="mt-4 aspect-square w-full border-2 border-dashed border-nx-border bg-nx-bg grid place-items-center">
             <div class="text-center text-nx-dim p-6">
               <div class="text-5xl font-display">◇</div>
               <p class="mt-3 font-mono text-xs uppercase tracking-widest">{i18nLab.placeholderA}</p>
@@ -117,7 +117,7 @@ const i18nLab = {
           </div>
 
           <!-- Spec output -->
-          <div id="spec-area" class="mt-4 hidden border-t-[3px] border-nx-border-strong pt-4">
+          <div id="spec-area" class="mt-4 hidden border-t border-nx-border pt-4">
             <div class="flex items-center justify-between">
               <h3 class="font-mono text-xs font-bold uppercase tracking-widest text-nx-text">{i18nLab.specTitle}</h3>
               <button id="spec-copy" type="button" class="border-2 border-nx-border-strong bg-nx-surface px-2 py-1 font-mono text-[10px] font-bold uppercase hover:bg-nx-primary hover:text-nx-text-on-primary">{i18nLab.specCopy}</button>
@@ -207,15 +207,15 @@ const i18nLab = {
 
     if (role === 'bot') {
       const avatar = document.createElement('div');
-      avatar.className = 'grid h-8 w-8 shrink-0 place-items-center border-2 border-nx-ink bg-nx-primary font-mono text-xs font-bold text-nx-text-on-primary';
+      avatar.className = 'grid h-8 w-8 shrink-0 place-items-center border-2 border-nx-border-strong bg-nx-primary font-mono text-xs font-bold text-nx-text-on-primary';
       avatar.textContent = 'NX';
       wrap.appendChild(avatar);
     }
 
     const bubble = document.createElement('div');
     bubble.className = role === 'user'
-      ? 'border-2 border-nx-ink bg-nx-primary p-3 text-sm font-mono max-w-[85%] text-nx-text-on-primary'
-      : 'border-2 border-nx-ink bg-nx-bg p-3 text-sm max-w-[85%]';
+      ? 'border-2 border-nx-border-strong bg-nx-primary p-3 text-sm font-mono max-w-[85%] text-nx-text-on-primary'
+      : 'border-2 border-nx-border-strong bg-nx-bg p-3 text-sm max-w-[85%]';
     bubble.textContent = text;
     wrap.appendChild(bubble);
     log.appendChild(wrap);

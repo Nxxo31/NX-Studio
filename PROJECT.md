@@ -29,11 +29,12 @@ estático para SEO y velocidad.
 El sistema de diseño canónico vive en `DESIGN.md`.
 NO duplicar tokens aquí — apuntar siempre a DESIGN.md.
 
-Resumen: 2 paletas brutalistas (`brutal-dark` default + `brutal-cream`)
-que comparten el mismo contrato de tokens `--nx-*`. Lava `#ff4500` como
-único acento + tinta estructural (crema en dark, negro en cream) +
-sombras duras sin blur + esquinas cuadradas (radius = 0 en toda la
-escala Tailwind v4) + grilla expuesta. Auto-switch dark/light via
+Resumen: 2 paletas glass (`glass-dark` default + `glass-light`) que
+comparten el mismo contrato de tokens `--nx-*`. Lava `#ff4500` como único
+acento + tinta estructural (cream en dark, negro en light) + backdrop-blur
+suave + indigo `#818cf8` como acento de profundidad + radio moderado
+(8-14px) + Framer Motion en home + CSS animations en el resto. v0.8.0
+supersede el brutalism v0.7.0. Auto-switch dark/light via
 `prefers-color-scheme` la primera visita. Override manual con
 `data-palette="<id>"` en `<html>`.
 

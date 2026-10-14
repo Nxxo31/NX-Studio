@@ -2,102 +2,110 @@
 @import "./palettes.css";
 
 /* ============================================================
-   NX-Studio · Sistema de tokens — BRUTALISM (v0.7.0)
-   Lava #ff4500 + tinta estructural + sombras duras sin blur.
-   Bordes gruesos 2-3px, esquinas cuadradas, cero gradientes.
+   NX-Studio · Sistema de tokens — GLASS / DEPTH (v0.8.0)
+   Steel-indigo evolucionado. Navy profundo + glass cards + lava accent
+   + Framer Motion micro-interactions. shadcn/ui-compatible.
    ============================================================ */
 
 @theme {
-  /* Brutal Dark (default sin data-palette) */
-  --color-nx-bg: #0f0e0c;
-  --color-nx-surface: #191714;
-  --color-nx-raised: #23201b;
-  --color-nx-border: rgba(245, 240, 228, 0.35);
-  --color-nx-border-strong: #f5f0e4;
-  --color-nx-ink: #f5f0e4;
+  /* Glass Dark (default sin data-palette) */
+  --color-nx-bg: #0a0b14;
+  --color-nx-surface: #11132a;
+  --color-nx-raised: #181a35;
+  --color-nx-ink: #e8eaf6;
+  --color-nx-border: rgba(255, 255, 255, 0.08);
+  --color-nx-border-strong: rgba(255, 255, 255, 0.14);
 
   --color-nx-primary: #ff4500;
   --color-nx-primary-soft: #ff6a00;
-  --color-nx-deep: #b92c00;
-  --color-nx-ember: #ff6a00;
+  --color-nx-primary-deep: #b92c00;
+  --color-nx-primary-tint: rgba(255, 69, 0, 0.14);
 
-  --color-nx-accent: #ffd23f;
-  --color-nx-purple: #f5f0e4;
-  --color-nx-amber: #ffd23f;
+  --color-nx-secondary: #818cf8;
+  --color-nx-secondary-soft: #a5b4fc;
+  --color-nx-secondary-deep: #4f46e5;
 
-  --color-nx-text: #f5f0e4;
-  --color-nx-muted: #b8b2a0;
-  --color-nx-dim: #7d7768;
+  --color-nx-accent: #818cf8;
+  --color-nx-accent-soft: #c4b5fd;
 
-  --color-nx-success: #22c55e;
-  --color-nx-warn: #ffd23f;
-  --color-nx-danger: #ff5050;
+  --color-nx-text: #f1f3ff;
+  --color-nx-text-muted: #9b9ec4;
+  --color-nx-text-dim: #5b5e85;
+  --color-nx-text-on-primary: #0a0b14;
 
-  /* Tipografía */
+  --color-nx-success: #34d399;
+  --color-nx-warn: #fbbf24;
+  --color-nx-danger: #f87171;
+  --color-nx-info: #818cf8;
+
   --font-display: "Space Grotesk", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  /* Brutalismo: cero border-radius en toda la escala Tailwind */
-  --radius-xs: 0px;
-  --radius-sm: 0px;
-  --radius-md: 0px;
-  --radius-lg: 0px;
-  --radius-xl: 0px;
-  --radius-2xl: 0px;
-  --radius-3xl: 0px;
-  --radius-4xl: 0px;
+  /* Glass/depth: radius moderado (no brutalism-square, no full-round) */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-3xl: 36px;
+  --radius-4xl: 48px;
 }
 
 /* ============================================================
-   Tokens --nx-* · Brutal Dark (default)
-   --nx-ink = color estructural (bordes + sombras + secundario)
+   Glass Dark · default
    ============================================================ */
-:root {
+:root,
+:root[data-palette="glass-dark"],
+[data-palette="glass-dark"] {
   --nx-primary:          #ff4500;
   --nx-primary-soft:     #ff6a00;
   --nx-primary-deep:     #b92c00;
-  --nx-primary-tint:     rgba(255, 69, 0, 0.16);
+  --nx-primary-tint:     rgba(255, 69, 0, 0.14);
 
-  --nx-ink:              #f5f0e4;
-  --nx-secondary:        #f5f0e4;
-  --nx-secondary-soft:   #cfc9b8;
-  --nx-secondary-deep:   #8a8574;
+  --nx-ink:              #e8eaf6;
+  --nx-secondary:        #818cf8;
+  --nx-secondary-soft:   #a5b4fc;
+  --nx-secondary-deep:   #4f46e5;
 
-  --nx-accent:           #ffd23f;
-  --nx-accent-soft:      #ffe699;
+  --nx-accent:           #818cf8;
+  --nx-accent-soft:      #c4b5fd;
 
-  --nx-bg:               #0f0e0c;
-  --nx-surface:          #191714;
-  --nx-surface-raised:   #23201b;
-  --nx-surface-overlay:  rgba(25, 23, 20, 0.96);
+  --nx-bg:               #0a0b14;
+  --nx-surface:          #11132a;
+  --nx-surface-raised:   #181a35;
+  --nx-surface-overlay:  rgba(17, 19, 42, 0.85);
 
-  --nx-border:           rgba(245, 240, 228, 0.35);
-  --nx-border-strong:    #f5f0e4;
+  --nx-border:           rgba(255, 255, 255, 0.08);
+  --nx-border-strong:    rgba(255, 255, 255, 0.14);
 
-  --nx-text:             #f5f0e4;
-  --nx-text-muted:       #b8b2a0;
-  --nx-text-dim:         #7d7768;
-  --nx-text-on-primary:  #141210;
+  --nx-text:             #f1f3ff;
+  --nx-text-muted:       #9b9ec4;
+  --nx-text-dim:         #5b5e85;
+  --nx-text-on-primary:  #0a0b14;
 
-  --nx-success:          #22c55e;
-  --nx-success-bg:       rgba(34, 197, 94, 0.14);
-  --nx-warn:             #ffd23f;
-  --nx-warn-bg:          rgba(255, 210, 63, 0.14);
-  --nx-danger:           #ff5050;
-  --nx-danger-bg:        rgba(255, 80, 80, 0.14);
-  --nx-info:             #ff6a00;
-  --nx-info-bg:          rgba(255, 69, 0, 0.14);
+  --nx-success:          #34d399;
+  --nx-success-bg:       rgba(52, 211, 153, 0.14);
+  --nx-warn:             #fbbf24;
+  --nx-warn-bg:          rgba(251, 191, 36, 0.14);
+  --nx-danger:           #f87171;
+  --nx-danger-bg:        rgba(248, 113, 113, 0.14);
+  --nx-info:             #818cf8;
+  --nx-info-bg:          rgba(129, 140, 248, 0.14);
 
   --nx-chart-1:          #ff4500;
-  --nx-chart-2:          #f5f0e4;
-  --nx-chart-3:          #ffd23f;
-  --nx-chart-4:          #22c55e;
+  --nx-chart-2:          #818cf8;
+  --nx-chart-3:          #fbbf24;
+  --nx-chart-4:          #34d399;
 
-  /* Sombras duras — offset fijo, cero blur, tinta estructural */
-  --nx-shadow-sm:        3px 3px 0 var(--nx-ink);
-  --nx-shadow:            6px 6px 0 var(--nx-ink);
-  --nx-shadow-lg:         10px 10px 0 var(--nx-ink);
+  --nx-texture-color:    rgba(129, 140, 248, 0.06);
+
+  /* Sombras con profundidad (no glow, no blur feo) */
+  --nx-shadow-sm:        0 1px 2px rgba(0, 0, 0, 0.4);
+  --nx-shadow:            0 8px 24px -8px rgba(0, 0, 0, 0.5);
+  --nx-shadow-lg:         0 24px 48px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --nx-glow:              0 0 32px -4px rgba(255, 69, 0, 0.35);
 }
 
 /* ============================================================
@@ -122,24 +130,22 @@ body {
   position: relative;
 }
 
-/* Grilla estructural expuesta — uniforme, sin mask, sin grain */
+/* Mesh de fondo sutil: dos radiales lava + indigo, baja opacidad */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.55;
   background-image:
-    linear-gradient(to right, var(--nx-texture-color) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--nx-texture-color) 1px, transparent 1px);
-  background-size: 56px 56px;
-  transform: translateZ(0);
+    radial-gradient(ellipse 60% 50% at 15% 10%, rgba(255, 69, 0, 0.10), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 80%, rgba(129, 140, 248, 0.10), transparent 60%);
 }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   letter-spacing: -0.02em;
+  font-weight: 700;
 }
 
 code, kbd, .mono {
@@ -147,34 +153,63 @@ code, kbd, .mono {
 }
 
 /* ============================================================
-   Componentes brutalistas
+   Utilidades Glass
+   ============================================================ */
+.glass {
+  background: var(--nx-surface-overlay);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--radius-lg);
+}
+.glass-strong {
+  background: var(--nx-surface);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--nx-border-strong);
+  border-radius: var(--radius-lg);
+}
+.glass-soft {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--radius-lg);
+}
+.glow-lava {
+  box-shadow: var(--nx-glow);
+}
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--nx-border-strong), transparent);
+}
+
+/* ============================================================
+   Componentes · steel-indigo glass
    ============================================================ */
 
-/* Card — borde 3px + sombra dura; hover la desplaza en contra */
-.lava-card {
+/* Card glass */
+.lava-card,
+.glass-card {
   position: relative;
   background: var(--nx-surface);
-  border: 3px solid var(--nx-ink);
+  backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--radius-lg);
   box-shadow: var(--nx-shadow);
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s, box-shadow 0.3s;
 }
-
-.lava-card:hover {
-  transform: translate(-3px, -3px);
-  box-shadow: 9px 9px 0 var(--nx-ink);
+.glass-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--nx-border-strong);
+  box-shadow: var(--nx-shadow-lg);
 }
-
+.glass-card-accent,
 .lava-card-accent {
-  border-color: var(--nx-primary);
-  box-shadow: 6px 6px 0 var(--nx-primary);
-}
-.lava-card-accent:hover {
-  box-shadow: 9px 9px 0 var(--nx-primary);
+  border-color: var(--nx-primary-tint);
+  box-shadow: var(--nx-shadow), 0 0 0 1px var(--nx-primary-tint);
 }
 
-/* Botón — bloque sólido lava, presionado físico al hover/active */
+/* Button · lava primary */
 .lava-btn {
-  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -185,48 +220,34 @@ code, kbd, .mono {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--nx-text-on-primary);
-  background: var(--nx-primary);
-  border: 3px solid var(--nx-ink);
-  box-shadow: 4px 4px 0 var(--nx-ink);
-  transition: transform 0.1s, box-shadow 0.1s;
+  background: linear-gradient(180deg, var(--nx-primary-soft), var(--nx-primary));
+  border: 1px solid var(--nx-primary-deep);
+  border-radius: var(--radius-md);
+  box-shadow: var(--nx-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
   cursor: pointer;
 }
-
 .lava-btn:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 var(--nx-ink);
+  transform: translateY(-1px);
+  box-shadow: var(--nx-shadow-lg), var(--nx-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  filter: brightness(1.05);
 }
-
-.lava-btn:active {
-  transform: translate(4px, 4px);
-  box-shadow: none;
-}
-
-.lava-btn:focus-visible {
-  outline: 3px solid var(--nx-accent);
-  outline-offset: 2px;
-}
-
+.lava-btn:active { transform: translateY(0); filter: brightness(0.98); }
 .lava-btn-ghost {
-  color: var(--nx-ink);
+  color: var(--nx-text);
   background: transparent;
-  border: 3px solid var(--nx-ink);
-  box-shadow: 4px 4px 0 var(--nx-ink);
-}
-
-.lava-btn-ghost:hover {
-  background: var(--nx-primary);
-  color: var(--nx-text-on-primary);
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 var(--nx-ink);
-}
-
-.lava-btn-ghost:active {
-  transform: translate(4px, 4px);
+  border: 1px solid var(--nx-border-strong);
   box-shadow: none;
 }
+.lava-btn-ghost:hover {
+  background: var(--nx-surface);
+  border-color: var(--nx-primary);
+  color: var(--nx-primary);
+  box-shadow: 0 0 0 1px var(--nx-primary-tint);
+  filter: none;
+}
 
-/* Etiqueta — bloque lava con borde y micro-sombra */
+/* Tag · glass */
 .lava-tag {
   display: inline-flex;
   align-items: center;
@@ -237,33 +258,34 @@ code, kbd, .mono {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--nx-text-on-primary);
-  background: var(--nx-primary);
-  border: 2px solid var(--nx-ink);
-  box-shadow: 3px 3px 0 var(--nx-ink);
+  color: var(--nx-primary);
+  background: var(--nx-primary-tint);
+  border: 1px solid var(--nx-primary-tint);
+  border-radius: var(--radius-sm);
+  backdrop-filter: blur(8px);
 }
 
-/* Divider — barra sólida de tinta */
+/* Hairline (legacy) */
 .hairline {
-  background: var(--nx-ink);
-  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--nx-border-strong), transparent);
+  height: 1px;
   opacity: 1;
 }
 
-/* Legacy Matrix-style — neutralizado en brutalismo */
-.lava-scan { display: none; }
-.orb { display: none; }
-
-/* Dot grid estructural */
+/* Dot grid (mesh sutil decorativo) */
 .dot-grid {
-  background-image: radial-gradient(circle, var(--nx-texture-color) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(circle, var(--nx-texture-color) 1.2px, transparent 1.2px);
   background-size: 24px 24px;
 }
 
-/* Scroll reveal */
+/* Legacy brutalism neutralizado */
+.lava-scan { display: none; }
+.orb { display: none; }
+
+/* Reveal (CSS-only fallback para no-JS) */
 .reveal {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(20px);
   transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .reveal.is-visible {
@@ -271,78 +293,84 @@ code, kbd, .mono {
   transform: translateY(0);
 }
 
-/* Nav links — bloques invertidos al hover */
+/* Nav links */
 .nav-link {
   position: relative;
   padding: 0.5rem 0.875rem;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--nx-text);
-  transition: background 0.1s, color 0.1s;
+  color: var(--nx-text-muted);
+  border-radius: var(--radius-sm);
+  transition: color 0.2s, background 0.2s;
 }
 .nav-link:hover {
-  background: var(--nx-ink);
-  color: var(--nx-bg);
+  color: var(--nx-text);
+  background: var(--nx-primary-tint);
 }
 .nav-active {
-  background: var(--nx-primary);
-  color: var(--nx-text-on-primary);
-  border: 2px solid var(--nx-ink);
-  box-shadow: 2px 2px 0 var(--nx-ink);
+  color: var(--nx-text);
+  background: var(--nx-primary-tint);
+  border: 1px solid var(--nx-primary-tint);
 }
 
-/* Card hover genérico */
+/* card-hover (legacy alias para ProjectPreview) */
 .card-hover {
-  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 .card-hover:hover {
-  border-color: var(--nx-primary);
-  transform: translate(-2px, -2px);
-  box-shadow: 8px 8px 0 var(--nx-ink);
+  transform: translateY(-3px);
+  border-color: var(--nx-primary-tint);
+  box-shadow: var(--nx-shadow-lg);
 }
 
 /* ============================================================
-   Backward-compat: clases legacy -> sistema --nx-*
+   Backward-compat
    ============================================================ */
-.text-lava {
-  color: var(--nx-primary);
-}
-.text-lava-edge {
-  color: var(--nx-ink);
-}
-.bg-lava-soft {
-  background: var(--nx-info-bg);
-}
-.border-lava {
-  border-color: var(--nx-ink);
-}
+.text-lava { color: var(--nx-primary); }
+.text-lava-edge { color: var(--nx-secondary); }
+.bg-lava-soft { background: var(--nx-primary-tint); }
+.border-lava { border-color: var(--nx-primary); }
 
-/* ============================================================
-   Bridge --lava-* legacy -> tokens brutales
-   ============================================================ */
+/* Bridge legacy --lava-* */
 :root {
   --lava-core: var(--nx-primary);
-  --lava-edge: var(--nx-ink);
+  --lava-edge: var(--nx-secondary);
   --lava-deep: var(--nx-primary-deep);
-  --lava-glow: var(--nx-primary-tint);
+  --lava-glow: var(--nx-glow);
   --lava-glow-soft: var(--nx-primary-tint);
   --bg-void: var(--nx-bg);
   --bg-ember: var(--nx-surface);
 }
 
-/* Scrollbar brutalista */
-::-webkit-scrollbar {
-  width: 12px; height: 12px;
-}
-::-webkit-scrollbar-track {
-  background: var(--nx-bg);
-  border-left: 2px solid var(--nx-ink);
-}
+/* ============================================================
+   Scrollbar glass
+   ============================================================ */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--nx-bg); }
 ::-webkit-scrollbar-thumb {
-  background: var(--nx-primary);
-  border: 2px solid var(--nx-ink);
+  background: var(--nx-surface-raised);
+  border: 2px solid var(--nx-bg);
+  border-radius: 6px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--nx-primary-soft);
+::-webkit-scrollbar-thumb:hover { background: var(--nx-primary); }
+
+/* ============================================================
+   Animaciones CSS auxiliares (complemento a Framer Motion)
+   ============================================================ */
+@keyframes nx-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes nx-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes nx-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-fade-up { animation: nx-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

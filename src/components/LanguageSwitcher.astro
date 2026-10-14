@@ -29,7 +29,7 @@ const options: Array<{ locale: Locale; label: string; href: string; current: boo
           hreflang={o.locale}
           aria-current={o.current ? 'true' : undefined}
           class:list={[
-            'rounded-md border px-2 py-1 font-mono text-xs transition',
+            ' border px-2 py-1 font-mono text-xs transition',
             o.current
               ? 'border-[var(--lava-edge)] text-nx-text'
               : 'border-nx-border text-nx-muted hover:text-nx-text',

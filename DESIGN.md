@@ -1,126 +1,97 @@
 ---
 version: alpha
-name: NX-Studio Theme System (Brutalism)
-description: 2 paletas brutalistas — brutal-dark (default) + brutal-cream. Validado WCAG 2.1 AA.
+name: NX-Studio Theme System (Glass / Depth v0.8.0)
+description: 2 paletas glass — glass-dark (default) + glass-light. Navy + glass + lava accent + Framer Motion. shadcn/ui-compatible.
 
 colors:
-  # brutal-dark (default · dark) — near-black cálido + tinta crema + lava
-  dark-bg: "#0f0e0c"
-  dark-surface: "#191714"
-  dark-raised: "#23201b"
-  dark-ink: "#f5f0e4"
-  dark-text: "#f5f0e4"
-  dark-text-muted: "#b8b2a0"
-  dark-text-dim: "#7d7768"
+  dark-bg: "#0a0b14"
+  dark-surface: "#11132a"
+  dark-raised: "#181a35"
+  dark-ink: "#e8eaf6"
+  dark-text: "#f1f3ff"
+  dark-text-muted: "#9b9ec4"
+  dark-text-dim: "#5b5e85"
   dark-primary: "#ff4500"
+  dark-secondary: "#818cf8"
   dark-accent: "#ffd23f"
 
-  # brutal-cream (light) — crema papel + tinta negra + lava
-  cream-bg: "#f2ecdf"
-  cream-surface: "#faf6ec"
-  cream-raised: "#fffdf6"
-  cream-ink: "#141210"
-  cream-text: "#141210"
-  cream-text-muted: "#443f36"
-  cream-text-dim: "#6b6558"
+  cream-bg: "#fafbff"
+  cream-surface: "#ffffff"
+  cream-raised: "#f4f5fb"
+  cream-ink: "#0a0b14"
+  cream-text: "#0a0b14"
+  cream-text-muted: "#4a4d6b"
+  cream-text-dim: "#7a7d9a"
   cream-primary: "#ff4500"
+  cream-secondary: "#4f46e5"
   cream-accent: "#ffd23f"
 
 components:
-  # ─── contratos brutales (ambas paletas) ───
-  # Card:    border 3px solid ink + shadow 6px 6px 0 ink (sin blur)
-  # Accent:  border/shadow en lava #ff4500
-  # Button:  bg lava, texto #141210, border 3px ink, shadow 4px 4px 0 ink.
-  #          Hover = pressed físico (translate 2px, shadow 2px).
-  # Tag:     bloque lava, border 2px ink, shadow 3px 3px 0 ink.
-  # Nav:     borde inferior 3px ink, hover = inversión ink/bg.
-  # Radius:  0 en toda la escala Tailwind (esquinas cuadradas).
+  card-glass:
+    backgroundColor: "{colors.dark-surface}"
+    borderColor: "rgba(255, 255, 255, 0.08)"
+    borderRadius: "14px"
+    boxShadow: "0 8px 24px -8px rgba(0, 0, 0, 0.5)"
   button-dark:
     backgroundColor: "{colors.dark-primary}"
-    textColor: "#141210"
-  button-cream:
-    backgroundColor: "{colors.cream-primary}"
-    textColor: "#141210"
-  text-default-dark:
-    backgroundColor: "{colors.dark-bg}"
-    textColor: "{colors.dark-text}"
-  text-muted-dark:
-    backgroundColor: "{colors.dark-bg}"
-    textColor: "{colors.dark-text-muted}"
-  primary-on-dark:
-    backgroundColor: "{colors.dark-bg}"
-    textColor: "{colors.dark-primary}"
-  text-default-cream:
-    backgroundColor: "{colors.cream-bg}"
-    textColor: "{colors.cream-text}"
-  text-muted-cream:
-    backgroundColor: "{colors.cream-bg}"
-    textColor: "{colors.cream-text-muted}"
-  primary-on-cream:
-    backgroundColor: "{colors.cream-bg}"
-    textColor: "{colors.cream-primary}"
+    textColor: "#0a0b14"
 ---
 
-# NX-Studio Theme System — BRUTALISM
+# NX-Studio Theme System — GLASS / DEPTH v0.8.0
 
-2 paletas (1 dark + 1 light) que comparten el mismo contrato de tokens
-`--nx-*`. Default = `brutal-dark`. Auto-switch via `prefers-color-scheme`
-la primera visita (respetado salvo override explícito del usuario).
+2 paletas (glass-dark + glass-light) que comparten el mismo contrato de
+tokens `--nx-*`. Default = `glass-dark`. Auto-switch via
+`prefers-color-scheme` la primera visita.
 
-Activar manualmente: `data-palette="<id>"` en `<html>`.
-IDs disponibles: `brutal-dark`, `brutal-cream`.
+Activar: `data-palette="<id>"` en `<html>`. IDs: `glass-dark`, `glass-light`.
 
-## Gramática visual
+## Gramática
 
-- **Tinta estructural** (`--nx-ink`): crema en dark, negro en cream.
-  Gobierna bordes, sombras y color secundario de texto.
-- **Lava** (`--nx-primary` `#ff4500`): único acento emocional — CTAs,
-  tags, marca, `::selection`.
-- **Amarillo** (`--nx-accent` `#ffd23f`): highlight secundario
-  (focus ring, acentos puntuales).
-- **Sombras duras**: offset fijo sin blur — `--nx-shadow-sm` (3px),
-  `--nx-shadow` (6px), `--nx-shadow-lg` (10px), siempre en tinta.
-- **Bordes**: 2-3px sólidos (nunca hairline translúcido en componentes;
-  `--nx-border` 35% de tinta queda solo para dividores quietos).
-- **Esquinas cuadradas**: toda la escala `--radius-*` de Tailwind = 0.
-- **Estructura expuesta**: grilla uniforme 56px en el fondo, sin mask,
-  sin grain, sin vignette.
-- **Prohibidos**: gradientes, blur, backdrop-blur, glows, clip-path
-  chamfers, glassmorphism. (`.lava-scan` y `.orb` están neutralizados
-  y WebGLBackground/BackgroundDecor no se montan desde Base.astro.)
+- **Glass**: `backdrop-filter: blur(14px) saturate(140%)` sobre surface
+  con alpha 0.72, border 1px ink @ 8% opacity, radius 14px.
+- **Tinta** (`--nx-ink`): cream dark / negro light — borders + secundario.
+- **Lava** (`--nx-primary` `#ff4500`): único acento emocional (CTAs,
+  tags, marca, selection, glows).
+- **Indigo** (`--nx-secondary`): acento de profundidad.
+- **Amarillo** (`--nx-accent` `#ffd23f`): focus rings.
+- **Sombras con profundidad**: `--nx-shadow-sm/…/lg` (suaves, sin offsets
+  duros), `--nx-glow` (lava 32px).
+- **Background mesh**: `body::before` con dos radiales lava + indigo
+  baja opacidad.
+- **Radius moderado**: xs 4, sm 6, md 10, lg 14, xl 20 (glass, no 0).
+- **Motion**: Framer Motion (React island) en home para hero stagger.
+  CSS animations + IntersectionObserver `.reveal` en el resto para
+  mantener bundle mínimo.
 
 ## Interacciones
 
-- Hover de botón = press físico: `translate(2px,2px)` + sombra reducida;
-  active = `translate(4px,4px)` + sombra cero.
-- Hover de card = contra-sombra: `translate(-3px,-3px)` + sombra 9px.
-- Hover de nav-link = inversión tinta/fondo; activo = chip lava con
-  sombra 2px.
-- Focus visible = outline 3px amarillo con offset 2px (`.lava-btn`),
-  o sombra dura 4px en inputs (`.nx-input`).
+- Hover botón = translate(-1px) + shadow-lg + glow lava + brightness.
+- Hover card = translate(-3px,-3px) + shadow 9px.
+- Hover nav-link = inversión ink/bg.
+- Framer Motion hero: stagger entrance, fade+translateY+blur(8px)→0.
 
-## Do's and Don'ts
+## Do
 
-### Do
+- Respetar prefers-color-scheme la primera visita.
+- Persistir override en localStorage con key `nx-studio-theme`.
+- Anti-FOUC en `<head>` antes del body.
+- Usar `<AnimatedHero client:load>` para motion premium en hero.
+- Usar `.glass-card` (o alias `.lava-card`) en cards.
 
-- Respetar `prefers-color-scheme` la primera visita si el usuario no ha tocado el switcher
-- Persistir override en localStorage con key `nx-studio-theme`
-- Pre-load script en `<head>` antes del body para evitar FOUC
-- Usar `--nx-ink`/`--nx-shadow*` para toda estructura visual
+## Don't
 
-### Don't
-
-- No reintroducir gradientes/blur/glow — si un componente lo "necesita",
-  resuelve con borde + sombra dura + color sólido
-- No usar `--nx-text-dim` como texto de lectura — solo micro-labels UI
-  (ratios bajo AA para body text)
-- No usar `border-radius` — la escala está anulada; cualquier radius
-  hardcoded rompe el sistema
-- No crear tokens nuevos por fuera de `global.css`/`palettes.css`
+- No reintroducir borders 3px ink ni shadows duras offset
+  (`shadow-[Npx_Npx_0_...]`) — usar `--nx-shadow` suave.
+- No usar `--nx-text-dim` para body text.
+- No reintroducir WebGLBackground/BackgroundDecor ni gradientes pesados.
+- No crear tokens nuevos fuera de `global.css`/`palettes.css`.
 
 ## Histórico
 
-- v0.2.0–v0.4.0: lava neon (Matrix orange, chamfers, glow).
+- v0.2.0–v0.4.0: lava neon (Matrix orange, chamfers).
 - v0.5.0: steel-indigo (Linear/Vercel vibe, 5 paletas).
-- v0.7.0 (2026-10-14, sprint brutalism): sistema brutalista de 2 paletas,
-  autorizado por el operador en sesión opencode (`sess-29ba7c928aff3f8d`).
+- v0.7.0 (2026-10-14): brutalism — supersedido.
+- **v0.8.0 (2026-10-14, sprint glass/depth)**: supersede brutalism.
+  React 18 + @astrojs/react 4 + framer-motion 11. Home con React island
+  + stagger entrance; resto del sitio con glass system consistente +
+  CSS animations.

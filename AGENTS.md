@@ -3,7 +3,7 @@
 **Proyecto:** Sitio web empresarial de NX-Studio (estudio de desarrollo LATAM)
 **Stack:** Astro 7.3.2 + Tailwind v4 (vía @tailwindcss/vite) + TypeScript
 **Output:** Cloudflare Workers SSR (D1 + Resend + better-auth) — https://nx-studio.nx-studio.workers.dev
-**Identidad:** Brutalismo (lava #ff4500 + tinta estructural, sombras duras sin blur, bordes gruesos, esquinas cuadradas)
+**Identidad:** Glass / depth (v0.8.0) — navy + glass + lava #ff4500, sombras suaves con profundidad, radius moderado, motion con Framer Motion
 
 ## Reglas del proyecto
 

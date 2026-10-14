@@ -2,70 +2,92 @@
 import "../styles/global.css";
 import Base from "../layouts/Base.astro";
 import Nav from "../components/Nav.astro";
-import Hero from "../components/Hero.astro";
 import Footer from "../components/Footer.astro";
+import ProjectPreview from "../components/ProjectPreview.astro";
+import AnimatedHero from "../components/motion/AnimatedHero";
+import { projects } from "../data/catalog";
 import { getT, getLocale, localeUrl } from "~/i18n";
 
 const t = getT(Astro);
 const locale = getLocale(Astro);
 
-// Pregunta 1: ¿Qué hacemos? → iconos estables; copy vía i18n (pages.index.services.items.N.*)
 const servicios = [
   { icon: 'M4 6h16M4 12h16M4 18h16' },
   { icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
   { icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
 ];
 
-// Pregunta 2: ¿Por qué confiar? → stats estables, label vía i18n
-const confianza = [
-  { stat: '11' },
-  { stat: '24+' },
-  { stat: 'LATAM' },
-  { stat: '0' },
-];
-
-// Pregunta 3: ¿Cómo trabajamos? → copy vía i18n
+const confianza = [{ stat: '11' }, { stat: '24+' }, { stat: 'LATAM' }, { stat: '0' }];
 const pasos = [{ n: '01' }, { n: '02' }, { n: '03' }];
+
+const heroProject = projects.find((p) => p.slug === "nexocore")!;
+const totalStack = Array.from(new Set(projects.flatMap((p) => p.stack))).length;
 ---
 
 <Base title={t('pages.index.title')} description={t('pages.index.description')}>
   <Nav />
   <main>
 
-    {/* ============ ¿QUÉ ES NX-STUDIO? ============ */}
-    <Hero />
+    {/* ============ HERO ============ */}
+    <section class="relative px-6 pt-24 pb-16 lg:pt-32 lg:pb-24">
+      <div class="mx-auto max-w-7xl">
+        <div class="grid gap-10 lg:gap-16 lg:grid-cols-12 items-center">
+          <div class="lg:col-span-7">
+            <AnimatedHero
+              client:load
+              badge={t('pages.hero.badge')}
+              titleA={t('pages.hero.headlineA')}
+              titleEm={t('pages.hero.headlineEm')}
+              titleB={t('pages.hero.headlineB')}
+              subtitlePre={t('pages.hero.sub1')}
+              subtitleStrong={t('pages.hero.subStrong')}
+              subtitlePost={t('pages.hero.sub2')}
+              chips={[t('pages.hero.chip1'), t('pages.hero.chip2'), t('pages.hero.chip3'), t('pages.hero.chip4')]}
+              primaryCta={{ label: t('pages.hero.ctaPrimary'), href: localeUrl('/cotizador', locale) }}
+              secondaryCta={{ label: t('pages.hero.ctaSecondary'), href: localeUrl('/productos', locale) }}
+              stats={[
+                { value: String(projects.length), label: t('pages.hero.stat1') },
+                { value: `${totalStack}+`, label: t('pages.hero.stat2') },
+                { value: '4 sem', label: t('pages.hero.stat3') },
+              ]}
+            />
+          </div>
+          <div class="lg:col-span-5 animate-fade-up" style="animation-delay: 0.2s">
+            <ProjectPreview project={heroProject} />
+          </div>
+        </div>
+      </div>
+    </section>
 
-    {/* ============ ¿QUÉ HACEMOS? ============ */}
-    <section class="relative px-6 py-16 lg:py-24">
+    {/* ============ SERVICIOS ============ */}
+    <section class="relative px-6 py-20 lg:py-28">
       <div class="mx-auto max-w-6xl">
-        <header class="mb-12">
+        <header class="mb-14">
           <span class="lava-tag mb-3">{t('pages.index.services.tag')}</span>
           <h2 class="font-display text-3xl lg:text-5xl font-bold tracking-tight max-w-3xl">
-            {t('pages.index.services.headingA')} <span class="text-lava">{t('pages.index.services.headingEm')}</span> {t('pages.index.services.headingB')}
+            {t('pages.index.services.headingA')} <span class="bg-gradient-to-r from-nx-primary to-nx-primary-soft bg-clip-text text-transparent">{t('pages.index.services.headingEm')}</span> {t('pages.index.services.headingB')}
           </h2>
-          <p class="mt-4 max-w-2xl text-nx-muted text-lg">
-            {t('pages.index.services.sub')}
-          </p>
+          <p class="mt-5 max-w-2xl text-nx-text-muted text-lg">{t('pages.index.services.sub')}</p>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {servicios.map((s, i) => (
-            <article class="lava-card p-6 flex flex-col group hover:border-nx-border-strong transition">
-              <div class="mb-5 flex h-11 w-11 items-center justify-center rounded-lg border border-nx-border bg-nx-surface text-lava-edge">
+            <article class="glass-card p-6 flex flex-col group reveal">
+              <div class="mb-5 flex h-11 w-11 items-center justify-center border border-nx-border bg-nx-surface-overlay rounded-lg text-nx-secondary">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d={s.icon} />
                 </svg>
               </div>
               <h3 class="font-display font-semibold text-lg mb-2 text-nx-text">{t(`pages.index.services.items.${i}.title`)}</h3>
-              <p class="text-sm text-nx-muted leading-relaxed flex-1">{t(`pages.index.services.items.${i}.resultado`)}</p>
-              <div class="mt-5 pt-4 border-t border-nx-border font-mono text-xs text-lava-edge">
+              <p class="text-sm text-nx-text-muted leading-relaxed flex-1">{t(`pages.index.services.items.${i}.resultado`)}</p>
+              <div class="mt-5 pt-4 border-t border-nx-border font-mono text-xs text-nx-secondary">
                 {t(`pages.index.services.items.${i}.precio`)}
               </div>
             </article>
           ))}
         </div>
 
-        <div class="mt-8">
+        <div class="mt-10">
           <a href={localeUrl('/servicios', locale)} class="lava-btn lava-btn-ghost">
             {t('pages.index.services.cta')}
           </a>
@@ -73,25 +95,23 @@ const pasos = [{ n: '01' }, { n: '02' }, { n: '03' }];
       </div>
     </section>
 
-    {/* ============ ¿POR QUÉ CONFIAR? ============ */}
-    <section class="relative px-6 py-16 lg:py-24 border-t border-nx-border">
+    {/* ============ TRUST / STATS ============ */}
+    <section class="relative px-6 py-20 lg:py-28">
       <div class="mx-auto max-w-6xl">
-        <header class="mb-12">
+        <header class="mb-14">
           <span class="lava-tag mb-3">{t('pages.index.trust.tag')}</span>
           <h2 class="font-display text-3xl lg:text-5xl font-bold tracking-tight max-w-3xl">
-            {t('pages.index.trust.headingA')} <span class="text-lava">{t('pages.index.trust.headingEm')}</span>{t('pages.index.trust.headingB')}
+            {t('pages.index.trust.headingA')} <span class="text-nx-primary">{t('pages.index.trust.headingEm')}</span>{t('pages.index.trust.headingB')}
           </h2>
-          <p class="mt-4 max-w-2xl text-nx-muted text-lg">
-            {t('pages.index.trust.sub')}
-          </p>
+          <p class="mt-5 max-w-2xl text-nx-text-muted text-lg">{t('pages.index.trust.sub')}</p>
         </header>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {confianza.map((c, i) => (
-            <div class="border-l-2 border-lava-edge pl-5 py-2">
-              <div class="font-display text-4xl lg:text-5xl font-bold text-nx-text leading-none">
+            <div class="glass-card p-6 reveal">
+              <div class="font-display text-4xl lg:text-5xl font-bold text-nx-text leading-none tracking-tight">
                 {c.stat}
               </div>
-              <div class="mt-3 text-sm text-nx-muted leading-snug">
+              <div class="mt-3 text-sm text-nx-text-muted leading-snug">
                 {t(`pages.index.trust.items.${i}.label`)}
               </div>
             </div>
@@ -100,65 +120,53 @@ const pasos = [{ n: '01' }, { n: '02' }, { n: '03' }];
       </div>
     </section>
 
-    {/* ============ ¿CÓMO TRABAJAMOS? ============ */}
-    <section class="relative px-6 py-16 lg:py-24">
+    {/* ============ PROCESO ============ */}
+    <section class="relative px-6 py-20 lg:py-28">
       <div class="mx-auto max-w-6xl">
-        <header class="mb-12">
+        <header class="mb-14">
           <span class="lava-tag mb-3">{t('pages.index.process.tag')}</span>
           <h2 class="font-display text-3xl lg:text-5xl font-bold tracking-tight max-w-3xl">
-            {t('pages.index.process.headingA')} <span class="text-lava">{t('pages.index.process.headingEm')}</span>
+            {t('pages.index.process.headingA')} <span class="text-nx-primary">{t('pages.index.process.headingEm')}</span>
           </h2>
-          <p class="mt-4 max-w-2xl text-nx-muted text-lg">
-            {t('pages.index.process.sub')}
-          </p>
+          <p class="mt-5 max-w-2xl text-nx-text-muted text-lg">{t('pages.index.process.sub')}</p>
         </header>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           {pasos.map((p, i) => (
-            <article class="relative">
-              <div class="font-display text-6xl lg:text-7xl font-bold text-nx-surface-raised leading-none mb-4 select-none">
+            <article class="glass-card p-8 relative reveal">
+              <div class="font-display text-7xl font-bold text-nx-primary leading-none mb-4 select-none">
                 {p.n}
               </div>
               <h3 class="font-display font-semibold text-xl mb-3 text-nx-text">{t(`pages.index.process.items.${i}.titulo`)}</h3>
-              <p class="text-nx-muted leading-relaxed">{t(`pages.index.process.items.${i}.detalle`)}</p>
+              <p class="text-nx-text-muted leading-relaxed">{t(`pages.index.process.items.${i}.detalle`)}</p>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    {/* ============ DOS MANERAS DE EMPEZAR ============ */}
-    <section class="relative px-6 py-16 lg:py-24">
+    {/* ============ START: COTIZADOR / CONTACTO ============ */}
+    <section class="relative px-6 py-20 lg:py-28">
       <div class="mx-auto max-w-6xl">
-        <header class="mb-12 text-center">
+        <header class="mb-14 text-center">
           <span class="lava-tag mb-3">{t('pages.index.start.tag')}</span>
           <h2 class="font-display text-3xl lg:text-5xl font-bold tracking-tight max-w-3xl mx-auto">
-            {t('pages.index.start.headingA')} <span class="text-lava">{t('pages.index.start.headingEm')}</span>
+            {t('pages.index.start.headingA')} <span class="text-nx-primary">{t('pages.index.start.headingEm')}</span>
           </h2>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Opción A: Cotizador */}
-          <a href={localeUrl('/cotizador', locale)} class="lava-card lava-card-accent p-8 block group hover:border-lava-edge transition">
-            <div class="font-mono text-xs text-nx-dim mb-3">{t('pages.index.start.optionA.tag')}</div>
+          <a href={localeUrl('/cotizador', locale)} class="glass-card glass-card-accent p-8 block group">
+            <div class="font-mono text-xs text-nx-text-dim mb-3 uppercase tracking-widest">{t('pages.index.start.optionA.tag')}</div>
             <h3 class="font-display text-2xl font-bold mb-3 text-nx-text">{t('pages.index.start.optionA.title')}</h3>
-            <p class="text-nx-muted mb-6 leading-relaxed">
-              {t('pages.index.start.optionA.desc')}
-            </p>
-            <span class="lava-btn">
-              {t('pages.index.start.optionA.cta')}
-            </span>
+            <p class="text-nx-text-muted mb-6 leading-relaxed">{t('pages.index.start.optionA.desc')}</p>
+            <span class="lava-btn">{t('pages.index.start.optionA.cta')}</span>
           </a>
 
-          {/* Opción B: Propuesta formal */}
-          <a href={localeUrl('/contacto', locale)} class="lava-card p-8 block group hover:border-lava-edge transition">
-            <div class="font-mono text-xs text-nx-dim mb-3">{t('pages.index.start.optionB.tag')}</div>
+          <a href={localeUrl('/contacto', locale)} class="glass-card p-8 block group">
+            <div class="font-mono text-xs text-nx-text-dim mb-3 uppercase tracking-widest">{t('pages.index.start.optionB.tag')}</div>
             <h3 class="font-display text-2xl font-bold mb-3 text-nx-text">{t('pages.index.start.optionB.title')}</h3>
-            <p class="text-nx-muted mb-6 leading-relaxed">
-              {t('pages.index.start.optionB.desc')}
-            </p>
-            <span class="lava-btn lava-btn-ghost">
-              {t('pages.index.start.optionB.cta')}
-            </span>
+            <p class="text-nx-text-muted leading-relaxed">{t('pages.index.start.optionB.desc')}</p>
+            <span class="lava-btn lava-btn-ghost">{t('pages.index.start.optionB.cta')}</span>
           </a>
         </div>
       </div>

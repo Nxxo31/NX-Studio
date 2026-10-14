@@ -31,7 +31,7 @@ const links = [
 ];
 ---
 
-<header class="sticky top-0 z-50 border-b-[3px] border-nx-border-strong bg-nx-bg">
+<header class="sticky top-0 z-50 border-b border-nx-border bg-nx-surface-overlay backdrop-blur-xl">
   <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
     <Brand variant="lockup" size="md" href={`${base}/`} />
 
@@ -57,7 +57,7 @@ const links = [
     </button>
   </nav>
 
-  <div id="mobile-menu" class="hidden border-t-[3px] border-nx-border-strong md:hidden">
+  <div id="mobile-menu" class="hidden border-t border-nx-border md:hidden">
     <ul class="flex flex-col gap-1 px-6 py-4">
       {links.map((l) => (
         <li><a href={l.href} class="nav-link block">{l.label}</a></li>

@@ -1,118 +1,119 @@
 /* ============================================================
-   NX-Studio · Brand Palettes v4 — BRUTALISM
-   2 paletas: brutal-dark (default) + brutal-cream (light).
-   Activar con data-palette="brutal-cream" en <html>; sin atributo = dark.
+   NX-Studio · Brand Palettes v5 — GLASS / DEPTH
+   2 paletas: glass-dark (default) + glass-light.
+   Activar con data-palette="glass-light" en <html>; sin atributo = dark.
    Auto-respecta prefers-color-scheme en la primera visita (Base.astro).
    ============================================================ */
 
 /* ============================================================
-   PALETTE 01 — BRUTAL DARK (default)
-   Near-black cálido, tinta crema estructural, lava como único acento.
+   PALETTE 01 — GLASS DARK (default)
+   Navy profundo, glass sobre surface, lava como único acento emocional,
+   indigo #818cf8 como acento de profundidad.
    ============================================================ */
 :root,
-:root[data-palette="brutal-dark"],
-[data-palette="brutal-dark"] {
+:root[data-palette="glass-dark"],
+[data-palette="glass-dark"] {
   --nx-primary:          #ff4500;
   --nx-primary-soft:     #ff6a00;
   --nx-primary-deep:     #b92c00;
-  --nx-primary-tint:     rgba(255, 69, 0, 0.16);
+  --nx-primary-tint:     rgba(255, 69, 0, 0.14);
 
-  --nx-ink:              #f5f0e4;
-  --nx-secondary:        #f5f0e4;
-  --nx-secondary-soft:   #cfc9b8;
-  --nx-secondary-deep:   #8a8574;
+  --nx-ink:              #e8eaf6;
+  --nx-secondary:        #818cf8;
+  --nx-secondary-soft:   #a5b4fc;
+  --nx-secondary-deep:   #4f46e5;
 
-  --nx-accent:           #ffd23f;
-  --nx-accent-soft:      #ffe699;
+  --nx-accent:           #818cf8;
+  --nx-accent-soft:      #c4b5fd;
 
-  --nx-bg:               #0f0e0c;
-  --nx-surface:          #191714;
-  --nx-surface-raised:   #23201b;
-  --nx-surface-overlay:  rgba(25, 23, 20, 0.96);
+  --nx-bg:               #0a0b14;
+  --nx-surface:          #11132a;
+  --nx-surface-raised:   #181a35;
+  --nx-surface-overlay:  rgba(17, 19, 42, 0.72);
 
-  --nx-border:           rgba(245, 240, 228, 0.35);
-  --nx-border-strong:    #f5f0e4;
+  --nx-border:           rgba(255, 255, 255, 0.08);
+  --nx-border-strong:    rgba(255, 255, 255, 0.14);
 
-  --nx-text:             #f5f0e4;
-  --nx-text-muted:       #b8b2a0;
-  --nx-text-dim:         #7d7768;
-  --nx-text-on-primary:  #141210;
+  --nx-text:             #f1f3ff;
+  --nx-text-muted:       #9b9ec4;
+  --nx-text-dim:         #5b5e85;
+  --nx-text-on-primary:  #0a0b14;
 
-  --nx-success:          #22c55e;
-  --nx-success-bg:       rgba(34, 197, 94, 0.14);
-  --nx-warn:             #ffd23f;
-  --nx-warn-bg:          rgba(255, 210, 63, 0.14);
-  --nx-danger:           #ff5050;
-  --nx-danger-bg:        rgba(255, 80, 80, 0.14);
-  --nx-info:             #ff6a00;
-  --nx-info-bg:          rgba(255, 69, 0, 0.14);
+  --nx-success:          #34d399;
+  --nx-success-bg:       rgba(52, 211, 153, 0.14);
+  --nx-warn:             #fbbf24;
+  --nx-warn-bg:          rgba(251, 191, 36, 0.14);
+  --nx-danger:           #f87171;
+  --nx-danger-bg:        rgba(248, 113, 113, 0.14);
+  --nx-info:             #818cf8;
+  --nx-info-bg:          rgba(129, 140, 248, 0.14);
 
   --nx-chart-1:          #ff4500;
-  --nx-chart-2:          #f5f0e4;
-  --nx-chart-3:          #ffd23f;
-  --nx-chart-4:          #22c55e;
+  --nx-chart-2:          #818cf8;
+  --nx-chart-3:          #fbbf24;
+  --nx-chart-4:          #34d399;
 
-  --nx-texture-color:    rgba(245, 240, 228, 0.05);
+  --nx-texture-color:    rgba(129, 140, 248, 0.06);
 }
 
 /* ============================================================
-   PALETTE 02 — BRUTAL CREAM (light)
-   Crema papel, tinta negra estructural, lava como único acento.
+   PALETTE 02 — GLASS LIGHT
+   Near-white cool, glass sobre surface, lava accent, indigo depth.
    ============================================================ */
-:root[data-palette="brutal-cream"],
-[data-palette="brutal-cream"] {
+:root[data-palette="glass-light"],
+[data-palette="glass-light"] {
   --nx-primary:          #ff4500;
   --nx-primary-soft:     #ff6a00;
   --nx-primary-deep:     #b92c00;
-  --nx-primary-tint:     #ffe4d3;
+  --nx-primary-tint:     rgba(255, 69, 0, 0.10);
 
-  --nx-ink:              #141210;
-  --nx-secondary:        #141210;
-  --nx-secondary-soft:   #3a352e;
-  --nx-secondary-deep:   #6b6558;
+  --nx-ink:              #0a0b14;
+  --nx-secondary:        #4f46e5;
+  --nx-secondary-soft:   #818cf8;
+  --nx-secondary-deep:   #3730a3;
 
-  --nx-accent:           #ffd23f;
-  --nx-accent-soft:      #ffec99;
+  --nx-accent:           #4f46e5;
+  --nx-accent-soft:      #818cf8;
 
-  --nx-bg:               #f2ecdf;
-  --nx-surface:          #faf6ec;
-  --nx-surface-raised:   #fffdf6;
-  --nx-surface-overlay:  rgba(250, 246, 236, 0.96);
+  --nx-bg:               #fafbff;
+  --nx-surface:          #ffffff;
+  --nx-surface-raised:   #f4f5fb;
+  --nx-surface-overlay:  rgba(255, 255, 255, 0.72);
 
-  --nx-border:           rgba(20, 18, 16, 0.35);
-  --nx-border-strong:    #141210;
+  --nx-border:           rgba(10, 11, 20, 0.08);
+  --nx-border-strong:    rgba(10, 11, 20, 0.16);
 
-  --nx-text:             #141210;
-  --nx-text-muted:       #443f36;
-  --nx-text-dim:         #6b6558;
-  --nx-text-on-primary:  #141210;
+  --nx-text:             #0a0b14;
+  --nx-text-muted:       #4a4d6b;
+  --nx-text-dim:         #7a7d9a;
+  --nx-text-on-primary:  #ffffff;
 
-  --nx-success:          #15803d;
-  --nx-success-bg:       rgba(21, 128, 61, 0.12);
+  --nx-success:          #059669;
+  --nx-success-bg:       rgba(5, 150, 105, 0.10);
   --nx-warn:             #b45309;
-  --nx-warn-bg:          rgba(180, 83, 9, 0.12);
+  --nx-warn-bg:          rgba(180, 83, 9, 0.10);
   --nx-danger:           #dc2626;
   --nx-danger-bg:        rgba(220, 38, 38, 0.10);
-  --nx-info:             #b92c00;
-  --nx-info-bg:          #ffe4d3;
+  --nx-info:             #4f46e5;
+  --nx-info-bg:          rgba(79, 70, 229, 0.10);
 
   --nx-chart-1:          #ff4500;
-  --nx-chart-2:          #141210;
-  --nx-chart-3:          #ffd23f;
-  --nx-chart-4:          #15803d;
+  --nx-chart-2:          #4f46e5;
+  --nx-chart-3:          #b45309;
+  --nx-chart-4:          #059669;
 
-  --nx-texture-color:    rgba(20, 18, 16, 0.06);
+  --nx-texture-color:    rgba(79, 70, 229, 0.05);
 
   /* Tailwind v4: overrides de las variables --color-nx-* (utilities bg-nx- y text-nx-) */
-  --color-nx-bg:         #f2ecdf;
-  --color-nx-surface:    #faf6ec;
-  --color-nx-raised:     #fffdf6;
-  --color-nx-border:     rgba(20, 18, 16, 0.35);
-  --color-nx-border-strong: #141210;
-  --color-nx-ink:        #141210;
-  --color-nx-text:       #141210;
-  --color-nx-muted:      #443f36;
-  --color-nx-dim:        #6b6558;
+  --color-nx-bg:         #fafbff;
+  --color-nx-surface:    #ffffff;
+  --color-nx-raised:     #f4f5fb;
+  --color-nx-border:     rgba(10, 11, 20, 0.08);
+  --color-nx-border-strong: rgba(10, 11, 20, 0.16);
+  --color-nx-ink:        #0a0b14;
+  --color-nx-text:       #0a0b14;
+  --color-nx-muted:      #4a4d6b;
+  --color-nx-dim:        #7a7d9a;
   --color-nx-primary:    #ff4500;
-  --color-nx-accent:     #ffd23f;
+  --color-nx-accent:     #4f46e5;
 }

@@ -37,7 +37,7 @@ const alternates = LOCALES.map((l) => ({
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#0f0e0c" />
+    <meta name="theme-color" content="#0a0b14" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="robots" content="index,follow" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -58,19 +58,19 @@ const alternates = LOCALES.map((l) => ({
     <!-- Anti-FOUC: aplicar tema antes del primer paint.
          1) respeta override del usuario en localStorage
          2) si no, respeta prefers-color-scheme (dark/light)
-         3) fallback: brutal-dark (dark default) -->
+         3) fallback: glass-dark (dark default) -->
     <script is:inline>
       (function() {
         try {
           var STORAGE_KEY = 'nx-studio-theme';
-          var VALID = ['brutal-dark', 'brutal-cream'];
+          var VALID = ['glass-dark', 'glass-light'];
           var stored = localStorage.getItem(STORAGE_KEY);
           var theme;
           if (stored && VALID.indexOf(stored) !== -1) {
             theme = stored;
           } else {
             var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            theme = prefersDark ? 'brutal-dark' : 'brutal-cream';
+            theme = prefersDark ? 'glass-dark' : 'glass-light';
           }
           document.documentElement.setAttribute('data-palette', theme);
         } catch(e) {}

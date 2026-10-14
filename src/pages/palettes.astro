@@ -52,7 +52,7 @@ const defaultPalette = "brutal-dark";
           {palettes.map((p) => (
             <button
               data-set-palette={p.id}
-              class={`palette-switch px-4 py-2 rounded-md font-mono text-xs uppercase tracking-widest transition border ${
+              class={`palette-switch px-4 py-2  font-mono text-xs uppercase tracking-widest transition border ${
                 p.id === defaultPalette
                   ? 'border-lava-edge bg-lava-soft text-lava-edge'
                   : 'border-nx-border text-nx-muted hover:border-lava-edge hover:text-lava-edge'
