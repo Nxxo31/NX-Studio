@@ -663,25 +663,15 @@
       },
       "back": "← back to site",
       "items": {
-        "lava-pure": {
-          "tag": "warm · energetic",
-          "desc": "Lava as the dominant accent, warm neutrals. Replit/Nium vibe.",
-          "use": "Keeps your current v0.2 look but adds a complete system (semantic, chart, borders). Closest to your original identity."
+        "brutal-dark": {
+          "tag": "dark · structural · DEFAULT",
+          "desc": "Warm near-black with structural cream ink. Lava as the only accent, hard shadows with zero blur.",
+          "use": "The site's default dark theme. Thick cream borders, lava blocks and an exposed grid."
         },
-        "steel-indigo": {
-          "tag": "corporate · fintech · DEFAULT",
-          "desc": "Lava reserved as emotional accent, indigo as corporate accent. Linear vibe.",
-          "use": "✓ THIS IS YOUR PALETTE. When you want to feel more corporate/fintech without losing the lava. Good targets: enterprise SaaS, premium B2B."
-        },
-        "obsidian-teal": {
-          "tag": "engineering · minimal",
-          "desc": "Radical monochrome with teal as the only accent. Lava only on hero CTAs. Vercel vibe.",
-          "use": "Enterprise engineering tool look. Good if you compete with Vercel/Linear on technical credibility."
-        },
-        "navy-gold": {
-          "tag": "premium · enterprise",
-          "desc": "Navy as base (authority), gold as premium accent (trust). Lava as energy. Andela/Toptal vibe.",
-          "use": "Large corporate targets / enterprise contracts. Communicates premium + trust + energy."
+        "brutal-cream": {
+          "tag": "light · paper · max contrast",
+          "desc": "Paper cream with structural black ink. Lava as the only accent, hard black shadows.",
+          "use": "The site's light theme. Maximum brutalist contrast: thick black borders over cream."
         }
       }
     },

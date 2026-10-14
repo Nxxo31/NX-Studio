@@ -6,48 +6,30 @@ import { getT, getLocale, localeUrl } from "~/i18n";
 const t = getT(Astro);
 const locale = getLocale(Astro);
 
-// 4 paletas a comparar (copy descriptivo via i18n: pages.palettes.items.{id}.*)
+// 2 paletas brutalistas (copy descriptivo via i18n: pages.palettes.items.{id}.*)
 const palettes = [
   {
-    id: "lava-pure",
-    name: "Lava Pure",
+    id: "brutal-dark",
+    name: "Brutal Dark",
     primary: "#ff4500",
-    secondary: "#d97706",
-    accent: "#c026d3",
-    bg: "#0a0608",
-    text: "#f5e6d3",
+    secondary: "#f5f0e4",
+    accent: "#ffd23f",
+    bg: "#0f0e0c",
+    text: "#f5f0e4",
   },
   {
-    id: "steel-indigo",
-    name: "Steel Indigo",
+    id: "brutal-cream",
+    name: "Brutal Cream",
     primary: "#ff4500",
-    secondary: "#5e6ad2",
-    accent: "#ff6a00",
-    bg: "#0b0b14",
-    text: "#f1f1f4",
-  },
-  {
-    id: "obsidian-teal",
-    name: "Obsidian + Teal",
-    primary: "#ff4500",
-    secondary: "#14b8a6",
-    accent: "#f59e0b",
-    bg: "#000000",
-    text: "#fafafa",
-  },
-  {
-    id: "navy-gold",
-    name: "Deep Navy + Gold",
-    primary: "#ff4500",
-    secondary: "#d4a574",
-    accent: "#3b82f6",
-    bg: "#0a0e1a",
-    text: "#faf7f0",
+    secondary: "#141210",
+    accent: "#ffd23f",
+    bg: "#f2ecdf",
+    text: "#141210",
   },
 ];
 
-// Steel-indigo es la paleta default
-const defaultPalette = "steel-indigo";
+// Brutal-dark es la paleta default
+const defaultPalette = "brutal-dark";
 ---
 
 <Base title={t('pages.palettes.title')} description={t('pages.palettes.description')}>
@@ -159,10 +141,10 @@ const defaultPalette = "steel-indigo";
             <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim mb-3">// components</div>
             <div class="flex flex-wrap gap-2 mb-4">
               <span class="lava-tag">// tag</span>
-              <span class="lava-tag" style="background: transparent; border-left-color: var(--nx-secondary); color: var(--nx-secondary);">
+              <span class="lava-tag" style="background: var(--nx-surface); color: var(--nx-ink);">
                 secondary
               </span>
-              <span class="lava-tag" style="background: transparent; border-left-color: var(--nx-accent); color: var(--nx-accent);">
+              <span class="lava-tag" style="background: var(--nx-accent); color: var(--nx-text-on-primary);">
                 accent
               </span>
             </div>
@@ -262,7 +244,7 @@ const defaultPalette = "steel-indigo";
 
 <script>
   // Live palette switcher
-  type Palette = 'lava-pure' | 'steel-indigo' | 'obsidian-teal' | 'navy-gold';
+  type Palette = 'brutal-dark' | 'brutal-cream';
   const STORAGE_KEY = 'nx-studio-palette-preview';
 
   function setPalette(p: Palette) {
@@ -283,7 +265,7 @@ const defaultPalette = "steel-indigo";
 
   // Initialize
   const stored = (typeof localStorage !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null) as Palette | null;
-  setPalette(stored || 'lava-pure');
+  setPalette(stored || 'brutal-dark');
 
   // Bind buttons
   document.querySelectorAll('[data-set-palette]').forEach((btn) => {

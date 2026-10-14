@@ -77,23 +77,22 @@ test.describe("Nav · mobile menu", () => {
 });
 
 test.describe("Card hover", () => {
-  test("hover en card cambia color del nombre del proyecto", async ({ page }) => {
+  test("hover en card cambia el borde a lava (contrato brutalista)", async ({ page }) => {
     await page.goto("/productos/");
 
     const firstCard = page.locator("[data-project-card]").first();
-    const titleLink = firstCard.locator("h3");
 
-    // Antes del hover: color base (nx-text)
-    const colorBefore = await titleLink.evaluate((el) => getComputedStyle(el).color);
+    // Antes del hover: borde tinta (--nx-ink)
+    const borderBefore = await firstCard.evaluate((el) => getComputedStyle(el).borderColor);
 
     // Hover sobre la card
     await firstCard.hover();
     // Pequeña espera para que la transición CSS arranque
     await page.waitForTimeout(200);
 
-    const colorAfter = await titleLink.evaluate((el) => getComputedStyle(el).color);
+    // Contrato brutalista: .card-hover:hover pinta el borde a lava (--nx-primary)
+    const borderAfter = await firstCard.evaluate((el) => getComputedStyle(el).borderColor);
 
-    // El color debe haber cambiado (transición de grupo)
-    expect(colorAfter).not.toBe(colorBefore);
+    expect(borderAfter).not.toBe(borderBefore);
   });
 });

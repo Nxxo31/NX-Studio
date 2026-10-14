@@ -31,7 +31,7 @@ const links = [
 ];
 ---
 
-<header class="sticky top-0 z-50 border-b border-nx-border bg-nx-bg/80 backdrop-blur-xl">
+<header class="sticky top-0 z-50 border-b-[3px] border-nx-border-strong bg-nx-bg">
   <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
     <Brand variant="lockup" size="md" href={`${base}/`} />
 
@@ -48,7 +48,7 @@ const links = [
       {t('nav.cta')}
     </a>
 
-    <button id="mobile-toggle" class="md:hidden rounded-md border border-nx-border p-2" aria-label={t('nav.menu')}>
+    <button id="mobile-toggle" class="md:hidden border-2 border-nx-border-strong bg-nx-surface p-2" aria-label={t('nav.menu')}>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <line x1="3" y1="6" x2="21" y2="6"></line>
         <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -57,7 +57,7 @@ const links = [
     </button>
   </nav>
 
-  <div id="mobile-menu" class="hidden border-t border-nx-border md:hidden">
+  <div id="mobile-menu" class="hidden border-t-[3px] border-nx-border-strong md:hidden">
     <ul class="flex flex-col gap-1 px-6 py-4">
       {links.map((l) => (
         <li><a href={l.href} class="nav-link block">{l.label}</a></li>

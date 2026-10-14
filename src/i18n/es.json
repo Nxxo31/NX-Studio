@@ -663,25 +663,15 @@
       },
       "back": "← volver al sitio",
       "items": {
-        "lava-pure": {
-          "tag": "warm · energetic",
-          "desc": "Lava como acento dominante, neutros cálidos. Replit/Nium vibe.",
-          "use": "Mantiene tu look v0.2 actual pero añade sistema completo (semánticos, chart, borders). El más cercano a tu identidad original."
+        "brutal-dark": {
+          "tag": "dark · estructural · DEFAULT",
+          "desc": "Near-black cálido con tinta crema estructural. Lava como único acento, sombras duras sin blur.",
+          "use": "Tema oscuro por defecto del sitio. Bordes gruesos crema, bloques lava y grilla expuesta."
         },
-        "steel-indigo": {
-          "tag": "corporate · fintech · DEFAULT",
-          "desc": "Lava se reserva como acento emocional, indigo como acento corporativo. Linear vibe.",
-          "use": "✓ ESTA ES TU PALETA. Cuando quieres sentir más corporativo/fintech sin perder la lava. Buenos targets: enterprise SaaS, B2B premium."
-        },
-        "obsidian-teal": {
-          "tag": "engineering · minimal",
-          "desc": "Monochrome radical con teal como único acento. Lava solo en hero CTAs. Vercel vibe.",
-          "use": "Look enterprise engineering tool. Bueno si compites con Vercel/Linear en credibilidad técnica."
-        },
-        "navy-gold": {
-          "tag": "premium · enterprise",
-          "desc": "Navy como base (autoridad), gold como acento premium (confianza). Lava como energía. Andela/Toptal vibe.",
-          "use": "Targets corporativos grandes / enterprise contracts. Comunica premium + confianza + energía."
+        "brutal-cream": {
+          "tag": "light · papel · contraste máximo",
+          "desc": "Crema papel con tinta negra estructural. Lava como único acento, sombras duras negras.",
+          "use": "Tema claro del sitio. Máximo contraste brutalista: bordes negros gruesos sobre crema."
         }
       }
     },

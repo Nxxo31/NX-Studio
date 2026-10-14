@@ -15,8 +15,8 @@ const { variant = 'desktop' } = Astro.props;
 // Solo 2 paletas: dark default + light. Botones con icono para reconocer
 // el modo sin necesidad de leer la etiqueta.
 const palettes = [
-  { id: "steel-indigo", label: "Dark",  icon: "🌙" },
-  { id: "azure-light",  label: "Light", icon: "☀️" },
+  { id: "brutal-dark",  label: "Dark",  icon: "🌙" },
+  { id: "brutal-cream", label: "Light", icon: "☀️" },
 ];
 
 const isDesktop = variant === 'desktop';
@@ -25,7 +25,7 @@ const isDesktop = variant === 'desktop';
 {isDesktop ? (
   <div
     id="nx-palette-bar"
-    class="hidden md:inline-flex items-center gap-1 rounded-lg border border-nx-border bg-nx-bg/60 backdrop-blur-md p-1"
+    class="hidden md:inline-flex items-center gap-1 border-2 border-nx-border-strong bg-nx-bg p-1"
     role="group"
     aria-label="Cambiar tema claro / oscuro"
   >
@@ -71,9 +71,9 @@ const isDesktop = variant === 'desktop';
     window.__nxPaletteSwitcherInit = true;
 
     const STORAGE_KEY = 'nx-studio-theme';
-    const DEFAULT_DARK = 'steel-indigo';
-    const DEFAULT_LIGHT = 'azure-light';
-    const VALID = ['steel-indigo', 'azure-light'];
+    const DEFAULT_DARK = 'brutal-dark';
+    const DEFAULT_LIGHT = 'brutal-cream';
+    const VALID = ['brutal-dark', 'brutal-cream'];
     const ALL_BTN_SELECTOR = '[data-set-palette]';
 
     function systemPrefersDark() {

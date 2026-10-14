@@ -1,142 +1,103 @@
 ---
 version: alpha
-name: NX-Studio Theme System
-description: 5 brand palettes para NX-Studio — 4 dark + 1 light. Validado WCAG 2.1 AA.
+name: NX-Studio Theme System (Brutalism)
+description: 2 paletas brutalistas — brutal-dark (default) + brutal-cream. Validado WCAG 2.1 AA.
 
 colors:
-  # steel-indigo (default · dark) — bumped #5e6ad2 → #7c84e8 (5.21:1 AA)
-  steel-bg: "#0b0b14"
-  steel-surface: "#15172a"
-  steel-text: "#f1f1f4"
-  steel-text-muted: "#9b9bad"
-  steel-text-dim: "#4a4a60"
-  steel-primary: "#7c84e8"
-  steel-accent: "#ff6a00"
+  # brutal-dark (default · dark) — near-black cálido + tinta crema + lava
+  dark-bg: "#0f0e0c"
+  dark-surface: "#191714"
+  dark-raised: "#23201b"
+  dark-ink: "#f5f0e4"
+  dark-text: "#f5f0e4"
+  dark-text-muted: "#b8b2a0"
+  dark-text-dim: "#7d7768"
+  dark-primary: "#ff4500"
+  dark-accent: "#ffd23f"
 
-  # lava-pure (dark warm)
-  lava-bg: "#0a0608"
-  lava-surface: "#14090c"
-  lava-text: "#f5e6d3"
-  lava-text-muted: "#a89580"
-  lava-primary: "#ff4500"
-  lava-secondary: "#d97706"
-
-  # obsidian-teal (dark monochrome)
-  teal-bg: "#000000"
-  teal-surface: "#0a0a0a"
-  teal-text: "#fafafa"
-  teal-text-muted: "#a3a3a3"
-  teal-primary: "#0f766e"
-
-  # navy-gold (dark premium)
-  navy-bg: "#0a0e1a"
-  navy-surface: "#111827"
-  navy-text: "#faf7f0"
-  navy-text-muted: "#b8a890"
-  navy-primary: "#d4a574"
-  navy-secondary: "#3b82f6"
-
-  # azure-light (light · B2B)
-  azure-bg: "#ffffff"
-  azure-surface: "#f8fafc"
-  azure-surface-raised: "#f1f5f9"
-  azure-text: "#0f172a"
-  azure-text-muted: "#475569"
-  azure-text-dim: "#64748b"
-  azure-primary: "#2563eb"
-  azure-primary-deep: "#1d4ed8"
-  azure-secondary: "#6366f1"
-  azure-accent: "#06b6d4"
+  # brutal-cream (light) — crema papel + tinta negra + lava
+  cream-bg: "#f2ecdf"
+  cream-surface: "#faf6ec"
+  cream-raised: "#fffdf6"
+  cream-ink: "#141210"
+  cream-text: "#141210"
+  cream-text-muted: "#443f36"
+  cream-text-dim: "#6b6558"
+  cream-primary: "#ff4500"
+  cream-accent: "#ffd23f"
 
 components:
-  # ─── steel-indigo · dark (default) ───
-  text-default-steel:
-    backgroundColor: "{colors.steel-bg}"
-    textColor: "{colors.steel-text}"
-  text-muted-steel:
-    backgroundColor: "{colors.steel-bg}"
-    textColor: "{colors.steel-text-muted}"
-  primary-on-bg-steel:
-    backgroundColor: "{colors.steel-bg}"
-    textColor: "{colors.steel-primary}"
-  button-primary-steel:
-    backgroundColor: "{colors.steel-primary}"
-    textColor: "#ffffff"
-
-  # ─── lava-pure · dark warm ───
-  text-default-lava:
-    backgroundColor: "{colors.lava-bg}"
-    textColor: "{colors.lava-text}"
-  text-muted-lava:
-    backgroundColor: "{colors.lava-bg}"
-    textColor: "{colors.lava-text-muted}"
-  primary-on-bg-lava:
-    backgroundColor: "{colors.lava-bg}"
-    textColor: "{colors.lava-primary}"
-  button-primary-lava:
-    backgroundColor: "{colors.lava-primary}"
-    textColor: "#0a0608"
-
-  # ─── obsidian-teal · dark monochrome ───
-  text-default-teal:
-    backgroundColor: "{colors.teal-bg}"
-    textColor: "{colors.teal-text}"
-  text-muted-teal:
-    backgroundColor: "{colors.teal-bg}"
-    textColor: "{colors.teal-text-muted}"
-  primary-on-bg-teal:
-    backgroundColor: "{colors.teal-bg}"
-    textColor: "{colors.teal-primary}"
-  button-primary-teal:
-    backgroundColor: "{colors.teal-primary}"
-    textColor: "#ffffff"
-
-  # ─── navy-gold · dark premium ───
-  text-default-navy:
-    backgroundColor: "{colors.navy-bg}"
-    textColor: "{colors.navy-text}"
-  text-muted-navy:
-    backgroundColor: "{colors.navy-bg}"
-    textColor: "{colors.navy-text-muted}"
-  primary-on-bg-navy:
-    backgroundColor: "{colors.navy-bg}"
-    textColor: "{colors.navy-primary}"
-  button-primary-navy:
-    backgroundColor: "{colors.navy-primary}"
-    textColor: "{colors.navy-bg}"
-
-  # ─── azure-light · light B2B ───
-  text-default-azure:
-    backgroundColor: "{colors.azure-bg}"
-    textColor: "{colors.azure-text}"
-  text-muted-azure:
-    backgroundColor: "{colors.azure-bg}"
-    textColor: "{colors.azure-text-muted}"
-  text-dim-azure:
-    backgroundColor: "{colors.azure-bg}"
-    textColor: "{colors.azure-text-dim}"
-  primary-on-bg-azure:
-    backgroundColor: "{colors.azure-bg}"
-    textColor: "{colors.azure-primary}"
-  button-primary-azure:
-    backgroundColor: "{colors.azure-primary}"
-    textColor: "#ffffff"
-  button-primary-soft-azure:
-    backgroundColor: "{colors.azure-surface}"
-    textColor: "{colors.azure-primary}"
-  surface-default-azure:
-    backgroundColor: "{colors.azure-surface}"
-    textColor: "{colors.azure-text}"
+  # ─── contratos brutales (ambas paletas) ───
+  # Card:    border 3px solid ink + shadow 6px 6px 0 ink (sin blur)
+  # Accent:  border/shadow en lava #ff4500
+  # Button:  bg lava, texto #141210, border 3px ink, shadow 4px 4px 0 ink.
+  #          Hover = pressed físico (translate 2px, shadow 2px).
+  # Tag:     bloque lava, border 2px ink, shadow 3px 3px 0 ink.
+  # Nav:     borde inferior 3px ink, hover = inversión ink/bg.
+  # Radius:  0 en toda la escala Tailwind (esquinas cuadradas).
+  button-dark:
+    backgroundColor: "{colors.dark-primary}"
+    textColor: "#141210"
+  button-cream:
+    backgroundColor: "{colors.cream-primary}"
+    textColor: "#141210"
+  text-default-dark:
+    backgroundColor: "{colors.dark-bg}"
+    textColor: "{colors.dark-text}"
+  text-muted-dark:
+    backgroundColor: "{colors.dark-bg}"
+    textColor: "{colors.dark-text-muted}"
+  primary-on-dark:
+    backgroundColor: "{colors.dark-bg}"
+    textColor: "{colors.dark-primary}"
+  text-default-cream:
+    backgroundColor: "{colors.cream-bg}"
+    textColor: "{colors.cream-text}"
+  text-muted-cream:
+    backgroundColor: "{colors.cream-bg}"
+    textColor: "{colors.cream-text-muted}"
+  primary-on-cream:
+    backgroundColor: "{colors.cream-bg}"
+    textColor: "{colors.cream-primary}"
 ---
 
-# NX-Studio Theme System
+# NX-Studio Theme System — BRUTALISM
 
-5 paletas (4 dark + 1 light) que comparten el mismo contrato de tokens.
-Default = steel-indigo. Auto-switch dark/light via `prefers-color-scheme`
-la primera visita (respetado salvo override explicito del usuario).
+2 paletas (1 dark + 1 light) que comparten el mismo contrato de tokens
+`--nx-*`. Default = `brutal-dark`. Auto-switch via `prefers-color-scheme`
+la primera visita (respetado salvo override explícito del usuario).
 
 Activar manualmente: `data-palette="<id>"` en `<html>`.
-IDs disponibles: `steel-indigo`, `lava-pure`, `obsidian-teal`, `navy-gold`, `azure-light`.
+IDs disponibles: `brutal-dark`, `brutal-cream`.
+
+## Gramática visual
+
+- **Tinta estructural** (`--nx-ink`): crema en dark, negro en cream.
+  Gobierna bordes, sombras y color secundario de texto.
+- **Lava** (`--nx-primary` `#ff4500`): único acento emocional — CTAs,
+  tags, marca, `::selection`.
+- **Amarillo** (`--nx-accent` `#ffd23f`): highlight secundario
+  (focus ring, acentos puntuales).
+- **Sombras duras**: offset fijo sin blur — `--nx-shadow-sm` (3px),
+  `--nx-shadow` (6px), `--nx-shadow-lg` (10px), siempre en tinta.
+- **Bordes**: 2-3px sólidos (nunca hairline translúcido en componentes;
+  `--nx-border` 35% de tinta queda solo para dividores quietos).
+- **Esquinas cuadradas**: toda la escala `--radius-*` de Tailwind = 0.
+- **Estructura expuesta**: grilla uniforme 56px en el fondo, sin mask,
+  sin grain, sin vignette.
+- **Prohibidos**: gradientes, blur, backdrop-blur, glows, clip-path
+  chamfers, glassmorphism. (`.lava-scan` y `.orb` están neutralizados
+  y WebGLBackground/BackgroundDecor no se montan desde Base.astro.)
+
+## Interacciones
+
+- Hover de botón = press físico: `translate(2px,2px)` + sombra reducida;
+  active = `translate(4px,4px)` + sombra cero.
+- Hover de card = contra-sombra: `translate(-3px,-3px)` + sombra 9px.
+- Hover de nav-link = inversión tinta/fondo; activo = chip lava con
+  sombra 2px.
+- Focus visible = outline 3px amarillo con offset 2px (`.lava-btn`),
+  o sombra dura 4px en inputs (`.nx-input`).
 
 ## Do's and Don'ts
 
@@ -145,11 +106,21 @@ IDs disponibles: `steel-indigo`, `lava-pure`, `obsidian-teal`, `navy-gold`, `azu
 - Respetar `prefers-color-scheme` la primera visita si el usuario no ha tocado el switcher
 - Persistir override en localStorage con key `nx-studio-theme`
 - Pre-load script en `<head>` antes del body para evitar FOUC
-- Transicion suave entre temas (CSS transition 200ms en colores bg/text)
+- Usar `--nx-ink`/`--nx-shadow*` para toda estructura visual
 
 ### Don't
 
-- No usar `--nx-text-dim` (#94a3b8) como texto normal — solo UI/large text
-  (ratio 3.3:1 sobre blanco no cumple 4.5:1 para body text)
-- No usar `text-lava-edge` (indigo bridge en steel-indigo) esperando buen
-  contraste — su ratio es 3.0:1 sobre bg navy
+- No reintroducir gradientes/blur/glow — si un componente lo "necesita",
+  resuelve con borde + sombra dura + color sólido
+- No usar `--nx-text-dim` como texto de lectura — solo micro-labels UI
+  (ratios bajo AA para body text)
+- No usar `border-radius` — la escala está anulada; cualquier radius
+  hardcoded rompe el sistema
+- No crear tokens nuevos por fuera de `global.css`/`palettes.css`
+
+## Histórico
+
+- v0.2.0–v0.4.0: lava neon (Matrix orange, chamfers, glow).
+- v0.5.0: steel-indigo (Linear/Vercel vibe, 5 paletas).
+- v0.7.0 (2026-10-14, sprint brutalism): sistema brutalista de 2 paletas,
+  autorizado por el operador en sesión opencode (`sess-29ba7c928aff3f8d`).

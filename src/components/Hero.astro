@@ -39,16 +39,16 @@ const heroProject = projects.find((p) => p.slug === "nexocore")!;
 
         <!-- Spec badges -->
         <div class="reveal mt-8 flex flex-wrap gap-2">
-          <span class="lava-tag" style="background: transparent; border-left-color: var(--lava-edge); color: var(--lava-edge);">
+          <span class="lava-tag">
             {t('hero.chip1')}
           </span>
-          <span class="lava-tag" style="background: transparent; border-left-color: var(--lava-edge); color: var(--lava-edge);">
+          <span class="lava-tag">
             {t('hero.chip2')}
           </span>
-          <span class="lava-tag" style="background: transparent; border-left-color: var(--lava-edge); color: var(--lava-edge);">
+          <span class="lava-tag">
             {t('hero.chip3')}
           </span>
-          <span class="lava-tag" style="background: transparent; border-left-color: var(--lava-edge); color: var(--lava-edge);">
+          <span class="lava-tag">
             {t('hero.chip4')}
           </span>
         </div>
@@ -65,7 +65,7 @@ const heroProject = projects.find((p) => p.slug === "nexocore")!;
         </div>
 
         <!-- Quick stats -->
-        <div class="reveal mt-12 grid grid-cols-3 gap-6 border-t border-nx-border pt-6 max-w-2xl">
+        <div class="reveal mt-12 grid grid-cols-3 gap-6 border-t-[3px] border-nx-border-strong pt-6 max-w-2xl">
           <div>
             <div class="font-display text-3xl font-bold text-lava">{projects.length}</div>
             <div class="mt-1 font-mono text-xs text-nx-dim">{t('hero.stat1')}</div>

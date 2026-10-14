@@ -3,7 +3,7 @@
 **Proyecto:** Sitio web empresarial de NX-Studio (estudio de desarrollo LATAM)
 **Stack:** Astro 7.3.2 + Tailwind v4 (vía @tailwindcss/vite) + TypeScript
 **Output:** Cloudflare Workers SSR (D1 + Resend + better-auth) — https://nx-studio.nx-studio.workers.dev
-**Identidad:** Lava neon naranja/rojizo con geometría angular Matrix-style
+**Identidad:** Brutalismo (lava #ff4500 + tinta estructural, sombras duras sin blur, bordes gruesos, esquinas cuadradas)
 
 ## Reglas del proyecto
 
@@ -16,16 +16,18 @@
 - **Términos técnicos estándar:** Inglés (commit, deploy, middleware, endpoint)
 - **Razonamiento técnico interno:** Inglés
 
-### Sistema de diseño — Lava Neon
+### Sistema de diseño — Brutalism (v0.7.0)
 
-Tokens centralizados en `src/styles/global.css`:
+Tokens centralizados en `src/styles/global.css` + `src/styles/palettes.css` (2 paletas: `brutal-dark` default, `brutal-cream`):
 
-- Paleta naranja/rojizo: `--color-nx-primary: #ff4500`, `--color-nx-primary-soft: #ff6a00`, `--color-nx-deep: #8b0000`
-- Variables semánticas: `--lava-core`, `--lava-edge`, `--lava-deep`, `--lava-glow`, `--bg-void`, `--bg-ember`
-- **NO hardcodear colores** — siempre usar `var(--lava-*)` o clases Tailwind `text-lava`, `bg-lava-soft`, `border-lava`
-- Componentes base: `.lava-card`, `.lava-card-accent`, `.lava-btn`, `.lava-btn-ghost`, `.lava-tag`, `.lava-scan`, `.hairline`
-- Geometría angular con chamfers (clip-path) — mantener este patrón en cards/botones
+- Paleta: lava `#ff4500` (único acento) + tinta estructural `--nx-ink` (crema en dark, negra en cream) + amarillo `--nx-accent #ffd23f`
+- Sombras duras: `--nx-shadow-sm/…/lg` = offset fijo sin blur, siempre en tinta
+- Variables semánticas legacy bridge: `--lava-core`, `--lava-edge`, `--lava-deep`, `--bg-void`, `--bg-ember`
+- **NO hardcodear colores** — siempre usar `var(--nx-*)`/`var(--lava-*)` o clases Tailwind `text-lava`, `bg-lava-soft`, `border-lava`
+- Componentes base: `.lava-card`, `.lava-card-accent`, `.lava-btn`, `.lava-btn-ghost`, `.lava-tag`, `.hairline`
+- Geometría brutalista: bordes 2-3px sólidos + sombras duras offset — **prohibidos** gradientes, blur, glows, chamfers clip-path; esquinas cuadradas (escala Tailwind radius anulada)
 - Tipografía: `var(--font-display)` para headings, `var(--font-mono)` para código/números, `var(--font-body)` para texto
+- Detalles completos: `DESIGN.md` (canónico)
 
 ### Accesibilidad obligatoria
 
@@ -92,7 +94,7 @@ Tokens centralizados en `src/styles/global.css`:
 ## Reglas críticas
 
 - **NUNCA** usar colores hardcoded — siempre `var(--lava-*)` o clases Tailwind semánticas
-- **NUNCA** cambiar paleta base sin confirmar (lava neon es la identidad v0.2.0+)
+- **NUNCA** cambiar paleta base sin confirmar (brutalism es la identidad v0.7.0+; lava #ff4500 se mantiene como acento desde v0.2.0)
 - **NUNCA** agregar `videoUrl` falso al catálogo (queda undefined hasta que el video exista)
 - **NUNCA** publicar precio fijo en OSINT/Testing — solo rangos o tiers
 - **NUNCA** copiar estilo visual de Vertex/Toptal/etc. — solo patrones estructurales

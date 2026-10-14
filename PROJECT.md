@@ -26,23 +26,49 @@ estático para SEO y velocidad.
 
 ## Identidad de marca · Sistema de diseño canónico
 
-El sistema de diseño canónico vive en `DESIGN.md` (155 líneas, 4.8 KB).
+El sistema de diseño canónico vive en `DESIGN.md`.
 NO duplicar tokens aquí — apuntar siempre a DESIGN.md.
 
-Resumen: 5 paletas (4 dark + 1 light) que comparten el mismo contrato
-de tokens. Default = `steel-indigo`. Auto-switch dark/light via
+Resumen: 2 paletas brutalistas (`brutal-dark` default + `brutal-cream`)
+que comparten el mismo contrato de tokens `--nx-*`. Lava `#ff4500` como
+único acento + tinta estructural (crema en dark, negro en cream) +
+sombras duras sin blur + esquinas cuadradas (radius = 0 en toda la
+escala Tailwind v4) + grilla expuesta. Auto-switch dark/light via
 `prefers-color-scheme` la primera visita. Override manual con
-`data-palette="<id>"` en `<html>`. IDs disponibles: `steel-indigo`,
-`lava-pure`, `obsidian-teal`, `navy-gold`, `azure-light`.
+`data-palette="<id>"` en `<html>`.
 
-WCAG 2.1 AA validado en todas las combinaciones. Geometría: bordes
-angulares con chamfers (clip-path), grid lines, scan-line opcional,
-monospace para números/códigos.
+Histórico: lava neon v0.2.0→v0.4.0 (Matrix orange, chamfers) →
+steel-indigo v0.5.0 (5 paletas, Linear vibe) → **brutalism v0.7.0
+(2026-10-14, autorizado por el operador)**.
 
-Histórico: la paleta "lava neon" (orange/rojiza) que documentaban las
-versiones 0.2.0 → 0.4.0 quedó superseded por el sistema steel-indigo
-con 5 paletas (sprint v0.5.0). Tokens legacy siguen disponibles como
-`lava-pure` para secciones que necesiten el look Matrix.
+### Sprint brutalism (2026-10-14)
+
+Refactor completo del UI a neobrutalismo (token-level + componentes base):
+
+- `src/styles/global.css`: tokens + clases `.lava-card/.lava-btn/.lava-tag/
+  .nav-link/.card-hover` redefinidas a bordes 2-3px + sombras duras
+  `--nx-shadow-sm/…/lg` (offset fijo, sin blur). Eliminados grain SVG,
+  vignette, chamfers, `.orb` y `.lava-scan` (neutralizados). Radius
+  anulado vía tokens Tailwind `@theme --radius-*: 0`.
+- `src/styles/palettes.css`: 2 paletas (`brutal-dark`, `brutal-cream`).
+- `Base.astro`: anti-FOUC apunta a las nuevas IDs; WebGLBackground y
+  BackgroundDecor desmontados (archivos conservados, reversibles).
+- Componentes: Nav/Footer con bordes 3px sólidos (sin glass),
+  PaletteSwitcher con nuevas IDs, Brand glifo plano lava (sin gradientes
+  ni glow SVG), Hero chips como bloques sólidos, ProjectPreview sin
+  halo/chamfer/sparkline con gradientes.
+- `palettes.astro`: showcase reescrito a las 2 paletas nuevas + i18n
+  ES/EN/PT actualizado.
+- Tests: `tests/interactions.spec.ts` — el test de hover ahora aserta el
+  contrato brutalista (borde cambia a lava). Build exit 0, vitest
+  107/107. E2E: 42/52 passing = baseline (los 10 fallos restantes son
+  preexistentes del sprint v0.5.0: `/servicios/osint/` 404 tras la
+  retirada de OSINT 2026-10-09, título "Marca", `.status-live`
+  duplicado, filtro SaaS — cubiertos por kanban t_a6154bf7).
+
+Lección operativa: un comentario CSS con `*/` dentro del texto
+(ej. `bg-nx-*/text-nx-*`) rompe el parser de `@import` de Tailwind v4
+con error opaco "Missing opening (". Evitar esa secuencia en comentarios.
 
 ## Estructura de páginas
 

@@ -2,117 +2,102 @@
 @import "./palettes.css";
 
 /* ============================================================
-   NX-Studio · Sistema de tokens — Lava Neon (Matriz NX-Studio)
-   Paleta naranja/rojizo con geometría angular Matrix-style.
-   Inspiración estructural (no visual) de Vertex pricing + Toptal
-   engagement shapes + OSINT/QA tiered models. Identidad propia.
+   NX-Studio · Sistema de tokens — BRUTALISM (v0.7.0)
+   Lava #ff4500 + tinta estructural + sombras duras sin blur.
+   Bordes gruesos 2-3px, esquinas cuadradas, cero gradientes.
    ============================================================ */
 
 @theme {
-  /* ============================================================
-     Steel Indigo · paleta corporativa LATAM-tech
-     Lava se reserva como primary (CTAs heroicos, brand mark dash)
-     Indigo como secondary (acento corporativo principal)
-     Backgrounds: deep navy-blue tints (Linear/Vercel vibe)
-     ============================================================ */
+  /* Brutal Dark (default sin data-palette) */
+  --color-nx-bg: #0f0e0c;
+  --color-nx-surface: #191714;
+  --color-nx-raised: #23201b;
+  --color-nx-border: rgba(245, 240, 228, 0.35);
+  --color-nx-border-strong: #f5f0e4;
+  --color-nx-ink: #f5f0e4;
 
-  /* Backgrounds (cool blue-tinted darks — Linear-style) */
-  --color-nx-bg: #0b0b14;             /* fondo base navy */
-  --color-nx-surface: #15172a;        /* surface cards */
-  --color-nx-raised: #1c1f3a;         /* raised/elevated */
-  --color-nx-border: rgba(124, 132, 232, 0.12);
-  --color-nx-border-strong: rgba(124, 132, 232, 0.28);
-
-  /* Primary (lava) — acento emocional, usado en CTAs heroicos */
   --color-nx-primary: #ff4500;
   --color-nx-primary-soft: #ff6a00;
-  --color-nx-deep: #8b0000;
-  --color-nx-ember: #d97706;
+  --color-nx-deep: #b92c00;
+  --color-nx-ember: #ff6a00;
 
-  /* Secondary (indigo) — acento corporativo */
-  --color-nx-accent: #5e6ad2;
-  --color-nx-purple: #818cf8;          /* indigo-soft */
-  --color-nx-amber: #f59e0b;
+  --color-nx-accent: #ffd23f;
+  --color-nx-purple: #f5f0e4;
+  --color-nx-amber: #ffd23f;
 
-  /* Text (cool white scale) */
-  --color-nx-text: #f1f1f4;
-  --color-nx-muted: #9b9bad;
-  --color-nx-dim: #4a4a60;
+  --color-nx-text: #f5f0e4;
+  --color-nx-muted: #b8b2a0;
+  --color-nx-dim: #7d7768;
 
-  /* Semantic (calibrados para dark + cool) */
   --color-nx-success: #22c55e;
-  --color-nx-warn: #f59e0b;
-  --color-nx-danger: #f87171;
+  --color-nx-warn: #ffd23f;
+  --color-nx-danger: #ff5050;
 
   /* Tipografía */
   --font-display: "Space Grotesk", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
-}
 
-/* El bridge --lava-* está más abajo, cerca de las utility classes */
+  /* Brutalismo: cero border-radius en toda la escala Tailwind */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+}
 
 /* ============================================================
-   Brand palettes v2 — sistema --nx-* (sobrescribe cuando hay data-palette activo)
-   Default: steel-indigo (paleta corporativa LATAM-tech).
-   Los tokens --nx-* funcionan SIN necesidad de data-palette en HTML.
-   Si SÍ hay data-palette, palettes.css toma precedencia via cascade.
+   Tokens --nx-* · Brutal Dark (default)
+   --nx-ink = color estructural (bordes + sombras + secundario)
    ============================================================ */
 :root {
-  /* Primary lava (acento emocional — se mantiene como CTA) */
-  --nx-primary:         #ff4500;
-  --nx-primary-soft:    #ff6a00;
-  --nx-primary-deep:    #8b0000;
-  --nx-primary-glow:    rgba(255, 69, 0, 0.55);
-  --nx-primary-glow-soft: rgba(255, 69, 0, 0.18);
+  --nx-primary:          #ff4500;
+  --nx-primary-soft:     #ff6a00;
+  --nx-primary-deep:     #b92c00;
+  --nx-primary-tint:     rgba(255, 69, 0, 0.16);
 
-  /* Secondary indigo (acento corporativo Linear-style) — bumped to
-     #7c84e8 para WCAG AA sobre navy bg #0b0b14 (ratio 5.21:1) */
-  --nx-secondary:       #7c84e8;
-  --nx-secondary-soft:  #a5acef;
-  --nx-secondary-deep:  #4338ca;
+  --nx-ink:              #f5f0e4;
+  --nx-secondary:        #f5f0e4;
+  --nx-secondary-soft:   #cfc9b8;
+  --nx-secondary-deep:   #8a8574;
 
-  /* Accent coral (warm highlight) */
-  --nx-accent:          #ff6a00;
-  --nx-accent-soft:     #ffa07a;
+  --nx-accent:           #ffd23f;
+  --nx-accent-soft:      #ffe699;
 
-  /* Backgrounds (cool blue-tinted darks) */
-  --nx-bg:              #0b0b14;
-  --nx-surface:         #15172a;
-  --nx-surface-raised:  #1c1f3a;
-  --nx-surface-overlay: rgba(21, 23, 42, 0.92);
+  --nx-bg:               #0f0e0c;
+  --nx-surface:          #191714;
+  --nx-surface-raised:   #23201b;
+  --nx-surface-overlay:  rgba(25, 23, 20, 0.96);
 
-  /* Borders (subtle blue) */
-  --nx-border:          rgba(124, 132, 232, 0.12);
-  --nx-border-strong:   rgba(124, 132, 232, 0.28);
+  --nx-border:           rgba(245, 240, 228, 0.35);
+  --nx-border-strong:    #f5f0e4;
 
-  /* Text (cool white scale) */
-  --nx-text:            #f1f1f4;
-  --nx-text-muted:      #9b9bad;
-  --nx-text-dim:        #4a4a60;
-  --nx-text-on-light:   #0b0b14;
+  --nx-text:             #f5f0e4;
+  --nx-text-muted:       #b8b2a0;
+  --nx-text-dim:         #7d7768;
+  --nx-text-on-primary:  #141210;
 
-  /* Semantic (calibrados para dark + cool) */
-  --nx-success:         #22c55e;
-  --nx-success-bg:      rgba(34, 197, 94, 0.12);
-  --nx-warn:            #f59e0b;
-  --nx-warn-bg:         rgba(245, 158, 11, 0.12);
-  --nx-danger:          #f87171;
-  --nx-danger-bg:       rgba(248, 113, 113, 0.12);
-  --nx-info:            #5e6ad2;
-  --nx-info-bg:         rgba(124, 132, 232, 0.12);
+  --nx-success:          #22c55e;
+  --nx-success-bg:       rgba(34, 197, 94, 0.14);
+  --nx-warn:             #ffd23f;
+  --nx-warn-bg:          rgba(255, 210, 63, 0.14);
+  --nx-danger:           #ff5050;
+  --nx-danger-bg:        rgba(255, 80, 80, 0.14);
+  --nx-info:             #ff6a00;
+  --nx-info-bg:          rgba(255, 69, 0, 0.14);
 
-  /* Chart/data viz */
-  --nx-chart-1:         #5e6ad2;
-  --nx-chart-2:         #818cf8;
-  --nx-chart-3:         #ff6a00;
-  --nx-chart-4:         #22c55e;
-}
+  --nx-chart-1:          #ff4500;
+  --nx-chart-2:          #f5f0e4;
+  --nx-chart-3:          #ffd23f;
+  --nx-chart-4:          #22c55e;
 
-/* Fallback compat — los --nx-* se mantienen igual con o sin data-palette */
-:root[data-palette] {
-  /* No override needed — palettes.css provides data-palette="*" versions */
-  /* que solo se activan cuando hay atributo presente */
+  /* Sombras duras — offset fijo, cero blur, tinta estructural */
+  --nx-shadow-sm:        3px 3px 0 var(--nx-ink);
+  --nx-shadow:            6px 6px 0 var(--nx-ink);
+  --nx-shadow-lg:         10px 10px 0 var(--nx-ink);
 }
 
 /* ============================================================
@@ -120,126 +105,36 @@
    ============================================================ */
 
 ::selection {
-  background: var(--lava-core);
-  color: white;
+  background: var(--nx-primary);
+  color: var(--nx-text-on-primary);
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-/* Transiciones optimizadas al cambiar tema.
-   Optimizaciones de rendimiento:
-   - 150ms en vez de 200ms (más snappy, menos perceptible el lag)
-   - Solo background-color y color (border-color fuera — no aporta y retrasa)
-   - ease-out (acelera rápido, desacelera al final = más rápido perceptualmente)
-   - will-change hints al browser para promover elementos a capas GPU
-   - Respeta prefers-reduced-motion (media query más abajo) */
 body {
-  transition: background-color 150ms ease-out, color 150ms ease-out;
-  will-change: background-color, color;
-}
-@media (prefers-reduced-motion: reduce) {
-  body { transition: none; will-change: auto; }
-}
-
-body {
-  background: var(--bg-void);
-  color: var(--color-nx-text);
+  background: var(--nx-bg);
+  color: var(--nx-text);
   font-family: var(--font-body);
   font-feature-settings: "ss01", "cv11";
   overflow-x: hidden;
   position: relative;
 }
 
-/* ============================================================
-   Background texturizado (capa fija, debajo del contenido, encima
-   del WebGL cuando aplique).
-   ============================================================
-   Composición:
-   - Capa 1 (body::before): grilla sutil (líneas verticales + horizontales
-     cada 56px) con mask radial para que se desvanezca en los bordes.
-     El color lo controla --nx-texture-color (definido por paleta).
-   - Capa 2 (body::after): grain noise SVG inline para textura
-     "papel impreso" — opacity controlada por --nx-texture-grain-opacity.
-     Misma técnica que Substack, Stripe, Linear.
-   - Vignette radial: --nx-texture-vignette.
-   ============================================================ */
-
+/* Grilla estructural expuesta — uniforme, sin mask, sin grain */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.55;
   background-image:
     linear-gradient(to right, var(--nx-texture-color) 1px, transparent 1px),
     linear-gradient(to bottom, var(--nx-texture-color) 1px, transparent 1px);
   background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
-  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
-  /* GPU promotion: pre-compute grid + mask en su propia capa */
   transform: translateZ(0);
-  will-change: opacity;
-}
-
-/* Light mode: la grilla cubre toda la pantalla con menos fade en bordes,
-   y se añade una segunda grilla más densa que mezcla con el grain para
-   crear efecto "papel azul impreso". */
-[data-palette="azure-light"] body::before {
-  opacity: 1;
-  mask-image: radial-gradient(ellipse 100% 80% at 50% 50%, black 60%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 50%, black 60%, transparent 100%);
-  background-size: 56px 56px, 56px 56px;
-}
-[data-palette="azure-light"] body::after {
-  opacity: var(--nx-texture-grain-opacity, 0.28);
-  mix-blend-mode: multiply;   /* grain con aspecto impreso en lugar de additive */
-  transform: translateZ(0);
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: var(--nx-texture-grain-opacity, 0.30);
-  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/></svg>");
-}
-
-/* Vignette opcional — algunas páginas lo activan via .lava-vignette-mask.
-   Color y opacidad vienen de la paleta. */
-.lava-vignette-mask {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: var(--nx-texture-vignette);
-}
-
-/* Respeta prefers-reduced-motion: la textura es estática pero
-   mantenemos este gate para futuros efectos animados del bg. */
-@media (prefers-reduced-motion: reduce) {
-  body::before, body::after { transition: none; }
-}
-
-/* Componente decorativo extra — orb glow. Útil para hero sections
-   que quieran un toque de color sin saturar. */
-.orb {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(80px);
-  pointer-events: none;
-  will-change: transform;
-}
-
-/* Componente texturizado — dot grid denso, útil para section dividers
-   y cards destacadas. */
-.dot-grid {
-  background-image: radial-gradient(circle, var(--nx-texture-color) 1px, transparent 1.5px);
-  background-size: 24px 24px;
 }
 
 h1, h2, h3, h4 {
@@ -252,38 +147,32 @@ code, kbd, .mono {
 }
 
 /* ============================================================
-   Geometría Matrix NX-Studio · bordes angulares con chamfers
+   Componentes brutalistas
    ============================================================ */
 
-/* Card con chamfer (corte diagonal en esquina) */
+/* Card — borde 3px + sombra dura; hover la desplaza en contra */
 .lava-card {
   position: relative;
-  background: linear-gradient(180deg, var(--color-nx-surface), var(--color-nx-raised));
-  border: 1px solid var(--color-nx-border);
-  clip-path: polygon(
-    0 0,
-    calc(100% - 18px) 0,
-    100% 18px,
-    100% 100%,
-    18px 100%,
-    0 calc(100% - 18px)
-  );
-  transition: border-color 0.25s, transform 0.25s;
+  background: var(--nx-surface);
+  border: 3px solid var(--nx-ink);
+  box-shadow: var(--nx-shadow);
+  transition: transform 0.15s, box-shadow 0.15s;
 }
 
 .lava-card:hover {
-  border-color: var(--lava-edge);
-  transform: translateY(-2px);
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 var(--nx-ink);
 }
 
 .lava-card-accent {
-  border-color: var(--lava-edge);
-  box-shadow:
-    0 0 0 1px var(--lava-glow-soft),
-    0 8px 24px -8px var(--lava-glow-soft);
+  border-color: var(--nx-primary);
+  box-shadow: 6px 6px 0 var(--nx-primary);
+}
+.lava-card-accent:hover {
+  box-shadow: 9px 9px 0 var(--nx-primary);
 }
 
-/* Botón chamfer con glow */
+/* Botón — bloque sólido lava, presionado físico al hover/active */
 .lava-btn {
   position: relative;
   display: inline-flex;
@@ -292,100 +181,83 @@ code, kbd, .mono {
   padding: 0.75rem 1.5rem;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #0a0608;     /* WCAG AA: texto oscuro sobre lava #ff4500 = 6.5:1 */
-  background: linear-gradient(135deg, var(--lava-core), var(--lava-edge));
-  clip-path: polygon(
-    0 0,
-    calc(100% - 10px) 0,
-    100% 10px,
-    100% 100%,
-    10px 100%,
-    0 calc(100% - 10px)
-  );
-  transition: filter 0.2s, transform 0.15s;
+  color: var(--nx-text-on-primary);
+  background: var(--nx-primary);
+  border: 3px solid var(--nx-ink);
+  box-shadow: 4px 4px 0 var(--nx-ink);
+  transition: transform 0.1s, box-shadow 0.1s;
   cursor: pointer;
 }
 
 .lava-btn:hover {
-  filter: brightness(1.15) drop-shadow(0 0 8px var(--lava-glow));
-  transform: translateY(-1px);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--nx-ink);
+}
+
+.lava-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.lava-btn:focus-visible {
+  outline: 3px solid var(--nx-accent);
+  outline-offset: 2px;
 }
 
 .lava-btn-ghost {
-  color: var(--lava-edge);
+  color: var(--nx-ink);
   background: transparent;
-  border: 1px solid var(--lava-edge);
-  clip-path: polygon(
-    0 0,
-    calc(100% - 10px) 0,
-    100% 10px,
-    100% 100%,
-    10px 100%,
-    0 calc(100% - 10px)
-  );
+  border: 3px solid var(--nx-ink);
+  box-shadow: 4px 4px 0 var(--nx-ink);
 }
 
 .lava-btn-ghost:hover {
-  background: var(--lava-glow-soft);
-  filter: drop-shadow(0 0 6px var(--lava-glow));
+  background: var(--nx-primary);
+  color: var(--nx-text-on-primary);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--nx-ink);
 }
 
-/* Etiqueta monospace con barra lava */
+.lava-btn-ghost:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+/* Etiqueta — bloque lava con borde y micro-sombra */
 .lava-tag {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.25rem 0.625rem;
+  padding: 0.3rem 0.7rem;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--lava-edge);
-  background: var(--lava-glow-soft);
-  border-left: 2px solid var(--lava-core);
+  color: var(--nx-text-on-primary);
+  background: var(--nx-primary);
+  border: 2px solid var(--nx-ink);
+  box-shadow: 3px 3px 0 var(--nx-ink);
 }
 
-/* Hairline divider lava */
+/* Divider — barra sólida de tinta */
 .hairline {
-  background: linear-gradient(90deg, transparent, var(--lava-edge), transparent);
-  height: 1px;
-  opacity: 0.5;
-}
-
-/* Scan line sutil (animación opcional, respeta prefers-reduced-motion) */
-@keyframes lava-scan {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
-.lava-scan {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.lava-scan::before {
-  content: "";
-  position: absolute;
-  left: 0; right: 0;
+  background: var(--nx-ink);
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--lava-edge), transparent);
-  animation: lava-scan 6s linear infinite;
-  opacity: 0.4;
-}
-@media (prefers-reduced-motion: reduce) {
-  .lava-scan::before { animation: none; opacity: 0; }
+  opacity: 1;
 }
 
-/* Glow orbs (reemplazan los púrpuras) */
-.orb {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(80px);
-  pointer-events: none;
-  will-change: transform;
+/* Legacy Matrix-style — neutralizado en brutalismo */
+.lava-scan { display: none; }
+.orb { display: none; }
+
+/* Dot grid estructural */
+.dot-grid {
+  background-image: radial-gradient(circle, var(--nx-texture-color) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
 }
 
 /* Scroll reveal */
@@ -399,75 +271,78 @@ code, kbd, .mono {
   transform: translateY(0);
 }
 
-/* Nav links */
+/* Nav links — bloques invertidos al hover */
 .nav-link {
   position: relative;
   padding: 0.5rem 0.875rem;
-  border-radius: 0.5rem;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  color: var(--color-nx-muted);
-  transition: color 0.2s, background 0.2s;
+  font-weight: 600;
+  color: var(--nx-text);
+  transition: background 0.1s, color 0.1s;
 }
-.nav-link:hover { color: var(--color-nx-text); background: rgba(255, 90, 30, 0.06); }
+.nav-link:hover {
+  background: var(--nx-ink);
+  color: var(--nx-bg);
+}
 .nav-active {
-  color: var(--lava-edge);
-  background: var(--lava-glow-soft);
+  background: var(--nx-primary);
+  color: var(--nx-text-on-primary);
+  border: 2px solid var(--nx-ink);
+  box-shadow: 2px 2px 0 var(--nx-ink);
 }
 
 /* Card hover genérico */
 .card-hover {
-  transition: border-color 0.25s, transform 0.25s;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
 }
 .card-hover:hover {
-  border-color: var(--lava-edge);
-  transform: translateY(-2px);
+  border-color: var(--nx-primary);
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--nx-ink);
 }
 
 /* ============================================================
    Backward-compat: clases legacy -> sistema --nx-*
-   text-lava = primary, text-lava-edge/bg-lava-soft/border-lava = secondary (indigo)
-   Esto unifica el look bajo steel-indigo sin tocar cada componente.
    ============================================================ */
 .text-lava {
   color: var(--nx-primary);
 }
 .text-lava-edge {
-  color: var(--nx-secondary);
+  color: var(--nx-ink);
 }
 .bg-lava-soft {
   background: var(--nx-info-bg);
 }
 .border-lava {
-  border-color: var(--nx-secondary);
+  border-color: var(--nx-ink);
 }
 
 /* ============================================================
-   Bridge para componentes que usan --lava-* legacy
-   Si data-palette activa = steel-indigo, redirigimos --lava-* al secondary
-   (indigo) para coherencia visual.
+   Bridge --lava-* legacy -> tokens brutales
    ============================================================ */
 :root {
   --lava-core: var(--nx-primary);
-  --lava-edge: var(--nx-secondary);
-  --lava-deep: var(--nx-secondary-deep);
-  --lava-glow: var(--nx-info-bg);
-  --lava-glow-soft: rgba(124, 132, 232, 0.18);
+  --lava-edge: var(--nx-ink);
+  --lava-deep: var(--nx-primary-deep);
+  --lava-glow: var(--nx-primary-tint);
+  --lava-glow-soft: var(--nx-primary-tint);
   --bg-void: var(--nx-bg);
   --bg-ember: var(--nx-surface);
 }
 
-/* Scrollbar estilo Matrix */
+/* Scrollbar brutalista */
 ::-webkit-scrollbar {
-  width: 10px; height: 10px;
+  width: 12px; height: 12px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-void);
+  background: var(--nx-bg);
+  border-left: 2px solid var(--nx-ink);
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--lava-deep), var(--lava-core));
-  border-radius: 0;
+  background: var(--nx-primary);
+  border: 2px solid var(--nx-ink);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, var(--lava-core), var(--lava-edge));
+  background: var(--nx-primary-soft);
 }
