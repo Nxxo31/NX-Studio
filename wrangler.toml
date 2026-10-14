@@ -3,6 +3,11 @@ compatibility_date = "2026-10-01"
 # nodejs_compat activa un falso-positivo de isNode en workerd (astro#14511):
 # las rutas SSR devuelven "[object Object]". disable_nodejs_process_v2 evita
 # que el process nativo v2 quede expuesto antes del polyfill de unenv.
+# NOTA: este combo rompe `wrangler pages dev` local en wrangler 4.143.0
+# ("No such module @cloudflare/unenv-preset/node/process" desde pages-shim.js).
+# La corrección upstream está en wrangler 4.151.0+. Para testear el backend
+# local antes de eso, usar staging o el live (workers.dev). NO cambiar sin
+# verificar SSR en prod (riesgo de astro#14511).
 compatibility_flags = ["nodejs_compat", "disable_nodejs_process_v2"]
 workers_dev = true
 
