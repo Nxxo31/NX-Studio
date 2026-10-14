@@ -437,20 +437,34 @@
         }
       },
       "mockup": {
-        "title": "◎ Mockup generado",
-        "sub": "Imagen conceptual con IA · Pollinations.ai",
+        "title": "◎ Mockup brutalista",
+        "sub": "Wireframe determinista, generado en tu navegador",
         "regenerate": "Regenerar",
-        "waiting": "Esperando...",
+        "regenerating": "Generando variación...",
+        "waiting": "Esperando 5 respuestas...",
         "placeholderA": "Tu mockup aparecerá aquí",
-        "placeholderB": "mínimo 3 mensajes de conversación",
-        "generating": "Generando...",
-        "generatingLong": "Generando mockup...",
-        "promptLabel": "Prompt",
-        "generated": "✓ Generado",
-        "errorStatus": "✗ Error",
-        "errorBody": "Pollinations.ai no respondió. Intenta regenerar."
+        "placeholderB": "responde 5 preguntas para generar"
       },
-      "disclaimer": "⚠ Este laboratorio es un prototipo sin backend: tu conversación no se guarda en ningún servidor. Las imágenes son generadas por Pollinations.ai, una API pública gratuita.",
+      "spec": {
+        "title": "SPEC · COPIABLE",
+        "project": "Producto",
+        "user": "Usuario",
+        "problem": "Problema",
+        "platform": "Plataforma",
+        "feel": "Estilo",
+        "refs": "Referencias",
+        "copy": "Copiar",
+        "empty": "Sin spec aún"
+      },
+      "types": {
+        "dashboard": "Dashboard",
+        "landing": "Landing",
+        "mobile": "Mobile",
+        "ecommerce": "E-commerce",
+        "tool": "Herramienta"
+      },
+      "poweredBy": "brutalismo v0.7 · sin APIs externas",
+      "disclaimer": "◇ El laboratorio no usa backend ni servicios externos: los mockups se generan en tu navegador con el sistema brutalista. Tu conversación no se guarda en ningún servidor.",
       "cta": {
         "title": "¿Te gustó lo que ves en el mockup?",
         "desc": "Reservamos 30 minutos gratis. Me lo describes en persona, lo refino contigo y te entrego un prototipo funcional en 72 horas.",

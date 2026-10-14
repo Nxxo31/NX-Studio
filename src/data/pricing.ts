@@ -160,7 +160,7 @@ export function computeQuote(input: QuoteInput): QuoteBreakdown {
   const totalHigh = Math.round(mid * 1.15);
   const totalHours = features.reduce((acc, f) => acc + f.hours, 0) + shape.baseHours;
 
-  let bandLabel = 'USD';
+  let bandLabel: 'Starter' | 'Standard' | 'Growth' | 'Enterprise';
   if (totalHigh >= 50000) bandLabel = 'Enterprise';
   else if (totalHigh >= 15000) bandLabel = 'Growth';
   else if (totalHigh >= 5000) bandLabel = 'Standard';

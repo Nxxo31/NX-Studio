@@ -7,20 +7,33 @@ import { getT, getLocale, localeUrl } from "~/i18n";
 const t = getT(Astro);
 const locale = getLocale(Astro);
 
-// Strings del chatbot client-side (preguntas del flujo + estados del mockup).
 const i18nLab = {
   questions: [0, 1, 2, 3, 4].map((i) => t(`pages.laboratorio.chat.questions.${i}`)),
   greeting: t('pages.laboratorio.chat.greeting'),
   greetingAgain: t('pages.laboratorio.chat.greetingAgain'),
-  generating: t('pages.laboratorio.mockup.generating'),
-  generatingLong: t('pages.laboratorio.mockup.generatingLong'),
   promptLabel: t('pages.laboratorio.mockup.promptLabel'),
-  generated: t('pages.laboratorio.mockup.generated'),
-  errorStatus: t('pages.laboratorio.mockup.errorStatus'),
-  errorBody: t('pages.laboratorio.mockup.errorBody'),
   waiting: t('pages.laboratorio.mockup.waiting'),
   placeholderA: t('pages.laboratorio.mockup.placeholderA'),
   placeholderB: t('pages.laboratorio.mockup.placeholderB'),
+  specTitle: t('pages.laboratorio.spec.title'),
+  specProject: t('pages.laboratorio.spec.project'),
+  specUser: t('pages.laboratorio.spec.user'),
+  specProblem: t('pages.laboratorio.spec.problem'),
+  specPlatform: t('pages.laboratorio.spec.platform'),
+  specFeel: t('pages.laboratorio.spec.feel'),
+  specRefs: t('pages.laboratorio.spec.refs'),
+  specCopy: t('pages.laboratorio.spec.copy'),
+  regenerating: t('pages.laboratorio.mockup.regenerating'),
+  regen: t('pages.laboratorio.mockup.regenerate'),
+  noSpec: t('pages.laboratorio.spec.empty'),
+  poweredBy: t('pages.laboratorio.poweredBy'),
+  types: {
+    dashboard: t('pages.laboratorio.types.dashboard'),
+    landing: t('pages.laboratorio.types.landing'),
+    mobile: t('pages.laboratorio.types.mobile'),
+    ecommerce: t('pages.laboratorio.types.ecommerce'),
+    tool: t('pages.laboratorio.types.tool'),
+  },
 };
 ---
 
@@ -30,8 +43,8 @@ const i18nLab = {
   <main class="px-6 py-16">
     <div class="mx-auto max-w-7xl">
       <header class="text-center">
-        <p class="font-mono text-sm uppercase tracking-widest text-nx-accent">{t('pages.laboratorio.tag')}</p>
-        <h1 class="mt-3 font-display text-5xl font-bold md:text-6xl">
+        <span class="lava-tag">{t('pages.laboratorio.tag')}</span>
+        <h1 class="mt-3 font-display text-4xl font-bold md:text-5xl">
           {t('pages.laboratorio.heading')}
         </h1>
         <p class="mx-auto mt-4 max-w-2xl text-lg text-nx-muted">
@@ -41,22 +54,21 @@ const i18nLab = {
 
       <div class="mt-12 grid gap-6 lg:grid-cols-2">
         <!-- Chat panel -->
-        <div class="rounded-2xl border border-nx-border bg-nx-surface p-6">
-          <div class="flex items-center justify-between border-b border-nx-border pb-4">
+        <section class="lava-card p-6" aria-labelledby="lab-chat-title">
+          <div class="flex items-center justify-between border-b-[3px] border-nx-border-strong pb-4">
             <div>
-              <h2 class="font-display text-lg font-semibold">{t('pages.laboratorio.chat.title')}</h2>
+              <h2 id="lab-chat-title" class="font-display text-lg font-bold">{t('pages.laboratorio.chat.title')}</h2>
               <p class="font-mono text-xs text-nx-dim">{t('pages.laboratorio.chat.sub')}</p>
             </div>
-            <button id="reset-btn" class="rounded-md border border-nx-border px-3 py-1 font-mono text-xs hover:border-nx-accent transition">
+            <button id="reset-btn" type="button" class="border-2 border-nx-border-strong bg-nx-surface px-3 py-1 font-mono text-xs font-bold uppercase hover:bg-nx-primary hover:text-nx-text-on-primary">
               {t('pages.laboratorio.chat.reset')}
             </button>
           </div>
 
           <div id="chat-log" class="mt-4 h-[420px] overflow-y-auto space-y-3 pr-2">
-            <!-- Mensaje inicial -->
             <div class="flex gap-3">
-              <div class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-nx-accent to-nx-purple font-mono text-xs text-white">NX</div>
-              <div class="rounded-2xl rounded-tl-sm bg-nx-bg p-3 text-sm">
+              <div class="grid h-8 w-8 shrink-0 place-items-center border-2 border-nx-ink bg-nx-primary font-mono text-xs font-bold text-nx-text-on-primary">NX</div>
+              <div class="border-2 border-nx-ink bg-nx-bg p-3 text-sm max-w-[85%]">
                 {i18nLab.greeting}
               </div>
             </div>
@@ -68,44 +80,51 @@ const i18nLab = {
               type="text"
               placeholder={t('pages.laboratorio.chat.inputPh')}
               autocomplete="off"
-              class="flex-1 rounded-xl border border-nx-border bg-nx-bg px-4 py-3 text-sm outline-none focus:border-nx-accent"
+              class="flex-1 border-2 border-nx-border-strong bg-nx-bg px-4 py-3 text-sm font-mono outline-none focus:border-nx-primary"
             />
             <button
               type="submit"
-              class="rounded-xl bg-gradient-to-r from-nx-accent to-nx-purple px-5 py-3 text-sm font-semibold text-white hover:shadow-lg hover:shadow-nx-accent/30"
+              class="border-[3px] border-nx-ink bg-nx-primary px-5 py-3 text-sm font-bold uppercase text-nx-text-on-primary shadow-[4px_4px_0_var(--nx-ink)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_var(--nx-ink)]"
             >
               {t('common.enviar')}
             </button>
           </form>
-        </div>
+        </section>
 
         <!-- Mockup panel -->
-        <div class="rounded-2xl border border-nx-border bg-nx-surface p-6">
-          <div class="flex items-center justify-between border-b border-nx-border pb-4">
+        <section class="lava-card p-6" aria-labelledby="lab-mockup-title">
+          <div class="flex items-center justify-between border-b-[3px] border-nx-border-strong pb-4">
             <div>
-              <h2 class="font-display text-lg font-semibold">{t('pages.laboratorio.mockup.title')}</h2>
+              <h2 id="lab-mockup-title" class="font-display text-lg font-bold">{t('pages.laboratorio.mockup.title')}</h2>
               <p class="font-mono text-xs text-nx-dim">{t('pages.laboratorio.mockup.sub')}</p>
             </div>
-            <button id="regenerate" class="hidden rounded-md border border-nx-border px-3 py-1 font-mono text-xs hover:border-nx-accent transition">
-              {t('pages.laboratorio.mockup.regenerate')}
+            <button id="regenerate" type="button" class="hidden border-2 border-nx-border-strong bg-nx-surface px-3 py-1 font-mono text-xs font-bold uppercase hover:bg-nx-primary hover:text-nx-text-on-primary">
+              {i18nLab.regen}
             </button>
           </div>
 
-          <div id="mockup-area" class="mt-4 grid aspect-square place-items-center rounded-xl border border-dashed border-nx-border bg-nx-bg/50">
-            <div class="text-center text-nx-dim">
-              <div class="text-5xl">◇</div>
-              <p class="mt-3 font-mono text-xs">{i18nLab.placeholderA}</p>
+          <div id="mockup-area" class="mt-4 aspect-square w-full border-[3px] border-dashed border-nx-border-strong bg-nx-bg grid place-items-center">
+            <div class="text-center text-nx-dim p-6">
+              <div class="text-5xl font-display">◇</div>
+              <p class="mt-3 font-mono text-xs uppercase tracking-widest">{i18nLab.placeholderA}</p>
               <p class="mt-1 font-mono text-xs">{i18nLab.placeholderB}</p>
             </div>
           </div>
 
           <div class="mt-4 flex items-center justify-between font-mono text-xs text-nx-dim">
             <span id="mockup-status">{i18nLab.waiting}</span>
-            <a href="https://pollinations.ai" target="_blank" rel="noopener" class="hover:text-nx-accent">
-              powered by pollinations.ai ↗
-            </a>
+            <span>{i18nLab.poweredBy}</span>
           </div>
-        </div>
+
+          <!-- Spec output -->
+          <div id="spec-area" class="mt-4 hidden border-t-[3px] border-nx-border-strong pt-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-mono text-xs font-bold uppercase tracking-widest text-nx-text">{i18nLab.specTitle}</h3>
+              <button id="spec-copy" type="button" class="border-2 border-nx-border-strong bg-nx-surface px-2 py-1 font-mono text-[10px] font-bold uppercase hover:bg-nx-primary hover:text-nx-text-on-primary">{i18nLab.specCopy}</button>
+            </div>
+            <pre id="spec-output" class="mt-2 max-h-48 overflow-y-auto border-2 border-nx-border-strong bg-nx-surface p-3 font-mono text-[11px] leading-relaxed text-nx-text whitespace-pre-wrap"></pre>
+          </div>
+        </section>
       </div>
 
       <!-- Disclaimer -->
@@ -114,16 +133,16 @@ const i18nLab = {
       </p>
 
       <!-- CTA -->
-      <section class="mt-16 rounded-3xl border border-nx-border bg-gradient-to-br from-nx-accent/10 via-nx-bg to-nx-purple/10 p-12 text-center">
+      <section class="mt-16 lava-card lava-card-accent p-12 text-center">
         <h2 class="font-display text-3xl font-bold md:text-4xl">{t('pages.laboratorio.cta.title')}</h2>
         <p class="mx-auto mt-3 max-w-xl text-nx-muted">
           {t('pages.laboratorio.cta.desc')}
         </p>
         <a
           href={localeUrl('/contacto', locale)}
-          class="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-nx-accent to-nx-purple px-6 py-3 text-sm font-semibold text-white hover:shadow-lg hover:shadow-nx-accent/30"
+          class="mt-6 inline-flex"
         >
-          {t('pages.laboratorio.cta.button')}
+          <span class="lava-btn">{t('pages.laboratorio.cta.button')}</span>
         </a>
       </section>
     </div>
@@ -135,30 +154,38 @@ const i18nLab = {
 <script define:vars={{ i18nLab }} is:inline>
   window.__labI18n = i18nLab;
 </script>
+
 <script>
-  // ============================================================
-  // LABORATORIO — Chatbot + Generador de Mockups (sin backend)
-  // ============================================================
+  import { renderMockup, buildSpec } from '~/lib/mockup';
+
   const LAB = (window as any).__labI18n as {
     questions: string[];
     greeting: string;
     greetingAgain: string;
-    generating: string;
-    generatingLong: string;
     promptLabel: string;
-    generated: string;
-    errorStatus: string;
-    errorBody: string;
     waiting: string;
     placeholderA: string;
     placeholderB: string;
+    specTitle: string;
+    specProject: string;
+    specUser: string;
+    specProblem: string;
+    specPlatform: string;
+    specFeel: string;
+    specRefs: string;
+    specCopy: string;
+    regenerating: string;
+    regen: string;
+    noSpec: string;
+    poweredBy: string;
+    types: Record<string, string>;
   };
 
   type Msg = { role: 'user' | 'bot'; text: string };
-  const state: { messages: Msg[]; turn: number; prompt: string } = {
+  const state: { messages: Msg[]; turn: number; variation: number } = {
     messages: [],
     turn: 0,
-    prompt: '',
+    variation: 0,
   };
 
   const questions = LAB.questions;
@@ -168,25 +195,27 @@ const i18nLab = {
   const input = document.getElementById('chat-input') as HTMLInputElement;
   const mockupArea = document.getElementById('mockup-area') as HTMLDivElement;
   const regenBtn = document.getElementById('regenerate') as HTMLButtonElement;
-  const statusEl = document.getElementById('mockup-status') as HTMLSpanElement;
   const resetBtn = document.getElementById('reset-btn') as HTMLButtonElement;
+  const statusEl = document.getElementById('mockup-status') as HTMLSpanElement;
+  const specArea = document.getElementById('spec-area') as HTMLDivElement;
+  const specOut = document.getElementById('spec-output') as HTMLPreElement;
+  const specCopy = document.getElementById('spec-copy') as HTMLButtonElement;
 
   function addMsg(role: 'user' | 'bot', text: string) {
     const wrap = document.createElement('div');
     wrap.className = role === 'user' ? 'flex gap-3 justify-end' : 'flex gap-3';
 
-    const bubble = document.createElement('div');
-    bubble.className = role === 'user'
-      ? 'rounded-2xl rounded-tr-sm bg-nx-accent/20 border border-nx-accent/30 p-3 text-sm max-w-[85%]'
-      : 'rounded-2xl rounded-tl-sm bg-nx-bg p-3 text-sm max-w-[85%]';
-
     if (role === 'bot') {
       const avatar = document.createElement('div');
-      avatar.className = 'grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-nx-accent to-nx-purple font-mono text-xs text-white';
+      avatar.className = 'grid h-8 w-8 shrink-0 place-items-center border-2 border-nx-ink bg-nx-primary font-mono text-xs font-bold text-nx-text-on-primary';
       avatar.textContent = 'NX';
       wrap.appendChild(avatar);
     }
 
+    const bubble = document.createElement('div');
+    bubble.className = role === 'user'
+      ? 'border-2 border-nx-ink bg-nx-primary p-3 text-sm font-mono max-w-[85%] text-nx-text-on-primary'
+      : 'border-2 border-nx-ink bg-nx-bg p-3 text-sm max-w-[85%]';
     bubble.textContent = text;
     wrap.appendChild(bubble);
     log.appendChild(wrap);
@@ -194,63 +223,60 @@ const i18nLab = {
     state.messages.push({ role, text });
   }
 
-  function buildPrompt(): string {
-    const userMsgs = state.messages.filter((m) => m.role === 'user').map((m) => m.text).join(' | ');
-    const styleHints = state.messages
-      .filter((m) => m.role === 'user' && state.turn >= 4)
-      .map((m) => m.text)
-      .join(' ');
-    return `professional UI mockup screenshot of a software product: ${userMsgs}. Style: ${styleHints || 'modern, clean, premium, dark theme'}. High fidelity, isometric or screen view, dribbble-quality, no text, no logos`;
+  function setStatus(text: string) {
+    statusEl.textContent = text;
   }
 
-  async function generateMockup() {
-    state.prompt = buildPrompt();
-    statusEl.textContent = LAB.generating;
+  function renderMockupInto() {
+    const userAnswers = state.messages
+      .filter((m) => m.role === 'user')
+      .map((m) => m.text);
+    const pairs = questions.map((_, i) => ({ q: questions[i], a: userAnswers[i] ?? '' }));
+    const spec = buildSpec(pairs, state.variation);
+    mockupArea.innerHTML = renderMockup(spec);
+    mockupArea.classList.remove('border-dashed');
+    mockupArea.classList.add('border-solid');
+    setStatus(`✓ ${LAB.types[spec.type]} · v${state.variation + 1}`);
+    regenBtn.classList.remove('hidden');
+    renderSpec(pairs, spec);
+  }
 
-    const encoded = encodeURIComponent(state.prompt);
-    const seed = Math.floor(Math.random() * 99999);
-    const url = `https://image.pollinations.ai/prompt/${encoded}?width=768&height=768&seed=${seed}&nologo=true`;
+  function renderSpec(pairs: { q: string; a: string }[], spec: ReturnType<typeof buildSpec>) {
+    const lines: string[] = [
+      `// ${LAB.specTitle}`,
+      ``,
+      `> ${LAB.specProject}: ${spec.name || '—'}`,
+      `> ${LAB.specUser}: ${spec.user || '—'}`,
+      `> ${LAB.specProblem}: ${spec.problem || '—'}`,
+      `> ${LAB.specPlatform}: ${spec.platform}`,
+      `> ${LAB.specFeel}: ${spec.feel}`,
+      `> ${LAB.specRefs}: ${spec.refs || '—'}`,
+      `> TYPE: ${LAB.types[spec.type] || spec.type}`,
+      `> VARIATION: v${state.variation + 1}`,
+    ];
+    specOut.textContent = lines.join('\n');
+    specArea.classList.remove('hidden');
+  }
 
-    mockupArea.innerHTML = `
-      <div class="text-center">
-        <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-nx-accent border-t-transparent"></div>
-        <p class="mt-4 font-mono text-xs text-nx-dim">${LAB.generatingLong}</p>
-        <p class="mt-1 font-mono text-xs text-nx-dim">${LAB.promptLabel}: ${state.prompt.slice(0, 80)}...</p>
-      </div>
-    `;
-
-    try {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.alt = 'Mockup generado por IA';
-      img.className = 'h-full w-full rounded-xl object-cover';
-      img.onload = () => {
-        mockupArea.innerHTML = '';
-        mockupArea.appendChild(img);
-        statusEl.textContent = LAB.generated;
-        regenBtn.classList.remove('hidden');
-      };
-      img.onerror = () => {
-        mockupArea.innerHTML = `
-          <div class="text-center text-rose-400">
-            <div class="text-5xl">⚠</div>
-            <p class="mt-3 font-mono text-xs">${LAB.errorBody}</p>
-          </div>
-        `;
-        statusEl.textContent = LAB.errorStatus;
-      };
-      img.src = url;
-    } catch (e) {
-      statusEl.textContent = LAB.errorStatus;
-    }
+  function generate() {
+    if (state.messages.filter((m) => m.role === 'user').length < questions.length) return;
+    setStatus(LAB.regenerating);
+    requestAnimationFrame(() => {
+      try {
+        renderMockupInto();
+      } catch (e) {
+        setStatus('✗ ' + String(e));
+      }
+    });
   }
 
   function botRespond() {
     if (state.turn < questions.length) {
-      setTimeout(() => addMsg('bot', questions[state.turn]), 600);
+      const idx = state.turn;
+      setTimeout(() => addMsg('bot', questions[idx]), 400);
       state.turn++;
       if (state.turn === questions.length) {
-        setTimeout(generateMockup, 1500);
+        setTimeout(generate, 700);
       }
     }
   }
@@ -264,36 +290,58 @@ const i18nLab = {
     botRespond();
   });
 
-  regenBtn.addEventListener('click', generateMockup);
+  regenBtn.addEventListener('click', () => {
+    state.variation++;
+    generate();
+  });
 
   resetBtn.addEventListener('click', () => {
     state.messages = [];
     state.turn = 0;
-    state.prompt = '';
+    state.variation = 0;
     log.innerHTML = '';
     mockupArea.innerHTML = `
-      <div class="text-center text-nx-dim">
-        <div class="text-5xl">◇</div>
-        <p class="mt-3 font-mono text-xs">${LAB.placeholderA}</p>
+      <div class="text-center text-nx-dim p-6">
+        <div class="text-5xl font-display">◇</div>
+        <p class="mt-3 font-mono text-xs uppercase tracking-widest">${LAB.placeholderA}</p>
         <p class="mt-1 font-mono text-xs">${LAB.placeholderB}</p>
       </div>
     `;
-    statusEl.textContent = LAB.waiting;
+    mockupArea.classList.add('border-dashed');
+    mockupArea.classList.remove('border-solid');
+    specArea.classList.add('hidden');
+    setStatus(LAB.waiting);
     regenBtn.classList.add('hidden');
     addMsg('bot', LAB.greetingAgain);
+  });
+
+  specCopy.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(specOut.textContent ?? '');
+      const original = specCopy.textContent;
+      specCopy.textContent = '✓ ' + LAB.specCopy;
+      setTimeout(() => { specCopy.textContent = original; }, 1400);
+    } catch {
+      // fallback: select
+      const range = document.createRange();
+      range.selectNodeContents(specOut);
+      const sel = window.getSelection();
+      sel?.removeAllRanges();
+      sel?.addRange(range);
+    }
   });
 </script>
 
 <!-- Pricing engine preview -->
 <section class="mx-auto mt-16 max-w-5xl px-6">
   <div class="lava-card lava-card-accent p-8 text-center">
-    <div class="lava-tag mb-3 mx-auto">// pricing-engine · live preview</div>
+    <span class="lava-tag mb-3 mx-auto">// pricing-engine · live preview</span>
     <h2 class="font-display text-3xl font-bold mb-3">
       {t('pages.laboratorio.pricingCta.title')}
     </h2>
     <p class="text-nx-muted mb-6 max-w-xl mx-auto">
       {t('pages.laboratorio.pricingCta.descA')}
-      <b class="text-lava-edge">{t('pages.laboratorio.pricingCta.descEm')}</b>
+      <b class="text-nx-text">{t('pages.laboratorio.pricingCta.descEm')}</b>
       {t('pages.laboratorio.pricingCta.descB')}
     </p>
     <a href={localeUrl('/cotizador', locale)} class="lava-btn">{t('pages.laboratorio.pricingCta.button')}</a>

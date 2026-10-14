@@ -1,49 +1,50 @@
 ---
-const steps = ['Idea', 'Refinamiento', 'Mockup IA'];
+const steps = ['Idea', 'Refinamiento', 'Mockup brutalista'];
 ---
 
-<section id="laboratorio" class="relative overflow-hidden border-t border-nx-border bg-gradient-to-br from-nx-accent/5 via-nx-bg to-nx-purple/5 px-6 py-32">
+<section id="laboratorio" class="border-t-[3px] border-nx-border-strong bg-nx-bg px-6 py-32">
   <div class="mx-auto max-w-6xl">
     <div class="grid items-center gap-12 lg:grid-cols-2">
       <div class="reveal">
-        <p class="font-mono text-sm uppercase tracking-widest text-nx-accent">/ laboratorio</p>
+        <span class="lava-tag">/ laboratorio</span>
         <h2 class="mt-3 font-display text-4xl font-bold md:text-5xl">
-          Describe tu idea → recibe un mockup visual
+          Describe tu idea → recibe un mockup brutalista
         </h2>
         <p class="mt-6 text-lg text-nx-muted">
-          Chat conversacional + IA generativa de imágenes. Sin registro, sin backend,
-          todo en tu navegador. Refinamos tu producto en 3–5 mensajes y te entrego
-          una imagen conceptual que puedes usar para pitch, feedback o inspiración.
+          Chat conversacional + generador de wireframes brutalistas en el navegador.
+          Sin registro, sin backend, sin APIs externas. Refinamos tu producto en 5
+          mensajes y te entrego un mockup + spec copyable que puedes usar para pitch
+          o para enseñarle a tu equipo cómo se ve tu idea.
         </p>
 
         <div class="mt-8 space-y-3">
           {steps.map((s, i) => (
             <div class="flex items-center gap-3">
-              <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-nx-accent/30 bg-nx-accent/10 font-mono text-xs text-nx-accent">
+              <span class="grid h-8 w-8 shrink-0 place-items-center border-2 border-nx-ink bg-nx-primary font-mono text-xs font-bold text-nx-text-on-primary">
                 {i + 1}
               </span>
-              <span class="text-nx-text">{s}</span>
+              <span class="text-nx-text font-mono text-sm uppercase tracking-widest">{s}</span>
             </div>
           ))}
         </div>
 
         <a
           href="/laboratorio"
-          class="mt-10 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-nx-accent to-nx-purple px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-nx-accent/30 transition hover:shadow-xl hover:shadow-nx-accent/50"
+          class="mt-10 inline-flex"
         >
-          Probar Laboratorio IA →
+          <span class="lava-btn">Probar Laboratorio →</span>
         </a>
       </div>
 
       <!-- Visual demo del laboratorio -->
-      <div class="reveal relative">
-        <div class="rounded-2xl border border-nx-border bg-nx-surface p-6 shadow-2xl">
+      <div class="reveal">
+        <div class="lava-card p-6">
           <!-- Header simulado -->
-          <div class="flex items-center gap-2 border-b border-nx-border pb-3">
+          <div class="flex items-center gap-2 border-b-2 border-nx-border-strong pb-3">
             <div class="flex gap-1.5">
-              <span class="h-2.5 w-2.5 rounded-full bg-rose-500/60"></span>
-              <span class="h-2.5 w-2.5 rounded-full bg-amber-500/60"></span>
-              <span class="h-2.5 w-2.5 rounded-full bg-emerald-500/60"></span>
+              <span class="h-2.5 w-2.5 bg-rose-500/60"></span>
+              <span class="h-2.5 w-2.5 bg-amber-500/60"></span>
+              <span class="h-2.5 w-2.5 bg-emerald-500/60"></span>
             </div>
             <span class="ml-auto font-mono text-xs text-nx-dim">laboratorio.nxstudio.dev</span>
           </div>
@@ -51,40 +52,37 @@ const steps = ['Idea', 'Refinamiento', 'Mockup IA'];
           <!-- Chat simulado -->
           <div class="mt-4 space-y-3">
             <div class="flex gap-2">
-              <div class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-nx-accent to-nx-purple font-mono text-xs text-white">NX</div>
-              <div class="rounded-2xl rounded-tl-sm bg-nx-bg p-2 text-sm">
+              <div class="grid h-7 w-7 shrink-0 place-items-center border-2 border-nx-ink bg-nx-primary font-mono text-xs font-bold text-nx-text-on-primary">NX</div>
+              <div class="border-2 border-nx-ink bg-nx-bg p-2 text-sm max-w-[80%]">
                 ¿Qué producto quieres construir?
               </div>
             </div>
             <div class="flex gap-2 justify-end">
-              <div class="rounded-2xl rounded-tr-sm bg-nx-accent/20 border border-nx-accent/30 p-2 text-sm">
+              <div class="border-2 border-nx-ink bg-nx-primary p-2 text-sm font-mono text-nx-text-on-primary max-w-[80%]">
                 App para que restaurantes gestionen inventario
               </div>
             </div>
             <div class="flex gap-2">
-              <div class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-nx-accent to-nx-purple font-mono text-xs text-white">NX</div>
-              <div class="rounded-2xl rounded-tl-sm bg-nx-bg p-2 text-sm">
+              <div class="grid h-7 w-7 shrink-0 place-items-center border-2 border-nx-ink bg-nx-primary font-mono text-xs font-bold text-nx-text-on-primary">NX</div>
+              <div class="border-2 border-nx-ink bg-nx-bg p-2 text-sm max-w-[80%]">
                 Interesante. ¿En qué plataforma?
               </div>
             </div>
             <div class="flex gap-2 justify-end">
-              <div class="rounded-2xl rounded-tr-sm bg-nx-accent/20 border border-nx-accent/30 p-2 text-sm">
+              <div class="border-2 border-nx-ink bg-nx-primary p-2 text-sm font-mono text-nx-text-on-primary max-w-[80%]">
                 Mobile, Android primero
               </div>
             </div>
           </div>
 
           <!-- Mockup placeholder -->
-          <div class="mt-4 aspect-video rounded-xl bg-gradient-to-br from-nx-accent/30 to-nx-purple/30 grid place-items-center">
+          <div class="mt-4 aspect-video border-2 border-nx-border-strong bg-nx-surface grid place-items-center">
             <div class="text-center">
-              <div class="text-4xl">◇</div>
-              <p class="mt-2 font-mono text-xs">Mockup generado</p>
+              <div class="text-4xl font-display text-nx-primary">◇</div>
+              <p class="mt-2 font-mono text-xs uppercase tracking-widest text-nx-dim">Mockup brutalista · v1</p>
             </div>
           </div>
         </div>
-
-        <!-- Glow effect -->
-        <div class="absolute -inset-4 -z-10 rounded-3xl bg-gradient-to-r from-nx-accent/20 to-nx-purple/20 blur-2xl"></div>
       </div>
     </div>
   </div>

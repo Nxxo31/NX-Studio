@@ -437,20 +437,34 @@
         }
       },
       "mockup": {
-        "title": "◎ Mockup gerado",
-        "sub": "Imagem conceitual com IA · Pollinations.ai",
+        "title": "◎ Mockup brutalista",
+        "sub": "Wireframe determinístico, gerado no seu navegador",
         "regenerate": "Regenerar",
-        "waiting": "Aguardando...",
+        "regenerating": "Gerando variação...",
+        "waiting": "Aguardando 5 respostas...",
         "placeholderA": "Seu mockup aparecerá aqui",
-        "placeholderB": "mínimo de 3 mensagens de conversa",
-        "generating": "Gerando...",
-        "generatingLong": "Gerando mockup...",
-        "promptLabel": "Prompt",
-        "generated": "✓ Gerado",
-        "errorStatus": "✗ Erro",
-        "errorBody": "Pollinations.ai não respondeu. Tente regenerar."
+        "placeholderB": "responda 5 perguntas para gerar"
       },
-      "disclaimer": "⚠ Este laboratório é um protótipo sem backend: sua conversa não é salva em nenhum servidor. As imagens são geradas pelo Pollinations.ai, uma API pública gratuita.",
+      "spec": {
+        "title": "SPEC · COPIÁVEL",
+        "project": "Produto",
+        "user": "Usuário",
+        "problem": "Problema",
+        "platform": "Plataforma",
+        "feel": "Estilo",
+        "refs": "Referências",
+        "copy": "Copiar",
+        "empty": "Sem spec ainda"
+      },
+      "types": {
+        "dashboard": "Dashboard",
+        "landing": "Landing",
+        "mobile": "Mobile",
+        "ecommerce": "E-commerce",
+        "tool": "Ferramenta"
+      },
+      "poweredBy": "brutalismo v0.7 · sem APIs externas",
+      "disclaimer": "◇ O laboratório não usa backend nem serviços externos: os mockups são gerados no seu navegador com o sistema brutalista. Sua conversa não é salva em nenhum servidor.",
       "cta": {
         "title": "Gostou do que vê no mockup?",
         "desc": "Reservamos 30 minutos gratuitos. Você me descreve pessoalmente, refinamos juntos e entrego um protótipo funcional em 72 horas.",

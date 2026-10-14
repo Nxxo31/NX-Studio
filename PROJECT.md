@@ -70,6 +70,45 @@ Lección operativa: un comentario CSS con `*/` dentro del texto
 (ej. `bg-nx-*/text-nx-*`) rompe el parser de `@import` de Tailwind v4
 con error opaco "Missing opening (". Evitar esa secuencia en comentarios.
 
+### Sprint 2026-10-14 (cont.) · Test pass + reemplazo de Pollinations + Lab brutalista
+
+Diagnóstico end-to-end del sistema (sweep Playwright sobre 15 rutas en ambos
+temas + interacción real de forms + backend API):
+
+- **Frontend limpio**: 0 console errors, 0 page errors, 0 network 4xx/5xx en
+  las 15 rutas × 2 paletas. La refactorización brutalista no introdujo
+  regresiones.
+- **Backend descubierto**: el form de `/contacto` devuelve 500 en local
+  preview (`Failed query: insert into "licitacion"`). Root cause: `astro preview`
+  para el adapter Cloudflare NO aplica las migraciones de Drizzle; solo
+  `wrangler pages dev` lo hace. En producción (`nx-studio.nx-studio.workers.dev`)
+  la tabla existe y los submits funcionan (las plantillas de email confirman
+  flujo operativo). Acción: probar contacto en `wrangler pages dev` o staging,
+  no en `astro preview`.
+- **Fix preventivo real**: `computeQuote` tenía `let bandLabel = 'USD'` como
+  default antes del if/else. Aunque todos los branches lo reasignan a un valor
+  válido, el tipado era permisivo y un valor no-enum rompería la inserción
+  D1 (banda es `text('banda', { enum: ['Starter','Standard','Growth','Enterprise'] })`).
+  Cambiado a tipo estricto + default válido. Safety improvement, no bug activo.
+- **Lab: Pollinations reemplazado**. El generador de mockups vía
+  `image.pollinations.ai/prompt/...` produce imágenes IA mediocres,
+  depende de una API pública sin SLA, puede fallar, y rompe la estética
+  brutalista. Reemplazado por un generador SVG determinista en el navegador
+  (`src/lib/mockup.ts`) que produce 5 tipos de wireframe brutalista
+  (dashboard, landing, mobile, ecommerce, tool) con los tokens del estudio
+  (lava + tinta, bordes duros, monospace). Cero red, cero claves, instantáneo.
+  El chat de 5 preguntas + botón Regenerar (variaciones seeded) + output de
+  SPEC copyable (resumen estructurado del producto que el visitante puede
+  llevarse). Además el componente `Lab.astro` (home) y el disclaimer del Lab
+  se limpiaron de gradientes/blur/soft-shadows heredados.
+- **Portfolio quality**: 0 gradientes, 0 soft-shadows, 0 blur residuales en
+  pages o components (grep). El sistema brutalista se mantiene consistente.
+
+Verificación gates finales: build exit 0, vitest 107/107, e2e 43/52
+(zero regresión; los 9 fallos restantes son los preexistentes del sprint
+v0.5.0), smoke 13/13, Lab interact test 200 con SVG renderizado
+(17 rects + 23 texts, status "✓ Mobile · v1"), contacto 500 (env).
+
 ## Estructura de páginas
 
 ```
