@@ -35,20 +35,20 @@ const totalStack = Array.from(new Set(projects.flatMap((p) => p.stack))).length;
           <div class="lg:col-span-7">
             <AnimatedHero
               client:load
-              badge={t('pages.hero.badge')}
-              titleA={t('pages.hero.headlineA')}
-              titleEm={t('pages.hero.headlineEm')}
-              titleB={t('pages.hero.headlineB')}
-              subtitlePre={t('pages.hero.sub1')}
-              subtitleStrong={t('pages.hero.subStrong')}
-              subtitlePost={t('pages.hero.sub2')}
-              chips={[t('pages.hero.chip1'), t('pages.hero.chip2'), t('pages.hero.chip3'), t('pages.hero.chip4')]}
-              primaryCta={{ label: t('pages.hero.ctaPrimary'), href: localeUrl('/cotizador', locale) }}
-              secondaryCta={{ label: t('pages.hero.ctaSecondary'), href: localeUrl('/productos', locale) }}
+              badge={t('hero.badge')}
+              titleA={t('hero.headlineA')}
+              titleEm={t('hero.headlineEm')}
+              titleB={t('hero.headlineB')}
+              subtitlePre={t('hero.sub1')}
+              subtitleStrong={t('hero.subStrong')}
+              subtitlePost={t('hero.sub2')}
+              chips={[t('hero.chip1'), t('hero.chip2'), t('hero.chip3'), t('hero.chip4')]}
+              primaryCta={{ label: t('hero.ctaPrimary'), href: localeUrl('/cotizador', locale) }}
+              secondaryCta={{ label: t('hero.ctaSecondary'), href: localeUrl('/productos', locale) }}
               stats={[
-                { value: String(projects.length), label: t('pages.hero.stat1') },
-                { value: `${totalStack}+`, label: t('pages.hero.stat2') },
-                { value: '4 sem', label: t('pages.hero.stat3') },
+                { value: String(projects.length), label: t('hero.stat1') },
+                { value: `${totalStack}+`, label: t('hero.stat2') },
+                { value: '4 sem', label: t('hero.stat3') },
               ]}
             />
           </div>

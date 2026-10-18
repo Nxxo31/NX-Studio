@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "dev:clean": "node scripts/preview-clean.mjs dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/check-i18n-prerender.mjs",
     "preview": "astro preview",
     "preview:clean": "node scripts/preview-clean.mjs preview",
     "astro": "astro",
