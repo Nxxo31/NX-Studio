@@ -224,6 +224,43 @@ export const milestone = sqliteTable('milestone', {
     .default('pending'),
   dueDate: integer('due_date', { mode: 'timestamp_ms' }),
   completedAt: integer('completed_at', { mode: 'timestamp_ms' }),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
+  });
+// ─── B8 Admin Panel tables ──────────────────────────────────────────────
+
+export const adminSession = sqliteTable('admin_session', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  role: text('role', { enum: ['admin', 'gatekeeper', 'designer', 'dev'] }).notNull(),
+  expiresAt: integer('expires_at', { mode: 'timestamp_ms' }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
+});
+
+export const auditLog = sqliteTable('audit_log', {
+  id: text('id').primaryKey(),
+  actorUserId: text('actor_user_id').notNull().references(() => user.id),
+  action: text('action').notNull(),
+  resourceType: text('resource_type').notNull(),
+  resourceId: text('resource_id'),
+  beforeJson: text('before_json'),
+  afterJson: text('after_json'),
+  ip: text('ip'),
+  userAgent: text('user_agent'),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
+});
+
+export const deployLog = sqliteTable('deploy_log', {
+  id: text('id').primaryKey(),
+  versionId: text('version_id').notNull(),
+  commitSha: text('commit_sha'),
+  branch: text('branch'),
+  environment: text('environment', { enum: ['production', 'preview', 'local'] })
+    .notNull()
+    .default('production'),
+  workerStartupMs: integer('worker_startup_ms'),
+  status: text('status', { enum: ['success', 'failed', 'in_progress'] })
+      .notNull()
+      .default('success'),
   createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
 });
 
@@ -245,3 +282,9 @@ export type PortalMessage = typeof portalMessage.$inferSelect;
 export type NewPortalMessage = typeof portalMessage.$inferInsert;
 export type Milestone = typeof milestone.$inferSelect;
 export type NewMilestone = typeof milestone.$inferInsert;
+export type AdminSession = typeof adminSession.$inferSelect;
+export type NewAdminSession = typeof adminSession.$inferInsert;
+export type AuditLog = typeof auditLog.$inferSelect;
+export type NewAuditLog = typeof auditLog.$inferInsert;
+export type DeployLog = typeof deployLog.$inferSelect;
+export type NewDeployLog = typeof deployLog.$inferInsert;
