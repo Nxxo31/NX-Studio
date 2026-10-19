@@ -40,6 +40,18 @@ const BASE = '/NX-Studio';
 /** Rutas del portal accesibles sin sesión (auth flows). */
 const PUBLIC_PORTAL_PATHS = ['/portal/login', '/portal/register', '/portal/forgot-password'];
 
+/**
+ * Rutas SSR (prerender = false) del sitio público. El fallback estático de
+ * Astro i18n (fallbackType: 'rewrite') genera assets /en|pt/* en build para
+ * las páginas prerendered, pero para estas rutas NO existe asset y el worker
+ * responde 302 sin Location (bug user-visible en EN/PT desde que /productos
+ * pasó a SSR). El middleware reescribe explícitamente al path sin prefijo
+ * (ver serve branch). Mantener esta lista sincronizada con los
+ * `export const prerender = false` de src/pages (excluyendo api/portal/admin,
+ * que ya están fuera del flujo i18n).
+ */
+const SSR_I18N_ROUTES = ['/productos', '/templates'];
+
 function stripBase(pathname: string): string {
   if (pathname === BASE) return '/';
   if (pathname.startsWith(`${BASE}/`)) return pathname.slice(BASE.length) || '/';
@@ -114,9 +126,25 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return context.redirect(`${prefix}${result.location}${search}`, 302);
   }
 
-  // serve — el routing de /en/* y /pt/* lo resuelve el fallback nativo de
-  // Astro i18n (fallbackType: 'rewrite' en astro.config.mjs).
-  (context.locals as { locale?: Locale }).locale = result.locale;
+  // serve — para páginas prerendered, el fallback nativo de Astro i18n
+  // (fallbackType: 'rewrite') genera assets /en/* y /pt/* en build y next()
+  // los sirve. Para rutas SSR (prerender=false) NO existe asset y el
+  // fallback emite un 302 sin Location. Fix: rewrite explícito al path sin
+  // prefijo para las rutas SSR conocidas; locals persiste para que el
+  // handler vea el locale correcto.
+  const locals = context.locals as { locale?: Locale; i18nRewritten?: boolean };
+  if (result.stripPrefix && !locals.i18nRewritten) {
+    const target = logical.slice(result.stripPrefix.length) || '/';
+    const routeKey = target.replace(/\/+$/, '') || '/';
+    if (SSR_I18N_ROUTES.includes(routeKey)) {
+      locals.i18nRewritten = true;
+      locals.locale = result.locale;
+      return context.rewrite(`${target}${search}`);
+    }
+  }
+  if (!locals.i18nRewritten) {
+    locals.locale = result.locale;
+  }
 
   // Limpieza defensiva: cookie inválida se descarta una vez.
   const cookieValue = context.cookies.get(LOCALE_COOKIE)?.value;
