@@ -1189,10 +1189,10 @@ const CSS = `
 .sh-stage{position:absolute;inset:0;z-index:0;pointer-events:none}
 .sh-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .5s ease}
 .sh-fallback{position:absolute;display:block;max-width:none;user-select:none;-webkit-user-drag:none;transition:opacity .5s ease}
-.sh-root[data-gl="on"] .sh-canvas{opacity:1}
-.sh-root[data-gl="on"] .sh-fallback{opacity:0}
-.sh-root[data-swap="1"] .sh-canvas{opacity:0;transition-duration:.25s}
-.sh-root[data-swap="1"] .sh-fallback{opacity:0;transition-duration:.25s}
+.sh-root[data-gl='on'] .sh-canvas{opacity:1}
+.sh-root[data-gl='on'] .sh-fallback{opacity:0}
+.sh-root[data-swap='1'] .sh-canvas{opacity:0;transition-duration:.25s}
+.sh-root[data-swap='1'] .sh-fallback{opacity:0;transition-duration:.25s}
 .sh-backdrop{position:absolute;left:50%;z-index:0;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;user-select:none;
   font-family:var(--sh-head);font-weight:600;letter-spacing:-.06em;line-height:.8;color:color-mix(in srgb,var(--sh-fg) 5%,transparent)}
 .sh-nav{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:24px;
@@ -1210,15 +1210,15 @@ const CSS = `
 .sh-navcta:hover{background:var(--sh-fg);color:var(--sh-bg)}
 .sh-hint{position:absolute;z-index:1;transform:translate(-50%,0);display:flex;align-items:center;gap:10px;white-space:nowrap;
   font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.5;pointer-events:none;transition:opacity .8s ease}
-.sh-hint::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;animation:sh-pulse 2.4s ease-in-out infinite}
-.sh-root[data-touched="1"] .sh-hint{opacity:0}
+.sh-hint::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;animation:sh-pulse 2.4s ease-in-out infinite}
+.sh-root[data-touched='1'] .sh-hint{opacity:0}
 @keyframes sh-pulse{0%,100%{transform:scale(.6);opacity:.45}50%{transform:scale(1);opacity:1}}
 .sh-spacer{flex:1 1 auto;min-height:0}
 .sh-content{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);align-items:end;
   gap:clamp(24px,4cqw,72px);padding:0 clamp(20px,3.2cqw,48px) clamp(28px,3.4cqw,52px)}
 .sh-eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.62;margin:0 0 clamp(14px,1.6cqw,22px);
   display:flex;align-items:center;gap:12px}
-.sh-eyebrow::before{content:"";width:28px;height:1px;background:currentColor;opacity:.7}
+.sh-eyebrow::before{content:'';width:28px;height:1px;background:currentColor;opacity:.7}
 .sh-h1{font-family:var(--sh-head);font-weight:500;font-size:clamp(40px,min(6.6cqw,11.5cqh),124px);line-height:.92;letter-spacing:-.045em;margin:0;
   text-wrap:balance}
 .sh-h1 .sh-line{display:block}
@@ -1649,7 +1649,7 @@ export default function SculptureHero(props: SculptureHeroProps) {
 
   return (
     <section ref={rootRef} className={"sh-root" + (className ? " " + className : "")} style={{ ...vars, ...style }}>
-      <style>{CSS}</style>
+      <style dangerouslySetInnerHTML={{ __html: CSS }} />
       {backdropText ? (
         <div ref={backdropRef} className="sh-backdrop" aria-hidden="true">
           {backdropText}
