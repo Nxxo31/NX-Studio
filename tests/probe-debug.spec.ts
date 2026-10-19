@@ -9,5 +9,7 @@ test("probe · page.goto funciona con baseURL", async ({ page }) => {
   console.log("HTML length:", html.length);
   const cardCount = await page.locator("[data-project-card]").count();
   console.log("Card count:", cardCount);
-  expect(cardCount).toBe(11);
+  // 18 cards: 15 en línea + 2 prototipos + 1 archivado (alineado con
+  // tests/smoke.spec.ts "smoke · /productos muestra 18 cards y 8 chips de filtro").
+  expect(cardCount).toBe(18);
 });
