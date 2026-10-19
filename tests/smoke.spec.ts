@@ -16,14 +16,17 @@ const BASE = "http://127.0.0.1:4322";
 const routes = [
   { path: "/",                              titleIncludes: "NX-Studio" },
   { path: "/servicios/",                    titleIncludes: "NX-Studio" },
-  { path: "/servicios/osint/",              titleIncludes: "NX-Studio" },
+  // /servicios/osint/ eliminada el 2026-10-09 (OSINT fuera de catálogo,
+  // decisión operador) — fuera del array de rutas smoke.
   { path: "/servicios/testing/",            titleIncludes: "NX-Studio" },
   { path: "/productos/",                    titleIncludes: "Proyectos" },
   { path: "/cotizador/",                    titleIncludes: "Cotización" },
   { path: "/templates/",                    titleIncludes: "Templates" },
   { path: "/laboratorio/",                  titleIncludes: "Laboratorio" },
   { path: "/contacto/",                     titleIncludes: "Contacto" },
-  { path: "/brand/",                        titleIncludes: "Brand" },
+  // /brand/ se renderiza como "Marca — NX-Studio" en ES (default i18n).
+  // El path sigue siendo /brand/ (estable, no romper enlaces externos).
+  { path: "/brand/",                        titleIncludes: "Marca" },
   { path: "/logos/",                        titleIncludes: "Logos" },
   { path: "/palettes/",                     titleIncludes: "Paletas" },
 ];
