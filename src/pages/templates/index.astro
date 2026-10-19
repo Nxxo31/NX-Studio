@@ -4,18 +4,81 @@ import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
 import { TEMPLATES } from "../../data/templates";
 import { getT, getLocale, localeUrl } from "~/i18n";
+import {
+  categoryToKey,
+  renderMockup,
+  filterTemplates,
+  toPriceBucket,
+  type FilterSpec,
+} from "~/lib/template-mockup";
 
+// SSR — los filtros (cat/price/q) tienen que reaccionar al query string
+// en tiempo de request, no estar bakeados en HTML estático. /templates/[slug]
+// sí va prerendered (getStaticPaths genera 1 HTML por template).
+export const prerender = false;
+
+/**
+ * Marketplace de templates — Phase 7 (Dribbble-style grid).
+ *
+ * Cambios vs. v0.9:
+ * - Grid masonry columns en lugar de cards horizontales planas.
+ * - Cada card renderiza un mockup HTML/CSS server-rendered (sin <img>, sin
+ *   CDN, sin assets externos) a partir de src/lib/template-mockup.ts.
+ * - Hover: el mockup crece ligeramente + overlay con metadata (price, stack,
+ *   license, version).
+ * - Filtros por categoría + bucket de precio (URL search params → share-able).
+ * - Search box por nombre/tagline/desc.
+ * - Estado vacío cuando los filtros no matchean.
+ * - i18n namespace `templates.*` (ES / EN / PT).
+ */
 const t = getT(Astro);
 const locale = getLocale(Astro);
-// String/t helpers para copy data-driven de templates.ts (keys por slug).
-const tt = (slug: string, field: string) => t(`pages.templates.items.${slug}.${field}`);
+const tt = (slug: string, field: string) =>
+  t(`pages.templates.items.${slug}.${field}`);
+const tplKind = (k: string) => t(`pages.templates.kinds.${k}`);
 
-// Marketplace de templates comprables — one-time payment, código MIT-licensed.
-// Estructura modelo Arc.dev marketplace.
-const featured = TEMPLATES.filter((tpl) => tpl.featured);
-const rest = TEMPLATES.filter((tpl) => !tpl.featured);
+// ─── URL filters (GET-safe) ────────────────────────────────────────────────
+const url = new URL(Astro.request.url);
+const f: FilterSpec = {
+  category: (['landing', 'dashboard', 'ecommerce', 'all'] as const).find(
+    (c) => c === url.searchParams.get('cat'),
+  ) ?? 'all',
+  price: (['free', '$', '$$', 'all'] as const).find(
+    (p) => p === url.searchParams.get('price'),
+  ) ?? 'all',
+  search: (url.searchParams.get('q') ?? '').trim(),
+};
+
+const all = TEMPLATES;
+const filtered = filterTemplates(TEMPLATES, f);
 
 const fmt = new Intl.NumberFormat('en-US');
+const priceOf = (n: number) => (n === 0 ? t('pages.templates.price_free') : `$${fmt.format(n)}`);
+const bucketLabel = (b: string) =>
+  b === 'free' ? t('pages.templates.price_free') :
+  b === '$' ? t('pages.templates.price_paid_one') :
+  b === '$$' ? t('pages.templates.price_paid_two') :
+  t('pages.templates.price_all');
+
+// URL builder para los chips — preserva query params existentes.
+function withFilter(updates: Partial<FilterSpec>): string {
+  const sp = new URLSearchParams(url.searchParams);
+  if ('category' in updates && updates.category !== undefined) {
+    if (!updates.category || updates.category === 'all') sp.delete('cat');
+    else sp.set('cat', updates.category);
+  }
+  if ('price' in updates && updates.price !== undefined) {
+    if (!updates.price || updates.price === 'all') sp.delete('price');
+    else sp.set('price', updates.price);
+  }
+  if ('search' in updates && updates.search !== undefined) {
+    const v = updates.search.trim();
+    if (!v) sp.delete('q');
+    else sp.set('q', v);
+  }
+  const qs = sp.toString();
+  return `${url.pathname}${qs ? `?${qs}` : ''}`;
+}
 ---
 
 <Base
@@ -25,67 +88,242 @@ const fmt = new Intl.NumberFormat('en-US');
   <Nav />
   <main>
     <section class="relative px-6 py-20 lg:py-28">
-      <div class="mx-auto max-w-6xl">
-        <header class="mb-14 reveal">
-          <span class="lava-tag mb-4">// marketplace.v1</span>
+      <div class="mx-auto max-w-7xl">
+        <header class="mb-10 reveal">
+          <span class="lava-tag mb-4">// marketplace.v2</span>
           <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
             {t('pages.templates.headingA')} <span class="text-lava">{t('pages.templates.headingEm')}</span>
           </h1>
-          <p class="text-nx-muted max-w-2xl text-lg">
+          <p class="text-nx-muted max-w-3xl text-lg leading-relaxed">
             {t('pages.templates.sub')}
+          </p>
+          <p class="text-nx-dim text-sm font-mono mt-3 max-w-2xl">
+            {t('pages.templates.subtitle')}
           </p>
         </header>
 
-        {featured.length > 0 && (
-          <div class="mb-14">
-            <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">
-              {t('pages.templates.featuredTitle')}
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {featured.map((tpl) => (
-                <a href={localeUrl(`/templates/${tpl.slug}`, locale)} class="lava-card lava-card-accent p-6 lg:p-7 reveal flex flex-col card-hover">
-                  <div class="flex items-start justify-between mb-3">
-                    <span class="lava-tag">{tpl.category}</span>
-                    <span class="font-display text-2xl font-bold">${fmt.format(tpl.price)}</span>
-                  </div>
-                  <h3 class="font-display text-2xl font-bold mb-2">{tt(tpl.slug, 'name')}</h3>
-                  <p class="text-sm text-lava-edge font-mono mb-3">{tt(tpl.slug, 'tagline')}</p>
-                  <p class="text-sm text-nx-muted leading-relaxed flex-1 mb-4">{tt(tpl.slug, 'desc')}</p>
-                  <div class="flex flex-wrap gap-1.5 mb-3">
-                    {tpl.stack.slice(0, 4).map((s) => (
-                      <span class="text-xs font-mono text-nx-dim px-2 py-0.5 rounded border border-nx-border">{s}</span>
-                    ))}
-                    {tpl.stack.length > 4 && (
-                      <span class="text-xs font-mono text-nx-dim px-2 py-0.5">+{tpl.stack.length - 4}</span>
-                    )}
-                  </div>
-                  <span class="font-mono text-xs text-lava-edge">{t('pages.templates.viewDetail')}</span>
-                </a>
-              ))}
-            </div>
+        {/* ─── Filter bar ───────────────────────────────────────────────── */}
+        <div
+          class="reveal mb-8 lava-card p-4 md:p-5 flex flex-col gap-4 md:flex-row md:items-center md:flex-wrap"
+          data-testid="tpl-filters"
+        >
+          {/* Search */}
+          <form
+            method="get"
+            action={url.pathname}
+            class="flex-1 min-w-[180px]"
+            role="search"
+            aria-label={t('pages.templates.search_placeholder')}
+          >
+            <input
+              type="search"
+              name="q"
+              value={f.search ?? ''}
+              placeholder={t('pages.templates.search_placeholder')}
+              data-testid="tpl-search"
+              aria-label={t('pages.templates.search_placeholder')}
+              class="w-full bg-nx-bg border border-nx-border-strong rounded-md px-3 py-2 text-sm font-mono placeholder:text-nx-dim focus:outline-none focus:border-nx-primary focus:ring-1 focus:ring-nx-primary"
+            />
+            {/* Preserva cat/price via hidden inputs cuando se somete search */}
+            {f.category !== 'all' && <input type="hidden" name="cat" value={f.category} />}
+            {f.price !== 'all' && <input type="hidden" name="price" value={f.price} />}
+          </form>
+
+          {/* Category chips */}
+          <div
+            class="flex flex-wrap items-center gap-2"
+            role="tablist"
+            aria-label="Template category"
+            data-testid="tpl-cat-filter"
+          >
+            <span class="font-mono text-[10px] uppercase tracking-widest text-nx-dim mr-1">// cat</span>
+            {(['all', 'landing', 'dashboard', 'ecommerce'] as const).map((c) => (
+              <a
+                href={withFilter({ category: c })}
+                role="tab"
+                aria-selected={f.category === c}
+                data-testid={`tpl-cat-${c}`}
+                class={[
+                  'font-mono text-xs px-3 py-1.5 rounded border transition',
+                  f.category === c
+                    ? 'bg-nx-primary text-nx-text-on-primary border-nx-primary'
+                    : 'border-nx-border-strong text-nx-muted hover:border-nx-primary hover:text-nx-primary',
+                ].join(' ')}
+              >
+                {c === 'all'
+                  ? t('pages.templates.filter_all')
+                  : t(`pages.templates.filter_${c}`)}
+              </a>
+            ))}
           </div>
+
+          {/* Price chips */}
+          <div
+            class="flex flex-wrap items-center gap-2"
+            role="tablist"
+            aria-label="Template price"
+            data-testid="tpl-price-filter"
+          >
+            <span class="font-mono text-[10px] uppercase tracking-widest text-nx-dim mr-1">// $</span>
+            {(['all', 'free', '$', '$$'] as const).map((p) => (
+              <a
+                href={withFilter({ price: p })}
+                role="tab"
+                aria-selected={f.price === p}
+                data-testid={`tpl-price-${p === '$' ? 'one' : p === '$$' ? 'two' : p}`}
+                class={[
+                  'font-mono text-xs px-3 py-1.5 rounded border transition',
+                  f.price === p
+                    ? 'bg-nx-primary text-nx-text-on-primary border-nx-primary'
+                    : 'border-nx-border-strong text-nx-muted hover:border-nx-primary hover:text-nx-primary',
+                ].join(' ')}
+              >
+                {p === 'all' ? t('pages.templates.price_all') : bucketLabel(p)}
+              </a>
+            ))}
+          </div>
+
+          {/* Count badge */}
+          <span
+            class="font-mono text-[11px] text-nx-muted ml-auto whitespace-nowrap"
+            data-testid="tpl-count"
+          >
+            {t('pages.templates.showing')}{' '}
+            <span class="text-lava-edge font-bold">{filtered.length}</span>{' '}
+            {t('pages.templates.of')}{' '}
+            <span>{all.length}</span>{' '}
+            {t('pages.templates.item')}
+          </span>
+        </div>
+
+        {/* ─── Masonry grid ─────────────────────────────────────────────── */}
+        {filtered.length === 0 ? (
+          <div
+            data-testid="tpl-empty"
+            class="lava-card p-12 text-center reveal"
+          >
+            <span class="lava-tag">// 404</span>
+            <p class="text-nx-muted mt-4 text-lg font-display">
+              {t('pages.templates.no_results')}
+            </p>
+            <a
+              href={url.pathname}
+              class="lava-btn-ghost lava-btn mt-6 inline-flex"
+              data-testid="tpl-clear"
+            >
+              {t('pages.templates.clear_filters')} →
+            </a>
+          </div>
+        ) : (
+          <ul
+            class="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4"
+            data-testid="tpl-grid"
+          >
+            {filtered.map((tpl) => {
+              const bucket = toPriceBucket(tpl.price);
+              const strings = {
+                name: tt(tpl.slug, 'name'),
+                tagline: tt(tpl.slug, 'tagline'),
+                price: priceOf(tpl.price),
+                viewDemo: t('pages.templateSlug.view_demo'),
+                buy: t('pages.templateSlug.buy'),
+                stack: t('pages.templateSlug.stack'),
+                license: t('pages.templateSlug.license_mit'),
+                lastUpdated: tt(tpl.slug, 'lastUpdated'),
+              };
+              return (
+                <li
+                  class="tpl-card break-inside-avoid mb-4 relative overflow-hidden rounded-lg border border-nx-border bg-nx-surface group reveal"
+                  data-testid="tpl-card"
+                  data-template-slug={tpl.slug}
+                  data-template-category={categoryToKey(tpl.category)}
+                  data-template-bucket={bucket}
+                >
+                  {/* Mockup preview */}
+                  <div
+                    class="relative aspect-[4/3] overflow-hidden transition-transform duration-300 ease-out group-hover:scale-[1.025]"
+                    set:html={renderMockup(tpl, strings)}
+                  />
+
+                  {/* Hover overlay — precio + stack + license */}
+                  <div
+                    class="tpl-card-overlay absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
+                    data-testid="tpl-card-overlay"
+                    aria-hidden="true"
+                  >
+                    <div class="absolute inset-0 bg-gradient-to-t from-nx-bg/95 via-nx-bg/70 to-transparent"></div>
+                    <div class="relative">
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="font-mono text-[10px] uppercase tracking-widest text-nx-primary">
+                          {tplKind(tpl.category)}
+                        </span>
+                        <span class="font-display text-xl font-bold text-nx-text">
+                          {priceOf(tpl.price)}
+                        </span>
+                      </div>
+                      <div class="flex flex-wrap gap-1.5">
+                        {tpl.stack.slice(0, 4).map((s) => (
+                          <span class="font-mono text-[10px] text-nx-bg bg-nx-primary px-1.5 py-0.5 rounded">
+                            {s}
+                          </span>
+                        ))}
+                        {tpl.stack.length > 4 && (
+                          <span class="font-mono text-[10px] text-nx-dim bg-nx-raised border border-nx-border-strong px-1.5 py-0.5 rounded">
+                            +{tpl.stack.length - 4}
+                          </span>
+                        )}
+                      </div>
+                      <div class="mt-3 flex items-center justify-between">
+                        <span class="font-mono text-[10px] text-nx-text-muted">
+                          {t('pages.templateSlug.license_mit')} ·{' '}
+                          {strings.lastUpdated || 'v1.0.0'}
+                        </span>
+                        <span class="font-mono text-[10px] text-nx-primary">
+                          {t('pages.templates.viewDetail')}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Always-visible header — name + tagline */}
+                  <a
+                    href={localeUrl(`/templates/${tpl.slug}`, locale)}
+                    class="block p-4 border-t border-nx-border bg-nx-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-nx-primary"
+                    aria-label={`${strings.name} — ${t('pages.templates.viewDetail')}`}
+                  >
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                      <span class="font-mono text-[10px] uppercase tracking-widest text-nx-primary">
+                        {tplKind(tpl.category)}
+                      </span>
+                      {tpl.featured && (
+                        <span class="font-mono text-[9px] text-nx-text-on-primary bg-nx-primary px-1.5 py-0.5 rounded uppercase tracking-wider">
+                          ★
+                        </span>
+                      )}
+                    </div>
+                    <h3 class="font-display text-lg font-bold text-nx-text leading-snug mb-1">
+                      {strings.name}
+                    </h3>
+                    <p class="text-xs text-nx-text-muted leading-relaxed line-clamp-2">
+                      {strings.tagline}
+                    </p>
+                    <div class="mt-3 flex items-center justify-between">
+                      <span class="font-display text-base font-bold text-lava-edge">
+                        {priceOf(tpl.price)}
+                      </span>
+                      <span class="font-mono text-[10px] text-nx-muted">
+                        {t('pages.templates.viewDetail')} →
+                      </span>
+                    </div>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
         )}
 
-        {rest.length > 0 && (
-          <div>
-            <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">{t('pages.templates.othersTitle')}</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {rest.map((tpl) => (
-                <a href={localeUrl(`/templates/${tpl.slug}`, locale)} class="lava-card p-5 reveal flex flex-col card-hover">
-                  <div class="flex items-start justify-between mb-3">
-                    <span class="lava-tag">{tpl.category}</span>
-                    <span class="font-display text-xl font-bold">${fmt.format(tpl.price)}</span>
-                  </div>
-                  <h3 class="font-display text-lg font-bold mb-2">{tt(tpl.slug, 'name')}</h3>
-                  <p class="text-sm text-lava-edge font-mono mb-3">{tt(tpl.slug, 'tagline')}</p>
-                  <p class="text-sm text-nx-muted leading-relaxed flex-1">{tt(tpl.slug, 'desc')}</p>
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div class="mt-16 lava-card p-8 lg:p-10 reveal">
+        {/* ─── FAQ (existing) ──────────────────────────────────────────── */}
+        <div class="mt-20 lava-card p-8 lg:p-10 reveal">
           <span class="lava-tag mb-3">// faq</span>
           <h2 class="font-display text-2xl font-bold mb-4">{t('pages.templates.faq.title')}</h2>
           <ol class="space-y-3 text-nx-muted">
@@ -93,10 +331,33 @@ const fmt = new Intl.NumberFormat('en-US');
               <li><span class="text-lava-edge font-mono mr-2">{i + 1}.</span> {t(`pages.templates.faq.steps.${i}`)}</li>
             ))}
           </ol>
-          <a href={`${localeUrl('/contacto', locale)}?topic=template`} class="lava-btn mt-6 inline-flex">{t('pages.templates.faq.cta')}</a>
+          <a href={`${localeUrl('/contacto', locale)}?topic=template`} class="lava-btn mt-6 inline-flex">
+            {t('pages.templates.faq.cta')}
+          </a>
         </div>
       </div>
     </section>
   </main>
   <Footer />
 </Base>
+
+<style>
+  /* Hover overlay: cross-fade + slight lift, GIF-free. */
+  .tpl-card {
+    transition: transform 250ms ease-out, box-shadow 250ms ease-out;
+  }
+  .tpl-card:hover,
+  .tpl-card:focus-within {
+    border-color: var(--color-nx-primary, #ff4500);
+    box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--color-nx-primary, #ff4500);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tpl-card,
+    .tpl-card > div:first-child {
+      transition: none !important;
+    }
+    .tpl-card-overlay {
+      transition: none !important;
+    }
+  }
+</style>

@@ -230,7 +230,9 @@
             "1": "Copywriting",
             "2": "Hospedagem mensal (Vercel free tier OK)",
             "3": "Suporte pós-compra"
-          }
+          },
+          "version": "v1.2.0",
+          "lastUpdated": "2026-09-14"
         },
         "dashboard-starter": {
           "name": "Dashboard Starter",
@@ -249,7 +251,9 @@
             "0": "Auth provider custom",
             "1": "Design fora do tema lava neon",
             "2": "Deployment"
-          }
+          },
+          "version": "v0.9.4",
+          "lastUpdated": "2026-10-02"
         },
         "ecommerce-headless": {
           "name": "Headless E-commerce",
@@ -268,8 +272,34 @@
             "1": "Multi-moeda / multi-locale",
             "2": "Assinaturas",
             "3": "Design custom"
-          }
+          },
+          "version": "v1.0.1",
+          "lastUpdated": "2026-08-20"
         }
+      },
+      "subtitle": "Veja o preview antes de comprar. Mockups server-rendered, mesmos tokens do produto final.",
+      "search_placeholder": "Buscar template…",
+      "filter_all": "Todas",
+      "filter_landing": "Landing",
+      "filter_dashboard": "Dashboard",
+      "filter_ecommerce": "E-commerce",
+      "price_all": "Qualquer preço",
+      "price_free": "Free",
+      "price_paid_one": "$",
+      "price_paid_two": "$$",
+      "no_results": "Nenhum template corresponde ao seu filtro.",
+      "related_templates": "Templates relacionados",
+      "clear_filters": "Limpar filtros",
+      "showing": "Mostrando",
+      "of": "de",
+      "item": "templates",
+      "kinds": {
+        "Landing": "Landing",
+        "Dashboard": "Dashboard",
+        "E-commerce": "E-commerce",
+        "SaaS": "SaaS",
+        "Auth": "Auth",
+        "Blog": "Blog"
       }
     },
     "cotizador": {
@@ -777,8 +807,45 @@
         "desc": "Enviamos o repo privado + invoice em menos de 24 horas. Setup guiado incluído. Sem assinatura, sem royalties, sem vendor lock-in.",
         "buy": "Comprar",
         "custom": "Ou pedir custom →"
-      }
+      },
+      "stack": "Stack",
+      "license_mit": "MIT",
+      "license_commercial": "Commercial",
+      "last_updated": "Última atualização",
+      "version": "Versão",
+      "view_demo": "Ver demo ao vivo",
+      "buy": "Comprar agora"
     }
+  },
+  "chatbot": {
+    "title": "SophIA",
+    "subtitle": "Assistente virtual da NX-Studio",
+    "placeholder": "Digite uma mensagem…",
+    "send": "Enviar",
+    "close": "Fechar",
+    "minimize": "Minimizar",
+    "reset": "Reiniciar conversa",
+    "open": "Abrir SophIA",
+    "fab_label": "Abrir assistente SophIA",
+    "panel_label": "Painel de chat com SophIA",
+    "help_text": "Comandos disponíveis:\n• /help — mostra esta ajuda\n• /reset — limpa a conversa\n• /portalsignup — ir ao portal do cliente\n\nVocê também pode me perguntar em espanhol, inglês ou português sobre preços, serviços, templates, laboratório ou contato.",
+    "reset_done": "Conversa reiniciada. Como posso ajudar?",
+    "portalsignup": "Levando você ao portal do cliente em uma nova aba. Se ainda não tem conta, pode criar uma quando chegar lá.",
+    "mock_greeting": "Olá! Sou a SophIA, assistente virtual da NX-Studio. Em que posso ajudar hoje? Pergunte sobre preços, serviços, templates ou digite /help para ver todos os comandos.",
+    "mock_pricing": "Os preços dependem do escopo. Todo projeto começa com uma chamada de descoberta gratuita; depois enviamos uma proposta com faixa indicativa e banda sugerida. Para uma estimativa imediata, abra o cotizador (/cotizador) ou me diga o que precisa que eu já encaminho para a equipe.",
+    "mock_handoff": "Vou te conectar com a equipe humana. Enquanto isso, conte seu projeto em 2-3 linhas para agilizarmos o primeiro contato. Resposta habitual em menos de 24h úteis.",
+    "mock_unknown": "Não tenho certeza se entendi. Posso ajudar com preços, serviços, templates, laboratório ou te passar para um humano. Tente /help para ver comandos.",
+    "mock_services": "Temos três linhas: aplicações sob medida, QA & testing embarcado, e IA aplicada (chatbots, agentes, RAG). Cada uma tem um entregável concreto. Qual te interessa explorar?",
+    "mock_templates": "Temos templates production-ready (landing, dashboard, e-commerce) prontos para comprar e deploy. Licença MIT, sem royalties, suporte no primeiro sprint. Passe em /templates para ver o catálogo.",
+    "mock_labs": "O laboratório de IA é onde experimentamos geração de mockups, agentes e protótipos. Sem backend, tudo no seu navegador. Se quiser ver um ao vivo, /laboratorio.",
+    "mock_contact": "Para contato direto: formulário em /contacto (salva no backend e notifica a equipe), ou /cotizador para estimativa imediata. Também /portalsignup se preferir criar conta no portal.",
+    "mock_thanks": "Por nada! Se precisar de mais alguma coisa, estou aqui.",
+    "aria_user_message": "Sua mensagem",
+    "aria_bot_message": "SophIA diz",
+    "status_online": "Online",
+    "empty_state": "Comece a conversa com um cumprimento ou /help para ver comandos.",
+    "input_hint": "Enter envia · Shift+Enter nova linha",
+    "footer_disclaimer": "SophIA é uma assistente automática. As respostas são indicativas; a equipe confirma qualquer proposta formal."
   },
   "portal": {
     "shell": {

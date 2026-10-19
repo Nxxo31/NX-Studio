@@ -4,10 +4,12 @@ import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
 import { TEMPLATES } from "../../data/templates";
 import { getT, getLocale, localeUrl } from "~/i18n";
+import {
+  renderMockup,
+  categoryToKey,
+  filterTemplates,
+} from "~/lib/template-mockup";
 
-// Prerendered, pero Astro i18n genera /en//pt/ como variantes estáticas
-// (fallbackType rewrite + currentLocale por build), así que el body SÍ se
-// traduce vía t() — keys data-driven por slug (pages.templates.items.*).
 export const prerender = true;
 
 export function getStaticPaths() {
@@ -25,8 +27,36 @@ if (!template) {
 const t = getT(Astro);
 const locale = getLocale(Astro);
 const tt = (field: string) => t(`pages.templates.items.${template.slug}.${field}`);
+const ttFor = (slug: string, field: string) => t(`pages.templates.items.${slug}.${field}`);
+const tplKind = (k: string) => t(`pages.templates.kinds.${k}`);
 
 const fmt = new Intl.NumberFormat('en-US');
+const priceOf = (n: number) => (n === 0 ? t('pages.templates.price_free') : `$${fmt.format(n)}`);
+
+// Related templates: misma categoría (excluyendo el actual). Si la
+// categoría tiene solo 1 item (caso de Dashboard / E-commerce en este
+// catálogo de muestra), caen a "all" para mostrar el resto.
+const SAME_CATEGORY_KEY_BY_CATEGORY: Record<string, 'landing' | 'dashboard' | 'ecommerce' | undefined> = {
+  'Landing': 'landing',
+  'Dashboard': 'dashboard',
+  'E-commerce': 'ecommerce',
+};
+const others = TEMPLATES.filter((x) => x.slug !== template.slug);
+const sameKey = SAME_CATEGORY_KEY_BY_CATEGORY[template.category];
+const same = sameKey ? filterTemplates(others, { category: sameKey }) : [];
+const related = (same.length > 0 ? same : others).slice(0, 3);
+
+// Strings para el mockup renderer.
+const mockupStrings = {
+  name: tt('name'),
+  tagline: tt('tagline'),
+  price: priceOf(template.price),
+  viewDemo: t('pages.templateSlug.view_demo'),
+  buy: t('pages.templateSlug.buy'),
+  stack: t('pages.templateSlug.stack'),
+  license: t('pages.templateSlug.license_mit'),
+  lastUpdated: tt('lastUpdated') || tt('version') || 'v1.0.0',
+};
 ---
 
 <Base
@@ -36,38 +66,127 @@ const fmt = new Intl.NumberFormat('en-US');
   <Nav />
   <main>
     <section class="relative px-6 py-20 lg:py-28">
-      <div class="mx-auto max-w-5xl">
-        <a href={localeUrl('/templates', locale)} class="font-mono text-xs text-nx-muted hover:text-lava-edge transition inline-flex items-center gap-2 mb-6">
+      <div class="mx-auto max-w-6xl">
+        <a
+          href={localeUrl('/templates', locale)}
+          class="font-mono text-xs text-nx-muted hover:text-lava-edge transition inline-flex items-center gap-2 mb-6"
+        >
           {t('pages.templateSlug.back')}
         </a>
 
-        <header class="mb-12 reveal">
-          <div class="flex items-start justify-between flex-wrap gap-4 mb-4">
-            <div>
-              <span class="lava-tag mb-3">{template.category}</span>
-              <h1 class="font-display text-4xl lg:text-5xl font-bold tracking-tight">
-                {tt('name')}
-              </h1>
+        {/* Hero: name + price (left) + mockup (right) */}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <header class="reveal">
+            <div class="flex items-center gap-2 mb-3 flex-wrap">
+              <span class="lava-tag">{tplKind(template.category)}</span>
+              {template.featured && (
+                <span class="font-mono text-[10px] text-nx-text-on-primary bg-nx-primary px-2 py-0.5 rounded uppercase tracking-wider">
+                  ★ featured
+                </span>
+              )}
+              <span class="font-mono text-[10px] uppercase tracking-widest text-nx-muted">
+                {mockupStrings.license} · {tt('version') || 'v1.0.0'}
+              </span>
             </div>
-            <div class="text-right">
-              <div class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-1">{t('pages.templateSlug.oneTime')}</div>
-              <div class="font-display text-4xl font-bold text-lava-edge">${fmt.format(template.price)}</div>
-              <div class="text-xs text-nx-dim font-mono mt-1">{t('pages.templateSlug.licenseNote')}</div>
+            <h1 class="font-display text-4xl lg:text-5xl font-bold tracking-tight mb-4">
+              {tt('name')}
+            </h1>
+            <p class="text-lava-edge font-mono text-lg mb-4">{tt('tagline')}</p>
+            <p class="text-nx-muted max-w-2xl text-base leading-relaxed mb-6">{tt('desc')}</p>
+
+            <div class="flex items-end gap-6 mb-6 flex-wrap">
+              <div>
+                <div class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-1">{t('pages.templateSlug.oneTime')}</div>
+                <div class="font-display text-4xl font-bold text-lava-edge">
+                  {priceOf(template.price)}
+                </div>
+                <div class="text-xs text-nx-dim font-mono mt-1">{t('pages.templateSlug.licenseNote')}</div>
+              </div>
+              <div>
+                <div class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-1">{t('pages.templateSlug.version')}</div>
+                <div class="font-display text-2xl font-bold text-nx-text">
+                  {tt('version') || 'v1.0.0'}
+                </div>
+                <div class="text-xs text-nx-dim font-mono mt-1">
+                  {t('pages.templateSlug.last_updated')}: {tt('lastUpdated') || '—'}
+                </div>
+              </div>
+            </div>
+
+            {/* CTAs */}
+            <div class="flex flex-wrap gap-3" data-testid="tpl-detail-cta">
+              <a
+                href={`${localeUrl('/contacto', locale)}?topic=template&slug=${template.slug}`}
+                class="lava-btn"
+                data-testid="tpl-buy-btn"
+              >
+                {t('pages.templateSlug.buy')} {tt('name')} →
+              </a>
+              {template.demoUrl ? (
+                <a
+                  href={template.demoUrl}
+                  rel="noopener"
+                  target="_blank"
+                  class="lava-btn lava-btn-ghost"
+                  data-testid="tpl-demo-btn"
+                >
+                  {t('pages.templateSlug.view_demo')} ↗
+                </a>
+              ) : (
+                <span
+                  class="lava-btn lava-btn-ghost opacity-60 cursor-not-allowed"
+                  aria-disabled="true"
+                  title="Demo coming soon"
+                  data-testid="tpl-demo-btn-disabled"
+                >
+                  {t('pages.templateSlug.view_demo')} (soon)
+                </span>
+              )}
+              <a
+                href={localeUrl('/cotizador', locale)}
+                class="lava-btn lava-btn-ghost"
+              >
+                {t('pages.templateSlug.cta.custom')}
+              </a>
+            </div>
+          </header>
+
+          {/* Big mockup preview */}
+          <div
+            class="reveal tpl-detail-mockup relative rounded-xl border border-nx-border bg-nx-surface overflow-hidden"
+            data-testid="tpl-detail-mockup"
+          >
+            <div
+              class="aspect-[4/3]"
+              set:html={renderMockup(template, mockupStrings)}
+            />
+            {/* Mockup label strip */}
+            <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+              <span class="font-mono text-[10px] uppercase tracking-widest text-nx-text-muted bg-nx-bg/80 backdrop-blur-sm px-2 py-1 rounded">
+                {tplKind(template.category)} · preview
+              </span>
+              <span class="font-mono text-[10px] text-nx-primary bg-nx-bg/80 backdrop-blur-sm px-2 py-1 rounded">
+                {mockupStrings.price}
+              </span>
             </div>
           </div>
-          <p class="text-lava-edge font-mono text-lg mb-4">{tt('tagline')}</p>
-          <p class="text-nx-muted max-w-3xl text-lg leading-relaxed">{tt('desc')}</p>
-        </header>
+        </div>
 
+        {/* Stack */}
         <div class="mb-12 reveal">
-          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-4">Stack</h2>
+          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-4">
+            {t('pages.templateSlug.stack')}
+          </h2>
           <div class="flex flex-wrap gap-2">
             {template.stack.map((s) => (
-              <span class="font-mono text-xs px-3 py-1.5 rounded border border-nx-border-strong text-nx-muted">{s}</span>
+              <span class="font-mono text-xs px-3 py-1.5 rounded border border-nx-border-strong text-nx-muted">
+                {s}
+              </span>
             ))}
           </div>
         </div>
 
+        {/* Includes / Excludes */}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
           <article class="lava-card p-6 lg:p-8 reveal">
             <h2 class="font-display text-xl font-bold mb-4 text-lava-edge">{t('pages.templateSlug.includesTitle')}</h2>
@@ -93,14 +212,58 @@ const fmt = new Intl.NumberFormat('en-US');
           </article>
         </div>
 
+        {/* Related templates */}
+        {related.length > 0 && (
+          <section class="mb-12 reveal" data-testid="tpl-related">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted">
+                {t('pages.templates.related_templates')}
+              </h2>
+              <a
+                href={localeUrl('/templates', locale)}
+                class="font-mono text-xs text-nx-muted hover:text-lava-edge transition"
+              >
+                {t('pages.templates.viewDetail')} →
+              </a>
+            </div>
+            <ul class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {related.map((r) => (
+                <li>
+                  <a
+                    href={localeUrl(`/templates/${r.slug}`, locale)}
+                    class="lava-card block p-4 hover:border-nx-primary transition"
+                    data-testid="tpl-related-card"
+                    data-template-slug={r.slug}
+                  >
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="font-mono text-[10px] uppercase tracking-widest text-nx-primary">
+                        {tplKind(r.category)}
+                      </span>
+                      <span class="font-display text-base font-bold text-lava-edge">
+                        {priceOf(r.price)}
+                      </span>
+                    </div>
+                    <h3 class="font-display text-base font-bold mb-1">{ttFor(r.slug, 'name') || r.name}</h3>
+                    <p class="text-xs text-nx-text-muted line-clamp-2">{r.tagline}</p>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* Bottom CTA */}
         <div class="lava-card lava-card-accent p-8 lg:p-10 reveal">
           <h2 class="font-display text-2xl font-bold mb-3">{t('pages.templateSlug.cta.title')}</h2>
           <p class="text-nx-muted mb-6 max-w-2xl">
             {t('pages.templateSlug.cta.desc')}
           </p>
           <div class="flex flex-wrap gap-3">
-            <a href={`${localeUrl('/contacto', locale)}?topic=template&slug=${template.slug}`} class="lava-btn">
-              {t('pages.templateSlug.cta.buy')} {tt('name')} →
+            <a
+              href={`${localeUrl('/contacto', locale)}?topic=template&slug=${template.slug}`}
+              class="lava-btn"
+            >
+              {t('pages.templateSlug.buy')} {tt('name')} →
             </a>
             <a href={localeUrl('/cotizador', locale)} class="lava-btn lava-btn-ghost">
               {t('pages.templateSlug.cta.custom')}
@@ -112,3 +275,13 @@ const fmt = new Intl.NumberFormat('en-US');
   </main>
   <Footer />
 </Base>
+
+<style>
+  .tpl-detail-mockup {
+    transition: border-color 250ms ease-out, transform 250ms ease-out;
+  }
+  .tpl-detail-mockup:hover {
+    border-color: var(--color-nx-primary, #ff4500);
+    transform: translateY(-2px);
+  }
+</style>
