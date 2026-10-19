@@ -23,13 +23,13 @@
     "sub1": "Estúdio de desenvolvimento",
     "subStrong": "LATAM-first",
     "sub2": "Construímos aplicações, QA e templates prontos para produção. Você vê o código desde o primeiro dia. Sem caixa-preta.",
-    "chip1": "11 produtos OSS",
-    "chip2": "24+ tecnologias",
+    "chip1": "11 projetos OSS",
+        "chip2": "24+ tecnologias",
     "chip3": "LATAM remote-first",
     "chip4": "Engajamento flexível",
     "ctaPrimary": "Cotar projeto",
-    "ctaSecondary": "Ver produtos OSS",
-    "stat1": "produtos",
+        "ctaSecondary": "Ver projetos OSS",
+        "stat1": "projetos",
     "stat2": "tecnologias",
     "stat3": "ciclo de MVP",
     "previewLink": "// ver os projetos →",
@@ -97,7 +97,7 @@
         "sub": "Se nada disso te convence, recomendamos outro estúdio. Preferimos perder um cliente a entregar algo medíocre.",
         "items": {
           "0": {
-            "label": "produtos open source publicados no GitHub"
+            "label": "projetos open source publicados no GitHub"
           },
           "1": {
             "label": "tecnologias em stack verificável"
