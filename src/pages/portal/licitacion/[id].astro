@@ -1,0 +1,163 @@
+---
+// /portal/licitacion/[id] — detalle de cotización del cliente (B7 · T05).
+//
+// Verifica que la licitacion.user_id === session.user.id (404 si no).
+// Muestra: nombre, email, tipo, engagement, features[], pricing, status, fecha.
+// Próxima milestone: query milestone WHERE proyecto_id = licitacion.proyecto_id
+//                    AND status IN ('pending','in_progress') ORDER BY due_date ASC LIMIT 1.
+
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { eq } from 'drizzle-orm';
+import { createDb, schema } from '~/db';
+import {
+  getLicitacionForUser,
+  getNextMilestoneForProject,
+} from '~/server/portal-repo';
+import Base from '~/layouts/Base.astro';
+import PortalShell from '~/components/portal/PortalShell.astro';
+import { getT, getLocale } from '~/i18n';
+
+export const prerender = false;
+
+const env = runtimeEnv as unknown as { DB: D1Database };
+
+const portalSession = (Astro.locals as { portalSession?: { user: { id: string } } }).portalSession;
+if (!portalSession) {
+  return new Response('Unauthorized', { status: 401 });
+}
+const userId = portalSession.user.id;
+const t = getT(getLocale(Astro));
+
+const licitacionId = Astro.params.id;
+if (!licitacionId) {
+  return new Response(t('portal.errors.notFound'), { status: 404 });
+}
+
+const db = createDb(env.DB);
+
+let user = { name: '', email: '' };
+let licitacion = null as Awaited<ReturnType<typeof getLicitacionForUser>>;
+let nextMs = null as Awaited<ReturnType<typeof getNextMilestoneForProject>>;
+
+try {
+  const direct = await db.select().from(schema.user).where(eq(schema.user.id, userId)).get();
+  if (direct) user = { name: direct.name ?? '', email: direct.email ?? '' };
+  licitacion = await getLicitacionForUser(db, licitacionId, userId);
+  if (!licitacion) {
+    return new Response(t('portal.licitacion.notFound'), { status: 404 });
+  }
+  // próxima milestone: si la licitacion tiene proyectoId vinculado, lo usamos;
+  // actualmente el schema de licitacion no expone proyectoId, así que el bloque
+  // siguiente es defensivo para futuras versiones.
+  const lid = (licitacion as unknown as { proyectoId?: string | null }).proyectoId;
+  if (lid) {
+    nextMs = await getNextMilestoneForProject(db, lid);
+  }
+} catch {
+  return new Response(t('portal.errors.notFound'), { status: 404 });
+}
+
+let features: string[] = [];
+try { features = JSON.parse(licitacion.featuresJson || '[]'); } catch { features = []; }
+
+const fmt = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const dateFmt = new Intl.DateTimeFormat('es-CO', { dateStyle: 'long' });
+---
+
+<Base title={t('portal.shell.title.licitacion')} description={t('portal.shell.title.licitacionDescription')}>
+  <PortalShell t={t} user={user} active="dashboard" title={t('portal.licitacion.heading')} description={`#${licitacion.id.slice(0, 8)}`}>
+    <a href="/portal" class="portal-back">{t('portal.licitacion.backToDashboard')}</a>
+
+    <dl class="portal-dl">
+      <dt>{t('portal.licitacion.labelStatus')}</dt>
+      <dd><span class="portal-status-tag" data-status={licitacion.status}>{t(`portal.dashboard.status.${licitacion.status}`)}</span></dd>
+
+      <dt>{t('portal.licitacion.labelNombre')}</dt>
+      <dd>{licitacion.nombre}</dd>
+
+      <dt>{t('portal.licitacion.labelEmail')}</dt>
+      <dd>{licitacion.email}</dd>
+
+      {licitacion.empresa && (<><dt>{t('portal.licitacion.labelEmpresa')}</dt><dd>{licitacion.empresa}</dd></>)}
+      {licitacion.telefono && (<><dt>{t('portal.licitacion.labelTelefono')}</dt><dd>{licitacion.telefono}</dd></>)}
+      {licitacion.pais && (<><dt>{t('portal.licitacion.labelPais')}</dt><dd>{licitacion.pais}</dd></>)}
+
+      <dt>{t('portal.licitacion.labelTipo')}</dt>
+      <dd>{licitacion.tipo}</dd>
+
+      <dt>{t('portal.licitacion.labelEngagement')}</dt>
+      <dd>{licitacion.engagement}</dd>
+
+      <dt>{t('portal.licitacion.labelUrgencia')}</dt>
+      <dd>{licitacion.urgencia}</dd>
+
+      <dt>{t('portal.licitacion.labelBanda')}</dt>
+      <dd>{licitacion.banda}</dd>
+
+      <dt>{t('portal.licitacion.labelPricing')}</dt>
+      <dd><strong>{fmt.format(licitacion.precioMin)}–{fmt.format(licitacion.precioMax)}</strong></dd>
+
+      {licitacion.displayCurrency && licitacion.displayMin != null && licitacion.displayMax != null && (
+        <><dt>{t('portal.licitacion.labelDisplay')}</dt><dd>{licitacion.displayCurrency} {licitacion.displayMin}–{licitacion.displayMax}</dd></>
+      )}
+
+      <dt>{t('portal.licitacion.labelFeatures')}</dt>
+      <dd>{features.length > 0 ? (<ul class="portal-features">{(features as string[]).map((f) => <li>{f}</li>)}</ul>) : '—'}</dd>
+
+      <dt>{t('portal.licitacion.labelDescripcion')}</dt>
+      <dd class="portal-desc">{licitacion.descripcion}</dd>
+
+      <dt>{t('portal.licitacion.labelFecha')}</dt>
+      <dd>{dateFmt.format(new Date(licitacion.createdAt))}</dd>
+
+      {(licitacion as unknown as { proyectoId?: string | null }).proyectoId && (
+        <>
+          <dt>{t('portal.licitacion.nextMilestone')}</dt>
+          <dd>
+            {nextMs ? (
+              <span>
+                <strong>{nextMs.title}</strong> · <em>{t(`portal.proyectos.milestoneStatus.${nextMs.status}`)}</em>
+                {nextMs.dueDate && <span> · {dateFmt.format(new Date(nextMs.dueDate))}</span>}
+              </span>
+            ) : (
+              <span class="portal-muted">{t('portal.licitacion.noMilestone')}</span>
+            )}
+          </dd>
+        </>
+      )}
+    </dl>
+  </PortalShell>
+</Base>
+
+<style>
+  .portal-back { display: inline-block; margin-bottom: 1rem; color: var(--color-nx-muted); text-decoration: none; font-size: 0.9rem; }
+  .portal-back:hover { color: var(--color-nx-primary); }
+  .portal-dl {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 0.6rem 1rem;
+    margin: 0;
+  }
+  @media (max-width: 640px) { .portal-dl { grid-template-columns: 1fr; gap: 0.25rem 0; } .portal-dl dt { margin-top: 0.75rem; } }
+  .portal-dl dt { color: var(--color-nx-muted); font-size: 0.85rem; }
+  .portal-dl dd { margin: 0; }
+  .portal-features { margin: 0; padding-left: 1.2rem; }
+  .portal-desc { white-space: pre-wrap; }
+  .portal-muted { color: var(--color-nx-muted); }
+  .portal-status-tag {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: var(--color-nx-primary-tint);
+    color: var(--color-nx-primary);
+  }
+  .portal-status-tag[data-status="aceptada"], .portal-status-tag[data-status="completada"] {
+    background: rgba(34, 197, 94, 0.14); color: #22c55e;
+  }
+  .portal-status-tag[data-status="rechazada"] {
+    background: rgba(239, 68, 68, 0.14); color: #ef4444;
+  }
+</style>

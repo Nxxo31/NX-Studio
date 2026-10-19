@@ -1,0 +1,95 @@
+---
+// /portal/proyectos — lista de proyectos del cliente (B7 · T06).
+
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { eq } from 'drizzle-orm';
+import { createDb, schema } from '~/db';
+import {
+  getNextMilestonesByProjects,
+  listProyectosDelCliente,
+} from '~/server/portal-repo';
+import Base from '~/layouts/Base.astro';
+import PortalShell from '~/components/portal/PortalShell.astro';
+import { getT, getLocale } from '~/i18n';
+
+export const prerender = false;
+
+const env = runtimeEnv as unknown as { DB: D1Database };
+const portalSession = (Astro.locals as { portalSession?: { user: { id: string } } }).portalSession;
+if (!portalSession) return new Response('Unauthorized', { status: 401 });
+const userId = portalSession.user.id;
+const t = getT(getLocale(Astro));
+const db = createDb(env.DB);
+
+let user = { name: '', email: '' };
+let proyectos: Awaited<ReturnType<typeof listProyectosDelCliente>> = [];
+let nextMs = new Map<string, Awaited<ReturnType<typeof getNextMilestonesByProjects>> extends Map<string, infer V> ? V : never>();
+try {
+  const direct = await db.select().from(schema.user).where(eq(schema.user.id, userId)).get();
+  if (direct) user = { name: direct.name ?? '', email: direct.email ?? '' };
+  proyectos = await listProyectosDelCliente(db, userId);
+  nextMs = await getNextMilestonesByProjects(db, proyectos.map((p) => p.id));
+} catch {
+  proyectos = [];
+}
+
+function parseStack(raw: string): string[] {
+  try { return JSON.parse(raw); } catch { return []; }
+}
+---
+
+<Base title={t('portal.shell.title.proyectos')} description={t('portal.shell.title.proyectosDescription')}>
+  <PortalShell t={t} user={user} active="proyectos" title={t('portal.proyectos.heading')} description={t('portal.proyectos.subhead')}>
+    {proyectos.length === 0 ? (
+      <p class="portal-empty">{t('portal.proyectos.empty')}</p>
+    ) : (
+      <div class="portal-table-wrap">
+        <table class="portal-table" data-testid="portal-proyectos-table">
+          <thead>
+            <tr>
+              <th>{t('portal.proyectos.tableName')}</th>
+              <th>{t('portal.proyectos.tableStatus')}</th>
+              <th>{t('portal.proyectos.tableYear')}</th>
+              <th>{t('portal.proyectos.tableStack')}</th>
+              <th>{t('portal.proyectos.tableMilestone')}</th>
+              <th aria-label="actions"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {proyectos.map((p) => {
+              const ms = nextMs.get(p.id);
+              const stack = parseStack(p.stack);
+              return (
+                <tr>
+                  <td><a href={`/portal/proyectos/${p.slug}`}>{p.name}</a></td>
+                  <td>{p.status}</td>
+                  <td>{p.year}</td>
+                  <td class="portal-table-stack">{stack.slice(0, 4).join(', ')}{stack.length > 4 ? '…' : ''}</td>
+                  <td>{ms ? ms.title : <span class="portal-muted">{t('portal.proyectos.noMilestone')}</span>}</td>
+                  <td><a href={`/portal/proyectos/${p.slug}`} class="lava-btn-ghost lava-btn-sm">{t('portal.shell.actions.viewDetail')}</a></td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </PortalShell>
+</Base>
+
+<style>
+  .portal-table-wrap { overflow-x: auto; }
+  .portal-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  .portal-table th, .portal-table td { text-align: left; padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--color-nx-border); }
+  .portal-table th { color: var(--color-nx-muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .portal-table a { color: var(--color-nx-ink); text-decoration: none; }
+  .portal-table a:hover { color: var(--color-nx-primary); }
+  .portal-table-stack { color: var(--color-nx-muted); font-size: 0.85rem; }
+  .portal-muted { color: var(--color-nx-muted); }
+  .portal-empty {
+    color: var(--color-nx-muted);
+    padding: 1rem;
+    border: 1px dashed var(--color-nx-border-strong);
+    border-radius: 0.5rem;
+  }
+</style>

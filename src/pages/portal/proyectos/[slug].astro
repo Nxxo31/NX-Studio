@@ -1,0 +1,137 @@
+---
+// /portal/proyectos/[slug] — detalle del proyecto + timeline de milestones (B7 · T06).
+
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { eq } from 'drizzle-orm';
+import { createDb, schema } from '~/db';
+import {
+  getProyectoForUser,
+  listMilestonesByProject,
+} from '~/server/portal-repo';
+import Base from '~/layouts/Base.astro';
+import PortalShell from '~/components/portal/PortalShell.astro';
+import { getT, getLocale } from '~/i18n';
+
+export const prerender = false;
+
+const env = runtimeEnv as unknown as { DB: D1Database };
+const portalSession = (Astro.locals as { portalSession?: { user: { id: string } } }).portalSession;
+if (!portalSession) return new Response('Unauthorized', { status: 401 });
+const userId = portalSession.user.id;
+const slug = Astro.params.slug;
+const t = getT(getLocale(Astro));
+const db = createDb(env.DB);
+
+if (!slug) return new Response(t('portal.proyectos.notFound'), { status: 404 });
+
+let user = { name: '', email: '' };
+let proyecto = null as Awaited<ReturnType<typeof getProyectoForUser>>;
+let milestones: Awaited<ReturnType<typeof listMilestonesByProject>> = [];
+
+try {
+  const direct = await db.select().from(schema.user).where(eq(schema.user.id, userId)).get();
+  if (direct) user = { name: direct.name ?? '', email: direct.email ?? '' };
+  proyecto = await getProyectoForUser(db, slug, userId);
+  if (!proyecto) return new Response(t('portal.proyectos.notFound'), { status: 404 });
+  milestones = await listMilestonesByProject(db, proyecto.id);
+} catch {
+  return new Response(t('portal.proyectos.notFound'), { status: 404 });
+}
+
+// Orden: pending/in_progress por due_date ASC, luego completed/cancelled por completed_at DESC.
+const milestonesOrdered = [...milestones].sort((a, b) => {
+  const open = ['pending', 'in_progress'].includes(a.status) === ['pending', 'in_progress'].includes(b.status);
+  if (!open) return ['pending', 'in_progress'].includes(a.status) ? -1 : 1;
+  if (['pending', 'in_progress'].includes(a.status)) {
+    return (a.dueDate ?? Infinity) - (b.dueDate ?? Infinity);
+  }
+  return (b.completedAt ?? 0) - (a.completedAt ?? 0);
+});
+
+function parseStack(raw: string): string[] {
+  try { return JSON.parse(raw); } catch { return []; }
+}
+const stack = parseStack(proyecto.stack);
+const dateFmt = new Intl.DateTimeFormat('es-CO', { dateStyle: 'medium' });
+---
+
+<Base title={`${proyecto.name} — NX-Studio`} description={proyecto.tagline}>
+  <PortalShell t={t} user={user} active="proyectos" title={proyecto.name} description={proyecto.tagline}>
+    <a href="/portal/proyectos" class="portal-back">{t('portal.proyectos.backToList')}</a>
+
+    <section class="portal-detail-meta">
+      <span class="portal-tag">{proyecto.categoria}</span>
+      <span class="portal-tag">{proyecto.status}</span>
+      <span class="portal-tag">{proyecto.year}</span>
+      {stack.map((s) => <span class="portal-tag portal-tag-muted">{s}</span>)}
+    </section>
+
+    <p class="portal-detail-desc">{proyecto.descripcion}</p>
+
+    <h2 class="portal-timeline-title">{t('portal.proyectos.timeline')}</h2>
+    {milestonesOrdered.length === 0 ? (
+      <p class="portal-empty">{t('portal.proyectos.noTimeline')}</p>
+    ) : (
+      <ol class="portal-timeline">
+        {milestonesOrdered.map((m) => (
+          <li class={`portal-timeline-item portal-timeline-${m.status}`}>
+            <div class="portal-timeline-bullet" aria-hidden="true"></div>
+            <div class="portal-timeline-body">
+              <strong>{m.title}</strong>
+              <span class={`portal-timeline-status portal-timeline-status-${m.status}`}>{t(`portal.proyectos.milestoneStatus.${m.status}`)}</span>
+              {m.description && <p class="portal-timeline-desc">{m.description}</p>}
+              <div class="portal-timeline-meta">
+                {m.dueDate && <span>{dateFmt.format(new Date(m.dueDate))}</span>}
+                {m.completedAt && <span>✓ {dateFmt.format(new Date(m.completedAt))}</span>}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+    )}
+  </PortalShell>
+</Base>
+
+<style>
+  .portal-back { display: inline-block; margin-bottom: 1rem; color: var(--color-nx-muted); text-decoration: none; font-size: 0.9rem; }
+  .portal-back:hover { color: var(--color-nx-primary); }
+  .portal-detail-meta { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+  .portal-tag {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: var(--color-nx-primary-tint);
+    color: var(--color-nx-primary);
+  }
+  .portal-tag-muted { background: var(--color-nx-raised); color: var(--color-nx-muted); }
+  .portal-detail-desc { color: var(--color-nx-ink); line-height: 1.5; }
+  .portal-timeline-title { font-family: var(--font-display); margin-top: 1.5rem; font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-nx-muted); }
+  .portal-timeline { list-style: none; padding: 0; margin: 1rem 0 0 0; position: relative; }
+  .portal-timeline:before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: var(--color-nx-border); }
+  .portal-timeline-item { position: relative; padding-left: 1.75rem; padding-bottom: 1rem; }
+  .portal-timeline-bullet {
+    position: absolute; left: 2px; top: 4px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--color-nx-primary);
+    box-shadow: 0 0 0 3px var(--color-nx-surface);
+  }
+  .portal-timeline-completed .portal-timeline-bullet { background: #22c55e; }
+  .portal-timeline-cancelled .portal-timeline-bullet { background: #ef4444; }
+  .portal-timeline-status {
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    color: var(--color-nx-muted);
+  }
+  .portal-timeline-desc { color: var(--color-nx-ink); margin: 0.25rem 0; }
+  .portal-timeline-meta { color: var(--color-nx-muted); font-size: 0.8rem; }
+  .portal-empty {
+    color: var(--color-nx-muted);
+    padding: 1rem;
+    border: 1px dashed var(--color-nx-border-strong);
+    border-radius: 0.5rem;
+  }
+</style>
