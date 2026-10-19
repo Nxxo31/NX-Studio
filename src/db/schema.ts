@@ -128,6 +128,11 @@ export const proyecto = sqliteTable('proyecto', {
     .notNull()
     .default('activo'),
   destacado: integer('destacado', { mode: 'boolean' }).notNull().default(false),
+  // ─── B7 Portal Cliente: columnas añadidas en migrations/0002_portal.sql ───
+  // cliente_id referencia al user que contrató el proyecto (rol='cliente')
+  clienteId: text('cliente_id').references(() => user.id),
+  // portal_visible: 1 → proyecto aparece en el portal del cliente; 0 → oculto
+  portalVisible: integer('portal_visible', { mode: 'boolean' }).notNull().default(false),
   createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
   updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
 });
@@ -166,6 +171,62 @@ export const compra = sqliteTable('compra', {
   updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
 });
 
+// ─── B7 Portal Cliente tables ───────────────────────────────────────────
+// Esquema propio: sesiones, actividad, mensajería y milestones. Mantenidas
+// separadas de la tabla session de better-auth para que un compromiso del
+// portal no afecte la sesión admin/auth y viceversa.
+
+export const portalSession = sqliteTable('portal_session', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  // token + updatedAt son necesarios porque better-auth mapea esta tabla
+  // a su session interna — sin ellos el adapter tira "Drizzle schema mismatch".
+  // Se exponen aquí para mantener simetría con la tabla `session` original.
+  token: text('token').notNull().unique(),
+    // better-auth espera `ipAddress` (lo busca por nombre camelCase en el
+    // schema); Drizzle mapea a columna SQL `ip_address` automáticamente.
+    ipAddress: text('ip_address'),
+    userAgent: text('user_agent'),
+  // epoch ms — better-auth trabaja en ms, mantenemos consistencia interna
+  expiresAt: integer('expires_at', { mode: 'timestamp_ms' }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
+});
+
+export const portalActivity = sqliteTable('portal_activity', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  action: text('action').notNull(),
+  entityType: text('entity_type').notNull(),
+  entityId: text('entity_id'),
+  payload: text('payload'), // JSON serializado
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
+});
+
+export const portalMessage = sqliteTable('portal_message', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  // inbound  ← mensaje del cliente hacia el operador
+  // outbound ← mensaje del operador hacia el cliente
+  direction: text('direction', { enum: ['inbound', 'outbound'] }).notNull(),
+  body: text('body').notNull(),
+  readAt: integer('read_at', { mode: 'timestamp_ms' }),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
+});
+
+export const milestone = sqliteTable('milestone', {
+  id: text('id').primaryKey(),
+  proyectoId: text('proyecto_id').notNull().references(() => proyecto.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  description: text('description'),
+  status: text('status', { enum: ['pending', 'in_progress', 'completed', 'cancelled'] })
+    .notNull()
+    .default('pending'),
+  dueDate: integer('due_date', { mode: 'timestamp_ms' }),
+  completedAt: integer('completed_at', { mode: 'timestamp_ms' }),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
+});
+
 // Type exports para usar en el código de aplicación
 export type User = typeof user.$inferSelect;
 export type Licitacion = typeof licitacion.$inferSelect;
@@ -176,3 +237,11 @@ export type Template = typeof template.$inferSelect;
 export type NewTemplate = typeof template.$inferInsert;
 export type Compra = typeof compra.$inferSelect;
 export type NewCompra = typeof compra.$inferInsert;
+export type PortalSession = typeof portalSession.$inferSelect;
+export type NewPortalSession = typeof portalSession.$inferInsert;
+export type PortalActivity = typeof portalActivity.$inferSelect;
+export type NewPortalActivity = typeof portalActivity.$inferInsert;
+export type PortalMessage = typeof portalMessage.$inferSelect;
+export type NewPortalMessage = typeof portalMessage.$inferInsert;
+export type Milestone = typeof milestone.$inferSelect;
+export type NewMilestone = typeof milestone.$inferInsert;

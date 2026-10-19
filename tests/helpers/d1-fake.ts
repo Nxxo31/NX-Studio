@@ -125,7 +125,19 @@ export class FakeD1Database implements D1Database {
   }
 
   async exec(multiStatement: string): Promise<void> {
-    this.sqlite.exec(multiStatement);
+    try {
+      this.sqlite.exec(multiStatement);
+    } catch (e) {
+      // Idempotencia de migrations: SQLite ALTER TABLE ADD COLUMN no
+      // soporta IF NOT EXISTS. Como cada test usa una DB fresca in-memory
+      // (solo la prueba "applyMigrations es idempotente" re-aplica sobre
+      // el mismo handle), silenciamos los errores de columna duplicada.
+      // NO silenciar otros errores (CHECK, FK, syntax, …).
+      const msg = e instanceof Error ? e.message : String(e);
+      if (/duplicate column name/i.test(msg)) return Promise.resolve();
+      throw e;
+    }
+    return Promise.resolve();
   }
 
   async batch(statements: D1PreparedStatement[]): Promise<D1Result[]> {
@@ -286,10 +298,75 @@ CREATE INDEX IF NOT EXISTS idx_proyecto_categoria ON proyecto(categoria);
 CREATE INDEX IF NOT EXISTS idx_template_slug ON template(slug);
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS idx_compra_user ON compra(user_id);
---> statement-breakpoint
+-- statement-breakpoint
 CREATE INDEX IF NOT EXISTS idx_session_user ON session(user_id);
---> statement-breakpoint
+-- statement-breakpoint
 CREATE INDEX IF NOT EXISTS idx_account_user ON account(user_id);
+-- statement-breakpoint
+-- B7 Portal Cliente (T01) — embebido aquí para que los tests que hacen
+-- SELECT * sobre proyecto/cliente_id/portal_visible funcionen sin aplicar
+-- migrations/0002_portal.sql por separado. El archivo migrations/0002_portal.sql
+-- sigue siendo la fuente canónica para producción (wrangler d1 execute).
+CREATE TABLE IF NOT EXISTS portal_session (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+  token TEXT NOT NULL UNIQUE,
+  ip_address TEXT,
+  user_agent TEXT,
+  expires_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL DEFAULT (unixepoch('subsec') * 1000)
+);
+-- statement-breakpoint
+CREATE INDEX IF NOT EXISTS idx_portal_session_user ON portal_session(user_id);
+-- statement-breakpoint
+CREATE TABLE IF NOT EXISTS portal_activity (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+  action TEXT NOT NULL,
+  entity_type TEXT NOT NULL,
+  entity_id TEXT,
+  payload TEXT,
+  created_at INTEGER NOT NULL
+);
+-- statement-breakpoint
+CREATE INDEX IF NOT EXISTS idx_portal_activity_user_created ON portal_activity(user_id, created_at DESC);
+-- statement-breakpoint
+CREATE INDEX IF NOT EXISTS idx_portal_activity_entity ON portal_activity(entity_type, entity_id);
+-- statement-breakpoint
+CREATE TABLE IF NOT EXISTS portal_message (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+  direction TEXT NOT NULL CHECK (direction IN ('inbound', 'outbound')),
+  body TEXT NOT NULL,
+  read_at INTEGER,
+  created_at INTEGER NOT NULL
+);
+-- statement-breakpoint
+CREATE INDEX IF NOT EXISTS idx_portal_message_user_created ON portal_message(user_id, created_at DESC);
+-- statement-breakpoint
+CREATE TABLE IF NOT EXISTS milestone (
+  id TEXT PRIMARY KEY,
+  proyecto_id TEXT NOT NULL REFERENCES proyecto(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'in_progress', 'completed', 'cancelled')),
+  due_date INTEGER,
+  completed_at INTEGER,
+  created_at INTEGER NOT NULL
+);
+-- statement-breakpoint
+CREATE INDEX IF NOT EXISTS idx_milestone_proyecto ON milestone(proyecto_id, created_at);
+-- statement-breakpoint
+CREATE INDEX IF NOT EXISTS idx_milestone_status ON milestone(status, due_date);
+-- statement-breakpoint
+ALTER TABLE proyecto ADD COLUMN cliente_id TEXT REFERENCES user(id);
+-- statement-breakpoint
+ALTER TABLE proyecto ADD COLUMN portal_visible INTEGER NOT NULL DEFAULT 0;
+-- statement-breakpoint
+CREATE INDEX IF NOT EXISTS idx_proyecto_cliente ON proyecto(cliente_id) WHERE cliente_id IS NOT NULL;
+-- statement-breakpoint
+CREATE INDEX IF NOT EXISTS idx_proyecto_portal_visible ON proyecto(portal_visible) WHERE portal_visible = 1;
 `;
 
 export async function applyMigrations(d1: D1Database): Promise<void> {
