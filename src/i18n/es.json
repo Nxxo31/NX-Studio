@@ -7,11 +7,11 @@
   "nav": {
     "inicio": "Inicio",
     "servicios": "Servicios",
-    "productos": "Productos",
-    "cotizador": "Cotizador",
-    "templates": "Templates",
+    "productos": "Proyectos",
+    "cotizador": "Cotización",
+    "templates": "Plantillas",
     "laboratorio": "Laboratorio",
-    "contacto": "Licitar",
+    "contacto": "Contacto",
     "cta": "Pedir propuesta →",
     "menu": "Menú"
   },
@@ -32,15 +32,17 @@
     "stat1": "productos",
     "stat2": "tecnologías",
     "stat3": "ciclo MVP",
-    "previewLink": "// ver los 11 productos OSS →"
+    "previewLink": "// ver los proyectos →",
+    "hint": "Mueve el cursor sobre la forma",
+    "hintTouch": "Toca la forma"
   },
   "footer": {
     "tagline": "Estudio de software LATAM. Producto + servicio. Bots de trading, ERP multi-tenant, auditoría electoral, experiencias 3D y más. Neiva, Colombia · Servicio remoto global.",
     "author": "Sebastian Velasco Ocampo · Full-stack + IA",
     "colSitio": "Sitio",
-    "linkCotizador": "Cotizador",
+    "linkCotizador": "Cotización",
     "linkLaboratorio": "Laboratorio IA",
-    "linkContacto": "Licitar / Contacto",
+    "linkContacto": "Contacto",
     "linkDocs": "Docs · cómo trabajamos",
     "colContacto": "Contacto directo",
     "built": "Built with Astro + Tailwind + ⚡ Hermes",
@@ -136,7 +138,7 @@
           "tag": "// opción A · self-service",
           "title": "Calcula tu presupuesto",
           "desc": "Selecciona lo que necesitas. El rango de inversión se actualiza al instante. Sin registro, sin compromiso.",
-          "cta": "Abrir cotizador →"
+          "cta": "Cotizar mi proyecto →"
         },
         "optionB": {
           "tag": "// opción B · guiado",
@@ -144,6 +146,18 @@
           "desc": "Cuéntanos tu proyecto. Te enviamos alcance detallado, mockup y opciones de agendamiento en menos de 24h.",
           "cta": "Iniciar conversación →"
         }
+      },
+      "showcase": {
+        "tag": "// proyectos terminados",
+        "headingA": "Trabajo",
+        "headingEm": "real y terminado",
+        "headingB": "que puedes ver hoy",
+        "sub": "Una muestra de proyectos finalizados con sus capturas y sus funcionalidades explicadas sin palabras técnicas.",
+        "features": "Qué hace",
+        "prev": "Proyecto anterior",
+        "next": "Proyecto siguiente",
+        "view": "Ver detalle →",
+        "cta": "Ver todos los proyectos →"
       }
     },
     "servicios": {
@@ -259,21 +273,21 @@
       }
     },
     "cotizador": {
-      "title": "Cotizador — NX-Studio",
-      "description": "Cotiza tu proyecto de software en minutos: alcance, stack y engagement con precio estimado.",
-      "headingA": "Cotizador por",
-      "headingEm": "features",
-      "sub": "Selecciona las capacidades que necesita tu proyecto. El rango de inversión se calcula en tiempo real según horas estimadas, tarifa blended, modifiers de urgencia y engagement shape.",
-      "disclaimer": "⚠ Rango indicativo. No publicamos precio exacto — depende de scope, complejidad y evoluciones.",
-      "step1": "01 / Engagement shape",
-      "step2": "02 / Selecciona features",
-      "step3": "03 / Modifiers",
+      "title": "Cotización — NX-Studio",
+      "description": "Elige qué necesitas y cómo lo quieres: tu estimado aparece en minutos, sin registro y sin compromiso.",
+      "headingA": "Tu cotización",
+      "headingEm": "en 3 pasos",
+      "sub": "Elige qué tipo de proyecto necesitas y marca lo que debe incluir. El rango de inversión se calcula al instante — sin registro, sin compromiso.",
+      "disclaimer": "⚠ Rango indicativo — el precio exacto se define contigo según los detalles de tu proyecto.",
+      "step1": "01 / Elige cómo trabajar",
+      "step2": "02 / Marca lo que necesitas",
+      "step3": "03 / Recibe tu estimado",
       "optional": "optional",
       "panel": {
         "range": "Rango indicativo",
         "estimated": "estimadas",
         "selected": "seleccionadas",
-        "cta": "Solicitar scoping →",
+        "cta": "Recibir estimado →",
         "breakdown": "Ver desglose",
         "currency": "Moneda",
         "whatsappCta": "WhatsApp directo"

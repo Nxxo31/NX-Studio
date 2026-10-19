@@ -3,6 +3,7 @@ import Base from "../../layouts/Base.astro";
 import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
 import { projects } from "../../data/catalog";
+import projectImages from "../../data/project-images.json";
 
 export const prerender = true;
 
@@ -19,6 +20,11 @@ const { project } = Astro.props;
 if (!project) {
   return Astro.redirect("/productos");
 }
+
+// Capturas del proyecto (manifest generado por npm run sync:proyectos).
+const images = ((projectImages as Record<string, string[]>)[project.slug] ?? []).filter(
+  (i) => project.status === "live"
+);
 
 // Otros proyectos de la misma categoría (excluyendo el actual) — sugeridos.
 const related = projects
@@ -39,7 +45,7 @@ const statusLabel = {
 ---
 
 <Base
-  title={`${project.name} — Productos NX-Studio`}
+  title={`${project.name} — Proyectos NX-Studio`}
   description={project.tagline}
 >
   <Nav />
@@ -53,7 +59,7 @@ const statusLabel = {
           href="/productos"
           class="font-mono text-xs text-nx-muted hover:text-lava-edge transition inline-flex items-center gap-2 mb-6"
         >
-          ← Volver a productos
+          ← Volver a proyectos
         </a>
 
         <header class="reveal">
@@ -122,45 +128,83 @@ const statusLabel = {
     </section>
 
     <!-- ============================================================
-         Mockup placeholder (CSS-only, coherente con ProjectPreview)
+         Qué hace — funcionalidades en lenguaje llano
+         ============================================================ -->
+    <section class="relative px-6 pb-12">
+      <div class="mx-auto max-w-5xl">
+        <article class="lava-card lava-card-accent p-6 lg:p-8 reveal">
+          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5">
+            // qué hace — explicado sin tecnicismos
+          </h2>
+          <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
+            {project.highlights.map((h) => (
+              <li class="flex items-start gap-3 text-nx-text-muted leading-snug">
+                <svg class="mt-1 shrink-0 text-lava-edge" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="m3 8.5 3.2 3.2L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                {h}
+              </li>
+            ))}
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Galería de capturas (o mockup CSS si aún no hay imágenes)
          ============================================================ -->
     <section class="relative px-6 pb-16">
       <div class="mx-auto max-w-5xl">
-        <article class="lava-card p-6 lg:p-8 reveal">
-          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-4">
-            // preview
-          </h2>
-          <div class="browser-chrome">
-            <div class="browser-dots">
-              <span class="dot dot-red"></span>
-              <span class="dot dot-yellow"></span>
-              <span class="dot dot-green"></span>
-              <span class="browser-url font-mono">{project.name.toLowerCase()}.app</span>
-            </div>
-            <div class="browser-body">
-              <div class="grid grid-cols-3 gap-3 mb-4">
-                <div class="browser-stat">
-                  <div class="browser-stat-label">{project.category}</div>
-                  <div class="browser-stat-value">{project.code}</div>
-                </div>
-                <div class="browser-stat">
-                  <div class="browser-stat-label">Stack</div>
-                  <div class="browser-stat-value">{project.stack.length}</div>
-                </div>
-                <div class="browser-stat">
-                  <div class="browser-stat-label">Status</div>
-                  <div class="browser-stat-value">{project.year}</div>
-                </div>
+        <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-4 reveal">
+          // vistas del proyecto
+        </h2>
+        {images.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {images.map((im, i) => (
+              <div class:list={["lava-card p-2 reveal overflow-hidden", i === 0 && "md:col-span-2"]}>
+                <img
+                  src={im}
+                  alt={`${project.name} — vista ${i + 1}`}
+                  loading="lazy"
+                  class="w-full rounded"
+                />
               </div>
-              <div class="browser-message">
-                <span class="font-mono text-xs text-nx-dim">// </span>
-                <span class="font-mono text-xs text-nx-muted">
-                  Demo interactiva disponible bajo solicitud — escribe para acceso.
-                </span>
-              </div>
-            </div>
+            ))}
           </div>
-        </article>
+        ) : (
+          <article class="lava-card p-6 lg:p-8 reveal">
+            <div class="browser-chrome">
+              <div class="browser-dots">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+                <span class="browser-url font-mono">{project.name.toLowerCase()}.app</span>
+              </div>
+              <div class="browser-body">
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                  <div class="browser-stat">
+                    <div class="browser-stat-label">{project.category}</div>
+                    <div class="browser-stat-value">{project.code}</div>
+                  </div>
+                  <div class="browser-stat">
+                    <div class="browser-stat-label">Stack</div>
+                    <div class="browser-stat-value">{project.stack.length}</div>
+                  </div>
+                  <div class="browser-stat">
+                    <div class="browser-stat-label">Status</div>
+                    <div class="browser-stat-value">{project.year}</div>
+                  </div>
+                </div>
+                <div class="browser-message">
+                  <span class="font-mono text-xs text-nx-dim">// </span>
+                  <span class="font-mono text-xs text-nx-muted">
+                    Demo interactiva disponible bajo solicitud — escribe para acceso.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </article>
+        )}
       </div>
     </section>
 
@@ -171,7 +215,7 @@ const statusLabel = {
       <section class="relative px-6 pb-16">
         <div class="mx-auto max-w-5xl">
           <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">
-            // otros productos de {project.category}
+            // otros proyectos de {project.category}
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             {related.map((r) => (
@@ -245,7 +289,7 @@ const statusLabel = {
           </p>
           <div class="flex flex-wrap items-center justify-center gap-3">
             <a href="/contacto" class="lava-btn">Iniciar conversación →</a>
-            <a href="/cotizador" class="lava-btn lava-btn-ghost">Ver cotizador</a>
+            <a href="/cotizador" class="lava-btn lava-btn-ghost">Cotizar mi proyecto</a>
           </div>
         </div>
       </div>

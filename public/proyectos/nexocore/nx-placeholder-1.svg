@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+    <radialGradient id="g" cx="30%" cy="25%" r="90%">
+      <stop offset="0%" stop-color="hsl(230 70% 16%)"/>
+      <stop offset="100%" stop-color="#0a0b14"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#g)"/>
+  <g stroke="#e8eaf6" stroke-opacity="0.06">
+    <line x1="0" y1="0" x2="1280" y2="0"/><line x1="0" y1="60" x2="1280" y2="60"/><line x1="0" y1="120" x2="1280" y2="120"/><line x1="0" y1="180" x2="1280" y2="180"/><line x1="0" y1="240" x2="1280" y2="240"/><line x1="0" y1="300" x2="1280" y2="300"/><line x1="0" y1="360" x2="1280" y2="360"/><line x1="0" y1="420" x2="1280" y2="420"/><line x1="0" y1="480" x2="1280" y2="480"/><line x1="0" y1="540" x2="1280" y2="540"/><line x1="0" y1="600" x2="1280" y2="600"/><line x1="0" y1="660" x2="1280" y2="660"/>
+    <line x1="0" y1="0" x2="0" y2="720"/><line x1="60" y1="0" x2="60" y2="720"/><line x1="120" y1="0" x2="120" y2="720"/><line x1="180" y1="0" x2="180" y2="720"/><line x1="240" y1="0" x2="240" y2="720"/><line x1="300" y1="0" x2="300" y2="720"/><line x1="360" y1="0" x2="360" y2="720"/><line x1="420" y1="0" x2="420" y2="720"/><line x1="480" y1="0" x2="480" y2="720"/><line x1="540" y1="0" x2="540" y2="720"/><line x1="600" y1="0" x2="600" y2="720"/><line x1="660" y1="0" x2="660" y2="720"/><line x1="720" y1="0" x2="720" y2="720"/><line x1="780" y1="0" x2="780" y2="720"/><line x1="840" y1="0" x2="840" y2="720"/><line x1="900" y1="0" x2="900" y2="720"/><line x1="960" y1="0" x2="960" y2="720"/><line x1="1020" y1="0" x2="1020" y2="720"/><line x1="1080" y1="0" x2="1080" y2="720"/><line x1="1140" y1="0" x2="1140" y2="720"/><line x1="1200" y1="0" x2="1200" y2="720"/><line x1="1260" y1="0" x2="1260" y2="720"/>
+  </g>
+  <g transform="translate(72,96)" stroke="#ff4500" stroke-width="6" fill="none" stroke-linejoin="round">
+    <path d="M30 0 L60 17 L60 51 L30 68 L0 51 L0 17 Z"/>
+    <text x="30" y="46" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="30" fill="#ff4500" stroke="none">NX</text>
+  </g>
+  <text x="72" y="300" font-family="Arial, sans-serif" font-weight="700" font-size="64" fill="#e8eaf6">NexoCore</text>
+  <text x="72" y="360" font-family="Arial, sans-serif" font-size="28" fill="#ff8a66">Todo tu negocio en un solo panel</text>
+  <rect x="72" y="420" rx="18" width="104" height="36" fill="none" stroke="#e8eaf6" stroke-opacity="0.35"/>
+  <text x="96" y="444" font-family="Arial, sans-serif" font-size="18" fill="#e8eaf6" fill-opacity="0.8">SaaS</text>
+  <text x="72" y="640" font-family="Arial, sans-serif" font-size="18" fill="#e8eaf6" fill-opacity="0.45">NX-Studio · vista previa del proyecto</text>
+</svg>

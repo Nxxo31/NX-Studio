@@ -5,7 +5,7 @@ import { test, expect } from "@playwright/test";
  * y renderizar su contenido esencial.
  *
  * Cobertura: 14 páginas principales + los slugs dinámicos (3 templates,
- * 11 productos) se cubren en sus propios specs.
+ * 18 proyectos) se cubren en sus propios specs.
  */
 
 // Base URL del preview server (debe coincidir con playwright.config.ts).
@@ -18,8 +18,8 @@ const routes = [
   { path: "/servicios/",                    titleIncludes: "NX-Studio" },
   { path: "/servicios/osint/",              titleIncludes: "NX-Studio" },
   { path: "/servicios/testing/",            titleIncludes: "NX-Studio" },
-  { path: "/productos/",                    titleIncludes: "Productos" },
-  { path: "/cotizador/",                    titleIncludes: "Cotizador" },
+  { path: "/productos/",                    titleIncludes: "Proyectos" },
+  { path: "/cotizador/",                    titleIncludes: "Cotización" },
   { path: "/templates/",                    titleIncludes: "Templates" },
   { path: "/laboratorio/",                  titleIncludes: "Laboratorio" },
   { path: "/contacto/",                     titleIncludes: "Contacto" },
@@ -48,14 +48,13 @@ for (const route of routes) {
   });
 }
 
-test("smoke · /productos muestra 11 cards y 4 stats inline", async ({ page }) => {
+test("smoke · /productos muestra 18 cards y 8 chips de filtro", async ({ page }) => {
   await page.goto("/productos/");
 
-  // 11 cards de proyecto
-  await expect(page.locator("[data-project-card]")).toHaveCount(11);
+  // 18 cards de proyecto (15 en línea + 2 prototipos + 1 archivado)
+  await expect(page.locator("[data-project-card]")).toHaveCount(18);
 
-  // 4 chips de filtro (Todos + 3 categorías visibles sin scroll)
-  // (la nav tiene más pero el filtro principal es 8: 1 todos + 7 categorías)
+  // 8 chips de filtro (1 "Todos" + 7 categorías)
   await expect(page.locator("#cat-filter .cat-chip")).toHaveCount(8);
 });
 

@@ -2,27 +2,56 @@
 import Base from "../../layouts/Base.astro";
 import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
-import { projects, categories } from "../../data/catalog";
+import { categories } from "../../data/catalog";
+import { getLiveRepos, mergeProjects } from "../../lib/github";
+import ProjectSlider from "../../components/motion/ProjectSlider";
+
+// SSR en el edge: datos de GitHub en vivo (cacheados 1h en la capa lib).
+// Con prerender=false el layout y el copy se renderizan por request.
+export const prerender = false;
+
+// Degradación: si GitHub no responde, servimos el catálogo estático
+// (github=null en cada proyecto). La página nunca falla por culpa de GitHub.
+const repos = await getLiveRepos().catch(() => []);
+const merged = mergeProjects(repos);
+
+// El slider muestra proyectos terminados (status 'live') con sus capturas.
+const sliderProjects = merged
+  .filter((p) => p.status === "live" && p.images.length > 0)
+  .map((p) => ({
+    slug: p.slug,
+    name: p.name,
+    tagline: p.tagline,
+    category: p.category,
+    highlights: p.highlights,
+    images: p.images,
+    href: `/productos/${p.slug}`,
+  }));
 
 // Agrupa proyectos por categoría para organizar visualmente las secciones.
-// Mantenemos el orden de `categories` (mapa) para que "Todos" salga primero
-// y luego SaaS, IA, DevTools... en el orden definido en el archivo de datos.
 const grouped = categories
   .filter((c) => c.id !== "all")
   .map((cat) => ({
     ...cat,
-    items: projects.filter((p) => p.category === cat.id),
+    items: merged.filter((p) => p.category === cat.id),
   }))
   .filter((g) => g.items.length > 0);
 
-const total = projects.length;
-const live = projects.filter((p) => p.status === "live").length;
-const prototypes = projects.filter((p) => p.status === "prototype").length;
+const total = merged.length;
+const live = merged.filter((p) => p.status === "live").length;
+const prototypes = merged.filter((p) => p.status === "prototype").length;
+const githubLive = merged.some((p) => p.github !== null);
+
+const meses = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+const fechaCorta = (iso: string) => {
+  const d = new Date(iso);
+  return `${meses[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+};
 ---
 
 <Base
-  title="Productos — NX-Studio"
-  description="11 proyectos open source de Sebastian Velasco: SaaS, IA, DevTools, Seguridad, 3D, Web, Backend. Repos públicos en GitHub."
+  title="Proyectos — NX-Studio"
+  description="Proyectos reales, terminados y publicados por NX-Studio: cada uno explicado sin palabras técnicas, con capturas y código abierto en GitHub."
 >
   <Nav />
   <main>
@@ -32,40 +61,47 @@ const prototypes = projects.filter((p) => p.status === "prototype").length;
     <section class="relative px-6 pt-20 pb-12 md:pt-28 md:pb-16">
       <div class="mx-auto max-w-6xl">
         <header class="reveal">
-          <span class="lava-tag mb-4">// productos.v1</span>
+          <span class="lava-tag mb-4">// proyectos reales</span>
           <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]">
-            11 productos <span class="text-lava">open source</span>
+            {total} proyectos <span class="text-lava">terminados</span>
             <span class="block mt-2 text-nx-muted text-2xl sm:text-3xl lg:text-4xl font-normal">
-              construidos y publicados en GitHub.
+              que puedes ver funcionando hoy.
             </span>
           </h1>
           <p class="mt-6 max-w-2xl text-lg text-nx-muted leading-relaxed">
-            Cada producto es código real, deployable, sin caja negra. Lo que
-            entrego a clientes es lo mismo que publico: <b class="text-nx-text">stack verificable</b>,
-            código abierto, decisiones arquitectónicas documentadas.
+            Cada proyecto de este portafolio existe, funciona y está publicado.
+            Aquí lo explicamos <b class="text-nx-text">sin palabras técnicas</b>:
+            qué hace, para quién y por qué importa. El código está abierto en
+            GitHub para quien quiera verlo en detalle.
           </p>
 
           <!-- Stats inline -->
           <div class="mt-8 grid grid-cols-3 gap-3 max-w-xl">
             <div class="lava-card p-4">
               <div class="font-display text-2xl font-bold text-lava-edge">{total}</div>
-              <div class="text-xs font-mono text-nx-dim uppercase tracking-widest mt-1">repos</div>
+              <div class="text-xs font-mono text-nx-dim uppercase tracking-widest mt-1">proyectos</div>
             </div>
             <div class="lava-card p-4">
               <div class="font-display text-2xl font-bold text-nx-success">{live}</div>
-              <div class="text-xs font-mono text-nx-dim uppercase tracking-widest mt-1">live</div>
+              <div class="text-xs font-mono text-nx-dim uppercase tracking-widest mt-1">en línea</div>
             </div>
             <div class="lava-card p-4">
               <div class="font-display text-2xl font-bold text-nx-warn">{prototypes}</div>
-              <div class="text-xs font-mono text-nx-dim uppercase tracking-widest mt-1">prototype</div>
+              <div class="text-xs font-mono text-nx-dim uppercase tracking-widest mt-1">en desarrollo</div>
             </div>
           </div>
+
+          <p class="mt-4 font-mono text-xs text-nx-dim">
+            {githubLive
+              ? "// datos en vivo desde GitHub"
+              : "// catálogo local (GitHub no disponible ahora)"}
+          </p>
 
           <!-- Filter bar (client-side via JS nativo, zero deps) -->
           <nav
             id="cat-filter"
-            aria-label="Filtrar productos por categoría"
-            class="mt-10 flex flex-wrap gap-2"
+            aria-label="Filtrar proyectos por categoría"
+            class="mt-8 flex flex-wrap gap-2"
           >
             <button data-cat="all" class="cat-chip cat-chip-active" type="button">
               <span class="cat-chip-icon">✦</span> Todos
@@ -81,12 +117,30 @@ const prototypes = projects.filter((p) => p.status === "prototype").length;
     </section>
 
     <!-- ============================================================
-         Grid de productos (agrupados por categoría, filtrables)
+         Slider de proyectos terminados (capturas + funcionalidades)
+         ============================================================ -->
+    <section class="relative px-6 pb-16" aria-label="Galería de proyectos terminados">
+      <div class="mx-auto max-w-6xl">
+        <ProjectSlider
+          client:visible
+          projects={sliderProjects}
+          labels={{
+            features: "Qué hace",
+            prev: "Proyecto anterior",
+            next: "Proyecto siguiente",
+            view: "Ver detalle →",
+          }}
+        />
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Grid de proyectos (agrupados por categoría, filtrables)
          ============================================================ -->
     <section class="relative px-6 pb-20">
       <div class="mx-auto max-w-6xl">
         {grouped.map((g) => (
-          <div class="cat-group" data-group={g.id} class:list={[ "mb-14" ]}>
+          <div class="cat-group" data-group={g.id} class:list={["mb-14"]}>
             <header class="flex items-center gap-3 mb-5 reveal">
               <span class="font-display text-2xl text-lava-edge" aria-hidden="true">{g.icon}</span>
               <h2 class="font-display text-xl lg:text-2xl font-bold tracking-tight">{g.label}</h2>
@@ -97,47 +151,60 @@ const prototypes = projects.filter((p) => p.status === "prototype").length;
               {g.items.map((p) => (
                 <a
                   href={`/productos/${p.slug}`}
-                  class="lava-card p-5 lg:p-6 reveal flex flex-col card-hover group"
+                  class="lava-card p-0 reveal flex flex-col card-hover group overflow-hidden"
                   data-project-card={p.category}
                   aria-label={`Ver detalle de ${p.name}`}
                 >
-                  <!-- Header: code + status pill -->
-                  <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2">
-                      <span class="font-mono text-xs text-nx-dim">{p.code}</span>
-                      <span class="font-mono text-xs text-nx-border-strong">/</span>
-                      <span class={`status-pill status-${p.status}`}>
-                        {p.status === "live" ? "● live" : p.status === "prototype" ? "◐ proto" : "○ arch"}
+                  <!-- Captura de preview (primera imagen del proyecto) -->
+                  {p.images.length > 0 && (
+                    <div class="relative aspect-[16/9] overflow-hidden border-b border-nx-border bg-nx-surface-overlay">
+                      <img
+                        src={p.images[0]}
+                        alt={`Vista previa de ${p.name}`}
+                        loading="lazy"
+                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                      <span class={`status-pill status-${p.status} absolute left-3 top-3`}>
+                        {p.status === "live" ? "● en línea" : p.status === "prototype" ? "◐ en desarrollo" : "○ archivado"}
                       </span>
                     </div>
-                    <span class="font-mono text-xs text-nx-dim">{p.year}</span>
-                  </div>
+                  )}
 
-                  <h3 class="font-display text-xl font-bold mb-1.5 text-nx-text group-hover:text-lava-edge transition">
-                    {p.name}
-                  </h3>
-                  <p class="text-sm text-lava-edge font-mono mb-3 leading-snug">{p.tagline}</p>
-                  <p class="text-sm text-nx-muted leading-relaxed flex-1 mb-4">{p.desc}</p>
+                  <div class="p-5 lg:p-6 flex flex-col flex-1">
+                    <div class="flex items-start justify-between mb-3">
+                      <div class="flex items-center gap-2">
+                        <span class="font-mono text-xs text-nx-dim">{p.slug}</span>
+                      </div>
+                      <span class="font-mono text-xs text-nx-dim">{p.year}</span>
+                    </div>
 
-                  <!-- Stack tags (max 3 visibles, +N si hay más) -->
-                  <div class="flex flex-wrap gap-1.5 mb-3">
-                    {p.stack.slice(0, 3).map((s) => (
-                      <span class="text-xs font-mono text-nx-muted px-2 py-0.5 rounded border border-nx-border">
-                        {s}
+                    <h3 class="font-display text-xl font-bold mb-1.5 text-nx-text group-hover:text-lava-edge transition">
+                      {p.name}
+                    </h3>
+                    <p class="text-sm text-lava-edge font-mono mb-3 leading-snug">{p.tagline}</p>
+
+                    <!-- Funcionalidades en lenguaje llano (2 primeras) -->
+                    <ul class="space-y-1.5 mb-4 flex-1">
+                      {p.highlights.slice(0, 2).map((h) => (
+                        <li class="flex items-start gap-2 text-sm text-nx-muted leading-snug">
+                          <svg class="mt-1 shrink-0 text-lava-edge" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <path d="m3 8.5 3.2 3.2L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          {h}
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div class="flex items-center justify-between mt-auto pt-3 border-t border-nx-border">
+                      <span class="font-mono text-xs text-nx-dim">
+                        {p.github
+                          ? `★ ${p.github.stars} · ${p.github.language ?? ""} · ${fechaCorta(p.github.pushedAt)}`
+                          : "repo público"}
                       </span>
-                    ))}
-                    {p.stack.length > 3 && (
-                      <span class="text-xs font-mono text-nx-dim px-2 py-0.5">
-                        +{p.stack.length - 3}
+                      <span class="font-mono text-xs text-lava-edge group-hover:translate-x-0.5 transition">
+                        Ver detalle →
                       </span>
-                    )}
-                  </div>
-
-                  <div class="flex items-center justify-between mt-auto pt-3 border-t border-nx-border">
-                    <span class="font-mono text-xs text-nx-dim">{p.impact}</span>
-                    <span class="font-mono text-xs text-lava-edge group-hover:translate-x-0.5 transition">
-                      Ver detalle →
-                    </span>
+                    </div>
                   </div>
                 </a>
               ))}
@@ -148,22 +215,22 @@ const prototypes = projects.filter((p) => p.status === "prototype").length;
     </section>
 
     <!-- ============================================================
-         CTA final: trabajar con Sebastian
+         CTA final
          ============================================================ -->
     <section class="relative px-6 pb-24">
       <div class="mx-auto max-w-4xl">
         <div class="lava-card lava-card-accent p-8 lg:p-10 reveal text-center">
           <span class="lava-tag mb-3">// siguiente paso</span>
           <h2 class="font-display text-2xl lg:text-3xl font-bold mb-3">
-            ¿Quieres construir algo <span class="text-lava">así</span>?
+            ¿Quieres un proyecto <span class="text-lava">así</span> para tu negocio?
           </h2>
           <p class="text-nx-muted max-w-2xl mx-auto mb-6">
-            Estos 11 proyectos son una muestra del stack y la calidad. Si tu
-            proyecto necesita el mismo nivel de rigor, hablemos.
+            Elige qué necesitas en la cotización y mira al instante el rango de
+            inversión. Sin registro, sin compromiso, sin tecnicismos.
           </p>
           <div class="flex flex-wrap items-center justify-center gap-3">
-            <a href="/contacto" class="lava-btn">Iniciar conversación →</a>
-            <a href="/cotizador" class="lava-btn lava-btn-ghost">Ver cotizador</a>
+            <a href="/cotizador" class="lava-btn">Cotizar mi proyecto →</a>
+            <a href="/contacto" class="lava-btn lava-btn-ghost">Hablemos primero</a>
           </div>
         </div>
       </div>
@@ -261,12 +328,10 @@ const prototypes = projects.filter((p) => p.status === "prototype").length;
   const cards = document.querySelectorAll<HTMLElement>("[data-project-card]");
 
   function applyFilter(cat: string) {
-    // Toggle active chip
     chips.forEach((c) => {
       c.classList.toggle("cat-chip-active", c.dataset.cat === cat);
     });
 
-    // Show/hide groups + cards
     groups.forEach((g) => {
       const gCat = g.dataset.group;
       if (cat === "all" || gCat === cat) {

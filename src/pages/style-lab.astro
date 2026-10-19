@@ -1,0 +1,88 @@
+---
+import "../styles/global.css";
+import Base from "../layouts/Base.astro";
+import PatternShell from "../components/style-lab/PatternShell";
+import PatternBento from "../components/style-lab/PatternBento";
+import PatternEditorial from "../components/style-lab/PatternEditorial";
+import PatternMarquee from "../components/style-lab/PatternMarquee";
+import PatternKinetic from "../components/style-lab/PatternKinetic";
+---
+
+<Base title="Style Lab — NX-Studio" description="Choose the visual direction">
+  <head slot="head">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@500;700&display=swap" />
+  </head>
+
+  <main class="bg-nx-bg text-nx-text font-body">
+
+    <!-- Nav -->
+    <nav class="sticky top-0 z-50 flex items-center justify-between px-6 py-3 border-b border-nx-border bg-nx-bg/85 backdrop-blur-xl">
+      <div class="flex items-center gap-3">
+        <span class="font-display font-bold text-nx-text">NX-Studio</span>
+        <span class="font-mono text-[10px] uppercase tracking-widest text-nx-text-dim">/ style-lab</span>
+      </div>
+      <div class="hidden md:flex items-center gap-1">
+        <a href="#intro"  class="nav-link">Intro</a>
+        <a href="#bento"      class="nav-link">A · Bento</a>
+        <a href="#editorial"  class="nav-link">B · Editorial</a>
+        <a href="#marquee"    class="nav-link">C · Marquee</a>
+        <a href="#kinetic"    class="nav-link">D · Kinetic</a>
+      </div>
+    </nav>
+
+    <!-- Intro -->
+    <section id="intro" class="min-h-screen flex flex-col items-center justify-center text-center px-6">
+      <div class="max-w-3xl">
+        <span class="lava-tag">// style-lab</span>
+        <h1 class="mt-6 font-display text-5xl md:text-7xl font-bold tracking-tighter leading-[1.02]">
+          Cuatro patrones <span class="bg-gradient-to-r from-nx-primary to-nx-primary-soft bg-clip-text text-transparent">Framer Motion</span>.
+        </h1>
+        <p class="mt-6 text-lg text-nx-text-muted">
+          Elegí el que más te acerque a lo que querés. Después lo aplico a todo el sitio (con el sistema glass/depth que ya está).
+        </p>
+        <p class="mt-2 text-sm text-nx-text-dim">
+          Bajá. Cada sección es un hero completo. Cada una tiene un botón <span class="text-nx-primary font-bold">Choose this</span> arriba a la derecha.
+        </p>
+      </div>
+      <motion-arrow className="mt-12 text-nx-text-dim text-xs font-mono uppercase tracking-widest">↓ scroll</motion-arrow>
+    </section>
+
+    <!-- A · Bento -->
+    <div id="bento" class="border-t border-nx-border">
+      <PatternShell number="A" name="Bento Grid" tagline="Linear / Vercel · cards de tamaño variable" onPick={() => alert('Elegiste A · Bento Grid. Decime "A" y lo aplico.')}>
+        <PatternBento client:load />
+      </PatternShell>
+    </div>
+
+    <!-- B · Editorial -->
+    <div id="editorial" class="border-t border-nx-border">
+      <PatternShell number="B" name="Aurora Editorial" tagline="Stripe Press · serif + gradient aurora animado" onPick={() => alert('Elegiste B · Aurora Editorial. Decime "B" y lo aplico.')}>
+        <PatternEditorial client:load />
+      </PatternShell>
+    </div>
+
+    <!-- C · Marquee + Glass -->
+    <div id="marquee" class="border-t border-nx-border">
+      <PatternShell number="C" name="Marquee + Glass" tagline="Stripe / Vercel · ticker infinito + cards" onPick={() => alert('Elegiste C · Marquee + Glass. Decime "C" y lo aplico.')}>
+        <PatternMarquee client:load />
+      </PatternShell>
+    </div>
+
+    <!-- D · Kinetic Type -->
+    <div id="kinetic" class="border-t border-nx-border">
+      <PatternShell number="D" name="Kinetic Type" tagline="21st.dev · texto enorme que responde al scroll" onPick={() => alert('Elegiste D · Kinetic Type. Decime "D" y lo aplico.')}>
+        <PatternKinetic client:load />
+      </PatternShell>
+    </div>
+
+    <!-- End -->
+    <section class="min-h-[50vh] flex flex-col items-center justify-center text-center px-6 border-t border-nx-border">
+      <span class="lava-tag">// pick</span>
+      <h2 class="mt-4 font-display text-3xl font-bold">Decime <span class="text-nx-primary">A</span>, <span class="text-nx-primary">B</span>, <span class="text-nx-primary">C</span> o <span class="text-nx-primary">D</span>.</h2>
+      <p class="mt-3 text-nx-text-muted">O una mezcla (ej. "B + C"). Lo aplico al home y al resto del sitio manteniendo el sistema glass/depth.</p>
+    </section>
+
+  </main>
+</Base>

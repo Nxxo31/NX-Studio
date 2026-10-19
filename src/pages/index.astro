@@ -3,9 +3,10 @@ import "../styles/global.css";
 import Base from "../layouts/Base.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
-import ProjectPreview from "../components/ProjectPreview.astro";
-import AnimatedHero from "../components/motion/AnimatedHero";
+import NXSculptureHero from "../components/motion/NXSculptureHero";
+import ProjectSlider from "../components/motion/ProjectSlider";
 import { projects } from "../data/catalog";
+import projectImages from "../data/project-images.json";
 import { getT, getLocale, localeUrl } from "~/i18n";
 
 const t = getT(Astro);
@@ -20,41 +21,69 @@ const servicios = [
 const confianza = [{ stat: '11' }, { stat: '24+' }, { stat: 'LATAM' }, { stat: '0' }];
 const pasos = [{ n: '01' }, { n: '02' }, { n: '03' }];
 
-const heroProject = projects.find((p) => p.slug === "nexocore")!;
-const totalStack = Array.from(new Set(projects.flatMap((p) => p.stack))).length;
+// Slider del home: proyectos finalizados con capturas (top 6).
+const imgMap = projectImages as Record<string, string[]>;
+const finished = projects.filter((p) => p.status === "live");
+const showcaseProjects = finished.slice(0, 6).map((p) => ({
+  slug: p.slug,
+  name: p.name,
+  tagline: p.tagline,
+  category: p.category,
+  highlights: p.highlights,
+  images: imgMap[p.slug] ?? [],
+  href: localeUrl(`/productos/${p.slug}`, locale),
+}));
+
+const heroHeadline = `${t('hero.headlineA')} ${t('hero.headlineEm')},\n${t('hero.headlineB')}`;
+const heroBody = `${t('hero.sub1')} ${t('hero.subStrong')}. ${t('hero.sub2')}`;
 ---
 
 <Base title={t('pages.index.title')} description={t('pages.index.description')}>
   <Nav />
   <main>
 
-    {/* ============ HERO ============ */}
-    <section class="relative px-6 pt-24 pb-16 lg:pt-32 lg:pb-24">
-      <div class="mx-auto max-w-7xl">
-        <div class="grid gap-10 lg:gap-16 lg:grid-cols-12 items-center">
-          <div class="lg:col-span-7">
-            <AnimatedHero
-              client:load
-              badge={t('pages.hero.badge')}
-              titleA={t('pages.hero.headlineA')}
-              titleEm={t('pages.hero.headlineEm')}
-              titleB={t('pages.hero.headlineB')}
-              subtitlePre={t('pages.hero.sub1')}
-              subtitleStrong={t('pages.hero.subStrong')}
-              subtitlePost={t('pages.hero.sub2')}
-              chips={[t('pages.hero.chip1'), t('pages.hero.chip2'), t('pages.hero.chip3'), t('pages.hero.chip4')]}
-              primaryCta={{ label: t('pages.hero.ctaPrimary'), href: localeUrl('/cotizador', locale) }}
-              secondaryCta={{ label: t('pages.hero.ctaSecondary'), href: localeUrl('/productos', locale) }}
-              stats={[
-                { value: String(projects.length), label: t('pages.hero.stat1') },
-                { value: `${totalStack}+`, label: t('pages.hero.stat2') },
-                { value: '4 sem', label: t('pages.hero.stat3') },
-              ]}
-            />
-          </div>
-          <div class="lg:col-span-5 animate-fade-up" style="animation-delay: 0.2s">
-            <ProjectPreview project={heroProject} />
-          </div>
+    {/* ============ HERO — escultura líquida (React island WebGL2) ============ */}
+    <NXSculptureHero
+      client:load
+      eyebrow={t('hero.badge')}
+      headline={heroHeadline}
+      headlineAccent={t('hero.headlineEm')}
+      body={heroBody}
+      primaryCta={{ label: t('hero.ctaPrimary'), href: localeUrl('/cotizador', locale) }}
+      secondaryCta={{ label: t('hero.ctaSecondary'), href: localeUrl('/productos', locale) }}
+      hint={t('hero.hint')}
+      hintTouch={t('hero.hintTouch')}
+      backdropText="NX"
+    />
+
+    {/* ============ PROYECTOS: slider con previews y funcionalidades ============ */}
+    <section class="relative px-6 py-20 lg:py-24">
+      <div class="mx-auto max-w-6xl">
+        <header class="mb-10 reveal">
+          <span class="lava-tag mb-3">{t('pages.index.showcase.tag')}</span>
+          <h2 class="font-display text-3xl lg:text-5xl font-bold tracking-tight max-w-3xl">
+            {t('pages.index.showcase.headingA')} <span class="text-nx-primary">{t('pages.index.showcase.headingEm')}</span> {t('pages.index.showcase.headingB')}
+          </h2>
+          <p class="mt-5 max-w-2xl text-nx-text-muted text-lg">{t('pages.index.showcase.sub')}</p>
+        </header>
+
+        {showcaseProjects.length > 0 && (
+          <ProjectSlider
+            client:visible
+            projects={showcaseProjects}
+            labels={{
+              features: t('pages.index.showcase.features'),
+              prev: t('pages.index.showcase.prev'),
+              next: t('pages.index.showcase.next'),
+              view: t('pages.index.showcase.view'),
+            }}
+          />
+        )}
+
+        <div class="mt-8">
+          <a href={localeUrl('/productos', locale)} class="lava-btn lava-btn-ghost">
+            {t('pages.index.showcase.cta')}
+          </a>
         </div>
       </div>
     </section>
@@ -144,7 +173,7 @@ const totalStack = Array.from(new Set(projects.flatMap((p) => p.stack))).length;
       </div>
     </section>
 
-    {/* ============ START: COTIZADOR / CONTACTO ============ */}
+    {/* ============ START: COTIZACIÓN / CONTACTO ============ */}
     <section class="relative px-6 py-20 lg:py-28">
       <div class="mx-auto max-w-6xl">
         <header class="mb-14 text-center">

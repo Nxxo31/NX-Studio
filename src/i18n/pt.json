@@ -7,11 +7,11 @@
   "nav": {
     "inicio": "Início",
     "servicios": "Serviços",
-    "productos": "Produtos",
+    "productos": "Projetos",
     "cotizador": "Orçamento",
-    "templates": "Templates",
+    "templates": "Modelos",
     "laboratorio": "Laboratório",
-    "contacto": "Iniciar projeto",
+    "contacto": "Contato",
     "cta": "Pedir proposta →",
     "menu": "Menu"
   },
@@ -32,7 +32,9 @@
     "stat1": "produtos",
     "stat2": "tecnologias",
     "stat3": "ciclo de MVP",
-    "previewLink": "// ver os 11 produtos OSS →"
+    "previewLink": "// ver os projetos →",
+    "hint": "Deslize sobre a forma",
+    "hintTouch": "Toque a forma"
   },
   "footer": {
     "tagline": "Estúdio de software LATAM. Produto + serviço. Bots de trading, ERP multi-tenant, auditoria eleitoral, experiências 3D e mais. Neiva, Colômbia · Atendimento remoto global.",
@@ -40,7 +42,7 @@
     "colSitio": "Site",
     "linkCotizador": "Orçamento",
     "linkLaboratorio": "Laboratório IA",
-    "linkContacto": "Iniciar projeto / Contato",
+    "linkContacto": "Contato",
     "linkDocs": "Docs · como trabalhamos",
     "colContacto": "Contato direto",
     "built": "Built with Astro + Tailwind + ⚡ Hermes",
@@ -136,7 +138,7 @@
           "tag": "// opção A · self-service",
           "title": "Calcule seu orçamento",
           "desc": "Selecione o que você precisa. A faixa de investimento atualiza na hora. Sem cadastro, sem compromisso.",
-          "cta": "Abrir orçamento →"
+          "cta": "Cotar meu projeto →"
         },
         "optionB": {
           "tag": "// opção B · guiado",
@@ -144,6 +146,18 @@
           "desc": "Conte sobre o seu projeto. Enviamos escopo detalhado, mockup e opções de agendamento em menos de 24h.",
           "cta": "Iniciar conversa →"
         }
+      },
+      "showcase": {
+        "tag": "// projetos concluídos",
+        "headingA": "Trabalho",
+        "headingEm": "real e concluído",
+        "headingB": "que você pode ver hoje",
+        "sub": "Uma amostra de projetos finalizados com capturas de tela e funcionalidades explicadas sem termos técnicos.",
+        "features": "O que faz",
+        "prev": "Projeto anterior",
+        "next": "Próximo projeto",
+        "view": "Ver detalhes →",
+        "cta": "Ver todos os projetos →"
       }
     },
     "servicios": {
@@ -260,20 +274,20 @@
     },
     "cotizador": {
       "title": "Orçamento — NX-Studio",
-      "description": "Cote seu projeto de software em minutos: escopo, stack e engajamento com preço estimado.",
-      "headingA": "Calculadora por",
-      "headingEm": "features",
-      "sub": "Selecione as capacidades que seu projeto precisa. A faixa de investimento é calculada em tempo real a partir de horas estimadas, taxa blended, modificadores de urgência e engagement shape.",
-      "disclaimer": "⚠ Faixa indicativa. Não publicamos preço exato — depende de escopo, complexidade e iterações.",
-      "step1": "01 / Engagement shape",
-      "step2": "02 / Selecione features",
-      "step3": "03 / Modificadores",
+      "description": "Escolha o que precisa e como quer: sua estimativa aparece em minutos, sem cadastro e sem compromisso.",
+      "headingA": "Seu orçamento",
+      "headingEm": "em 3 passos",
+      "sub": "Escolha o tipo de projeto e marque o que deve incluir. A faixa de investimento é calculada na hora — sem cadastro, sem compromisso.",
+      "disclaimer": "⚠ Faixa indicativa — o preço exato é definido com você conforme os detalhes do projeto.",
+      "step1": "01 / Escolha como trabalhar",
+      "step2": "02 / Marque o que precisa",
+      "step3": "03 / Receba sua estimativa",
       "optional": "opcional",
       "panel": {
         "range": "Faixa indicativa",
         "estimated": "estimadas",
         "selected": "selecionadas",
-        "cta": "Solicitar scoping →",
+        "cta": "Receber estimativa →",
         "breakdown": "Ver detalhamento",
         "currency": "Moeda",
         "whatsappCta": "WhatsApp direto"

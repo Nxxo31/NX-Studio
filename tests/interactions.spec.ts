@@ -10,22 +10,22 @@ import { test, expect } from "@playwright/test";
  */
 
 test.describe("/productos · filtro por categoría", () => {
-  test("Todos muestra los 11 productos", async ({ page }) => {
+  test("Todos muestra los 18 proyectos", async ({ page }) => {
     await page.goto("/productos/");
-    await expect(page.locator("[data-project-card]")).toHaveCount(11);
+    await expect(page.locator("[data-project-card]")).toHaveCount(18);
     await expect(page.locator(".cat-group-hidden")).toHaveCount(0);
   });
 
-  test("click en 'SaaS' filtra a 1 card visible + persiste en hash", async ({ page }) => {
+  test("click en 'SaaS' filtra a 2 cards visibles + persiste en hash", async ({ page }) => {
     await page.goto("/productos/");
 
     // Click en chip SaaS
     await page.locator('#cat-filter [data-cat="SaaS"]').click();
 
-    // Solo el grupo SaaS visible
-    await expect(page.locator(".cat-group")).toHaveCount(1);
+    // Solo el grupo SaaS visible (los 7 grupos existen en el DOM; 6 se ocultan por clase)
+    await expect(page.locator(".cat-group")).toHaveCount(7);
     await expect(page.locator(".cat-group:not(.cat-group-hidden)")).toHaveCount(1);
-    await expect(page.locator("[data-project-card]:not(.cat-hidden)")).toHaveCount(1);
+    await expect(page.locator("[data-project-card]:not(.cat-hidden)")).toHaveCount(2);
 
     // Hash de la URL actualizado
     expect(new URL(page.url()).hash).toBe("#SaaS");
@@ -35,10 +35,10 @@ test.describe("/productos · filtro por categoría", () => {
     await expect(page.locator('#cat-filter [data-cat="all"]')).not.toHaveClass(/cat-chip-active/);
   });
 
-  test("click en 'Seguridad' muestra 2 cards (flag-edge + nexoaccmanager)", async ({ page }) => {
+  test("click en 'Seguridad' muestra 3 cards (supply-radar + nexoaccmanager + wifi-pentest)", async ({ page }) => {
     await page.goto("/productos/");
     await page.locator('#cat-filter [data-cat="Seguridad"]').click();
-    await expect(page.locator("[data-project-card]:not(.cat-hidden)")).toHaveCount(2);
+    await expect(page.locator("[data-project-card]:not(.cat-hidden)")).toHaveCount(3);
   });
 
   test("restaurar filtro desde hash al recargar", async ({ page }) => {
@@ -46,8 +46,8 @@ test.describe("/productos · filtro por categoría", () => {
     // Solo grupo IA visible
     await expect(page.locator(".cat-group-hidden")).toHaveCount(6); // 7 grupos totales, 1 visible
     await expect(page.locator(".cat-group:not(.cat-group-hidden)")).toHaveCount(1);
-    // 2 cards IA: e14-fraud-detector + tic-tac-toe
-    await expect(page.locator("[data-project-card]:not(.cat-hidden)")).toHaveCount(2);
+    // 3 cards IA: e14-fraud-detector + tic-tac-toe + e14-audit-platform
+    await expect(page.locator("[data-project-card]:not(.cat-hidden)")).toHaveCount(3);
   });
 });
 
@@ -72,7 +72,7 @@ test.describe("Nav · mobile menu", () => {
     // Después de navegar, el menú se cierra (en el handler actual NO se cierra
     // automáticamente — eso es una mejora pendiente del componente Nav).
     // Por ahora solo validamos la navegación efectiva.
-    await expect(page.locator("h1")).toContainText(/productos/i);
+    await expect(page.locator("h1")).toContainText(/proyectos/i);
   });
 });
 

@@ -15,6 +15,9 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./tests",
+  // Solo specs E2E: vitest vive en tests/unit y tests/integration (*.test.ts)
+  // y el testMatch por defecto de Playwright también los levanta (colisionan).
+  testMatch: "**/*.spec.ts",
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: 0,

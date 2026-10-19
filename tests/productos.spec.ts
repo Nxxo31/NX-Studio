@@ -17,7 +17,7 @@ test.describe("/productos/[slug]", () => {
 
     await expect(page).toHaveTitle(/NexoCore.*NX-Studio/);
     await expect(page.locator("h1")).toContainText("NexoCore");
-    await expect(page.locator("text=ERP/CRM/Analytics")).toBeVisible();
+    await expect(page.locator("text=Todo tu negocio en un solo panel")).toBeVisible();
 
     // Stack visible
     await expect(page.locator("text=Next.js 15")).toBeVisible();
@@ -28,13 +28,16 @@ test.describe("/productos/[slug]", () => {
     await expect(repoLink).toHaveAttribute("target", "_blank");
     await expect(repoLink).toHaveAttribute("rel", /noopener/);
 
-    // CTA interno
-    await expect(page.locator('a[href="/contacto"]').first()).toBeVisible();
+    // CTA interno (visible en mobile y desktop: el del hero/nav está
+    // oculto en viewports pequeños — usamos el de la sección CTA en <main>)
+    await expect(page.locator('main a[href="/contacto"]').first()).toBeVisible();
   });
 
-  test("nexocore: status pill muestra 'live'", async ({ page }) => {
+  test("nexocore: status pill muestra 'en línea'", async ({ page }) => {
     await page.goto("/productos/nexocore/");
-    await expect(page.locator(".status-live")).toBeVisible();
+    // Scope al header del detalle: en la página hay varias .status-live
+    // (header + related), el contrato es la del proyecto actual.
+    await expect(page.locator("header .status-pill.status-live")).toBeVisible();
   });
 
   test("e14-fraud-detector: prev/next apunta a otro producto", async ({ page }) => {
@@ -56,8 +59,8 @@ test.describe("/productos/[slug]", () => {
   test("tic-tac-toe: related muestra e14 (misma categoría IA)", async ({ page }) => {
     await page.goto("/productos/tic-tac-toe/");
 
-    // La sección "otros productos de IA" debe tener al menos 1 card
-    const relatedSection = page.locator("text=otros productos de IA").locator("..");
+    // La sección "otros proyectos de IA" debe tener al menos 1 card
+    const relatedSection = page.locator("text=otros proyectos de IA").locator("..");
     const relatedCards = relatedSection.locator("a[href^='/productos/']");
     await expect(relatedCards.first()).toBeVisible();
 

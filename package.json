@@ -1,7 +1,7 @@
 {
   "name": "nx-studio",
   "type": "module",
-  "version": "0.5.0",
+  "version": "0.9.0",
   "private": true,
   "engines": {
     "node": ">=22.12.0"
@@ -21,6 +21,7 @@
     "seed:proyectos": "tsx scripts/seed-proyectos.ts --apply-sql > _seed-proyectos.sql && echo 'Generated: _seed-proyectos.sql'",
     "seed:templates": "tsx scripts/seed-templates.ts --apply-sql > _seed-templates.sql && echo 'Generated: _seed-templates.sql'",
     "seed:dry": "tsx scripts/seed-proyectos.ts --dry-run && tsx scripts/seed-templates.ts",
+    "sync:proyectos": "tsx scripts/sync-project-images.ts",
     "db:create": "wrangler d1 create nx-studio-db",
     "db:migrate:local": "wrangler d1 execute nx-studio-db --local --file .wrangler/init.sql",
     "db:migrate:remote": "wrangler d1 execute nx-studio-db --remote --file .wrangler/init.sql",

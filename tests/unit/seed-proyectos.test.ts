@@ -53,11 +53,11 @@ describe('seed-proyectos', () => {
   });
 
   describe('generateSeedSQL', () => {
-    it('genera un SQL con 11 INSERTs', () => {
+    it('genera un SQL con 18 INSERTs', () => {
       const sql = generateSeedSQL();
       const matches = sql.match(/INSERT INTO proyecto/g);
       expect(matches).not.toBeNull();
-      expect(matches!.length).toBe(11);
+      expect(matches!.length).toBe(18);
     });
 
     it('usa ON CONFLICT DO UPDATE (idempotente)', () => {
@@ -74,7 +74,7 @@ describe('seed-proyectos', () => {
   });
 
   describe('seed real (integration)', () => {
-    it('aplicar el seed a una DB vacía inserta exactamente 11 proyectos', async () => {
+    it('aplicar el seed a una DB vacía inserta exactamente 18 proyectos', async () => {
       const env = await createTestEnv();
       const sql = generateSeedSQL();
       // Ejecutar el SQL proyecto por proyecto (separado por ;)
@@ -84,7 +84,7 @@ describe('seed-proyectos', () => {
       }
 
       const all = await listAll(env.db);
-      expect(all).toHaveLength(11);
+      expect(all).toHaveLength(18);
     });
 
     it('una segunda ejecución es idempotente (no duplica por slug)', async () => {
@@ -100,7 +100,7 @@ describe('seed-proyectos', () => {
       }
 
       const all = await listAll(env.db);
-      expect(all).toHaveLength(11);
+      expect(all).toHaveLength(18);
     });
   });
 });

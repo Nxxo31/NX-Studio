@@ -7,11 +7,11 @@
   "nav": {
     "inicio": "Home",
     "servicios": "Services",
-    "productos": "Products",
-    "cotizador": "Quote builder",
+    "productos": "Projects",
+    "cotizador": "Get a quote",
     "templates": "Templates",
     "laboratorio": "Lab",
-    "contacto": "Start a project",
+    "contacto": "Contact",
     "cta": "Request a proposal →",
     "menu": "Menu"
   },
@@ -32,15 +32,17 @@
     "stat1": "products",
     "stat2": "technologies",
     "stat3": "MVP cycle",
-    "previewLink": "// see all 11 OSS products →"
+    "previewLink": "// see the projects →",
+    "hint": "Move across the form",
+    "hintTouch": "Touch the form"
   },
   "footer": {
     "tagline": "LATAM software studio. Product + service. Trading bots, multi-tenant ERP, electoral auditing, 3D experiences and more. Neiva, Colombia · Remote service worldwide.",
     "author": "Sebastian Velasco Ocampo · Full-stack + AI",
     "colSitio": "Site",
-    "linkCotizador": "Quote builder",
+    "linkCotizador": "Get a quote",
     "linkLaboratorio": "AI Lab",
-    "linkContacto": "Start a project / Contact",
+    "linkContacto": "Contact",
     "linkDocs": "Docs · how we work",
     "colContacto": "Direct contact",
     "built": "Built with Astro + Tailwind + ⚡ Hermes",
@@ -136,7 +138,7 @@
           "tag": "// option A · self-service",
           "title": "Estimate your budget",
           "desc": "Select what you need. The investment range updates instantly. No sign-up, no commitment.",
-          "cta": "Open calculator →"
+          "cta": "Quote my project →"
         },
         "optionB": {
           "tag": "// option B · guided",
@@ -144,6 +146,18 @@
           "desc": "Tell us about your project. We'll send detailed scope, a mockup and scheduling options in under 24h.",
           "cta": "Start the conversation →"
         }
+      },
+      "showcase": {
+        "tag": "// finished work",
+        "headingA": "Real work,",
+        "headingEm": "finished and live",
+        "headingB": "you can see today",
+        "sub": "A sample of completed projects with their screenshots and features explained without technical jargon.",
+        "features": "What it does",
+        "prev": "Previous project",
+        "next": "Next project",
+        "view": "View details →",
+        "cta": "See all projects →"
       }
     },
     "servicios": {
@@ -259,21 +273,21 @@
       }
     },
     "cotizador": {
-      "title": "Quote builder — NX-Studio",
-      "description": "Quote your software project in minutes: scope, stack and engagement with an estimated price.",
-      "headingA": "Feature-based",
-      "headingEm": "calculator",
-      "sub": "Select the capabilities your project needs. The investment range is computed in real time from estimated hours, blended rate, urgency modifiers and engagement shape.",
-      "disclaimer": "⚠ Indicative range. We don't publish exact pricing — it depends on scope, complexity and iterations.",
-      "step1": "01 / Engagement shape",
-      "step2": "02 / Select features",
-      "step3": "03 / Modifiers",
+      "title": "Get a quote — NX-Studio",
+      "description": "Choose what you need and how you want it: your estimate appears in minutes, no sign-up, no commitment.",
+      "headingA": "Your quote",
+      "headingEm": "in 3 steps",
+      "sub": "Pick your project type and check what it should include. The investment range updates instantly — no sign-up, no commitment.",
+      "disclaimer": "⚠ Indicative range — the exact price is defined with you based on your project's details.",
+      "step1": "01 / Choose how we work",
+      "step2": "02 / Check what you need",
+      "step3": "03 / Get your estimate",
       "optional": "optional",
       "panel": {
         "range": "Indicative range",
         "estimated": "estimated",
         "selected": "selected",
-        "cta": "Request scoping →",
+        "cta": "Get estimate →",
         "breakdown": "View breakdown",
         "currency": "Currency",
         "whatsappCta": "Direct WhatsApp"
