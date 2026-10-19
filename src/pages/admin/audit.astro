@@ -1,0 +1,206 @@
+---
+// /admin/audit — log viewer de audit_log (B8 · T10).
+//
+// Requiere role admin o gatekeeper (requireRole(['admin','gatekeeper'])).
+// Filtros: actor_user_id, fecha rango, action (search), resource_type, resource_id.
+// Paginación: 50 por page.
+// audit_log es INMUTABLE: no se exponen endpoints de update/delete.
+
+import Base from '~/layouts/Base.astro';
+import Table from '~/components/ui/Table.astro';
+import Button from '~/components/ui/Button.astro';
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { createDb } from '~/db';
+import { queryAudit } from '~/lib/audit';
+import { canRole, type Role } from '~/lib/rbac';
+
+export const prerender = false;
+
+// RBAC check — solo admin y gatekeeper pueden ver el audit log
+const role = (Astro.locals as { portalSession?: { user?: { role?: string } } }).portalSession?.user?.role ?? '';
+const canReadAudit = canRole(role as Role, 'audit_log.read');
+
+if (!canReadAudit) {
+  return new Response('Acceso restringido al equipo NX-Studio', {
+    status: 403,
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  });
+}
+
+const env = runtimeEnv as unknown as { DB: D1Database };
+const db = createDb(env.DB);
+
+const sp = Astro.url.searchParams;
+const fActor = sp.get('actor') ?? '';
+const fAction = sp.get('action') ?? '';
+const fResourceType = sp.get('resource_type') ?? '';
+const fResourceId = sp.get('resource_id') ?? '';
+const fFrom = sp.get('from') ?? '';
+const fTo = sp.get('to') ?? '';
+const fPage = parseInt(sp.get('page') ?? '1', 10) || 1;
+
+const fromDate = fFrom ? new Date(fFrom) : undefined;
+const toDate = fTo ? new Date(fTo) : undefined;
+const validFrom = fromDate && !isNaN(fromDate.getTime()) ? fromDate : undefined;
+const validTo = toDate && !isNaN(toDate.getTime()) ? toDate : undefined;
+
+let result = { rows: [], total: 0, page: 1, pageSize: 50, pageCount: 1 };
+try {
+  result = await queryAudit(db, {
+    actorUserId: fActor || undefined,
+    action: fAction || undefined,
+    resourceType: fResourceType || undefined,
+    resourceId: fResourceId || undefined,
+    from: validFrom,
+    to: validTo,
+    page: fPage,
+    pageSize: 50,
+  });
+} catch (e) {
+  // DB not initialized
+}
+
+function qs(overrides: Record<string, string>): string {
+  const p = new URLSearchParams();
+  const merged = {
+    actor: fActor, action: fAction, resource_type: fResourceType,
+    resource_id: fResourceId, from: fFrom, to: fTo,
+    page: String(fPage), ...overrides,
+  };
+  for (const [k, v] of Object.entries(merged)) {
+    if (v && v !== '') p.set(k, v);
+  }
+  const s = p.toString();
+  return s ? `/admin/audit?${s}` : '/admin/audit';
+}
+---
+<Base title="Audit log — Admin NX-Studio" description="Log inmutable de acciones del panel.">
+  <main class="mx-auto max-w-6xl px-6 py-16">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--nx-primary);">Operador · audit inmutable</p>
+        <h1 class="mt-2 font-display text-3xl font-bold">Audit log</h1>
+        <p class="mt-1 text-sm text-nx-muted">{result.total} entradas · página {result.page} de {result.pageCount}</p>
+      </div>
+      <nav class="flex flex-wrap gap-2 text-xs font-mono">
+        <a href="/admin" class="admin-nav-link">Dashboard</a>
+      </nav>
+    </div>
+
+    <form method="GET" class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-6" data-audit-filter-form>
+      <label class="admin-filter">
+        <span>Actor user ID</span>
+        <input type="text" name="actor" value={fActor} class="admin-input" placeholder="user id" />
+      </label>
+      <label class="admin-filter">
+        <span>Action (search)</span>
+        <input type="text" name="action" value={fAction} class="admin-input" placeholder="ej. licitacion" />
+      </label>
+      <label class="admin-filter">
+        <span>Resource type</span>
+        <select name="resource_type" class="admin-input">
+          <option value="">Todos</option>
+          <option value="licitacion" selected={fResourceType === 'licitacion'}>licitacion</option>
+          <option value="proyecto" selected={fResourceType === 'proyecto'}>proyecto</option>
+          <option value="template" selected={fResourceType === 'template'}>template</option>
+          <option value="user" selected={fResourceType === 'user'}>user</option>
+        </select>
+      </label>
+      <label class="admin-filter">
+        <span>Resource ID</span>
+        <input type="text" name="resource_id" value={fResourceId} class="admin-input" placeholder="opcional" />
+      </label>
+      <label class="admin-filter">
+        <span>Desde</span>
+        <input type="date" name="from" value={fFrom} class="admin-input" />
+      </label>
+      <label class="admin-filter">
+        <span>Hasta</span>
+        <input type="date" name="to" value={fTo} class="admin-input" />
+      </label>
+      <input type="hidden" name="page" value="1" />
+      <div class="col-span-2 sm:col-span-6 flex gap-2">
+        <Button type="submit" variant="primary" size="sm">Filtrar</Button>
+        <Button href="/admin/audit" variant="ghost" size="sm">Reset</Button>
+      </div>
+    </form>
+
+    <div class="mt-8" data-audit-table>
+      {result.rows.length === 0 ? (
+        <Table empty="Sin acciones registradas">
+          <span slot="head" data-empty-message>Sin acciones registradas</span>
+        </Table>
+      ) : (
+        <Table>
+          <tr slot="head">
+            <th>Fecha</th>
+            <th>Actor</th>
+            <th>Acción</th>
+            <th>Resource type</th>
+            <th>Resource ID</th>
+            <th>IP</th>
+          </tr>
+          {result.rows.map((r) => (
+            <tr data-audit-row>
+              <td class="font-mono text-xs">{new Date(r.createdAt).toLocaleString('es-CO')}</td>
+              <td><code class="text-xs">{r.actorUserId.slice(0, 8)}</code></td>
+              <td><span class="admin-tag">{r.action}</span></td>
+              <td>{r.resourceType}</td>
+              <td>{r.resourceId ? <code class="text-xs">{r.resourceId.slice(0, 12)}</code> : '—'}</td>
+              <td class="font-mono text-xs">{r.ip ?? '—'}</td>
+            </tr>
+          ))}
+        </Table>
+      )}
+    </div>
+
+    {result.pageCount > 1 && (
+      <nav class="mt-4 flex flex-wrap gap-2 text-xs font-mono" aria-label="Paginación">
+        {result.page > 1 && <a href={qs({ page: String(result.page - 1) })} class="admin-nav-link">← Prev</a>}
+        {Array.from({ length: result.pageCount }, (_, i) => i + 1)
+          .filter((p) => Math.abs(p - result.page) < 3 || p === 1 || p === result.pageCount)
+          .map((p) => (
+            <a href={qs({ page: String(p) })} class={`admin-nav-link ${p === result.page ? 'admin-nav-link-current' : ''}`}>{p}</a>
+          ))}
+        {result.page < result.pageCount && <a href={qs({ page: String(result.page + 1) })} class="admin-nav-link">Next →</a>}
+      </nav>
+    )}
+  </main>
+</Base>
+
+<style>
+  .admin-nav-link {
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--color-nx-border, rgba(255,255,255,0.12));
+    border-radius: 4px;
+    color: var(--color-nx-ink, #e7e9ee);
+    text-decoration: none;
+  }
+  .admin-nav-link:hover { border-color: var(--color-nx-primary, #ff6b3d); }
+  .admin-nav-link-current {
+    background: var(--color-nx-primary, #ff6b3d);
+    color: #0a0b14;
+    border-color: var(--color-nx-primary, #ff6b3d);
+  }
+  .admin-filter { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.75rem; color: var(--color-nx-muted, #9aa0ad); }
+  .admin-filter span { text-transform: uppercase; letter-spacing: 0.06em; font-family: ui-monospace, monospace; }
+  .admin-input {
+    background: transparent;
+    color: var(--color-nx-ink, #e7e9ee);
+    border: 1px solid var(--color-nx-border, rgba(255,255,255,0.12));
+    border-radius: 4px;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.85rem;
+    font-family: inherit;
+  }
+  .admin-input:focus { outline: none; border-color: var(--color-nx-primary, #ff6b3d); }
+  .admin-tag {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(255, 107, 61, 0.12);
+    color: var(--color-nx-primary, #ff6b3d);
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+  }
+</style>

@@ -1,105 +1,133 @@
 ---
-// /admin — panel del operador.
+// /admin — dashboard de métricas (B8 · T05).
 //
-// Control de acceso: Cloudflare Access sobre /admin/* y /api/admin/*
-// (decisión operador 2026-10-11 — ver PROJECT.md §Phase 11). La app NO
-// implementa auth propia en esta ruta; en local/preview el panel queda
-// abierto y la protección se materializa en producción vía Access policy.
+// 6 métricas en grid desktop / stack mobile:
+//   1. Licitaciones del mes (status='nueva' creadas desde start_of_month)
+//   2. Conversion rate del mes (aceptadas+completadas / total)
+//   3. MRR (suma de precioMax de licitaciones con status='aceptada')
+//   4. Deploys/24h (count de deploy_log con created_at > now-24h)
+//   5. Errores abiertos (placeholder)
+//   6. Gatekeeper health (placeholder)
+
 import Base from '~/layouts/Base.astro';
+import Card from '~/components/ui/Card.astro';
 import { env as runtimeEnv } from 'cloudflare:workers';
 import { createDb } from '~/db';
-import * as licitacionRepo from '~/server/licitacion-repo';
-import type { Licitacion } from '~/db/schema';
+import { computeDashboardMetrics } from '~/lib/admin-aggregators';
 
 export const prerender = false;
 
-// Astro v6+: locals.runtime.env fue removido — binding global cloudflare:workers.
 const env = runtimeEnv as unknown as { DB: D1Database };
-const db = createDb(env.DB);
-let items: Licitacion[] = [];
+let metrics;
 try {
-  items = await licitacionRepo.listAll(db);
-} catch {
-  items = [];
+  metrics = await computeDashboardMetrics(createDb(env.DB));
+} catch (e) {
+  metrics = {
+    licitacionesMes: 0,
+    conversionRate: 0,
+    mrrUsd: 0,
+    deploys24h: 0,
+    erroresAbiertos: 0,
+    gatekeeperHealth: 'unknown' as const,
+    generatedAt: Date.now(),
+  };
 }
 
-const filter = Astro.url.searchParams.get('status');
-const visible = filter ? items.filter((l) => l.status === filter) : items;
-
-const STATUS = ['nueva', 'contactada', 'propuesta_enviada', 'aceptada', 'rechazada', 'completada'] as const;
-const counts = new Map<string, number>();
-for (const it of items) counts.set(it.status, (counts.get(it.status) ?? 0) + 1);
-
-const fmt = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-const updated = Astro.url.searchParams.get('updated');
+const fmtUsd = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const fmtPct = (n: number) => `${(n * 100).toFixed(1)}%`;
 ---
-
-<Base title="Admin — NX-Studio" description="Panel del operador. Gestión de licitaciones.">
+<Base title="Dashboard — Admin NX-Studio" description="Panel de métricas operacionales.">
   <main class="mx-auto max-w-6xl px-6 py-16">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--lava-edge);">Operador</p>
-        <h1 class="mt-2 font-display text-3xl font-bold">Licitaciones</h1>
-        <p class="mt-1 text-sm text-nx-muted">{items.length} totales · protegido por Cloudflare Access</p>
+        <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--nx-primary);">Operador</p>
+        <h1 class="mt-2 font-display text-3xl font-bold">Dashboard</h1>
+        <p class="mt-1 text-sm text-nx-muted">Métricas en vivo · generado {new Date(metrics.generatedAt).toLocaleString('es-CO')}</p>
       </div>
-      <a href="/" class="lava-btn-ghost">← Sitio público</a>
+      <nav class="flex flex-wrap gap-2 text-xs font-mono">
+        <a href="/admin/licitacion" class="admin-nav-link">Licitaciones</a>
+        <a href="/admin/proyectos" class="admin-nav-link">Proyectos</a>
+        <a href="/admin/templates" class="admin-nav-link">Templates</a>
+        <a href="/admin/usuarios" class="admin-nav-link">Usuarios</a>
+        <a href="/admin/audit" class="admin-nav-link">Audit</a>
+        <a href="/admin/deploys" class="admin-nav-link">Deploys</a>
+        <form method="POST" action="/admin/logout" class="inline">
+          <button type="submit" class="admin-nav-link admin-nav-logout">Salir</button>
+        </form>
+      </nav>
     </div>
 
-    {updated && (
-      <p class="lava-tag mt-6 inline-block" role="status">Estado actualizado ({updated})</p>
-    )}
+    <section class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-dashboard-grid>
+      <Card>
+        <p class="admin-metric-label">Licitaciones del mes</p>
+        <p class="admin-metric-value" data-metric="licitacionesMes">{metrics.licitacionesMes}</p>
+        <p class="admin-metric-help">{metrics.licitacionesMes === 0 ? 'Sin licitaciones nuevas este mes' : 'Licitaciones con status=nueva'}</p>
+      </Card>
 
-    <nav class="mt-8 flex flex-wrap gap-2 font-mono text-xs uppercase tracking-widest" aria-label="Filtro por estado">
-      <a class={filter ? 'lava-btn-ghost' : 'lava-btn'} href="/admin">Todas ({items.length})</a>
-      {STATUS.map((s) => (
-        <a class={filter === s ? 'lava-btn' : 'lava-btn-ghost'} href={`/admin?status=${s}`}>
-          {s} ({counts.get(s) ?? 0})
-        </a>
-      ))}
-    </nav>
+      <Card>
+        <p class="admin-metric-label">Conversion rate (mes)</p>
+        <p class="admin-metric-value" data-metric="conversionRate">{fmtPct(metrics.conversionRate)}</p>
+        <p class="admin-metric-help">Aceptadas + completadas / total del mes</p>
+      </Card>
 
-    {visible.length === 0 ? (
-      <div class="lava-card mt-8 p-8 text-center text-nx-muted">Sin licitaciones en este estado.</div>
-    ) : (
-      <ul class="mt-8 space-y-4">
-        {visible.map((l) => (
-          <li class="lava-card p-6">
-            <div class="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <p class="font-mono text-xs text-nx-dim">
-                  {l.id.slice(0, 8)} · {new Date(l.createdAt).toLocaleString('es-CO')} · {l.tipo} · {l.engagement} · urgencia {l.urgencia}
-                </p>
-                <h2 class="mt-1 font-display text-lg font-bold">
-                  <a href={`/admin/licitacion/${l.id}`} class="hover:underline" style="text-decoration-color: var(--lava-edge);">{l.nombre}</a> <span class="font-normal text-nx-muted">&lt;{l.email}&gt;</span>
-                </h2>
-                <p class="mt-1 text-sm text-nx-muted">
-                  {[l.empresa, l.telefono, l.pais].filter(Boolean).join(' · ') || 'Sin datos de empresa'}
-                </p>
-              </div>
-              <div class="text-right">
-                <p class="font-mono text-sm">US$ {fmt.format(l.precioMin)} – US$ {fmt.format(l.precioMax)} <span class="text-nx-dim">· {l.banda}</span></p>
-                {l.displayCurrency && (
-                  <p class="font-mono text-xs text-nx-dim">
-                    vista cliente: {l.displayCurrency} {l.displayMin?.toLocaleString('es-CO')} – {l.displayMax?.toLocaleString('es-CO')}
-                  </p>
-                )}
-              </div>
-            </div>
-            <p class="mt-3 text-sm text-nx-muted">{l.descripcion}</p>
-            <form method="POST" action="/api/admin/update-status" class="mt-4 flex flex-wrap items-center gap-3">
-              <input type="hidden" name="id" value={l.id} />
-              <label class="sr-only" for={`status-${l.id}`}>Estado</label>
-              <select id={`status-${l.id}`} name="status"
-                class="border border-nx-border bg-transparent px-3 py-2 font-mono text-sm text-nx-text focus:border-[var(--lava-core)] focus:outline-none">
-                {STATUS.map((s) => (
-                  <option value={s} selected={s === l.status}>{s}</option>
-                ))}
-              </select>
-              <button type="submit" class="lava-btn">Actualizar</button>
-            </form>
-          </li>
-        ))}
-      </ul>
-    )}
+      <Card>
+        <p class="admin-metric-label">MRR estimado</p>
+        <p class="admin-metric-value" data-metric="mrrUsd">{fmtUsd.format(metrics.mrrUsd)}</p>
+        <p class="admin-metric-help">Suma de precioMax en licitaciones aceptadas</p>
+      </Card>
+
+      <Card>
+        <p class="admin-metric-label">Deploys (24h)</p>
+        <p class="admin-metric-value" data-metric="deploys24h">{metrics.deploys24h}</p>
+        <p class="admin-metric-help">{metrics.deploys24h === 0 ? 'Sin deploys en las últimas 24h' : 'Deploys recientes'}</p>
+      </Card>
+
+      <Card>
+        <p class="admin-metric-label">Errores abiertos</p>
+        <p class="admin-metric-value" data-metric="erroresAbiertos">{metrics.erroresAbiertos}</p>
+        <p class="admin-metric-help">Sin observabilidad configurada aún</p>
+      </Card>
+
+      <Card>
+        <p class="admin-metric-label">Gatekeeper health</p>
+        <p class="admin-metric-value" data-metric="gatekeeperHealth">{metrics.gatekeeperHealth}</p>
+        <p class="admin-metric-help">Scheduler externo (Cloudflare cron)</p>
+      </Card>
+    </section>
   </main>
 </Base>
+
+<style>
+  .admin-nav-link {
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--color-nx-border, rgba(255,255,255,0.12));
+    border-radius: 4px;
+    color: var(--color-nx-ink, #e7e9ee);
+    text-decoration: none;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+  }
+  .admin-nav-link:hover { border-color: var(--color-nx-primary, #ff6b3d); }
+  .admin-nav-logout { color: var(--color-nx-muted, #9aa0ad); }
+  .admin-metric-label {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-nx-muted, #9aa0ad);
+    margin: 0 0 0.5rem;
+  }
+  .admin-metric-value {
+    font-family: ui-monospace, monospace;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-nx-ink, #e7e9ee);
+    margin: 0;
+  }
+  .admin-metric-help {
+    font-size: 0.75rem;
+    color: var(--color-nx-muted, #9aa0ad);
+    margin: 0.5rem 0 0;
+  }
+</style>

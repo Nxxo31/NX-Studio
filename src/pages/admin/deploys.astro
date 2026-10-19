@@ -1,0 +1,99 @@
+---
+// /admin/deploys — log viewer de deploy_log (B8 · T11).
+//
+// Top 10 más recientes. Si wrangler API está disponible en prod, refresca
+// al cargar; si no, muestra solo lo de la tabla deploy_log.
+
+import Base from '~/layouts/Base.astro';
+import Table from '~/components/ui/Table.astro';
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { createDb } from '~/db';
+import { getRecentDeploys } from '~/lib/deploy-log';
+import { deploysFromDb, sortDeploysDesc, type DeployRow } from '~/lib/deploy-viewer';
+
+export const prerender = false;
+
+const env = runtimeEnv as unknown as { DB: D1Database };
+const db = createDb(env.DB);
+
+let rows: DeployRow[] = [];
+let source = 'db';
+try {
+  const dbRows = await getRecentDeploys(env, 10);
+  rows = sortDeploysDesc(deploysFromDb(dbRows));
+} catch (e) {
+  rows = [];
+}
+---
+<Base title="Deploys — Admin NX-Studio" description="Historial de deploys.">
+  <main class="mx-auto max-w-6xl px-6 py-16">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--nx-primary);">Operador</p>
+        <h1 class="mt-2 font-display text-3xl font-bold">Deploys</h1>
+        <p class="mt-1 text-sm text-nx-muted">{rows.length} registros · fuente: {source === 'wrangler' ? 'Cloudflare API' : 'deploy_log (tabla)'}</p>
+      </div>
+      <nav class="flex flex-wrap gap-2 text-xs font-mono">
+        <a href="/admin" class="admin-nav-link">Dashboard</a>
+      </nav>
+    </div>
+
+    <div class="mt-8" data-deploys-table>
+      {rows.length === 0 ? (
+        <Table empty="Sin deploys registrados">
+          <span slot="head" data-empty-message>Sin deploys registrados</span>
+        </Table>
+      ) : (
+        <Table>
+          <tr slot="head">
+            <th>Version ID</th>
+            <th>Commit SHA</th>
+            <th>Branch</th>
+            <th>Environment</th>
+            <th>Status</th>
+            <th>Startup (ms)</th>
+            <th>Creado</th>
+          </tr>
+          {rows.map((d) => (
+            <tr data-deploy-row data-version={d.versionId}>
+              <td><code class="text-xs">{d.versionId.slice(0, 12)}</code></td>
+              <td>{d.commitSha ? <code class="text-xs">{d.commitSha.slice(0, 7)}</code> : '—'}</td>
+              <td>{d.branch ?? '—'}</td>
+              <td><span class="admin-tag">{d.environment}</span></td>
+              <td>
+                <span class={`admin-tag ${d.status === 'success' ? 'admin-tag-on' : d.status === 'failed' ? 'admin-tag-danger' : ''}`}>
+                  {d.status}
+                </span>
+              </td>
+              <td class="font-mono text-xs">{d.workerStartupMs ?? '—'}</td>
+              <td class="font-mono text-xs">{new Date(d.createdAt).toLocaleString('es-CO')}</td>
+            </tr>
+          ))}
+        </Table>
+      )}
+    </div>
+  </main>
+</Base>
+
+<style>
+  .admin-nav-link {
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--color-nx-border, rgba(255,255,255,0.12));
+    border-radius: 4px;
+    color: var(--color-nx-ink, #e7e9ee);
+    text-decoration: none;
+  }
+  .admin-nav-link:hover { border-color: var(--color-nx-primary, #ff6b3d); }
+  .admin-tag {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--color-nx-muted, #9aa0ad);
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+  }
+  .admin-tag-on { background: rgba(80, 200, 120, 0.12); color: #50c878; }
+  .admin-tag-danger { background: rgba(255, 80, 80, 0.12); color: #ff8888; }
+</style>

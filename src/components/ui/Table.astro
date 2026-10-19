@@ -1,0 +1,34 @@
+---
+// Table — tabla base para listas admin (B8).
+// Header + body slots. Sin paginación interna — el caller controla la query.
+
+interface Props {
+  class?: string;
+  empty?: string;
+}
+const { class: className = '', empty } = Astro.props;
+const cls = ['nx-table-wrap', className].filter(Boolean).join(' ');
+---
+<div class={cls}>
+  <table class="nx-table">
+    {Astro.slots.has('head') && (
+      <thead><slot name="head" /></thead>
+    )}
+    <tbody>
+      <slot />
+    </tbody>
+  </table>
+  {empty && (
+    <p class="nx-table-empty">{empty}</p>
+  )}
+</div>
+
+<style>
+  .nx-table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--color-nx-border, rgba(255,255,255,0.08)); border-radius: 0.5rem; background: var(--color-nx-surface, #11132a); }
+  .nx-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .nx-table th, .nx-table td { padding: 0.6rem 0.9rem; text-align: left; border-bottom: 1px solid var(--color-nx-border, rgba(255,255,255,0.06)); }
+  .nx-table th { font-family: ui-monospace, monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-nx-muted, #9aa0ad); background: rgba(255,255,255,0.02); }
+  .nx-table tr:last-child td { border-bottom: 0; }
+  .nx-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .nx-table-empty { padding: 2rem; text-align: center; color: var(--color-nx-muted, #9aa0ad); font-size: 0.9rem; }
+</style>

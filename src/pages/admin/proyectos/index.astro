@@ -1,0 +1,119 @@
+---
+// /admin/proyectos — lista CRUD de proyectos (B8 · T07).
+
+import Base from '~/layouts/Base.astro';
+import Table from '~/components/ui/Table.astro';
+import Button from '~/components/ui/Button.astro';
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { createDb } from '~/db';
+import { listAll as listProyectos } from '~/server/proyecto-repo';
+
+export const prerender = false;
+
+const env = runtimeEnv as unknown as { DB: D1Database };
+const db = createDb(env.DB);
+
+let proyectos = [];
+try {
+  proyectos = await listProyectos(db);
+} catch (e) {
+  proyectos = [];
+}
+---
+<Base title="Proyectos — Admin NX-Studio" description="CRUD de proyectos del catálogo.">
+  <main class="mx-auto max-w-6xl px-6 py-16">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--nx-primary);">Operador</p>
+        <h1 class="mt-2 font-display text-3xl font-bold">Proyectos</h1>
+        <p class="mt-1 text-sm text-nx-muted">{proyectos.length} en el catálogo</p>
+      </div>
+      <nav class="flex flex-wrap gap-2 text-xs font-mono">
+        <a href="/admin" class="admin-nav-link">Dashboard</a>
+        <a href="/admin/proyectos/nuevo" class="admin-nav-link admin-nav-primary">+ Nuevo proyecto</a>
+      </nav>
+    </div>
+
+    <div class="mt-8" data-proyectos-table>
+      {proyectos.length === 0 ? (
+        <Table empty="Sin proyectos en el catálogo">
+          <span slot="head" data-empty-message>Sin proyectos en el catálogo</span>
+        </Table>
+      ) : (
+        <Table>
+          <tr slot="head">
+            <th>Slug</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Status</th>
+            <th>Año</th>
+            <th>Portal</th>
+            <th>Acciones</th>
+          </tr>
+          {proyectos.map((p) => (
+            <tr data-proyecto-row data-slug={p.slug}>
+              <td><code>{p.slug}</code></td>
+              <td>{p.name}</td>
+              <td>{p.categoria}</td>
+              <td><span class="admin-tag">{p.status}</span></td>
+              <td>{p.year}</td>
+              <td>
+                {p.portalVisible ? (
+                  <span class="admin-tag admin-tag-on">visible</span>
+                ) : (
+                  <span class="admin-tag admin-tag-off">oculto</span>
+                )}
+              </td>
+              <td>
+                <div class="flex flex-wrap gap-1">
+                  <Button href={`/admin/proyectos/${p.slug}/editar`} variant="subtle" size="sm">Editar</Button>
+                  <form method="POST" action="/api/admin/proyectos" class="inline">
+                    <input type="hidden" name="action" value="toggle-portal-visible" />
+                    <input type="hidden" name="slug" value={p.slug} />
+                    <Button type="submit" variant="ghost" size="sm">
+                      {p.portalVisible ? 'Ocultar' : 'Mostrar'}
+                    </Button>
+                  </form>
+                  <form method="POST" action="/api/admin/proyectos" class="inline">
+                    <input type="hidden" name="action" value="delete" />
+                    <input type="hidden" name="slug" value={p.slug} />
+                    <Button type="submit" variant="danger" size="sm">Eliminar</Button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </Table>
+      )}
+    </div>
+  </main>
+</Base>
+
+<style>
+  .admin-nav-link {
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--color-nx-border, rgba(255,255,255,0.12));
+    border-radius: 4px;
+    color: var(--color-nx-ink, #e7e9ee);
+    text-decoration: none;
+  }
+  .admin-nav-link:hover { border-color: var(--color-nx-primary, #ff6b3d); }
+  .admin-nav-primary {
+    background: var(--color-nx-primary, #ff6b3d);
+    color: #0a0b14;
+    border-color: var(--color-nx-primary, #ff6b3d);
+  }
+  .admin-tag {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(255, 107, 61, 0.12);
+    color: var(--color-nx-primary, #ff6b3d);
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .admin-tag-on { background: rgba(80, 200, 120, 0.12); color: #50c878; }
+  .admin-tag-off { background: rgba(255, 255, 255, 0.06); color: var(--color-nx-muted, #9aa0ad); }
+</style>

@@ -1,0 +1,101 @@
+---
+// /admin/templates/nuevo — form de creación de template (B8 · T08).
+
+import Base from '~/layouts/Base.astro';
+import Button from '~/components/ui/Button.astro';
+
+export const prerender = false;
+
+const categorias = ['landing', 'dashboard', 'ecommerce'] as const;
+---
+<Base title="Nuevo template — Admin NX-Studio" description="Crear nuevo template del catálogo.">
+  <main class="mx-auto max-w-3xl px-6 py-16">
+    <a href="/admin/templates" class="font-mono text-xs uppercase tracking-widest text-nx-muted hover:text-nx-text">← Volver a templates</a>
+    <h1 class="mt-4 font-display text-3xl font-bold">Nuevo template</h1>
+
+    <form method="POST" action="/api/admin/templates" class="mt-8 space-y-4" data-template-form>
+      <input type="hidden" name="action" value="create" />
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="admin-field">
+          <span>Slug (único, kebab-case)</span>
+          <input type="text" name="slug" required class="admin-input" pattern="[a-z0-9-]+" placeholder="ej. mi-template" />
+        </label>
+        <label class="admin-field">
+          <span>Nombre</span>
+          <input type="text" name="nombre" required class="admin-input" />
+        </label>
+      </div>
+
+      <label class="admin-field">
+        <span>Descripción corta</span>
+        <input type="text" name="descripcionCorta" required class="admin-input" maxlength="200" />
+      </label>
+
+      <label class="admin-field">
+        <span>Descripción larga</span>
+        <textarea name="descripcionLarga" required class="admin-input" rows="4"></textarea>
+      </label>
+
+      <div class="grid gap-4 sm:grid-cols-3">
+        <label class="admin-field">
+          <span>Precio USD</span>
+          <input type="number" name="precioUsd" required class="admin-input" min="0" step="1" value="0" />
+        </label>
+        <label class="admin-field">
+          <span>Categoría</span>
+          <select name="categoria" required class="admin-input">
+            {categorias.map((c) => <option value={c}>{c}</option>)}
+          </select>
+        </label>
+        <label class="admin-field">
+          <span>Tiempo entrega (días)</span>
+          <input type="number" name="tiempoEntregaDias" required class="admin-input" min="1" max="365" value="7" />
+        </label>
+      </div>
+
+      <label class="admin-field">
+        <span>Stack (JSON array)</span>
+        <input type="text" name="stack" required class="admin-input" placeholder='["Astro","Tailwind"]' />
+      </label>
+
+      <label class="admin-field">
+        <span>Incluye (JSON array)</span>
+        <input type="text" name="incluye" required class="admin-input" placeholder='["source code","docs"]' />
+      </label>
+
+      <label class="admin-field">
+        <span>No incluye (JSON array)</span>
+        <input type="text" name="noIncluye" required class="admin-input" placeholder='["hosting","support"]' />
+      </label>
+
+      <label class="admin-field">
+        <span>Destacado</span>
+        <select name="destacado" class="admin-input">
+          <option value="false">No</option>
+          <option value="true">Sí</option>
+        </select>
+      </label>
+
+      <div class="flex gap-2 pt-4">
+        <Button type="submit" variant="primary">Crear template</Button>
+        <Button href="/admin/templates" variant="ghost">Cancelar</Button>
+      </div>
+    </form>
+  </main>
+</Base>
+
+<style>
+  .admin-field { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem; color: var(--color-nx-muted, #9aa0ad); }
+  .admin-field span { text-transform: uppercase; letter-spacing: 0.05em; font-family: ui-monospace, monospace; font-size: 0.72rem; }
+  .admin-input {
+    background: transparent;
+    color: var(--color-nx-ink, #e7e9ee);
+    border: 1px solid var(--color-nx-border, rgba(255,255,255,0.12));
+    border-radius: 4px;
+    padding: 0.5rem 0.7rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+  }
+  .admin-input:focus { outline: none; border-color: var(--color-nx-primary, #ff6b3d); }
+</style>
