@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
 import { getLocale, getT, localeUrl, LOCALES, DEFAULT_LOCALE } from "../i18n";
+import ChatbotWrapper from "../components/chatbot/ChatbotWrapper.astro";
+import { shouldRenderChatbot } from "../lib/chatbot-fsm";
 
 interface Props {
   title?: string;
@@ -81,6 +83,8 @@ const alternates = LOCALES.map((l) => ({
     <div class="relative z-10">
       <slot />
     </div>
+
+    {shouldRenderChatbot(Astro.url.pathname) && <ChatbotWrapper />}
 
     <script is:inline>
       // Reveal on scroll — global observer (vanilla, ~30 lines, sin dependencias)

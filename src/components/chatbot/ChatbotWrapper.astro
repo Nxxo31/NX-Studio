@@ -1,0 +1,37 @@
+---
+/**
+ * ChatbotWrapper — Punto de entrada Astro del chatbot SophIA.
+ *
+ * Responsabilidades:
+ *  1. Chequear el pathname contra shouldRenderChatbot() (excluir /portal, /admin, /api).
+ *     Si NO debe renderizarse, retorna null — el bundle React ni siquiera se
+ *     incluye en la página (es client:only, sin island markup).
+ *  2. Pre-computar TODAS las strings i18n del chatbot como un objeto plano
+ *     (no función), porque astro-island serializa props a JSON y las
+ *     funciones no se pueden serializar. El React component recibe el dict
+ *     y hace su propio lookup interno.
+ *
+ * El componente React es `client:only="react"` porque depende de localStorage
+ * y nunca debe renderizar en el servidor (sin SSR mismatch por Date.now(),
+ * localStorage, window.matchMedia, etc.).
+ */
+import Chatbot, { type ChatbotStrings } from "./Chatbot";
+import { getLocale, getMessages } from "~/i18n";
+import { shouldRenderChatbot } from "~/lib/chatbot-fsm";
+
+const locale = getLocale(Astro);
+const messages = getMessages(locale);
+const chatbotDict = (messages as Record<string, unknown>)["chatbot"];
+const t: ChatbotStrings = (chatbotDict ?? {}) as ChatbotStrings;
+const pathname = Astro.url.pathname;
+const shouldRender = shouldRenderChatbot(pathname);
+---
+
+{shouldRender && (
+  <Chatbot
+    pathname={pathname}
+    locale={locale}
+    strings={t}
+    client:only="react"
+  />
+)}
