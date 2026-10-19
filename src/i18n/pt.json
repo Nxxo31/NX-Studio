@@ -780,6 +780,36 @@
       }
     }
   },
+  "chatbot": {
+    "title": "SophIA",
+    "subtitle": "Assistente virtual da NX-Studio",
+    "placeholder": "Digite uma mensagem…",
+    "send": "Enviar",
+    "close": "Fechar",
+    "minimize": "Minimizar",
+    "reset": "Reiniciar conversa",
+    "open": "Abrir SophIA",
+    "fab_label": "Abrir assistente SophIA",
+    "panel_label": "Painel de chat com SophIA",
+    "help_text": "Comandos disponíveis:\n• /help — mostra esta ajuda\n• /reset — limpa a conversa\n• /portalsignup — ir ao portal do cliente\n\nVocê também pode me perguntar em espanhol, inglês ou português sobre preços, serviços, templates, laboratório ou contato.",
+    "reset_done": "Conversa reiniciada. Como posso ajudar?",
+    "portalsignup": "Levando você ao portal do cliente em uma nova aba. Se ainda não tem conta, pode criar uma quando chegar lá.",
+    "mock_greeting": "Olá! Sou a SophIA, assistente virtual da NX-Studio. Em que posso ajudar hoje? Pergunte sobre preços, serviços, templates ou digite /help para ver todos os comandos.",
+    "mock_pricing": "Os preços dependem do escopo. Todo projeto começa com uma chamada de descoberta gratuita; depois enviamos uma proposta com faixa indicativa e banda sugerida. Para uma estimativa imediata, abra o cotizador (/cotizador) ou me diga o que precisa que eu já encaminho para a equipe.",
+    "mock_handoff": "Vou te conectar com a equipe humana. Enquanto isso, conte seu projeto em 2-3 linhas para agilizarmos o primeiro contato. Resposta habitual em menos de 24h úteis.",
+    "mock_unknown": "Não tenho certeza se entendi. Posso ajudar com preços, serviços, templates, laboratório ou te passar para um humano. Tente /help para ver comandos.",
+    "mock_services": "Temos três linhas: aplicações sob medida, QA & testing embarcado, e IA aplicada (chatbots, agentes, RAG). Cada uma tem um entregável concreto. Qual te interessa explorar?",
+    "mock_templates": "Temos templates production-ready (landing, dashboard, e-commerce) prontos para comprar e deploy. Licença MIT, sem royalties, suporte no primeiro sprint. Passe em /templates para ver o catálogo.",
+    "mock_labs": "O laboratório de IA é onde experimentamos geração de mockups, agentes e protótipos. Sem backend, tudo no seu navegador. Se quiser ver um ao vivo, /laboratorio.",
+    "mock_contact": "Para contato direto: formulário em /contacto (salva no backend e notifica a equipe), ou /cotizador para estimativa imediata. Também /portalsignup se preferir criar conta no portal.",
+    "mock_thanks": "Por nada! Se precisar de mais alguma coisa, estou aqui.",
+    "aria_user_message": "Sua mensagem",
+    "aria_bot_message": "SophIA diz",
+    "status_online": "Online",
+    "empty_state": "Comece a conversa com um cumprimento ou /help para ver comandos.",
+    "input_hint": "Enter envia · Shift+Enter nova linha",
+    "footer_disclaimer": "SophIA é uma assistente automática. As respostas são indicativas; a equipe confirma qualquer proposta formal."
+  },
   "portal": {
     "shell": {
       "nav": {

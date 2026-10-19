@@ -780,6 +780,36 @@
       }
     }
   },
+  "chatbot": {
+    "title": "SophIA",
+    "subtitle": "NX-Studio virtual assistant",
+    "placeholder": "Type a message…",
+    "send": "Send",
+    "close": "Close",
+    "minimize": "Minimize",
+    "reset": "Reset conversation",
+    "open": "Open SophIA",
+    "fab_label": "Open SophIA assistant",
+    "panel_label": "SophIA chat panel",
+    "help_text": "Available commands:\n• /help — show this help\n• /reset — clear the conversation\n• /portalsignup — go to the client portal\n\nYou can also ask me in Spanish, English or Portuguese about pricing, services, templates, the lab or contact info.",
+    "reset_done": "Conversation reset. How can I help?",
+    "portalsignup": "Taking you to the client portal in a new tab. If you don't have an account yet, you can create one when you arrive.",
+    "mock_greeting": "Hi! I'm SophIA, NX-Studio's virtual assistant. What can I help you with today? Ask me about pricing, services, templates or type /help to see every command.",
+    "mock_pricing": "Pricing depends on scope. Every project starts with a free discovery call; afterwards we send a proposal with an indicative range and suggested band. For an immediate estimate, open the quote builder (/cotizador) or tell me what you need and I'll loop in the team.",
+    "mock_handoff": "I'll connect you with the human team. Meanwhile, tell me about your project in 2-3 lines and we'll speed up the first contact. Typical response in under 24 business hours.",
+    "mock_unknown": "I'm not sure I understood. I can help with pricing, services, templates, the lab or handing you off to a human. Try /help for commands.",
+    "mock_services": "We have three lines: custom applications, embedded QA & testing, and applied AI (chatbots, agents, RAG). Each one has a concrete deliverable. Which one would you like to explore?",
+    "mock_templates": "We have production-ready templates (landing, dashboard, e-commerce) ready to buy and deploy. MIT-licensed, no royalties, support during the first sprint. Head over to /templates to see the catalog.",
+    "mock_labs": "The AI lab is where we experiment with mockup generation, agents and prototypes. No backend, all in your browser. If you want to see one live, /laboratorio.",
+    "mock_contact": "For direct contact: form at /contacto (saves to backend and notifies the team), or /cotizador for an immediate estimate. Also /portalsignup if you prefer to create an account on the portal.",
+    "mock_thanks": "You're welcome! If you need anything else, I'm right here.",
+    "aria_user_message": "Your message",
+    "aria_bot_message": "SophIA says",
+    "status_online": "Online",
+    "empty_state": "Start the conversation with a greeting or /help to see commands.",
+    "input_hint": "Enter sends · Shift+Enter new line",
+    "footer_disclaimer": "SophIA is an automated assistant. Responses are indicative; the team confirms any formal proposal."
+  },
   "portal": {
     "shell": {
       "nav": {
