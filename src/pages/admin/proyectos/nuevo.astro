@@ -1,0 +1,126 @@
+---
+// /admin/proyectos/nuevo — form de creación de proyecto (B8 · T07).
+//
+// El form hace POST directo a /api/admin/proyectos con action=create.
+
+import Base from '~/layouts/Base.astro';
+import Button from '~/components/ui/Button.astro';
+
+export const prerender = false;
+
+const categorias = ['SaaS', 'IA', 'DevTools', 'Seguridad', '3D', 'Web', 'Backend'] as const;
+const statuses = ['activo', 'mantenimiento', 'archivado', 'beta'] as const;
+---
+<Base title="Nuevo proyecto — Admin NX-Studio" description="Crear nuevo proyecto del catálogo.">
+  <main class="mx-auto max-w-3xl px-6 py-16">
+    <a href="/admin/proyectos" class="font-mono text-xs uppercase tracking-widest text-nx-muted hover:text-nx-text">← Volver a proyectos</a>
+    <h1 class="mt-4 font-display text-3xl font-bold">Nuevo proyecto</h1>
+
+    <form method="POST" action="/api/admin/proyectos" class="mt-8 space-y-4" data-proyecto-form>
+      <input type="hidden" name="action" value="create" />
+
+      <label class="admin-field">
+        <span>Slug (único, kebab-case)</span>
+        <input type="text" name="slug" required class="admin-input" placeholder="ej. mi-proyecto" pattern="[a-z0-9-]+" />
+      </label>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="admin-field">
+          <span>Code</span>
+          <input type="text" name="code" required class="admin-input" placeholder="ej. NXC" />
+        </label>
+        <label class="admin-field">
+          <span>Nombre</span>
+          <input type="text" name="name" required class="admin-input" />
+        </label>
+      </div>
+
+      <label class="admin-field">
+        <span>Tagline</span>
+        <input type="text" name="tagline" required class="admin-input" />
+      </label>
+
+      <label class="admin-field">
+        <span>Descripción</span>
+        <textarea name="descripcion" required class="admin-input" rows="3"></textarea>
+      </label>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="admin-field">
+          <span>Categoría</span>
+          <select name="categoria" required class="admin-input">
+            {categorias.map((c) => <option value={c}>{c}</option>)}
+          </select>
+        </label>
+        <label class="admin-field">
+          <span>Status</span>
+          <select name="status" required class="admin-input">
+            {statuses.map((s) => <option value={s} selected={s === 'activo'}>{s}</option>)}
+          </select>
+        </label>
+      </div>
+
+      <label class="admin-field">
+        <span>Stack (JSON array)</span>
+        <input type="text" name="stack" required class="admin-input" placeholder='["TypeScript","Astro","D1"]' />
+      </label>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="admin-field">
+          <span>Repo URL</span>
+          <input type="url" name="repoUrl" class="admin-input" placeholder="https://github.com/..." />
+        </label>
+        <label class="admin-field">
+          <span>Live URL</span>
+          <input type="url" name="liveUrl" class="admin-input" placeholder="https://..." />
+        </label>
+      </div>
+
+      <label class="admin-field">
+        <span>Impact (JSON, opcional)</span>
+        <input type="text" name="impact" class="admin-input" placeholder='{"metric":"latencia","value":"120ms"}' />
+      </label>
+
+      <div class="grid gap-4 sm:grid-cols-3">
+        <label class="admin-field">
+          <span>Año</span>
+          <input type="number" name="year" required class="admin-input" min="2000" max="2100" value={new Date().getFullYear()} />
+        </label>
+        <label class="admin-field">
+          <span>Destacado</span>
+          <select name="destacado" class="admin-input">
+            <option value="false">No</option>
+            <option value="true">Sí</option>
+          </select>
+        </label>
+        <label class="admin-field">
+          <span>Portal visible</span>
+          <select name="portalVisible" class="admin-input">
+            <option value="false">No</option>
+            <option value="true">Sí</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="flex gap-2 pt-4">
+        <Button type="submit" variant="primary">Crear proyecto</Button>
+        <Button href="/admin/proyectos" variant="ghost">Cancelar</Button>
+      </div>
+    </form>
+  </main>
+</Base>
+
+<style>
+  .admin-field { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem; color: var(--color-nx-muted, #9aa0ad); }
+  .admin-field span { text-transform: uppercase; letter-spacing: 0.05em; font-family: ui-monospace, monospace; font-size: 0.72rem; }
+  .admin-input {
+    background: transparent;
+    color: var(--color-nx-ink, #e7e9ee);
+    border: 1px solid var(--color-nx-border, rgba(255,255,255,0.12));
+    border-radius: 4px;
+    padding: 0.5rem 0.7rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+  }
+  .admin-input:focus { outline: none; border-color: var(--color-nx-primary, #ff6b3d); }
+</style>

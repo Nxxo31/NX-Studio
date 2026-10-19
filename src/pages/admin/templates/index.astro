@@ -1,0 +1,95 @@
+---
+// /admin/templates — lista CRUD de templates (B8 · T08).
+
+import Base from '~/layouts/Base.astro';
+import Table from '~/components/ui/Table.astro';
+import Button from '~/components/ui/Button.astro';
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { createDb } from '~/db';
+import { listAll as listTemplates } from '~/server/template-repo';
+
+export const prerender = false;
+
+const env = runtimeEnv as unknown as { DB: D1Database };
+const db = createDb(env.DB);
+
+let templates = [];
+try {
+  templates = await listTemplates(db);
+} catch (e) {
+  templates = [];
+}
+
+const fmtUsd = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+---
+<Base title="Templates — Admin NX-Studio" description="CRUD de templates del catálogo.">
+  <main class="mx-auto max-w-6xl px-6 py-16">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--nx-primary);">Operador</p>
+        <h1 class="mt-2 font-display text-3xl font-bold">Templates</h1>
+        <p class="mt-1 text-sm text-nx-muted">{templates.length} en el catálogo</p>
+      </div>
+      <nav class="flex flex-wrap gap-2 text-xs font-mono">
+        <a href="/admin" class="admin-nav-link">Dashboard</a>
+        <a href="/admin/templates/nuevo" class="admin-nav-link admin-nav-primary">+ Nuevo template</a>
+      </nav>
+    </div>
+
+    <div class="mt-8" data-templates-table>
+      {templates.length === 0 ? (
+        <Table empty="Sin templates en el catálogo">
+          <span slot="head" data-empty-message>Sin templates en el catálogo</span>
+        </Table>
+      ) : (
+        <Table>
+          <tr slot="head">
+            <th>Slug</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Precio USD</th>
+            <th>Entrega (días)</th>
+            <th>Destacado</th>
+            <th>Acciones</th>
+          </tr>
+          {templates.map((t) => (
+            <tr data-template-row data-slug={t.slug}>
+              <td><code>{t.slug}</code></td>
+              <td>{t.nombre}</td>
+              <td>{t.categoria}</td>
+              <td class="font-mono">{fmtUsd.format(t.precioUsd)}</td>
+              <td>{t.tiempoEntregaDias}</td>
+              <td>{t.destacado ? '★' : '·'}</td>
+              <td>
+                <div class="flex flex-wrap gap-1">
+                  <Button href={`/admin/templates/${t.slug}/editar`} variant="subtle" size="sm">Editar</Button>
+                  <form method="POST" action="/api/admin/templates" class="inline">
+                    <input type="hidden" name="action" value="delete" />
+                    <input type="hidden" name="slug" value={t.slug} />
+                    <Button type="submit" variant="danger" size="sm">Eliminar</Button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </Table>
+      )}
+    </div>
+  </main>
+</Base>
+
+<style>
+  .admin-nav-link {
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--color-nx-border, rgba(255,255,255,0.12));
+    border-radius: 4px;
+    color: var(--color-nx-ink, #e7e9ee);
+    text-decoration: none;
+  }
+  .admin-nav-link:hover { border-color: var(--color-nx-primary, #ff6b3d); }
+  .admin-nav-primary {
+    background: var(--color-nx-primary, #ff6b3d);
+    color: #0a0b14;
+    border-color: var(--color-nx-primary, #ff6b3d);
+  }
+</style>

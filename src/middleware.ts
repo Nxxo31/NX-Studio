@@ -2,7 +2,9 @@ import { defineMiddleware } from 'astro:middleware';
 import { detectLocale, LOCALE_COOKIE } from './i18n/detect';
 import type { Locale } from './i18n/country-map';
 import { portalGuard } from './lib/portal-guard';
+import { adminGuard, renderAdminForbidden } from './lib/admin-guard';
 import type { PortalEnv } from './lib/portal-auth';
+import type { AuthEnv } from './lib/auth';
 import { env as runtimeEnv } from 'cloudflare:workers';
 
 /**
@@ -66,6 +68,33 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
   if (logical === '/portal' || logical.startsWith('/portal/')) {
     // Bypass i18n para /portal/* — el portal no se localiza por ahora
+    return next();
+  }
+
+  // ─── B8 Admin guard (auth + RBAC) ─────────────────────────────────────
+  // /admin/* requiere sesión better-auth con role en [admin, gatekeeper,
+  // designer, dev]. Cookie prefix 'nx-studio' (compartido con el flujo
+  // /api/auth). El resultado se popular en locals.portalSession.user.role
+  // porque requireRole() (rbac.ts) lee desde ahí — los paths /portal y
+  // /admin son disjuntos, así que no hay colisión con el portal session.
+  const adminResult = await adminGuard({
+    pathname: logical,
+    request: context.request,
+    env: runtimeEnv as unknown as AuthEnv,
+  });
+  if (adminResult.action === 'redirect') {
+    return context.redirect(adminResult.location, 302);
+  }
+  if (adminResult.action === 'forbidden') {
+    return renderAdminForbidden(logical);
+  }
+  if (adminResult.action === 'next') {
+    (context.locals as { portalSession?: { user: { id: string; role: string } } }).portalSession = {
+      user: { id: adminResult.adminSession.user.id, role: adminResult.adminSession.user.role },
+    };
+  }
+  if (logical === '/admin' || logical.startsWith('/admin/')) {
+    // /admin/* es i18n-bypass (interno, sin localización por ahora)
     return next();
   }
 
