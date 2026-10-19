@@ -1,0 +1,36 @@
+---
+type InputType = 'text' | 'email' | 'tel' | 'password' | 'url' | 'number' | 'hidden';
+interface Props {
+  name: string;
+  label?: string;
+  type?: InputType;
+  value?: string | number;
+  placeholder?: string;
+  required?: boolean;
+  disabled?: boolean;
+  readonly?: boolean;
+  autocomplete?: string;
+  id?: string;
+  pattern?: string;
+  maxlength?: number;
+  minlength?: number;
+}
+const { name, label, type = 'text', value, placeholder, required = false, disabled = false, readonly = false, autocomplete, id, pattern, maxlength, minlength } = Astro.props;
+const inputId = id ?? `field-${name}`;
+const hasError = Astro.slots.has('error');
+---
+<label class="nx-input-label" for={inputId}>
+  {label && <span class="nx-input-label-text">{label}{required && <span class="nx-required-mark" aria-hidden="true">*</span>}</span>}
+  <input id={inputId} name={name} type={type} value={value} placeholder={placeholder} required={required} disabled={disabled} readonly={readonly} autocomplete={autocomplete} pattern={pattern} maxlength={maxlength} minlength={minlength} class={`nx-input ${hasError ? 'nx-input-error' : ''}`} aria-invalid={hasError ? 'true' : undefined} />
+  {hasError && <span class="nx-input-error-text"><slot name="error" /></span>}
+</label>
+<style>
+  .nx-input-label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.875rem; }
+  .nx-input-label-text { color: var(--color-nx-muted, #9ca3af); font-weight: 500; }
+  .nx-required-mark { color: var(--color-nx-primary, #ff4500); margin-left: 0.15rem; }
+  .nx-input { width: 100%; padding: 0.55rem 0.75rem; background: var(--color-nx-surface, #11132a); border: 1px solid var(--color-nx-border-strong, rgba(255,255,255,0.14)); border-radius: 0.5rem; color: var(--color-nx-ink, #e8eaf6); font-size: 0.95rem; transition: border-color 0.15s ease; }
+  .nx-input:focus { outline: none; border-color: var(--color-nx-primary, #ff4500); }
+  .nx-input:disabled { opacity: 0.5; cursor: not-allowed; }
+  .nx-input-error { border-color: #ef4444; }
+  .nx-input-error-text { color: #ef4444; font-size: 0.8rem; }
+</style>

@@ -1,0 +1,68 @@
+---
+// /portal/login — formulario de acceso al portal.
+// Stub básico: muestra el form, deja mejor-auth manejando la sesión vía cookie
+// del adapter /api/auth/[...all]. El flujo real de magic link / sign-in
+// vive en el adapter de better-auth.
+
+import Base from '~/layouts/Base.astro';
+import Input from '~/components/ui/Input.astro';
+import Button from '~/components/ui/Button.astro';
+import { getT, getLocale } from '~/i18n';
+
+export const prerender = false;
+
+const t = getT(getLocale(Astro));
+const from = Astro.url.searchParams.get('from') || '/portal';
+const error = Astro.url.searchParams.get('error');
+---
+
+<Base title="Portal login — NX-Studio" description="Accede a tu portal de cliente NX-Studio.">
+  <main class="mx-auto max-w-md px-6 py-16">
+    <div class="portal-login-card">
+      <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--lava-edge);">Portal Cliente</p>
+      <h1 class="mt-2 font-display text-2xl font-bold">Inicia sesión</h1>
+      <p class="mt-1 text-sm text-nx-muted">Accede con tu email y contraseña.</p>
+
+      {error && <p class="mt-4 portal-flash portal-flash-error" role="alert">{error}</p>}
+
+      <form method="POST" action={`/api/auth/sign-in/email?from=${encodeURIComponent(from)}`} class="portal-login-form" data-testid="portal-login-form">
+        <Input name="email" type="email" label="Email" required autocomplete="email" />
+        <Input name="password" type="password" label="Contraseña" required autocomplete="current-password" minlength={8} />
+        <Button type="submit" variant="primary">{t('portal.shell.nav.dashboard')}</Button>
+      </form>
+
+      <div class="portal-login-divider"><span>o</span></div>
+
+      <form method="POST" action={`/api/auth/sign-in/magic-link?from=${encodeURIComponent(from)}`} data-testid="portal-magic-form">
+        <Input name="email" type="email" label="Email para magic link" required autocomplete="email" />
+        <Button type="submit" variant="ghost">Enviar enlace mágico</Button>
+      </form>
+
+      <p class="mt-6 text-xs text-nx-muted">¿No tienes cuenta? <a href="/portal/register">Regístrate</a></p>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .portal-login-card {
+    background: var(--color-nx-surface, #11132a);
+    border: 1px solid var(--color-nx-border, rgba(255,255,255,0.08));
+    border-radius: 0.85rem;
+    padding: 2rem;
+    color: var(--color-nx-ink, #e8eaf6);
+  }
+  .portal-login-form, form { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+  .portal-login-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--color-nx-muted);
+    margin: 1.5rem 0;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .portal-login-divider:before, .portal-login-divider:after { content: ''; flex: 1; height: 1px; background: var(--color-nx-border); }
+  .portal-flash { padding: 0.5rem 0.75rem; border-radius: 0.4rem; }
+  .portal-flash-error { background: rgba(239, 68, 68, 0.14); color: #ef4444; }
+</style>

@@ -1,0 +1,96 @@
+---
+// /portal/mensajes — hilo cliente ↔ operador (B7 · T08).
+//
+// Lista portal_message WHERE user_id, ORDER BY created_at DESC.
+// Direction rendering: inbound (cliente) izquierda, outbound (operador) derecha.
+// Marcar outbound unread como read al render.
+// NO form per-client — el envío de mensajes es solo desde el operador.
+
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { eq } from 'drizzle-orm';
+import { createDb, schema } from '~/db';
+import {
+  listMensajesByUser,
+  markOutboundAsRead,
+} from '~/server/portal-repo';
+import Base from '~/layouts/Base.astro';
+import PortalShell from '~/components/portal/PortalShell.astro';
+import { getT, getLocale } from '~/i18n';
+
+export const prerender = false;
+
+const env = runtimeEnv as unknown as { DB: D1Database };
+const portalSession = (Astro.locals as { portalSession?: { user: { id: string } } }).portalSession;
+if (!portalSession) return new Response('Unauthorized', { status: 401 });
+const userId = portalSession.user.id;
+const t = getT(getLocale(Astro));
+const db = createDb(env.DB);
+
+let user = { name: '', email: '' };
+let mensajes: Awaited<ReturnType<typeof listMensajesByUser>> = [];
+try {
+  const direct = await db.select().from(schema.user).where(eq(schema.user.id, userId)).get();
+  if (direct) user = { name: direct.name ?? '', email: direct.email ?? '' };
+  // Marcar outbound unread como read antes de listar (operador "entrega" el mensaje).
+  await markOutboundAsRead(db, userId);
+  mensajes = await listMensajesByUser(db, userId);
+} catch {
+  mensajes = [];
+}
+
+// Mostrar en orden cronológico ASC para lectura natural (más viejo arriba, nuevo abajo).
+const ordered = [...mensajes].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+const dateTimeFmt = new Intl.DateTimeFormat('es-CO', { dateStyle: 'medium', timeStyle: 'short' });
+---
+
+<Base title={t('portal.shell.title.mensajes')} description={t('portal.shell.title.mensajesDescription')}>
+  <PortalShell t={t} user={user} active="mensajes" title={t('portal.mensajes.heading')} description={t('portal.mensajes.subhead')}>
+    <p class="portal-help">{t('portal.mensajes.noFormPerClient')}</p>
+    {ordered.length === 0 ? (
+      <p class="portal-empty">{t('portal.mensajes.empty')}</p>
+    ) : (
+      <ol class="portal-thread" data-testid="portal-thread">
+        {ordered.map((m) => (
+          <li class={`portal-msg portal-msg-${m.direction}`}>
+            <div class="portal-msg-bubble">
+              <p class="portal-msg-body">{m.body}</p>
+              <div class="portal-msg-meta">
+                <span class="portal-msg-author">{t(`portal.mensajes.direction${m.direction === 'inbound' ? 'Inbound' : 'Outbound'}`)}</span>
+                <span class="portal-msg-time">{dateTimeFmt.format(new Date(m.createdAt))}</span>
+                {m.readAt && m.direction === 'inbound' && <span class="portal-msg-read">✓</span>}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+    )}
+  </PortalShell>
+</Base>
+
+<style>
+  .portal-help { color: var(--color-nx-muted); font-size: 0.85rem; margin-bottom: 1rem; }
+  .portal-thread { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+  .portal-msg { display: flex; }
+  .portal-msg-inbound { justify-content: flex-start; }
+  .portal-msg-outbound { justify-content: flex-end; }
+  .portal-msg-bubble {
+    max-width: 75%;
+    padding: 0.65rem 0.85rem;
+    border-radius: 0.85rem;
+    background: var(--color-nx-raised, #181a35);
+  }
+  .portal-msg-outbound .portal-msg-bubble {
+    background: var(--color-nx-primary-tint, rgba(255, 69, 0, 0.14));
+    border: 1px solid var(--color-nx-primary, #ff4500);
+  }
+  .portal-msg-body { margin: 0; white-space: pre-wrap; }
+  .portal-msg-meta { display: flex; gap: 0.5rem; align-items: center; margin-top: 0.35rem; color: var(--color-nx-muted); font-size: 0.75rem; }
+  .portal-msg-author { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; }
+  .portal-msg-read { color: #22c55e; }
+  .portal-empty {
+    color: var(--color-nx-muted);
+    padding: 1rem;
+    border: 1px dashed var(--color-nx-border-strong);
+    border-radius: 0.5rem;
+  }
+</style>

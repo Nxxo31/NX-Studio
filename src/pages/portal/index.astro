@@ -1,0 +1,213 @@
+---
+// /portal — dashboard principal del cliente (B7 · T04).
+//
+// Tres secciones (desktop en columnas → stack mobile):
+//   1. Licitaciones del user (agrupadas por status)
+//   2. Proyectos visibles (cliente_id = user.id AND portal_visible = 1)
+//   3. Últimas 5 actividades del portal_activity
+//
+// Empty states copy + CTA "Iniciar nueva licitación" → /cotizador.
+
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { eq } from 'drizzle-orm';
+import { createDb, schema } from '~/db';
+import { createPortalAuth } from '~/lib/portal-auth';
+import {
+  groupLicitacionesByStatus,
+  listLicitacionesByUser,
+  listProyectosDelCliente,
+  listRecentActivity,
+} from '~/server/portal-repo';
+import Base from '~/layouts/Base.astro';
+import PortalShell from '~/components/portal/PortalShell.astro';
+import { getT, getLocale } from '~/i18n';
+import Card from '~/components/ui/Card.astro';
+
+export const prerender = false;
+
+// Astro v6+ — binding global cloudflare:workers.
+const env = runtimeEnv as unknown as {
+  DB: D1Database;
+  BETTER_AUTH_URL?: string;
+  BETTER_AUTH_SECRET?: string;
+};
+
+// Sesión del portal (la setea el middleware si está autenticado).
+const portalSession = (Astro.locals as { portalSession?: { user: { id: string } } }).portalSession;
+
+if (!portalSession) {
+  // El middleware ya debió redirigir — esto es safety net.
+  return Astro.redirect('/portal/login?from=/portal', 302);
+}
+
+const userId = portalSession.user.id;
+const t = getT(getLocale(Astro));
+const db = createDb(env.DB);
+
+let user: { name: string; email: string } | null = null;
+try {
+  // Hydrate del user real desde DB (portalSession solo trae el id).
+  const auth = createPortalAuth(env);
+  const session = await auth.api.getSession({ headers: Astro.request.headers });
+  const sessionUser = (session && (session as { user?: { name?: string; email?: string } }).user) || null;
+  user = sessionUser
+    ? { name: sessionUser.name ?? '', email: sessionUser.email ?? '' }
+    : { name: '', email: '' };
+  // Fallback: si el adapter no devolvió datos (cookie cache vacía), leemos user directo.
+  if (!user.name || !user.email) {
+    const direct = await db.select().from(schema.user).where(eq(schema.user.id, userId)).get();
+    if (direct) user = { name: direct.name ?? '', email: direct.email ?? '' };
+  }
+} catch {
+  return Astro.redirect('/portal/login?from=/portal', 302);
+}
+
+const safeUser = user ?? { name: '', email: '' };
+
+// Data del dashboard — todas las queries son best-effort; si D1 falla en preview/local,
+// mostramos empty states en lugar de romper el render.
+let licitaciones: Awaited<ReturnType<typeof listLicitacionesByUser>> = [];
+let proyectos: Awaited<ReturnType<typeof listProyectosDelCliente>> = [];
+let actividad: Awaited<ReturnType<typeof listRecentActivity>> = [];
+try {
+  [licitaciones, proyectos, actividad] = await Promise.all([
+    listLicitacionesByUser(db, userId),
+    listProyectosDelCliente(db, userId),
+    listRecentActivity(db, userId, 5),
+  ]);
+} catch {
+  // empty states
+}
+
+const grouped = groupLicitacionesByStatus(licitaciones);
+const STATUSES_ORDER = ['nueva', 'contactada', 'propuesta_enviada', 'aceptada', 'rechazada', 'completada'] as const;
+
+const fmt = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const dateFmt = new Intl.DateTimeFormat('es-CO', { dateStyle: 'medium' });
+
+const title = t('portal.shell.title.dashboard');
+const description = t('portal.shell.title.dashboardDescription');
+const pageTitle = t('portal.shell.title.dashboard');
+---
+
+<Base title={pageTitle} description={description}>
+  <PortalShell t={t} user={safeUser} active="dashboard" title={t('portal.dashboard.welcome', { name: safeUser.name || safeUser.email })} description={t('portal.dashboard.subhead')}>
+    <div class="portal-cta-row">
+      <a href="/cotizador" class="lava-btn">{t('portal.dashboard.ctaCotizar')}</a>
+    </div>
+
+    <section class="portal-section" data-testid="portal-section-licitaciones">
+      <h2 class="portal-section-title">{t('portal.dashboard.sectionLicitaciones')}</h2>
+      {licitaciones.length === 0 ? (
+        <p class="portal-empty">
+          {t('portal.dashboard.emptyLicitaciones')} {t('portal.dashboard.emptyLicitacionesHelp')}
+        </p>
+      ) : (
+        <ul class="portal-list">
+          {STATUSES_ORDER.flatMap((s) => (grouped[s] ?? []).map((l) => (
+            <li class="portal-list-row" data-status={s}>
+              <a href={`/portal/licitacion/${l.id}`} class="portal-list-link">
+                <span class="portal-status-tag" data-status={s}>{t(`portal.dashboard.status.${s}`)}</span>
+                <span class="portal-list-title">{l.tipo} · {l.engagement}</span>
+                <span class="portal-list-meta">{fmt.format(l.precioMin)}–{fmt.format(l.precioMax)} · {dateFmt.format(new Date(l.createdAt))}</span>
+              </a>
+            </li>
+          )))}
+        </ul>
+      )}
+    </section>
+
+    <section class="portal-section" data-testid="portal-section-proyectos">
+      <h2 class="portal-section-title">{t('portal.dashboard.sectionProyectos')}</h2>
+      {proyectos.length === 0 ? (
+        <p class="portal-empty">
+          {t('portal.dashboard.emptyProyectos')} {t('portal.dashboard.emptyProyectosHelp')}
+        </p>
+      ) : (
+        <ul class="portal-list">
+          {proyectos.map((p) => (
+            <li class="portal-list-row">
+              <a href={`/portal/proyectos/${p.slug}`} class="portal-list-link">
+                <span class="portal-list-title">{p.name}</span>
+                <span class="portal-list-meta">{p.categoria} · {p.status} · {p.year}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+
+    <section class="portal-section" data-testid="portal-section-actividad">
+      <h2 class="portal-section-title">{t('portal.dashboard.sectionActividad')}</h2>
+      {actividad.length === 0 ? (
+        <p class="portal-empty">{t('portal.dashboard.emptyActividad')}</p>
+      ) : (
+        <ul class="portal-activity-list">
+          {actividad.map((a) => (
+            <li class="portal-activity-row">
+              <span class="portal-activity-action">{a.action}</span>
+              <span class="portal-activity-meta">{dateFmt.format(new Date(a.createdAt))} · {a.entityType}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  </PortalShell>
+</Base>
+
+<style>
+  .portal-cta-row { display: flex; justify-content: flex-end; margin-bottom: 1rem; }
+  .portal-section { margin-top: 1.5rem; }
+  .portal-section-title {
+    font-family: var(--font-display, system-ui);
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-nx-muted, #9ca3af);
+    margin: 0 0 0.5rem 0;
+  }
+  .portal-list, .portal-activity-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+  .portal-list-row { border-radius: 0.5rem; }
+  .portal-list-link {
+    display: flex; gap: 0.75rem; align-items: center;
+    padding: 0.65rem 0.85rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: var(--color-nx-ink, #e8eaf6);
+    background: var(--color-nx-raised, #181a35);
+  }
+  .portal-list-link:hover { background: var(--color-nx-surface, #11132a); }
+  .portal-list-title { flex: 1; font-weight: 500; }
+  .portal-list-meta { color: var(--color-nx-muted, #9ca3af); font-size: 0.85rem; }
+  .portal-status-tag {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: var(--color-nx-primary-tint, rgba(255,69,0,0.14));
+    color: var(--color-nx-primary, #ff4500);
+  }
+  .portal-status-tag[data-status="aceptada"], .portal-status-tag[data-status="completada"] {
+    background: rgba(34, 197, 94, 0.14); color: #22c55e;
+  }
+  .portal-status-tag[data-status="rechazada"] {
+    background: rgba(239, 68, 68, 0.14); color: #ef4444;
+  }
+  .portal-empty {
+    color: var(--color-nx-muted, #9ca3af);
+    font-size: 0.9rem;
+    padding: 1rem;
+    border: 1px dashed var(--color-nx-border-strong, rgba(255,255,255,0.14));
+    border-radius: 0.5rem;
+  }
+  .portal-activity-row {
+    display: flex; gap: 0.75rem; align-items: center;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--color-nx-border, rgba(255,255,255,0.08));
+  }
+  .portal-activity-row:last-child { border-bottom: none; }
+  .portal-activity-action { font-family: var(--font-mono, monospace); font-size: 0.85rem; flex: 1; }
+  .portal-activity-meta { color: var(--color-nx-muted, #9ca3af); font-size: 0.8rem; }
+</style>

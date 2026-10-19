@@ -1,0 +1,151 @@
+---
+/**
+ * PortalShell — layout compartido para todas las páginas del portal cliente.
+ * - Sidebar de navegación (desktop) / topbar (mobile)
+ * - Header con logout
+ * - Slot para el contenido principal
+ *
+ * Uso:
+ *   <PortalShell t={t} user={user} active="dashboard">
+ *     <DashboardContent />
+ *   </PortalShell>
+ */
+import Card from '~/components/ui/Card.astro';
+
+type Active = 'dashboard' | 'proyectos' | 'mensajes' | 'perfil';
+
+interface Props {
+  t: (key: string, params?: Record<string, string | number>) => string;
+  user: { id: string; name: string; email: string };
+  active: Active;
+  title: string;
+  description?: string;
+}
+
+const { t, user, active, title, description } = Astro.props;
+
+const nav: { key: Active; href: string; labelKey: string }[] = [
+  { key: 'dashboard', href: '/portal', labelKey: 'portal.shell.nav.dashboard' },
+  { key: 'proyectos', href: '/portal/proyectos', labelKey: 'portal.shell.nav.proyectos' },
+  { key: 'mensajes', href: '/portal/mensajes', labelKey: 'portal.shell.nav.mensajes' },
+  { key: 'perfil', href: '/portal/perfil', labelKey: 'portal.shell.nav.perfil' },
+];
+---
+
+<div class="portal-shell">
+  <header class="portal-topbar">
+    <a href="/portal" class="portal-brand">NX-Studio<span aria-hidden="true">·</span><span class="portal-brand-tag">portal</span></a>
+    <form method="POST" action="/api/auth/sign-out" class="portal-logout-form">
+      <span class="portal-user-email" title={user.email}>{user.name || user.email}</span>
+      <button type="submit" class="lava-btn-ghost lava-btn-sm">{t('portal.shell.nav.logout')}</button>
+    </form>
+  </header>
+
+  <div class="portal-grid">
+    <nav class="portal-sidenav" aria-label="Portal navigation">
+      {nav.map((n) => (
+        <a href={n.href} class={`portal-sidenav-link ${active === n.key ? 'portal-sidenav-link-active' : ''}`}>
+          {t(n.labelKey)}
+        </a>
+      ))}
+    </nav>
+
+    <main class="portal-main">
+      <header class="portal-page-header">
+        <h1 class="portal-page-title">{title}</h1>
+        {description && <p class="portal-page-desc">{description}</p>}
+      </header>
+      <Card>
+        <slot />
+      </Card>
+    </main>
+  </div>
+</div>
+
+<style>
+  .portal-shell { min-height: 100vh; padding-bottom: 4rem; }
+  .portal-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--color-nx-border, rgba(255, 255, 255, 0.08));
+    background: var(--color-nx-surface, #11132a);
+  }
+  .portal-brand {
+    font-family: var(--font-display, system-ui);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--color-nx-ink, #e8eaf6);
+    text-decoration: none;
+  }
+  .portal-brand-tag {
+    color: var(--color-nx-primary, #ff4500);
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .portal-logout-form { display: flex; align-items: center; gap: 0.75rem; }
+  .portal-user-email {
+    font-size: 0.85rem;
+    color: var(--color-nx-muted, #9ca3af);
+  }
+
+  .portal-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 1.5rem;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+  @media (max-width: 768px) {
+    .portal-grid { grid-template-columns: 1fr; padding: 1rem; }
+  }
+
+  .portal-sidenav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  @media (max-width: 768px) {
+    .portal-sidenav {
+      flex-direction: row;
+      gap: 0.5rem;
+      overflow-x: auto;
+    }
+  }
+  .portal-sidenav-link {
+    display: block;
+    padding: 0.6rem 0.85rem;
+    border-radius: 0.5rem;
+    color: var(--color-nx-muted, #9ca3af);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .portal-sidenav-link:hover {
+    background: var(--color-nx-raised, #181a35);
+    color: var(--color-nx-ink, #e8eaf6);
+  }
+  .portal-sidenav-link-active {
+    background: var(--color-nx-primary-tint, rgba(255, 69, 0, 0.14));
+    color: var(--color-nx-primary, #ff4500);
+    font-weight: 600;
+  }
+
+  .portal-main { min-width: 0; }
+  .portal-page-header { margin-bottom: 1rem; }
+  .portal-page-title {
+    font-family: var(--font-display, system-ui);
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0;
+  }
+  .portal-page-desc {
+    color: var(--color-nx-muted, #9ca3af);
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+  }
+</style>

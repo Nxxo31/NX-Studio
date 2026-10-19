@@ -1,0 +1,17 @@
+---
+interface Props { label?: string; help?: string; error?: string; required?: boolean; for?: string; }
+const { label, help, error, required = false, for: forId } = Astro.props;
+---
+<div class="nx-field">
+  {label && <label class="nx-field-label" for={forId}>{label}{required && <span class="nx-required-mark" aria-hidden="true">*</span>}</label>}
+  <div class="nx-field-control"><slot /></div>
+  {error ? (<p class="nx-field-error" role="alert">{error}</p>) : help ? (<p class="nx-field-help">{help}</p>) : null}
+</div>
+<style>
+  .nx-field { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+  .nx-field-label { color: var(--color-nx-muted, #9ca3af); font-weight: 500; font-size: 0.875rem; }
+  .nx-required-mark { color: var(--color-nx-primary, #ff4500); margin-left: 0.15rem; }
+  .nx-field-control { width: 100%; }
+  .nx-field-help { font-size: 0.8rem; color: var(--color-nx-muted, #6b7280); }
+  .nx-field-error { font-size: 0.8rem; color: #ef4444; }
+</style>

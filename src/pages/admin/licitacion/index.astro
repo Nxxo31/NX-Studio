@@ -1,0 +1,203 @@
+---
+// /admin/licitacion — tabla de licitaciones con filtros y acciones inline (B8 · T06).
+//
+// Filtros: status, banda, fecha desde/hasta, user_id.
+// Acciones inline: aprobar, rechazar, marcar contactada.
+// Cada acción es un form POST que dispara la API correspondiente.
+//
+// Empty state: "Sin licitaciones que coincidan con los filtros".
+
+import Base from '~/layouts/Base.astro';
+import Table from '~/components/ui/Table.astro';
+import Button from '~/components/ui/Button.astro';
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { createDb } from '~/db';
+import { listAll as listLicitaciones } from '~/server/licitacion-repo';
+import { applyLicitacionFilters } from '~/lib/admin-aggregators';
+
+export const prerender = false;
+
+const env = runtimeEnv as unknown as { DB: D1Database };
+const db = createDb(env.DB);
+
+const STATUSES = ['nueva', 'contactada', 'propuesta_enviada', 'aceptada', 'rechazada', 'completada'] as const;
+const BANDAS = ['Starter', 'Standard', 'Growth', 'Enterprise'] as const;
+
+const sp = Astro.url.searchParams;
+const filterStatus = sp.get('status') ?? '';
+const filterBanda = sp.get('banda') ?? '';
+const filterUserId = sp.get('user_id') ?? '';
+const filterFrom = sp.get('from') ?? '';
+const filterTo = sp.get('to') ?? '';
+
+const fromDate = filterFrom ? new Date(filterFrom) : undefined;
+const toDate = filterTo ? new Date(filterTo) : undefined;
+const validToDate = toDate && !isNaN(toDate.getTime()) ? toDate : undefined;
+const validFromDate = fromDate && !isNaN(fromDate.getTime()) ? fromDate : undefined;
+
+let all = [];
+try {
+  all = await listLicitaciones(db);
+} catch (e) {
+  all = [];
+}
+
+const filtered = applyLicitacionFilters(all, {
+  status: filterStatus || undefined,
+  banda: filterBanda || undefined,
+  userId: filterUserId || undefined,
+  from: validFromDate,
+  to: validToDate,
+});
+
+const fmtUsd = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+---
+<Base title="Licitaciones — Admin NX-Studio" description="Tabla de licitaciones con filtros y acciones.">
+  <main class="mx-auto max-w-6xl px-6 py-16">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--nx-primary);">Operador</p>
+        <h1 class="mt-2 font-display text-3xl font-bold">Licitaciones</h1>
+        <p class="mt-1 text-sm text-nx-muted">{filtered.length} de {all.length} · filtros aplicados</p>
+      </div>
+      <nav class="flex flex-wrap gap-2 text-xs font-mono">
+        <a href="/admin" class="admin-nav-link">Dashboard</a>
+      </nav>
+    </div>
+
+    <form method="GET" class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-5" data-filter-form>
+      <label class="admin-filter">
+        <span>Status</span>
+        <select name="status" class="admin-select">
+          <option value="">Todos</option>
+          {STATUSES.map((s) => (
+            <option value={s} selected={filterStatus === s}>{s}</option>
+          ))}
+        </select>
+      </label>
+      <label class="admin-filter">
+        <span>Banda</span>
+        <select name="banda" class="admin-select">
+          <option value="">Todas</option>
+          {BANDAS.map((b) => (
+            <option value={b} selected={filterBanda === b}>{b}</option>
+          ))}
+        </select>
+      </label>
+      <label class="admin-filter">
+        <span>Desde</span>
+        <input type="date" name="from" value={filterFrom} class="admin-input" />
+      </label>
+      <label class="admin-filter">
+        <span>Hasta</span>
+        <input type="date" name="to" value={filterTo} class="admin-input" />
+      </label>
+      <label class="admin-filter">
+        <span>User ID</span>
+        <input type="text" name="user_id" value={filterUserId} class="admin-input" placeholder="opcional" />
+      </label>
+      <div class="col-span-2 sm:col-span-5 flex gap-2">
+        <Button type="submit" variant="primary" size="sm">Filtrar</Button>
+        <Button href="/admin/licitacion" variant="ghost" size="sm">Reset</Button>
+      </div>
+    </form>
+
+    <div class="mt-8" data-licitacion-table>
+      {filtered.length === 0 ? (
+        <Table empty="Sin licitaciones que coincidan con los filtros">
+          <span slot="head" data-empty-message>Sin licitaciones que coincidan con los filtros</span>
+        </Table>
+      ) : (
+        <Table>
+          <tr slot="head">
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Banda</th>
+            <th>Rango</th>
+            <th>Recibida</th>
+            <th>Acciones</th>
+          </tr>
+          {filtered.map((l) => (
+            <tr data-licitacion-row data-id={l.id}>
+              <td><code>{l.id.slice(0, 8)}</code></td>
+              <td><a href={`/admin/licitacion/${l.id}`} class="admin-link">{l.nombre}</a></td>
+              <td>{l.email}</td>
+              <td><span class="admin-tag">{l.status}</span></td>
+              <td>{l.banda}</td>
+              <td class="font-mono text-xs">{fmtUsd.format(l.precioMin)}–{fmtUsd.format(l.precioMax)}</td>
+              <td class="font-mono text-xs">{new Date(l.createdAt).toLocaleDateString('es-CO')}</td>
+              <td>
+                <div class="flex flex-wrap gap-1">
+                  <form method="POST" action={`/api/admin/licitacion/${l.id}/approve`} class="inline">
+                    <Button type="submit" variant="primary" size="sm">Aprobar</Button>
+                  </form>
+                  <form method="POST" action={`/api/admin/licitacion/${l.id}/contact`} class="inline">
+                    <Button type="submit" variant="subtle" size="sm">Contactar</Button>
+                  </form>
+                  <form method="POST" action={`/api/admin/licitacion/${l.id}/reject`} class="inline">
+                    <Button type="submit" variant="danger" size="sm">Rechazar</Button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </Table>
+      )}
+    </div>
+  </main>
+</Base>
+
+<style>
+  .admin-nav-link {
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--color-nx-border, rgba(255,255,255,0.12));
+    border-radius: 4px;
+    color: var(--color-nx-ink, #e7e9ee);
+    text-decoration: none;
+  }
+  .admin-nav-link:hover { border-color: var(--color-nx-primary, #ff6b3d); }
+  .admin-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    color: var(--color-nx-muted, #9aa0ad);
+  }
+  .admin-filter span {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: ui-monospace, monospace;
+  }
+  .admin-select, .admin-input {
+    width: 100%;
+    background: transparent;
+    color: var(--color-nx-ink, #e7e9ee);
+    border: 1px solid var(--color-nx-border, rgba(255,255,255,0.12));
+    border-radius: 4px;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.85rem;
+    font-family: inherit;
+  }
+  .admin-select:focus, .admin-input:focus {
+    outline: none;
+    border-color: var(--color-nx-primary, #ff6b3d);
+  }
+  .admin-link {
+    color: var(--color-nx-primary, #ff6b3d);
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 107, 61, 0.4);
+  }
+  .admin-tag {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(255, 107, 61, 0.12);
+    color: var(--color-nx-primary, #ff6b3d);
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>
