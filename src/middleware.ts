@@ -1,6 +1,8 @@
 import { defineMiddleware } from 'astro:middleware';
 import { detectLocale, LOCALE_COOKIE } from './i18n/detect';
 import type { Locale } from './i18n/country-map';
+import { portalGuard } from './lib/portal-guard';
+import type { PortalEnv } from './lib/portal-auth';
 
 /**
  * i18n server-side (memo #191). Corre en el edge como Pages Function
@@ -14,6 +16,14 @@ import type { Locale } from './i18n/country-map';
  * - Sin prefijo: cookie manual > cf-ipcountry > Accept-Language > 'es'.
  *   Locale no-default detectado → 302 al path prefijado.
  *
+ * ─── B7 Portal Cliente (T03) ────────────────────────────────────────────
+ * /portal/* tiene su propio guard ANTES del i18n porque:
+ *  1. El portal es i18n-internal por ahora (todo en español).
+ *  2. Si la sesión expira queremos redirigir al usuario a /portal/login
+ *     sin reescribir el locale.
+ *  3. /admin y /portal son dominios distintos — portal usa su propio
+ *     cookie prefix ('nx-studio-portal-') y tablas (portal_session).
+ *
  * Base path legacy '/NX-Studio' (home GitHub Pages): los links UI ya NO lo
  * incluyen (limpiado 2026-10-13); se conserva solo para normalizar inbound
  * links viejos del deploy anterior.
@@ -24,11 +34,41 @@ import type { Locale } from './i18n/country-map';
  */
 const BASE = '/NX-Studio';
 
-export const onRequest = defineMiddleware((context, next) => {
+/** Rutas del portal accesibles sin sesión (auth flows). */
+const PUBLIC_PORTAL_PATHS = ['/portal/login', '/portal/register', '/portal/forgot-password'];
+
+function stripBase(pathname: string): string {
+  if (pathname === BASE) return '/';
+  if (pathname.startsWith(`${BASE}/`)) return pathname.slice(BASE.length) || '/';
+  return pathname;
+}
+
+export const onRequest = defineMiddleware(async (context, next) => {
   const { pathname, search } = context.url;
 
+  const logical = stripBase(pathname);
+
+  // ─── B7 Portal guard (auth) ──────────────────────────────────────────
+  // Corre ANTES del i18n. Si no hay sesión en rutas privadas, redirect
+  // a /portal/login preservando el destino. Si hay sesión, popular
+  // locals.portalSession para que las rutas downstream lo usen.
+  const portalResult = await portalGuard({
+    pathname: logical,
+    request: context.request,
+    env: ((context.locals as { runtime?: { env?: PortalEnv } }).runtime?.env ?? { DB: undefined as unknown as D1Database }) as PortalEnv,
+  });
+  if (portalResult.action === 'redirect') {
+    return context.redirect(portalResult.location, 302);
+  }
+  if (portalResult.portalSession) {
+    (context.locals as { portalSession?: { user: { id: string } } }).portalSession = portalResult.portalSession;
+  }
+  if (logical === '/portal' || logical.startsWith('/portal/')) {
+    // Bypass i18n para /portal/* — el portal no se localiza por ahora
+    return next();
+  }
+
   const hasBase = pathname === BASE || pathname.startsWith(`${BASE}/`);
-  const logical = hasBase ? pathname.slice(BASE.length) || '/' : pathname;
 
   const result = detectLocale({
     pathname: logical,
