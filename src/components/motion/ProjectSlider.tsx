@@ -177,16 +177,16 @@ export default function ProjectSlider({ projects, labels }: Props) {
         </div>
       </div>
 
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .nx-slider:focus-visible { outline: 2px solid var(--nx-secondary); outline-offset: 2px; }
         .nx-slider-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--nx-border-strong); border: none; padding: 0; cursor: pointer; transition: all .2s ease; }
-        .nx-slider-dot[data-active="1"] { background: var(--nx-primary); width: 22px; }
+        .nx-slider-dot[data-active='1'] { background: var(--nx-primary); width: 22px; }
         .nx-slider-dot:hover { background: var(--nx-primary-soft); }
         .nx-slider-thumb { width: 44px; height: 30px; border-radius: 6px; overflow: hidden; padding: 0; border: 1px solid var(--nx-border); cursor: pointer; opacity: .65; transition: all .15s ease; }
         .nx-slider-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .nx-slider-thumb[data-active="1"] { opacity: 1; border-color: var(--nx-primary); }
+        .nx-slider-thumb[data-active='1'] { opacity: 1; border-color: var(--nx-primary); }
         .nx-slider-thumb:hover { opacity: 1; }
-      `}</style>
+      ` }} />
     </div>
   )
 }
