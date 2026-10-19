@@ -3,6 +3,7 @@ import { detectLocale, LOCALE_COOKIE } from './i18n/detect';
 import type { Locale } from './i18n/country-map';
 import { portalGuard } from './lib/portal-guard';
 import type { PortalEnv } from './lib/portal-auth';
+import { env as runtimeEnv } from 'cloudflare:workers';
 
 /**
  * i18n server-side (memo #191). Corre en el edge como Pages Function
@@ -53,10 +54,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
   // a /portal/login preservando el destino. Si hay sesión, popular
   // locals.portalSession para que las rutas downstream lo usen.
   const portalResult = await portalGuard({
-    pathname: logical,
-    request: context.request,
-    env: ((context.locals as { runtime?: { env?: PortalEnv } }).runtime?.env ?? { DB: undefined as unknown as D1Database }) as PortalEnv,
-  });
+      pathname: logical,
+      request: context.request,
+      env: runtimeEnv as unknown as PortalEnv,
+    });
   if (portalResult.action === 'redirect') {
     return context.redirect(portalResult.location, 302);
   }
