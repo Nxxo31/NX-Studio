@@ -32,10 +32,6 @@ export type AuthEnv = {
   GITHUB_CLIENT_SECRET?: string;
 };
 
-/** Secret de desarrollo: solo se usa si no hay BETTER_AUTH_SECRET en env.
- *  Mismo patrón que portal-auth.ts (B7). */
-const DEV_SECRET = 'dev-secret-not-for-production-must-be-32-chars-min-xxxxxxx';
-
 export function createAuth(env: AuthEnv) {
   const db = createDb(env.DB);
 
@@ -55,8 +51,8 @@ export function createAuth(env: AuthEnv) {
   }
 
   return betterAuth({
-    secret: env.BETTER_AUTH_SECRET ?? DEV_SECRET,
-    baseURL: env.BETTER_AUTH_URL ?? 'http://localhost:4321',
+    secret: env.BETTER_AUTH_SECRET,
+    baseURL: env.BETTER_AUTH_URL,
     database: drizzleAdapter(db, {
       provider: 'sqlite',
       schema: {
@@ -72,12 +68,6 @@ export function createAuth(env: AuthEnv) {
       minPasswordLength: 8,
       maxPasswordLength: 128,
       autoSignIn: true,
-      // B8 Admin: reset de password desde /admin/usuarios (magic link).
-      // La firma que espera better-auth es emailAndPassword.sendResetPassword.
-      sendResetPassword: async ({ email, url }: { email?: string; url: string }) => {
-        // eslint-disable-next-line no-console
-        console.log(`[auth] reset password link for ${email}: ${url}`);
-      },
     },
     socialProviders,
     user: {
@@ -116,7 +106,7 @@ export function createAuth(env: AuthEnv) {
     advanced: {
       cookiePrefix: 'nx-studio',
     },
-    trustedOrigins: [env.BETTER_AUTH_URL ?? 'http://localhost:4321'],
+    trustedOrigins: [env.BETTER_AUTH_URL],
   });
 }
 
