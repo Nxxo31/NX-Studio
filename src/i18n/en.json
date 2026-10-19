@@ -24,12 +24,12 @@
     "subStrong": "LATAM-first",
     "sub2": "development studio. We build production-ready applications, QA and templates. You see the code from day one. No black box.",
     "chip1": "11 OSS projects",
-        "chip2": "24+ technologies",
+    "chip2": "24+ technologies",
     "chip3": "LATAM remote-first",
     "chip4": "Flexible engagement",
     "ctaPrimary": "Get a quote",
-        "ctaSecondary": "Browse OSS projects",
-        "stat1": "projects",
+    "ctaSecondary": "Browse OSS projects",
+    "stat1": "projects",
     "stat2": "technologies",
     "stat3": "MVP cycle",
     "previewLink": "// see the projects →",
@@ -778,6 +778,136 @@
         "buy": "Buy",
         "custom": "Or request custom →"
       }
+    }
+  },
+  "portal": {
+    "shell": {
+      "nav": {
+        "dashboard": "Dashboard",
+        "proyectos": "Projects",
+        "mensajes": "Messages",
+        "perfil": "Profile",
+        "logout": "Sign out"
+      },
+      "title": {
+        "dashboard": "My portal — NX-Studio",
+        "dashboardDescription": "Your bids, projects, and conversations with NX-Studio in one place.",
+        "proyectos": "My projects — NX-Studio",
+        "proyectosDescription": "Status of each project we have in flight.",
+        "mensajes": "Messages — NX-Studio",
+        "mensajesDescription": "Your conversation with the NX-Studio team.",
+        "perfil": "My profile — NX-Studio",
+        "perfilDescription": "Update your contact information.",
+        "licitacion": "Bid — NX-Studio",
+        "licitacionDescription": "Your bid details."
+      },
+      "actions": {
+        "newLicitacion": "Start a new bid",
+        "save": "Save changes",
+        "cancel": "Cancel",
+        "back": "← Back",
+        "edit": "Edit",
+        "viewDetail": "View detail",
+        "openProject": "Open project",
+        "openLicitacion": "View bid"
+      }
+    },
+    "dashboard": {
+      "welcome": "Hi, {name}",
+      "subhead": "Here's what we have going on with you.",
+      "emptyLicitaciones": "No bids yet.",
+      "emptyLicitacionesHelp": "Start by quoting your project — takes less than 3 minutes.",
+      "emptyProyectos": "No active projects.",
+      "emptyProyectosHelp": "Once we approve a quote, the project will appear here.",
+      "sectionLicitaciones": "Bids",
+      "sectionProyectos": "Projects",
+      "sectionActividad": "Recent activity",
+      "emptyActividad": "No recent activity.",
+      "ctaCotizar": "Start a new bid",
+      "status": {
+        "nueva": "New",
+        "contactada": "Contacted",
+        "propuesta_enviada": "Proposal sent",
+        "aceptada": "Accepted",
+        "rechazada": "Rejected",
+        "completada": "Completed"
+      }
+    },
+    "licitacion": {
+      "heading": "Bid",
+      "labelNombre": "Name",
+      "labelEmail": "Email",
+      "labelTipo": "Project type",
+      "labelEngagement": "Engagement",
+      "labelFeatures": "Included components",
+      "labelPricing": "Investment range",
+      "labelStatus": "Current status",
+      "labelFecha": "Submitted on",
+      "labelEmpresa": "Company",
+      "labelTelefono": "Phone",
+      "labelPais": "Country",
+      "labelUrgencia": "Urgency",
+      "labelDescripcion": "Description",
+      "labelBanda": "Band",
+      "labelDisplay": "Range in original currency",
+      "nextMilestone": "Next milestone",
+      "noMilestone": "No open milestones.",
+      "backToDashboard": "← Back to dashboard",
+      "notFound": "Bid not found."
+    },
+    "proyectos": {
+      "heading": "My projects",
+      "subhead": "Each active project with its next milestone.",
+      "tableName": "Project",
+      "tableStatus": "Status",
+      "tableYear": "Year",
+      "tableStack": "Stack",
+      "tableMilestone": "Next milestone",
+      "empty": "No visible projects yet.",
+      "noMilestone": "—",
+      "timeline": "Timeline",
+      "noTimeline": "No milestones recorded.",
+      "milestoneStatus": {
+        "pending": "Pending",
+        "in_progress": "In progress",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "backToList": "← Back to projects",
+      "notFound": "Project not found."
+    },
+    "perfil": {
+      "heading": "My profile",
+      "subhead": "Keep your contact info up to date so we can reach you.",
+      "fieldName": "Full name",
+      "fieldEmail": "Email",
+      "fieldEmpresa": "Company",
+      "fieldTelefono": "Phone",
+      "fieldPais": "Country (ISO-2)",
+      "savedOk": "Profile updated.",
+      "savedError": "Could not save. Check the fields and try again.",
+      "noSession": "Sign in required."
+    },
+    "mensajes": {
+      "heading": "Messages",
+      "subhead": "Your conversation with the NX-Studio team.",
+      "empty": "No messages yet.",
+      "directionInbound": "You",
+      "directionOutbound": "Operator",
+      "noFormPerClient": "For now, messaging is one-way from the operator. We'll notify you by email."
+    },
+    "profile": {
+      "validation": {
+        "nameTooShort": "Name must be at least 2 characters.",
+        "emailInvalid": "Invalid email.",
+        "paisInvalid": "Country must be ISO-2 (2 letters).",
+        "emptyBody": "Empty body."
+      }
+    },
+    "errors": {
+      "unauthorized": "Sign in required.",
+      "notFound": "Resource not found.",
+      "validationFailed": "Validation failed."
     }
   }
 }

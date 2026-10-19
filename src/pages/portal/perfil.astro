@@ -1,0 +1,65 @@
+---
+// /portal/perfil — formulario de edición de contacto (B7 · T07).
+
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { eq } from 'drizzle-orm';
+import { createDb, schema } from '~/db';
+import Base from '~/layouts/Base.astro';
+import PortalShell from '~/components/portal/PortalShell.astro';
+import Card from '~/components/ui/Card.astro';
+import Input from '~/components/ui/Input.astro';
+import Button from '~/components/ui/Button.astro';
+import { getT, getLocale } from '~/i18n';
+
+export const prerender = false;
+
+const env = runtimeEnv as unknown as { DB: D1Database };
+const portalSession = (Astro.locals as { portalSession?: { user: { id: string } } }).portalSession;
+if (!portalSession) return Astro.redirect('/portal/login?from=/portal/perfil', 302);
+const userId = portalSession.user.id;
+const t = getT(getLocale(Astro));
+const db = createDb(env.DB);
+
+let userRow: typeof schema.user.$inferSelect | null = null;
+try {
+  userRow = await db.select().from(schema.user).where(eq(schema.user.id, userId)).get();
+} catch {
+  userRow = null;
+}
+if (!userRow) return Astro.redirect('/portal/login?from=/portal/perfil', 302);
+
+const user = { id: userRow.id, name: userRow.name ?? '', email: userRow.email ?? '' };
+const saved = Astro.url.searchParams.get('saved') === '1';
+const error = Astro.url.searchParams.get('error');
+---
+
+<Base title={t('portal.shell.title.perfil')} description={t('portal.shell.title.perfilDescription')}>
+  <PortalShell t={t} user={user} active="perfil" title={t('portal.perfil.heading')} description={t('portal.perfil.subhead')}>
+    {saved && <p class="portal-flash toast" data-testid="portal-perfil-saved">{t('portal.perfil.savedOk')}</p>}
+    {error && <p class="portal-flash portal-flash-error" role="alert">{t('portal.perfil.savedError')}</p>}
+
+    <form method="POST" action="/api/portal/profile" class="portal-form" data-testid="portal-perfil-form">
+      <Input name="name" type="text" label={t('portal.perfil.fieldName')} value={userRow.name ?? ''} required minlength={2} maxlength={120} />
+      <Input name="email" type="email" label={t('portal.perfil.fieldEmail')} value={userRow.email ?? ''} required maxlength={180} autocomplete="email" />
+      <Input name="empresa" type="text" label={t('portal.perfil.fieldEmpresa')} value={userRow.empresa ?? ''} maxlength={180} />
+      <Input name="telefono" type="tel" label={t('portal.perfil.fieldTelefono')} value={userRow.telefono ?? ''} maxlength={40} autocomplete="tel" />
+      <Input name="pais" type="text" label={t('portal.perfil.fieldPais')} value={userRow.pais ?? ''} maxlength={2} pattern="[A-Za-z]{2}" />
+      <div class="portal-form-actions">
+        <Button type="submit" variant="primary">{t('portal.shell.actions.save')}</Button>
+      </div>
+    </form>
+  </PortalShell>
+</Base>
+
+<style>
+  .portal-form { display: flex; flex-direction: column; gap: 0.75rem; max-width: 480px; }
+  .portal-form-actions { margin-top: 0.5rem; }
+  .portal-flash {
+    padding: 0.6rem 0.85rem;
+    border-radius: 0.5rem;
+    background: rgba(34, 197, 94, 0.14);
+    color: #22c55e;
+    margin-bottom: 1rem;
+  }
+  .portal-flash-error { background: rgba(239, 68, 68, 0.14); color: #ef4444; }
+</style>

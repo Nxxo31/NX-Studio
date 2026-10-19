@@ -24,12 +24,12 @@
     "subStrong": "LATAM-first",
     "sub2": "Construimos aplicaciones, QA y plantillas listas para producción. Tú ves el código desde el día uno. Sin caja negra.",
     "chip1": "11 proyectos OSS",
-        "chip2": "24+ tecnologías",
+    "chip2": "24+ tecnologías",
     "chip3": "LATAM remote-first",
     "chip4": "Engagement flexible",
     "ctaPrimary": "Cotizar proyecto",
-        "ctaSecondary": "Ver proyectos OSS",
-        "stat1": "proyectos",
+    "ctaSecondary": "Ver proyectos OSS",
+    "stat1": "proyectos",
     "stat2": "tecnologías",
     "stat3": "ciclo MVP",
     "previewLink": "// ver los proyectos →",
@@ -778,6 +778,136 @@
         "buy": "Comprar",
         "custom": "O pedir custom →"
       }
+    }
+  },
+  "portal": {
+    "shell": {
+      "nav": {
+        "dashboard": "Dashboard",
+        "proyectos": "Proyectos",
+        "mensajes": "Mensajes",
+        "perfil": "Perfil",
+        "logout": "Cerrar sesión"
+      },
+      "title": {
+        "dashboard": "Mi portal — NX-Studio",
+        "dashboardDescription": "Tus licitaciones, proyectos y conversaciones con NX-Studio en un solo lugar.",
+        "proyectos": "Mis proyectos — NX-Studio",
+        "proyectosDescription": "El estado de cada proyecto que tenemos en marcha.",
+        "mensajes": "Mensajes — NX-Studio",
+        "mensajesDescription": "Tu conversación con el equipo de NX-Studio.",
+        "perfil": "Mi perfil — NX-Studio",
+        "perfilDescription": "Actualiza tu información de contacto.",
+        "licitacion": "Cotización — NX-Studio",
+        "licitacionDescription": "Detalle de tu cotización."
+      },
+      "actions": {
+        "newLicitacion": "Iniciar nueva licitación",
+        "save": "Guardar cambios",
+        "cancel": "Cancelar",
+        "back": "← Volver",
+        "edit": "Editar",
+        "viewDetail": "Ver detalle",
+        "openProject": "Abrir proyecto",
+        "openLicitacion": "Ver cotización"
+      }
+    },
+    "dashboard": {
+      "welcome": "Hola, {name}",
+      "subhead": "Esto es lo que tenemos en marcha contigo.",
+      "emptyLicitaciones": "Sin licitaciones todavía.",
+      "emptyLicitacionesHelp": "Empieza por cotizar tu proyecto — tarda menos de 3 minutos.",
+      "emptyProyectos": "Sin proyectos activos.",
+      "emptyProyectosHelp": "Cuando aprobemos una cotización, el proyecto aparecerá aquí.",
+      "sectionLicitaciones": "Licitaciones",
+      "sectionProyectos": "Proyectos",
+      "sectionActividad": "Actividad reciente",
+      "emptyActividad": "Sin actividad reciente.",
+      "ctaCotizar": "Iniciar nueva licitación",
+      "status": {
+        "nueva": "Nueva",
+        "contactada": "Contactada",
+        "propuesta_enviada": "Propuesta enviada",
+        "aceptada": "Aceptada",
+        "rechazada": "Rechazada",
+        "completada": "Completada"
+      }
+    },
+    "licitacion": {
+      "heading": "Cotización",
+      "labelNombre": "Nombre",
+      "labelEmail": "Email",
+      "labelTipo": "Tipo de proyecto",
+      "labelEngagement": "Modalidad de trabajo",
+      "labelFeatures": "Componentes incluidos",
+      "labelPricing": "Rango de inversión",
+      "labelStatus": "Estado actual",
+      "labelFecha": "Fecha de envío",
+      "labelEmpresa": "Empresa",
+      "labelTelefono": "Teléfono",
+      "labelPais": "País",
+      "labelUrgencia": "Urgencia",
+      "labelDescripcion": "Descripción",
+      "labelBanda": "Banda",
+      "labelDisplay": "Rango en moneda original",
+      "nextMilestone": "Próxima milestone",
+      "noMilestone": "Sin milestones abiertas.",
+      "backToDashboard": "← Volver al dashboard",
+      "notFound": "Cotización no encontrada."
+    },
+    "proyectos": {
+      "heading": "Mis proyectos",
+      "subhead": "Cada proyecto activo con su próxima milestone.",
+      "tableName": "Proyecto",
+      "tableStatus": "Estado",
+      "tableYear": "Año",
+      "tableStack": "Stack",
+      "tableMilestone": "Próxima milestone",
+      "empty": "Sin proyectos visibles todavía.",
+      "noMilestone": "—",
+      "timeline": "Timeline",
+      "noTimeline": "Sin milestones registradas.",
+      "milestoneStatus": {
+        "pending": "Pendiente",
+        "in_progress": "En curso",
+        "completed": "Completada",
+        "cancelled": "Cancelada"
+      },
+      "backToList": "← Volver a proyectos",
+      "notFound": "Proyecto no encontrado."
+    },
+    "perfil": {
+      "heading": "Mi perfil",
+      "subhead": "Mantén tu información al día para que podamos contactarte.",
+      "fieldName": "Nombre completo",
+      "fieldEmail": "Email",
+      "fieldEmpresa": "Empresa",
+      "fieldTelefono": "Teléfono",
+      "fieldPais": "País (ISO-2)",
+      "savedOk": "Perfil actualizado.",
+      "savedError": "No se pudo guardar. Revisa los campos e inténtalo de nuevo.",
+      "noSession": "Necesitas iniciar sesión."
+    },
+    "mensajes": {
+      "heading": "Mensajes",
+      "subhead": "Tu conversación con el equipo de NX-Studio.",
+      "empty": "Aún no tienes mensajes.",
+      "directionInbound": "Tú",
+      "directionOutbound": "Operador",
+      "noFormPerClient": "Por ahora el envío de mensajes es solo desde el operador. Te avisaremos por email."
+    },
+    "profile": {
+      "validation": {
+        "nameTooShort": "El nombre debe tener al menos 2 caracteres.",
+        "emailInvalid": "Email inválido.",
+        "paisInvalid": "País debe ser código ISO-2 (2 letras).",
+        "emptyBody": "Body vacío."
+      }
+    },
+    "errors": {
+      "unauthorized": "Necesitas iniciar sesión.",
+      "notFound": "Recurso no encontrado.",
+      "validationFailed": "Validación fallida."
     }
   }
 }
