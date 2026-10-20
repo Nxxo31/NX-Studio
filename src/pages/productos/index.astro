@@ -5,6 +5,7 @@ import Footer from "../../components/Footer.astro";
 import { categories } from "../../data/catalog";
 import { getLiveRepos, mergeProjects } from "../../lib/github";
 import ProjectSlider from "../../components/motion/ProjectSlider";
+import { getT, getLocale } from "../../i18n";
 
 // SSR en el edge: datos de GitHub en vivo (cacheados 1h en la capa lib).
 // Con prerender=false el layout y el copy se renderizan por request.
@@ -38,6 +39,7 @@ const grouped = categories
   .filter((g) => g.items.length > 0);
 
 const total = merged.length;
+const t = getT(getLocale(Astro));
 const live = merged.filter((p) => p.status === "live").length;
 const prototypes = merged.filter((p) => p.status === "prototype").length;
 const githubLive = merged.some((p) => p.github !== null);
@@ -50,7 +52,7 @@ const fechaCorta = (iso: string) => {
 ---
 
 <Base
-  title="Proyectos — NX-Studio"
+  title={t('pages.productos.title')}
   description="Proyectos reales, terminados y publicados por NX-Studio: cada uno explicado sin palabras técnicas, con capturas y código abierto en GitHub."
 >
   <Nav />

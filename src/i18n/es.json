@@ -815,6 +815,9 @@
       "version": "Versión",
       "view_demo": "Ver demo en vivo",
       "buy": "Comprar ahora"
+    },
+    "productos": {
+      "title": "Proyectos — NX-Studio"
     }
   },
   "chatbot": {

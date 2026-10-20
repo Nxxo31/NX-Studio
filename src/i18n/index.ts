@@ -19,10 +19,16 @@ type AstroLike = Pick<AstroGlobal, 'locals'> & Partial<Pick<AstroGlobal, 'curren
 /** Locale activo del request: Astro.currentLocale (routing i18n) o
  *  Astro.locals.locale (middleware); 'es' si ninguno (tests, prerender). */
 export function getLocale(Astro: AstroLike): Locale {
+  // Prioridad: locals.locale (la setea el middleware i18n con la detección
+  // real: prefijo de URL > cookie > cf-ipcountry > Accept-Language) sobre
+  // Astro.currentLocale (derivado solo de la URL). Tras un rewrite de
+  // /en/productos → /productos el currentLocale vuelve a 'es' aunque el
+  // usuario navega en EN — locals preserva la intención real.
+  const l = (Astro.locals as { locale?: unknown }).locale;
+  if (isValidLocale(l as string)) return l as Locale;
   const current = (Astro as { currentLocale?: unknown }).currentLocale;
   if (isValidLocale(current as string)) return current as Locale;
-  const l = (Astro.locals as { locale?: unknown }).locale;
-  return isValidLocale(l as string) ? (l as Locale) : DEFAULT_LOCALE;
+  return DEFAULT_LOCALE;
 }
 
 export function getMessages(locale: Locale): Messages {
