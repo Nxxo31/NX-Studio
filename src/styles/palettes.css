@@ -62,10 +62,13 @@
    ============================================================ */
 :root[data-palette="glass-light"],
 [data-palette="glass-light"] {
-  --nx-primary:          #ff4500;
+  /* AA light remap (QA 2026-10-22, task t_ad290f52): el esquema light heredaba
+     valores calibrados para dark. Naranja de texto 5.0:1 sobre #fafbff
+     (#c2410c); dark conserva el #ff4500 original. */
+  --nx-primary:          #c2410c;
   --nx-primary-soft:     #ff6a00;
   --nx-primary-deep:     #b92c00;
-  --nx-primary-tint:     rgba(255, 69, 0, 0.10);
+  --nx-primary-tint:     rgba(194, 65, 12, 0.10);
 
   --nx-ink:              #0a0b14;
   --nx-secondary:        #4f46e5;
@@ -85,8 +88,8 @@
 
   --nx-text:             #0a0b14;
   --nx-text-muted:       #4a4d6b;
-  --nx-text-dim:         #7a7d9a;
-  --nx-text-on-primary:  #ffffff;
+  --nx-text-dim:         #5b5e85;
+  --nx-text-on-primary:  #0a0b14;
 
   --nx-success:          #059669;
   --nx-success-bg:       rgba(5, 150, 105, 0.10);
@@ -104,7 +107,10 @@
 
   --nx-texture-color:    rgba(79, 70, 229, 0.05);
 
-  /* Tailwind v4: overrides de las variables --color-nx-* (utilities bg-nx- y text-nx-) */
+  /* Tailwind v4: overrides de las variables --color-nx-* (utilities bg-nx- y text-nx-).
+     AA light remap: los nombres ANTERIORES (--color-nx-muted / --color-nx-dim) no
+     existen como utilities en @theme, así que text-nx-text-muted / text-nx-text-dim
+     resolvían SIEMPRE al valor dark (#9b9ec4 leak, 2.51:1 sobre fafbff). */
   --color-nx-bg:         #fafbff;
   --color-nx-surface:    #ffffff;
   --color-nx-raised:     #f4f5fb;
@@ -112,8 +118,9 @@
   --color-nx-border-strong: rgba(10, 11, 20, 0.16);
   --color-nx-ink:        #0a0b14;
   --color-nx-text:       #0a0b14;
-  --color-nx-muted:      #4a4d6b;
-  --color-nx-dim:        #7a7d9a;
-  --color-nx-primary:    #ff4500;
+  --color-nx-text-muted: #4a4d6b;
+  --color-nx-text-dim:   #5b5e85;
+  --color-nx-text-on-primary: #0a0b14;
+  --color-nx-primary:    #c2410c;
   --color-nx-accent:     #4f46e5;
 }

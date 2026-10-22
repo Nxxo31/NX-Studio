@@ -266,6 +266,22 @@ code, kbd, .mono {
   backdrop-filter: blur(8px);
 }
 
+/* Glass light (AA, QA 2026-10-22 / t_ad290f52): en light el tag lleva tinta
+   #c2410c (5.0:1) que solo se sostiene sobre fondo claro predecible. Con el
+   tinte translúcido el contraste dependía del fondo que quedara debajo (la
+   captura oscura del slider daba 4.23:1; tiras con textura, ~4.4:1). Pill
+   opaca: 5.18:1 garantizados sobre cualquier fondo. */
+[data-palette="glass-light"] .lava-tag {
+  background: #ffffff;
+  border-color: rgba(194, 65, 12, 0.35);
+}
+
+/* Chip activo del PaletteSwitcher en light: fondo opaco en lugar del tinte
+   --nx-info-bg (10% indigo), que dejaba el tinta #c2410c en ~4.4:1. */
+[data-palette="glass-light"] [data-set-palette][aria-pressed="true"] {
+  background: #ffffff;
+}
+
 /* Hairline (legacy) */
 .hairline {
   background: linear-gradient(90deg, transparent, var(--nx-border-strong), transparent);
