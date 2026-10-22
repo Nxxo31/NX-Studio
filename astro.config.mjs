@@ -3,6 +3,9 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import cloudflare from '@astrojs/cloudflare';
 import react from '@astrojs/react';
+import { fileURLToPath } from 'node:url';
+
+const srcDir = fileURLToPath(new URL('./src/', import.meta.url));
 
 // NX-Studio deploy: Cloudflare Pages con SSR + Resend para contacto.
 // Output 'server' = SSR, /api/* routes se ejecutan como Pages Functions en el edge.
@@ -40,10 +43,20 @@ export default defineConfig({
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      // El backend WebGPU esta dormido: sus archivos importan `vgpu`, que no
+      // esta instalado. Vite lo descubre en el escaneo de deps, falla, y al
+      // saltarse el pre-bundling TODO el dev server sirve 404 para los modulos
+      // virtuales (/@vite/client, astro:scripts/*). Ver AGENTS.md > Bug conocido.
+      exclude: ['vgpu', '@vgpu/core', '@vgpu/wgsl', '@vgpu/wgsl-std', '@vgpu/adapter-node'],
+    },
     resolve: {
+      // fileURLToPath, no .pathname: en Windows .pathname devuelve
+      // "/C:/Users/..." con barra inicial, que no existe como ruta.
+      // Vea AGENTS.md > Bug conocido.
       alias: {
-        '~': new URL('./src/', import.meta.url).pathname,
-        '@': new URL('./src/', import.meta.url).pathname,
+        '~': srcDir,
+        '@': srcDir,
       },
     },
   },
