@@ -1,97 +1,110 @@
 ---
-version: alpha
-name: NX-Studio Theme System (Glass / Depth v0.8.0)
-description: 2 paletas glass — glass-dark (default) + glass-light. Navy + glass + lava accent + Framer Motion. shadcn/ui-compatible.
+version: stable
+name: NX-Studio Theme System (Monochrome v0.9.0)
+description: Una sola escala de grises calibrada contra el agujero negro WebGL2. Sin dark/light mode. Sin archivo de paletas.
 
 colors:
-  dark-bg: "#0a0b14"
-  dark-surface: "#11132a"
-  dark-raised: "#181a35"
-  dark-ink: "#e8eaf6"
-  dark-text: "#f1f3ff"
-  dark-text-muted: "#9b9ec4"
-  dark-text-dim: "#5b5e85"
-  dark-primary: "#ff4500"
-  dark-secondary: "#818cf8"
-  dark-accent: "#ffd23f"
+  bg: "#050505"
+  surface: "#0e0e0e"
+  raised: "#171717"
+  ink: "#ededed"
+  text: "#f5f5f5"
+  text-muted: "#a3a3a3"
+  text-dim: "#6b6b6b"
+  primary: "#fafafa"
+  primary-soft: "#d4d4d4"
+  primary-deep: "#a3a3a3"
+  secondary: "#b8b8b8"
+  accent: "#b8b8b8"
+  text-on-primary: "#050505"
+  success: "#b6cfc0"
+  warn: "#cfc4a6"
+  danger: "#d3a9a9"
 
-  cream-bg: "#fafbff"
-  cream-surface: "#ffffff"
-  cream-raised: "#f4f5fb"
-  cream-ink: "#0a0b14"
-  cream-text: "#0a0b14"
-  cream-text-muted: "#4a4d6b"
-  cream-text-dim: "#7a7d9a"
-  cream-primary: "#ff4500"
-  cream-secondary: "#4f46e5"
-  cream-accent: "#ffd23f"
+typography:
+  display: "Space Grotesk, system-ui, sans-serif"
+  body: "Inter, system-ui, sans-serif"
+  mono: "JetBrains Mono, ui-monospace, monospace"
+
+radius:
+  xs: 4px
+  sm: 6px
+  md: 10px
+  lg: 14px
+  xl: 20px
+  "2xl": 28px
+  "3xl": 36px
+  "4xl": 48px
 
 components:
-  card-glass:
-    backgroundColor: "{colors.dark-surface}"
-    borderColor: "rgba(255, 255, 255, 0.08)"
+  card:
+    backgroundColor: "{colors.surface}"
+    borderColor: "rgba(255, 255, 255, 0.09)"
     borderRadius: "14px"
-    boxShadow: "0 8px 24px -8px rgba(0, 0, 0, 0.5)"
-  button-dark:
-    backgroundColor: "{colors.dark-primary}"
-    textColor: "#0a0b14"
+  button:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.text-on-primary}"
 ---
 
-# NX-Studio Theme System — GLASS / DEPTH v0.8.0
+# NX-Studio Theme System — MONOCHROME v0.9.0
 
-2 paletas (glass-dark + glass-light) que comparten el mismo contrato de
-tokens `--nx-*`. Default = `glass-dark`. Auto-switch via
-`prefers-color-scheme` la primera visita.
+Escala de grises **única**. Sin `data-palette`, sin `prefers-color-scheme`, sin
+anti-FOUC de tema. El color base `#050505` está calibrado contra el fondo del
+agujero negro para que el contenido flote sobre él sin costura visible.
 
-Activar: `data-palette="<id>"` en `<html>`. IDs: `glass-dark`, `glass-light`.
+Tokens canónicos: `src/styles/global.css` (`@theme` + `:root`).
 
 ## Gramática
 
-- **Glass**: `backdrop-filter: blur(14px) saturate(140%)` sobre surface
-  con alpha 0.72, border 1px ink @ 8% opacity, radius 14px.
-- **Tinta** (`--nx-ink`): cream dark / negro light — borders + secundario.
-- **Lava** (`--nx-primary` `#ff4500`): único acento emocional (CTAs,
-  tags, marca, selection, glows).
-- **Indigo** (`--nx-secondary`): acento de profundidad.
-- **Amarillo** (`--nx-accent` `#ffd23f`): focus rings.
-- **Sombras con profundidad**: `--nx-shadow-sm/…/lg` (suaves, sin offsets
-  duros), `--nx-glow` (lava 32px).
-- **Background mesh**: `body::before` con dos radiales lava + indigo
-  baja opacidad.
-- **Radius moderado**: xs 4, sm 6, md 10, lg 14, xl 20 (glass, no 0).
-- **Motion**: Framer Motion (React island) en home para hero stagger.
-  CSS animations + IntersectionObserver `.reveal` en el resto para
-  mantener bundle mínimo.
+- **Tinta** (`--nx-ink #ededed` / `--nx-text #f5f5f5`): estructura y texto.
+- **Blanco roto** (`--nx-primary #fafafa`): **solo** CTAs y texto invertido
+  sobre primario. Es el valor de máximo contraste del sistema, no un color de
+  decoración.
+- **Acentos lavados** (`--nx-secondary` / `--nx-accent #b8b8b8`): etiquetas,
+  metadatos, iconografía secundaria. Nunca compiten con el CTA.
+- **Semánticos desaturados** (`--nx-success #b6cfc0`, `--nx-warn #cfc4a6`,
+  `--nx-danger #d3a9a9`): presentes pero sin saturación, para no romper la
+  lectura monocroma.
+- **Bordes hairline**: `rgba(255,255,255,0.09)` base, `0.16` fuerte. La
+  separación se hace por luminancia, no por color.
+- **Radius progresivo**: xs 4 → 4xl 48px.
+- **Background**: agujero negro WebGL2 (`optimized-black-hole.tsx`) como
+  `fixed; z-index: 0`. No hay mesh CSS, ni gradientes de fondo, ni blur pesado.
+
+### Carve-out: el agujero negro ES un glow
+
+Único glow permitido. Es una excepción deliberada a la prohibición histórica de
+glows, y la razón de que `#050505` sea el color base. No lo trates como una
+violación a corregir.
 
 ## Interacciones
 
-- Hover botón = translate(-1px) + shadow-lg + glow lava + brightness.
-- Hover card = translate(-3px,-3px) + shadow 9px.
-- Hover nav-link = inversión ink/bg.
-- Framer Motion hero: stagger entrance, fade+translateY+blur(8px)→0.
+- Hover botón = `translateY(-1px)` + brightness.
+- Hover card = elevación por borde + superficie, sin offset duro.
+- Motion: React islands con `framer-motion` en home; CSS animations +
+  `IntersectionObserver` `.reveal` en el resto para mantener el bundle mínimo.
 
 ## Do
 
-- Respetar prefers-color-scheme la primera visita.
-- Persistir override en localStorage con key `nx-studio-theme`.
-- Anti-FOUC en `<head>` antes del body.
-- Usar `<AnimatedHero client:load>` para motion premium en hero.
-- Usar `.glass-card` (o alias `.lava-card`) en cards.
+- Usar `var(--nx-*)` o las clases Tailwind `text-nx-text`, `bg-nx-surface`,
+  `border-nx-border`.
+- Verificar contra `npm run build` + `dist/client` servido. `astro dev` no
+  hidrata (bug preexistente) — ver `AGENTS.md § Bug conocido`.
+- Migrar `lava-*` → `nx-*` en cualquier archivo que toques.
 
 ## Don't
 
-- No reintroducir borders 3px ink ni shadows duras offset
-  (`shadow-[Npx_Npx_0_...]`) — usar `--nx-shadow` suave.
+- No reintroducir paletas, dark/light mode, ni `PaletteSwitcher`.
+- No crear tokens fuera de `global.css`.
+- No añadir un segundo fondo animado ni CSS gradients sustituyendo el agujero negro.
 - No usar `--nx-text-dim` para body text.
-- No reintroducir WebGLBackground/BackgroundDecor ni gradientes pesados.
-- No crear tokens nuevos fuera de `global.css`/`palettes.css`.
+- No introducir `lava-*` nuevos (el bridge legacy se está drenando).
 
 ## Histórico
 
 - v0.2.0–v0.4.0: lava neon (Matrix orange, chamfers).
 - v0.5.0: steel-indigo (Linear/Vercel vibe, 5 paletas).
-- v0.7.0 (2026-10-14): brutalism — supersedido.
-- **v0.8.0 (2026-10-14, sprint glass/depth)**: supersede brutalism.
-  React 18 + @astrojs/react 4 + framer-motion 11. Home con React island
-  + stagger entrance; resto del sitio con glass system consistente +
-  CSS animations.
+- v0.7.0 (2026-10-14): brutalism.
+- v0.8.0 (2026-10-14): glass/depth — 2 paletas, lava `#ff4500`, `data-palette`.
+- **v0.9.0 (2026-10-21)**: monocromo. Una escala de grises, sin paletas,
+  agujero negro WebGL2 como fondo global. Superset de los tres anteriores.

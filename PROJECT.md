@@ -26,23 +26,92 @@ estático para SEO y velocidad.
 
 ## Identidad de marca · Sistema de diseño canónico
 
-El sistema de diseño canónico vive en `DESIGN.md`.
-NO duplicar tokens aquí — apuntar siempre a DESIGN.md.
+**Identidad actual: monocromática única (v0.9.0, 2026-10-21). Sin dark/light mode.**
 
-Resumen: 2 paletas glass (`glass-dark` default + `glass-light`) que
-comparten el mismo contrato de tokens `--nx-*`. Lava `#ff4500` como único
-acento + tinta estructural (cream en dark, negro en light) + backdrop-blur
-suave + indigo `#818cf8` como acento de profundidad + radio moderado
-(8-14px) + Framer Motion en home + CSS animations en el resto. v0.8.0
-supersede el brutalism v0.7.0. Auto-switch dark/light via
-`prefers-color-scheme` la primera visita. Override manual con
-`data-palette="<id>"` en `<html>`.
+El sitio entero usa **una sola escala de grises** calibrada contra el fondo del
+agujero negro. Tokens canónicos en `src/styles/global.css` (`@theme` + `:root`).
+**No existe archivo de paletas** — se eliminó en v0.9.0.
+
+| Rol | Token | Valor |
+|---|---|---|
+| Fondo base (calibrado al agujero negro) | `--nx-bg` | `#050505` |
+| Superficie | `--nx-surface` | `#0e0e0e` |
+| Superficie elevada | `--nx-surface-raised` | `#171717` |
+| Tinta estructural | `--nx-ink` | `#ededed` |
+| Texto | `--nx-text` | `#f5f5f5` |
+| CTA / blanco roto | `--nx-primary` | `#fafafa` |
+| Acento lavado | `--nx-secondary` / `--nx-accent` | `#b8b8b8` |
+| Semánticos desaturados | `--nx-success` / `--nx-warn` / `--nx-danger` | `#b6cfc0` / `#cfc4a6` / `#d3a9a9` |
+
+Tipografía: `--font-display` (Space Grotesk) · `--font-body` (Inter) ·
+`--font-mono` (JetBrains Mono). Radius progresivo `--radius-xs` 4px →
+`--radius-4xl` 48px.
+
+### Fondo global: agujero negro
+
+`src/components/ui/optimized-black-hole.tsx` (WebGL2 crudo, ~180 líneas, cero
+dependencias) se renderiza como `position: fixed; z-index: 0` detrás del
+contenido en `Base.astro`. Monocromo por construcción (`uMono = 1` en el shader).
+Es el **único glow permitido** del proyecto — excepción explícita a la
+prohibición histórica de glows, y la razón por la que `#050505` es el color base.
+
+Degradación: si WebGL2 no está disponible, `canvas.style.display = 'none'` y el
+sitio sigue legible. Respeta `prefers-reduced-motion`, pausa fuera de viewport
+(`IntersectionObserver`) y en `document.hidden`.
+
+Existe un **segundo backend dormido** en `src/components/ui/optimized-black-hole-vgpu/`
+(WebGPU + WGSL de 21st.dev, edit monocromático ya aplicado). No se importa desde
+ningún sitio. Activarlo está **decidido como no** (2026-10-21): ~8.7 MB unpacked /
+57 deps transitivas, y sin un wrapper de fallback a WebGL2 el sitio muestra un
+rectángulo negro a pantalla completa en Safari <26 y Firefox <141.
+
+> **Override normativo:** las reglas operativas viven en `AGENTS.md`. Este
+> documento describe; `AGENTS.md` obliga. Ante conflicto, `AGENTS.md` manda.
 
 Histórico: lava neon v0.2.0→v0.4.0 (Matrix orange, chamfers) →
-steel-indigo v0.5.0 (5 paletas, Linear vibe) → **brutalism v0.7.0
-(2026-10-14, autorizado por el operador)**.
+steel-indigo v0.5.0 (5 paletas, Linear vibe) → brutalism v0.7.0 (2026-10-14) →
+glass/depth v0.8.0 → **monocromático v0.9.0 (2026-10-21)**.
 
-### Sprint brutalism (2026-10-14)
+### Sprint monocromático v0.9.0 (2026-10-21)
+
+Colapso del sistema de paletas a escala de grises única. Autorizado por el
+operador.
+
+**Eliminado:** `src/styles/palettes.css`, `src/components/PaletteSwitcher.astro`,
+`src/pages/palettes.astro`, `src/components/BackgroundDecor.astro`,
+`src/components/WebGLBackground.astro` (huérfanos del starfield viejo y del
+showcase de paletas).
+
+**Reescrito:** `src/styles/global.css` — `@theme` + `:root` a monocromo, mesh
+`body::before` con radiales lava/indigo eliminado, import de `palettes.css`
+retirado. `Base.astro` — anti-FOUC de tema removido, `<html>` ya no lleva
+`data-palette`; el canvas del agujero negro queda como backdrop fijo z-0.
+`Nav.astro` — imports y usos de `PaletteSwitcher` fuera (desktop y mobile); el
+slot mobile del switcher se sustituyó por el CTA "Pedir propuesta" para no
+dejar hueco visual. `NXSculptureHero.tsx` — theme fijo `'dark'`,
+`accentColor #ff4500 → #fafafa`, background/darkBackground → `#050505`,
+`MutationObserver` sobre `data-palette` eliminado.
+
+**Añadido:** `src/components/ui/optimized-black-hole.tsx` +
+`optimized-black-hole-utils/` (activo, WebGL2) y
+`optimized-black-hole-vgpu/` (dormido, WebGPU de 21st.dev).
+
+**Resultado:** `npm run build` exit 0, i18n-guard OK, 93 HTML generados
+(96 → 93 = se fueron las 3 locales de `/palettes`). Verificación visual con
+Playwright sobre `dist/client`: nav y CTAs en blanco, sin chips de tema,
+agujero negro monocromo visible detrás del contenido.
+
+**Nota operativa:** `astro dev` no hidrata ninguna isla (0/4, 404 en
+`/@id/astro:scripts/before-hydration.js`). Preexistente, no causado por este
+sprint. Workaround: `npm run build` + servir `dist/client`.
+
+**Bridges legacy:** `global.css:328-336` mantiene `--lava-core/edge/deep/glow/
+glow-soft`, `--bg-void/ember` mapeados a tokens actuales, más las clases
+`.lava-card/.lava-card-accent/.lava-btn/.lava-btn-ghost/.lava-tag/.hairline` y
+utilidades `.text-lava-edge/.bg-lava-soft`. Rinden en escala de grises y siguen
+en uso en ~20 archivos. Se drenan de forma incremental, no en un commit aparte.
+
+### Sprint brutalism (2026-10-14) — histórico, superseded por v0.9.0
 
 Refactor completo del UI a neobrutalismo (token-level + componentes base):
 
@@ -229,6 +298,7 @@ Desde v0.5.0 hay un backend SSR en Cloudflare Pages (`output=server`):
 | Phase 10 | Backend foundation: D1, better-auth, schema, repos, seeds, tests | (este commit) ★ |
 | Phase 11 | /admin panel (list + detail + status) + /docs público. Portal diferido (re-confirmado 2026-10-13) | `ec901fd` |
 | i18n | ES/EN/PT auto-detect cf-ipcountry + cookie override + switcher footer + traducción completa (memo #192) | `32f01d8`, `82506a1` |
+| Phase 12 | Identidad monocromática v0.9.0: colapso de paletas a escala de grises + agujero negro WebGL2 como fondo global + eliminación de PaletteSwitcher/BackgroundDecor/WebGLBackground/palettes.astro | (v0.9.0) |
 
 ## Sprint v0.4.0 (cerrado)
 
@@ -466,10 +536,16 @@ PENDIENTE: `RESEND_API_KEY` — sin cuenta Resend el email queda en modo mock
 5. **i18n resuelto** (v0.6.1): ES/EN/PT auto-detect + switcher. /admin y /docs
    quedan ES-only deliberadamente.
 6. **Catálogo sin videos**: `videoUrl` queda undefined en la seed por ahora.
-7. **Tests: vitest + playwright: 80 unit/integration tests + E2E Playwright. Arquitectura
-   de tests con fake D1 + vitest para backend, Playwright para UI.
-8. **Working tree limpio** (verificado 2026-10-13): los cambios de paleta /
-   decoraciones antes listados aquí ya están commiteados.
+8. **Tests: vitest (299 unit/integration, 16 archivos) + Playwright E2E.
+   Arquitectura de tests con fake D1 + vitest para backend, Playwright para UI.**
+9. **`astro dev` no hidrata (0/4 islas, 404 `/@id/astro:scripts/before-hydration.js`)**:
+   bug preexistente, no causado por la migración monocroma. Verificar siempre
+   contra `npm run build` + `dist/client` servido, nunca contra el dev server.
+10. **Puente legacy `--lava-*` sigue en uso** (~20 archivos): drained
+    incrementalmente, no bloquea funcionalidad.
+11. **`.dev.vars` gitignored** contiene `TWENTYFIRST_API_KEY` (21st.dev) para
+    el backend VGPU dormido. Si ese backend se reactiva, el nombre de env var
+    debe reconciliarse con lo que `@21st.dev/vgpu` espere.
 
 ## Referencias
 
