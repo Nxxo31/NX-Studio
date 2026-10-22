@@ -28,7 +28,8 @@ const routes = [
   // El path sigue siendo /brand/ (estable, no romper enlaces externos).
   { path: "/brand/",                        titleIncludes: "Marca" },
   { path: "/logos/",                        titleIncludes: "Logos" },
-  { path: "/palettes/",                     titleIncludes: "Paletas" },
+  // /palettes/ fue eliminado por el sistema monochrome (206abab drop palette
+  // system and theme switcher) — ya no existe la página ni el switcher.
 ];
 
 for (const route of routes) {
