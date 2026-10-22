@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import { getLocale, getT, localeUrl, LOCALES, DEFAULT_LOCALE } from "../i18n";
 import ChatbotWrapper from "../components/chatbot/ChatbotWrapper.astro";
+import BlackHole from "../components/ui/optimized-black-hole";
 import { shouldRenderChatbot } from "../lib/chatbot-fsm";
 
 interface Props {
@@ -57,29 +58,13 @@ const alternates = LOCALES.map((l) => ({
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <title>{title}</title>
-    <!-- Anti-FOUC: aplicar tema antes del primer paint.
-         1) respeta override del usuario en localStorage
-         2) si no, respeta prefers-color-scheme (dark/light)
-         3) fallback: glass-dark (dark default) -->
-    <script is:inline>
-      (function() {
-        try {
-          var STORAGE_KEY = 'nx-studio-theme';
-          var VALID = ['glass-dark', 'glass-light'];
-          var stored = localStorage.getItem(STORAGE_KEY);
-          var theme;
-          if (stored && VALID.indexOf(stored) !== -1) {
-            theme = stored;
-          } else {
-            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            theme = prefersDark ? 'glass-dark' : 'glass-light';
-          }
-          document.documentElement.setAttribute('data-palette', theme);
-        } catch(e) {}
-      })();
-    </script>
   </head>
   <body class="bg-nx-bg text-nx-text antialiased relative">
+    {/* Fondo global: agujero negro monocromatico (React island WebGL2, z-0).
+        El contenido vive en z-10. Identidad unica: no hay modo claro/oscuro. */}
+    <div class="nx-blackhole-backdrop fixed inset-0 z-0" aria-hidden="true">
+      <BlackHole client:load />
+    </div>
     <div class="relative z-10">
       <slot />
     </div>
@@ -105,8 +90,14 @@ const alternates = LOCALES.map((l) => ({
         }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
         els.forEach((el) => obs.observe(el));
       });
-      // NOTA: el switcher de paleta vive ahora en src/components/PaletteSwitcher.astro
-      // (topbar del header). El anti-FOUC está en <head> más arriba.
+      // El sitio tiene identidad monocromatica unica: no hay anti-FOUC de tema.
     </script>
   </body>
 </html>
+
+<style is:global>
+  /* El canvas es decorativo: nunca captura puntero ni foco. */
+  .nx-blackhole-backdrop {
+    pointer-events: none;
+  }
+</style>

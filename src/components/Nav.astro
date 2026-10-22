@@ -1,6 +1,5 @@
 ---
 import Brand from './Brand.astro';
-import PaletteSwitcher from './PaletteSwitcher.astro';
 import { getLocale, getT, localeUrl } from '../i18n';
 
 const locale = getLocale(Astro);
@@ -41,8 +40,7 @@ const links = [
           <a href={l.href} class={`nav-link ${isActive(l.href) ? 'nav-active' : ''}`}>{l.label}</a>
         </li>
       ))}
-      <li class="ml-2"><PaletteSwitcher /></li>
-    </ul>
+      </ul>
 
     <a href={localeUrl('/contacto', locale)} class="hidden md:inline-flex items-center gap-2 lava-btn" style="padding: 0.5rem 1.25rem;">
       {t('nav.cta')}
@@ -64,7 +62,9 @@ const links = [
       ))}
     </ul>
     <div class="px-6 pb-4">
-      <PaletteSwitcher variant="mobile" />
+      <a href={localeUrl('/contacto', locale)} class="lava-btn w-full justify-center" style="padding: 0.5rem 1.25rem;">
+        {t('nav.cta')}
+      </a>
     </div>
   </div>
 </header>
