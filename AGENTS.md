@@ -3,7 +3,7 @@
 **Proyecto:** Sitio web empresarial de NX-Studio (estudio de desarrollo LATAM)
 **Stack:** Astro 7.3.2 + Tailwind v4 (vía @tailwindcss/vite) + TypeScript
 **Output:** Cloudflare Workers SSR (D1 + Resend + better-auth) — https://nx-studio.nx-studio.workers.dev
-**Identidad:** Glass / depth (v0.8.0) — navy + glass + lava #ff4500, sombras suaves con profundidad, radius moderado, motion con Framer Motion
+**Identidad:** Monocromática única (v0.9.0) — escala de grises calibrada contra el agujero negro. **Sin dark/light mode.** Detalles: `PROJECT.md § Identidad de marca`
 
 ## Reglas del proyecto
 
@@ -16,27 +16,50 @@
 - **Términos técnicos estándar:** Inglés (commit, deploy, middleware, endpoint)
 - **Razonamiento técnico interno:** Inglés
 
-### Sistema de diseño — Brutalism (v0.7.0)
+### Sistema de diseño — Monocromático (v0.9.0)
 
-Tokens centralizados en `src/styles/global.css` + `src/styles/palettes.css` (2 paletas: `brutal-dark` default, `brutal-cream`):
+Tokens centralizados **solo** en `src/styles/global.css` (`@theme` + `:root`). No hay archivo de paletas: la escala de grises es la única paleta.
 
-- Paleta: lava `#ff4500` (único acento) + tinta estructural `--nx-ink` (crema en dark, negra en cream) + amarillo `--nx-accent #ffd23f`
-- Sombras duras: `--nx-shadow-sm/…/lg` = offset fijo sin blur, siempre en tinta
-- Variables semánticas legacy bridge: `--lava-core`, `--lava-edge`, `--lava-deep`, `--bg-void`, `--bg-ember`
-- **NO hardcodear colores** — siempre usar `var(--nx-*)`/`var(--lava-*)` o clases Tailwind `text-lava`, `bg-lava-soft`, `border-lava`
-- Componentes base: `.lava-card`, `.lava-card-accent`, `.lava-btn`, `.lava-btn-ghost`, `.lava-tag`, `.hairline`
-- Geometría brutalista: bordes 2-3px sólidos + sombras duras offset — **prohibidos** gradientes, blur, glows, chamfers clip-path; esquinas cuadradas (escala Tailwind radius anulada)
-- Tipografía: `var(--font-display)` para headings, `var(--font-mono)` para código/números, `var(--font-body)` para texto
-- Detalles completos: `DESIGN.md` (canónico)
+- Base `--nx-bg: #050505` calibrada contra el agujero negro. Superficies `--nx-surface: #0e0e0e`, `--nx-surface-raised: #171717`. Tinta `--nx-ink: #ededed`, texto `--nx-text: #f5f5f5`.
+- Blanco roto `--nx-primary: #fafafa` reservado para CTAs y texto-on-primary invertido. Acentos **lavados** (`--nx-secondary: #b8b8b8`, `--nx-accent: #b8b8b8`); semánticos desaturados (`--nx-success: #b6cfc0`, `--nx-warn: #cfc4a6`, `--nx-danger: #d3a9a9`).
+- **NO hardcodear colores** — siempre `var(--nx-*)` o clases Tailwind `text-nx-text`, `bg-nx-surface`, `border-nx-border`.
+- Tipografía: `--font-display` (Space Grotesk) para headings, `--font-mono` (JetBrains Mono) para código/números, `--font-body` (Inter) para texto. Radius progresivo `--radius-xs` 4px → `--radius-4xl` 48px (las esquinas cuadradas del brutalism ya no aplican).
+- Detalles completos: `PROJECT.md` (canónico) + `DESIGN.md`
+
+#### Carve-out: el agujero negro ES un glow
+
+`src/components/ui/optimized-black-hole.tsx` (WebGL2, ~180 líneas, cero dependencias) dibuja el fondo global como `position: fixed; z-index: 0` detrás del contenido. Es el **único glow permitido en el proyecto** y la excepción explícita a la prohibición histórica de glows — no la reescribas como "prohibido".
+
+Dos backends conviven en el repo, solo uno activo:
+
+| | Estado | Detalle |
+|---|---|---|
+| `optimized-black-hole.tsx` + `optimized-black-hole-utils/` | **ACTIVO** | WebGL2 crudo, monocromo por construcción (`uMono = 1` en el shader). Respeta `prefers-reduced-motion`, `IntersectionObserver` (pausa fuera de viewport), `document.hidden`, cleanup con `WEBGL_lose_context`. Si WebGL2 falla: `canvas.style.display = 'none'` y degradación silenciosa. |
+| `optimized-black-hole-vgpu/` | **DORMIDO** | WebGPU + WGSL de 21st.dev. Edit monocromático ya aplicado (rampa térmica neutralizada a luminancia en `shade.wgsl.ts`, `stars.warmth = 0`). No se importa desde ningún sitio. Activarlo requiere `npm i vgpu` (~8.7 MB unpacked, 57 deps transitivas) **y** un wrapper con detección de WebGPU + fallback a WebGL2: sin fallback, `initialize()` lanza, `ready` rechaza y el host queda con un rectángulo negro a pantalla completa. |
+
+No introduzcas un tercer fondo animado, ni CSS gradients como sustituto del agujero negro.
+
+#### Bridges legacy `--lava-*` (deprecados, aún en uso)
+
+`global.css:328-336` mantiene un bloque "Bridge legacy" que mapea los nombres antiguos a tokens actuales:
+
+```
+--lava-core  → var(--nx-primary)      --lava-glow      → var(--nx-glow)
+--lava-edge  → var(--nx-secondary)    --lava-glow-soft → var(--nx-primary-tint)
+--lava-deep  → var(--nx-primary-deep) --bg-void        → var(--nx-bg)
+--bg-ember   → var(--nx-surface)
+```
+
+Clases `.lava-card`, `.lava-card-accent`, `.lava-btn`, `.lava-btn-ghost`, `.lava-tag`, `.hairline` y utilidades `.text-lava-edge` / `.bg-lava-soft` **siguen en uso en ~20 archivos**. Rinden en escala de grises. Al tocar un archivo, migra sus `lava-*` a `nx-*`; no introduzcas más `lava-*` nuevos. El bridge se borra solo cuando el último uso desaparezca.
 
 ### Accesibilidad obligatoria
 
 - Animaciones respetan `prefers-reduced-motion: reduce`
 - Navegación 100% funcional solo con teclado
 - `aria-pressed` en toggles, `aria-label` en iconos, `aria-hidden="true"` en decorativos
-- Contraste mínimo WCAG 2.1 AA — verificar lava-core sobre bg-void
+- Contraste mínimo WCAG 2.1 AA — verificar `--nx-ink` sobre `--nx-bg`
 - No usar solo color para transmitir información
-- `prefers-reduced-motion` honored en WebGLBackground (CSS-only fallback)
+- `prefers-reduced-motion` honrado en el agujero negro (`uSway = 0`, `clickEffect` ripple desactivado cuando `reduce`); si WebGL2 no está disponible el canvas se oculta sin romper layout
 
 ### Ciberseguridad / seguridad
 
@@ -85,27 +108,37 @@ Tokens centralizados en `src/styles/global.css` + `src/styles/palettes.css` (2 p
 3. Skills loaded automáticamente por el agente según stack
 4. Para tareas >1 archivo o UI work: pensar primero qué construir, mostrar mockups si es UI, luego escribir código
 5. **Build gate**: `npm run build` debe dar exit 0 con todas las páginas compiladas
-7. **Smoke test gate**: levantar `npm run preview` y curl a todas las rutas afectadas, verificar HTTP 200
-8. **Test gates**: `npm run test` (vitest, 107 tests) + `npm run test:e2e` (playwright) en verde antes de commit
-9. Update PROJECT.md con resultados ANTES de commit
-10. Commit atómico con conventional message (type(scope): description)
-11. `git push origin main`
+6. **Smoke test gate**: `npm run build` + servir `dist/client`, curl a todas las rutas afectadas, verificar HTTP 200
+7. **Test gates**: `npm run test` (vitest, 299 tests) + `npm run test:e2e` (playwright) en verde antes de commit
+8. Update PROJECT.md con resultados ANTES de commit
+9. Commit atómico con conventional message (type(scope): description) — **1 cambio lógico = 1 commit**
+10. `git push origin main` solo con working tree limpio y gates verdes
 
 ## Reglas críticas
 
-- **NUNCA** usar colores hardcoded — siempre `var(--lava-*)` o clases Tailwind semánticas
-- **NUNCA** cambiar paleta base sin confirmar (brutalism es la identidad v0.7.0+; lava #ff4500 se mantiene como acento desde v0.2.0)
+- **NUNCA** usar colores hardcoded — siempre `var(--nx-*)` o clases Tailwind semánticas
+- **NUNCA** reintroducir paletas, dark/light mode, ni `PaletteSwitcher` — la identidad es monocromática única desde v0.9.0
+- **NUNCA** introducir un glow nuevo — el agujero negro es el único carve-out
+- **NUNCA** introducir `lava-*` nuevos — usa `nx-*` (el bridge legacy se está drenando)
+- **NUNCA** activar `optimized-black-hole-vgpu/` sin fallback WebGL2 (rompe Safari <26 y Firefox <141 con un rectángulo negro)
 - **NUNCA** agregar `videoUrl` falso al catálogo (queda undefined hasta que el video exista)
 - **NUNCA** publicar precio fijo en OSINT/Testing — solo rangos o tiers
 - **NUNCA** copiar estilo visual de Vertex/Toptal/etc. — solo patrones estructurales
 - **NUNCA** saltarse el smoke test después de añadir páginas nuevas
-- **NUNCA** introducir dependencias pesadas (three.js, gsap, lenis) en el client bundle — el frontend sigue siendo mínimo
+- **NUNCA** introducir dependencias pesadas (three.js, gsap, lenis, vgpu) en el client bundle — el frontend sigue siendo mínimo
 - **NUNCA** agregar endpoints/API routes sin validación Zod + secret scan + test — el backend vive en Pages Functions
+- **NUNCA** confiar en `npm run dev` para verificación visual — ver "Bug conocido" abajo; usar `npm run build` + servir `dist/client`
+
+## Bug conocido: `astro dev` no hidrata
+
+En `astro dev` **0 de 4 islas hidratan**. Error: `Failed to fetch dynamically imported module: /@id/astro:scripts/before-hydration.js (404)`. Es **preexistente**, no lo causa el agujero negro ni la migración monocroma (Astro quita el atributo `ssr` de una isla al hidratarla; cuenta 0/4 significa ninguna hidrató). Incluye islas anteriores a este trabajo: `NXSculptureHero`, `ProjectSlider`, +2.
+
+**Workaround de desarrollo: `npm run build` y servir `dist/client` estáticamente.** En build de producción hidrata 4/4 sin errores. No inventes workarounds sobre este bug ni persigas corregirlo durante tareas de otro alcance.
 
 ## Comandos frecuentes
 
 ```bash
-# Dev server
+# Dev server (NO trustworthy para verificación visual: 0/4 islas hidratan, ver "Bug conocido")
 npm run dev -- --port 4321 --host 127.0.0.1
 
 # Build producción
@@ -118,7 +151,7 @@ npx wrangler pages dev dist --port 4321
 curl -s -o /dev/null -w "/ %{http_code}\n" http://127.0.0.1:4321/
 
 # Suites
-npm run test       # vitest 107 tests
+npm run test       # vitest 299 tests
 npm run test:e2e   # playwright
 
 # Deploy producción (Workers con static assets)
@@ -135,10 +168,10 @@ dark-memory · playwright · context7 · github
 ## Documentación de referencia
 
 - `docs/research-pricing-patterns.md` — benchmarks estructurales (NO visuales) de Vertex, Toptal, Andela, Arc.dev, OSINT firms, QA firms
-- `PROJECT.md` — single source of truth del proyecto (sprints, arquitectura, limitaciones)
+- `PROJECT.md` — single source of truth del proyecto (identidad, sprints, arquitectura, limitaciones)
 - Astro docs: https://docs.astro.build
 - Tailwind v4: https://tailwindcss.com/
 
 ---
 
-*v0.6.1 — 2026-10-13: actualizadas reglas post-migración a Cloudflare Pages SSR (D1 + Resend + better-auth) e i18n ES/EN/PT.*
+*v0.9.0 — 2026-10-21: identidad monocromática única. Eliminados el sistema de paletas, PaletteSwitcher, BackgroundDecor y WebGLBackground. Fondo global = agujero negro WebGL2 como único glow permitido. Documentado el bug preexistente de hidratación en `astro dev`.*
