@@ -443,6 +443,9 @@ class LiquidEngine {
   private ready = false
   private destroyed = false
   private lost = false
+  private driftTimer = 0
+  /** Callback del componente (relayout) cuando el watchdog detecta drift de tamaño. */
+  onDrift?: () => void
 
   constructor(canvas: HTMLCanvasElement, opts: EngineOptions, onFail: () => void) {
     this.canvas = canvas
@@ -467,6 +470,17 @@ class LiquidEngine {
       window.matchMedia("(pointer: coarse)").matches
     this.initGL()
     canvas.addEventListener("webglcontextlost", this.onLost, false)
+    // Watchdog de drift 1Hz: rAF y ResizeObserver no entregan con la página
+    // oculta (daemon QA headless) ni ante cambio de devicePixelRatio sin
+    // cambio de caja, y el loop se auto-detiene al idle (settle). Los timers
+    // SÍ corren ocultos (throttle >=1s). QA 2026-10-22 / t_ad290f52.
+    this.driftTimer = window.setInterval(() => {
+      if (this.destroyed || this.lost || !this.ready) return
+      if (this.syncBacking()) {
+        this.wake()
+        this.onDrift?.()
+      }
+    }, 1000)
   }
 
   private onLost = (e: Event) => {
@@ -724,6 +738,43 @@ class LiquidEngine {
     this.draw()
   }
 
+  /**
+   * Re-sincroniza el backing store con la caja CSS en cada draw (patrón del
+   * renderer de optimized-black-hole). El ResizeObserver del componente
+   * alimenta relayout() mientras la página renderiza, pero sus entries no se
+   * entregan con el documento oculto (daemon QA headless: visibilityState
+   * "hidden") ni ante un cambio de devicePixelRatio sin cambio de caja — el
+   * canvas quedaba estirado/blur al tamaño viejo (QA 2026-10-22). Con el
+   * chequeo por-draw, el primer frame después de cualquier hueco vuelve al
+   * tamaño real. La corrección del rect es proporcional: la exacta la sigue
+   * dando relayout() cuando el RO entrega.
+   */
+  private syncBacking() {
+    const cssW = Math.max(1, this.canvas.clientWidth)
+    const cssH = Math.max(1, this.canvas.clientHeight)
+    let dpr = Math.min(window.devicePixelRatio || 1, this.lowPower ? 1.5 : 2)
+    const px = cssW * cssH * dpr * dpr
+    if (px > 4.5e6) dpr = Math.max(1, Math.sqrt(4.5e6 / (cssW * cssH)))
+    const w = Math.round(cssW * dpr)
+    const h = Math.round(cssH * dpr)
+    if (this.canvas.width === w && this.canvas.height === h) return false
+    if (this.cssW > 0 && this.cssH > 0) {
+      const kx = cssW / this.cssW
+      const ky = cssH / this.cssH
+      this.rect = {
+        x: this.rect.x * kx,
+        y: this.rect.y * ky,
+        w: this.rect.w * kx,
+        h: this.rect.h * ky,
+      }
+    }
+    this.cssW = cssW
+    this.cssH = cssH
+    this.canvas.width = w
+    this.canvas.height = h
+    return true
+  }
+
   setVisible(v: boolean) {
     this.visible = v
     if (v) this.wake()
@@ -912,6 +963,7 @@ class LiquidEngine {
 
   private draw() {
     if (!this.ready || this.lost || this.destroyed) return
+    this.syncBacking()
     const gl = this.gl
     const o = this.opts
     const r = this.rect
@@ -998,6 +1050,7 @@ class LiquidEngine {
   destroy() {
     this.destroyed = true
     this.stop()
+    window.clearInterval(this.driftTimer)
     this.canvas.removeEventListener("webglcontextlost", this.onLost)
     const gl = this.gl
     if (!this.lost) {
@@ -1508,6 +1561,8 @@ export default function SculptureHero(props: SculptureHeroProps) {
     try {
       engine = new LiquidEngine(canvas, optsRef.current(mq.matches), fail)
       engineRef.current = engine
+      // drift watchdog del engine -> relayout completo (img/banda/hint), no solo backing
+      engine.onDrift = () => relayout()
     } catch {
       fail()
     }
