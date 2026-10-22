@@ -3,9 +3,8 @@ import SculptureHero, { type SculptureHeroLink } from "../ui/liquid-sculpture-he
 
 /**
  * NXSculptureHero — wrapper de SculptureHero para el sitio NX-Studio.
- * Sincroniza el tema del sitio (atributo data-palette en <html>, glass-dark /
- * glass-light) con el tema interno del hero, y aplica la identidad NX:
- * fondos glass, acento lava y tipografías del sistema.
+ * El sitio tiene identidad monocromatica unica (sin dark/light), asi que el
+ * hero se fija siempre en modo oscuro y con acento neutro.
  */
 
 export interface NXHeroProps {
@@ -20,21 +19,7 @@ export interface NXHeroProps {
   backdropText?: string
 }
 
-const THEME_ATTR = "data-palette"
-
 export default function NXSculptureHero(props: NXHeroProps) {
-  const [mode, setMode] = React.useState<"light" | "dark">("dark")
-
-  React.useEffect(() => {
-    const root = document.documentElement
-    const read = () =>
-      setMode(root.getAttribute(THEME_ATTR) === "glass-light" ? "light" : "dark")
-    read()
-    const obs = new MutationObserver(read)
-    obs.observe(root, { attributes: true, attributeFilter: [THEME_ATTR] })
-    return () => obs.disconnect()
-  }, [])
-
   return (
     <SculptureHero
       src="/assets/sculpture/light.webp"
@@ -45,7 +30,7 @@ export default function NXSculptureHero(props: NXHeroProps) {
       brand="NX-Studio"
       showNav={false}
       themeToggle={false}
-      theme={mode}
+      theme="dark"
       eyebrow={props.eyebrow}
       headline={props.headline}
       headlineAccent={props.headlineAccent}
@@ -54,9 +39,9 @@ export default function NXSculptureHero(props: NXHeroProps) {
       secondaryCta={props.secondaryCta}
       hint={props.hint}
       hintTouch={props.hintTouch}
-      background="#fafbff"
-      darkBackground="#0a0b14"
-      accentColor="#ff4500"
+      background="#050505"
+      darkBackground="#050505"
+      accentColor="#fafafa"
       headingFont="var(--font-display)"
       accentFont="'Instrument Serif', 'Times New Roman', serif"
       bodyFont="var(--font-body)"
