@@ -129,11 +129,21 @@ Clases `.lava-card`, `.lava-card-accent`, `.lava-btn`, `.lava-btn-ghost`, `.lava
 - **NUNCA** agregar endpoints/API routes sin validación Zod + secret scan + test — el backend vive en Pages Functions
 - **NUNCA** confiar en `npm run dev` para verificación visual — ver "Bug conocido" abajo; usar `npm run build` + servir `dist/client`
 
-## Bug conocido: `astro dev` no hidrata
+## Bug RESUELTO: `astro dev` no hidrataba (0/4 islas)
 
-En `astro dev` **0 de 4 islas hidratan**. Error: `Failed to fetch dynamically imported module: /@id/astro:scripts/before-hydration.js (404)`. Es **preexistente**, no lo causa el agujero negro ni la migración monocroma (Astro quita el atributo `ssr` de una isla al hidratarla; cuenta 0/4 significa ninguna hidrató). Incluye islas anteriores a este trabajo: `NXSculptureHero`, `ProjectSlider`, +2.
+**Resuelto 2026-10-22 (`dceb0a9`).** El bug (0/4 islas, 404 en `/@vite/client` y
+`/@id/astro:scripts/before-hydration.js` DESDE DENTRO de la página) NO era la
+cadena @astrojs/react — era `run_worker_first = true` (booleano) en
+`wrangler.toml`: el plugin de Cloudflare enrutaba TODAS las requests de dev al
+worker en miniflare ANTES del middleware de Vite (cloudflare/workers-sdk#14626).
+Fix: forma **ARRAY** con las 30 rutas de página/API — el middleware i18n sigue
+viendo cada página, los assets estáticos los sirve el binding y las URLs
+internas de Vite pasan a Vite.
 
-**Workaround de desarrollo: `npm run build` y servir `dist/client` estáticamente.** En build de producción hidrata 4/4 sin errores. No inventes workarounds sobre este bug ni persigas corregirlo durante tareas de otro alcance.
+`astro dev` hidrata 4/4 con dev-toolbar vivo. **Si reaparece: NO tocar
+@astrojs/react — revisar primero la forma de `run_worker_first` en
+`wrangler.toml`.** El gate de verificación visual de producción sigue siendo
+`npm run build` + `astro preview` (o prod directamente).
 
 ## Comandos frecuentes
 

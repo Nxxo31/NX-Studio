@@ -83,13 +83,15 @@ violación a corregir.
 - Hover card = elevación por borde + superficie, sin offset duro.
 - Motion: React islands con `framer-motion` en home; CSS animations +
   `IntersectionObserver` `.reveal` en el resto para mantener el bundle mínimo.
+- Hero: **solo-texto** (2026-10-22). La escultura líquida se retiró del hero; el
+  fondo global de agujero negro es el único visual — el hero va transparente.
 
 ## Do
 
 - Usar `var(--nx-*)` o las clases Tailwind `text-nx-text`, `bg-nx-surface`,
   `border-nx-border`.
-- Verificar contra `npm run build` + `dist/client` servido. `astro dev` no
-  hidrata (bug preexistente) — ver `AGENTS.md § Bug conocido`.
+- Verificar contra `npm run build` + `astro preview` (o prod). `astro dev`
+  hidrata 4/4 desde `dceb0a9` — ver `AGENTS.md § Bug RESUELTO`.
 - Migrar `lava-*` → `nx-*` en cualquier archivo que toques.
 
 ## Don't

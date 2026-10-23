@@ -1,6 +1,6 @@
 # PROJECT.md — NX-Studio
 
-> **Estado:** Activo | **Versión:** 0.5.0 — Backend en Cloudflare Pages con D1 + Better-auth | **Stack:** Astro 7.3.2 + Tailwind v4 + TypeScript + Cloudflare adapter + Better-auth + Drizzle ORM
+> **Estado:** Activo — sprint Reimaginación cerrado | **Versión:** 0.9.0 — Cloudflare Workers con static assets, D1 (15 tablas), portal cliente + admin panel live | **Stack:** Astro 7.3.2 + Tailwind v4 + TypeScript + @astrojs/cloudflare + better-auth 1.7.7 + Drizzle ORM
 
 ## Visión General
 
@@ -20,9 +20,10 @@ Objetivo: un sitio funcional con formulario de contacto con persistencia real,
 panel admin para el operador, y opcionalmente un portal de cliente donde ver el
 estado de su licitación.
 
-**Runtime:** Cloudflare Pages con output='server' — todos los `/api/*` routes son
-Pages Functions ejecutadas en el edge. El frontend sigue siendo mayoritariamente
-estático para SEO y velocidad.
+**Runtime:** Cloudflare Workers con static assets (`nx-studio.nx-studio.workers.dev`)
+— `output: 'static'` con `prerender = false` explícito en las rutas on-demand
+(APIs, /portal/*, /admin/*, /productos, /templates). El resto del sitio queda
+prerendered para SEO y velocidad.
 
 ## Identidad de marca · Sistema de diseño canónico
 
@@ -58,6 +59,13 @@ prohibición histórica de glows, y la razón por la que `#050505` es el color b
 Degradación: si WebGL2 no está disponible, `canvas.style.display = 'none'` y el
 sitio sigue legible. Respeta `prefers-reduced-motion`, pausa fuera de viewport
 (`IntersectionObserver`) y en `document.hidden`.
+
+**Hero solo-texto (2026-10-22, decisión operador):** la escultura líquida WebGL2
+se retiró del hero — `sculpture={false}` en `NXSculptureHero` (el componente
+genérico `SculptureHero` ganó la prop `sculpture`, default `true`, con render
+condicional del stage y guard en el effect de carga). El fondo global — el
+agujero negro — es el único visual del hero; el hero va con fondo transparente
+para que el canvas en z-0 se vea a través. Commit `27d6581`.
 
 Existe un **segundo backend dormido** en `src/components/ui/optimized-black-hole-vgpu/`
 (WebGPU + WGSL de 21st.dev, edit monocromático ya aplicado). No se importa desde
@@ -182,19 +190,26 @@ v0.5.0), smoke 13/13, Lab interact test 200 con SVG renderizado
 ## Estructura de páginas
 
 ```
-/                           # Home (Hero con ProjectPreview, Servicios, Confianza,
-                              #          Proceso, 2 CTAs)
+/                           # Home (Hero solo-texto sobre el agujero negro global,
+                              #          Servicios, Confianza, Proceso, 2 CTAs, Chatbot)
 /servicios                  # Índice de servicios especializados
   └── /testing              # QA: tiers Foundation/Accelerator/Strategic
-/templates                  # Marketplace de templates comprables
+/productos                  # Catálogo de proyectos (18, SSR + GitHub live)
+  └── /[slug]               # Detalle por proyecto
+/templates                  # Marketplace de templates (SSR + filtros query string)
   └── /[slug]               # Detalle por template (3 productos)
 /cotizador                  # ★ Pricing engine (state local, tiempo real)
-/laboratorio                # Chat IA + mockup preview
-/contacto                   # Formulario WhatsApp + email
-/brand                      # Preview del Brand component (3 variantes)  [sprint v0.3.0]
-/logos                      # 8 prototipos con selector live                [sprint v0.3.0]
-/palettes                   # 4 paletas con switcher sticky                 [sprint v0.3.0]
+/laboratorio                # Chat IA + mockup SVG determinista
+/contacto                   # Formulario WhatsApp + email (D1 + Resend)
+/docs                       # Pricing / engagement / licencias (público)
+/brand /logos /style-lab    # Previews de marca e identidad            [históricos]
+/portal/*                   # Portal de cliente (B7): login, dashboard, licitaciones,
+                              #   proyectos, mensajes, perfil
+/admin/*                    # Panel admin (B8): login, métricas, CRUD licitaciones/
+                              #   proyectos/templates, usuarios, audit, deploys
 ```
+
+(`/palettes` fue eliminada en v0.9.0.)
 
 **OSINT eliminado del catálogo público** (2026-10-09). `/servicios/osint.astro` borrado,
 feature `osint` removida de pricing.ts y FEATURES array en contacto.astro, Zod enum de
@@ -252,23 +267,41 @@ Desde v0.5.0 hay un backend SSR en Cloudflare Pages (`output=server`):
 - **`/api/auth/[...all]`** — catch-all para better-auth. Endpoints: `sign-up/email`,
   `sign-in/email`, `sign-out`, `session`, `verify-email`, OAuth callbacks (si Google/GitHub
   están configurados).
-- **`/portal/*`** — rutas protegidas (requieren sesión). El cliente ve el estado de
-  sus licitaciones en tiempo real.
-- **`/admin/*`** — rutas admin protegidas con Cloudflare Access (no better-auth).
-  El operador gestiona licitaciones, marca status, y configura el sistema.
+- **`/portal/*`** (Fase B7, live 2026-10-19) — portal de cliente: login (password +
+  magic link), dashboard, licitaciones, proyectos, mensajes, perfil. Auth propia
+  con sesión D1 (`lib/portal-auth.ts`, cookies `nx-studio-portal-`) + middleware
+  guard + notificaciones Resend (`lib/portal-notifications.ts`).
+- **`/admin/*`** (Fase B8, live 2026-10-19) — panel del operador: login con
+  `admin_session`, RBAC 20 acciones × 4 roles (`lib/rbac.ts`), CRUD de
+  licitaciones/proyectos/templates, gestión de usuarios, audit log INMUTABLE
+  (triggers SQL) y deploy log. Cloudflare Access sobre `/admin*` queda como capa
+  extra recomendada (pendiente en el dashboard CF, ~10 min; no bloquea — el panel
+  ya exige login + RBAC).
 
 **DB (Cloudflare D1):**
 
-| Tabla       | Contenido                                          |
-|-------------|----------------------------------------------------|
-| `user`      | Clientes + admin. role: 'cliente' (default) o 'admin' |
-| `session`   | Sessions activas (DB session, no JWT)              |
-| `account`   | Providers: 'credential' (password), 'google', 'github' |
+| Tabla | Contenido |
+|-------|-----------|
+| `user` | Clientes + admin. Custom: role, empresa, telefono, pais |
+| `session` | Sessions better-auth (DB session, no JWT) |
+| `account` | Providers: 'credential' (password), 'google', 'github' |
 | `verification` | Tokens magic link, email verify, password reset |
-| `licitacion` | Todos los submits de /contacto — email, tipo, engagement, pricing, status |
-| `proyecto`  | 11 productos del catálogo (NXC, SYN, E14...)       |
-| `template`  | 3 templates comprables ($290/$590/$890)             |
-| `compra`    | Compras manuales de templates (confirmadas por operador) |
+| `licitacion` | Submits de /contacto — email, tipo, engagement, pricing, status, moneda display |
+| `proyecto` | Catálogo de proyectos (18) + `cliente_id`, `portal_visible` (ext. B7) |
+| `template` | 3 templates comprables ($290/$590/$890) |
+| `compra` | Compras manuales de templates (confirmadas por operador) |
+| `portal_session` | Sesiones del portal de cliente (B7) |
+| `portal_activity` | Log de actividad del portal (B7) |
+| `portal_message` | Mensajes cliente ↔ operador (B7) |
+| `milestone` | Hitos por proyecto, visibles en el portal (B7) |
+| `admin_session` | Sesiones del panel admin (B8) |
+| `audit_log` | Audit INMUTABLE de acciones admin — triggers SQL (B8) |
+| `deploy_log` | Registro de deploys visible en /admin/deploys (B8) |
+
+**15 tablas** (8 core + 4 portal + 3 admin), schema canónico en
+`src/db/schema.ts`. Migraciones `0002_portal.sql` y `0003_admin.sql` aplicadas
+a la DB remota el 2026-10-22 (`wrangler d1 execute --remote` con el oauth
+cacheado — `unset CLOUDFLARE_API_TOKEN` primero; ver `docs/deploy.md`).
 
 **Stack del backend:**
 
@@ -299,6 +332,13 @@ Desde v0.5.0 hay un backend SSR en Cloudflare Pages (`output=server`):
 | Phase 11 | /admin panel (list + detail + status) + /docs público. Portal diferido (re-confirmado 2026-10-13) | `ec901fd` |
 | i18n | ES/EN/PT auto-detect cf-ipcountry + cookie override + switcher footer + traducción completa (memo #192) | `32f01d8`, `82506a1` |
 | Phase 12 | Identidad monocromática v0.9.0: colapso de paletas a escala de grises + agujero negro WebGL2 como fondo global + eliminación de PaletteSwitcher/BackgroundDecor/WebGLBackground/palettes.astro | (v0.9.0) |
+| B7 | Portal de cliente `/portal/*` — 13/13 tasks (dark-memory spec 16) | `617f8ff` + `d48ae48`, merge `e72a946` |
+| B8 | Admin panel `/admin/*` — RBAC 20×4 + audit + deploys (spec 17) | `005bf68` + `db54d10`, merge `6c16cc6` |
+| Phase 6 | Chatbot SophIA — FSM + 11 intents ES/EN/PT, bundle 12.9KB | `43f2627` |
+| Phase 7 | Templates marketplace Dribbble-style (SSR + filtros) | `2f42ef1` |
+| Q4 | Fix hidratación React #425/#423 (inline `<style>` RCDATA) | `35e054cd` |
+| Fix dev | `astro dev` hidrata 4/4 — `run_worker_first` array | `dceb0a9` |
+| Hero | Hero solo-texto — escultura retirada, el agujero negro es el visual | `27d6581` |
 
 ## Sprint v0.4.0 (cerrado)
 
@@ -338,18 +378,30 @@ Tareas completadas (referencia):
 - [x] Headers de seguridad en Base.astro
 
 Pendientes (futuros sprints):
-- [ ] /portal/* portal cliente — diferido por decisión operador 2026-10-11,
-      re-confirmado 2026-10-13 (requiere better-auth verificado E2E en Pages
-      Functions antes de exponerse)
+- [x] /portal/* portal cliente — LIVE desde B7 (2026-10-19, spec 16)
 - [x] i18n — decidido e implementado: ES/EN/PT auto-detect (memo #192),
       commits `32f01d8` (infraestructura) + `82506a1` (traducción)
 - [ ] /proceso (metodología 5 fases) — la versión inline del Home ya cubre esto
 - [ ] /precios (engagement shapes + tiers) — el cotizador y /docs ya cubren pricing
-- [ ] /productos (catálogo 11 repos) + /productos/[slug]
+- [x] /productos (catálogo 18 proyectos) + /productos/[slug] — live con
+      integración GitHub (`api/proyectos.ts`)
 
 ## Sprint actual
 
-**Sprint v0.6.0 — Phase 11 acotada: /admin panel + /docs público (2026-10-11)**
+**Cierre del sprint Reimaginación → v1.0 (2026-10-23)**
+
+Backlog del sprint cerrado al 100%: fases 1-8 + B0-B8 (portal y admin live en
+producción), chatbot SophIA, templates marketplace, identidad monocromática con
+agujero negro global, hero solo-texto, D1 remoto con las 15 tablas y `astro dev`
+hidratando 4/4. La Fase B9 (i18n + docs técnicos) se cierra con este realineo de
+documentación — i18n verificado por el i18n-guard del build (669 keys, 93
+archivos, 0 claves crudas en prerender). Único pendiente externo: T02 — crear la
+Cloudflare Access policy sobre `/admin*` en el dashboard CF (~10 min, capa extra
+de defensa sobre el login+RBAC que ya protege el panel).
+
+---
+
+**Sprint v0.6.0 — Phase 11 acotada: /admin panel + /docs público (2026-10-11)** *(histórico)*
 
 Scope definido por el operador (kanban t_c45baff3): Phase 11 original era
 demasiado amplio (admin + portal + i18n + docs). Se acotó a:
@@ -493,7 +545,7 @@ PENDIENTE: `RESEND_API_KEY` — sin cuenta Resend el email queda en modo mock
 | Styling | Tailwind CSS (vía Vite plugin) | 4.3.3 |
 | TypeScript | | 5.7 |
 | Hosting | Cloudflare Workers (SSR + static assets) | nx-studio.nx-studio.workers.dev |
-| Identity | Lava neon (palette naranja/rojizo + chamfers + scan lines) | v0.3.0 |
+| Identity | Monocromática única + agujero negro WebGL2 como fondo global | v0.9.0 |
 
 ## Decisiones arquitectónicas
 
@@ -528,9 +580,9 @@ PENDIENTE: `RESEND_API_KEY` — sin cuenta Resend el email queda en modo mock
 2. **Templates sin payment real**: el botón de comprar redirige a
    `/contacto?topic=template&slug=X` — no hay Stripe checkout (supuesto de cobro
    manual, respeta preferencia del operador).
-3. **Sin portal de cliente**: diferido (decisión operador 2026-10-11). El
-   scaffolding better-auth existe (Phase 10) pero el portal no se expone hasta
-   tener pruebas E2E sobre Pages Functions.
+3. **Portal de cliente y admin LIVE** (2026-10-19): la limitación original
+   (diferido 2026-10-11) quedó superada — /portal/* y /admin/* tienen E2E
+   Playwright propios (portal.spec, admin.spec) y D1 remoto con las 15 tablas.
 4. **Seed de producción se aplica manualmente**: `npm run db:seed:remote` requiere
    `wrangler` + auth Cloudflare. No hay CI/CD todavía.
 5. **i18n resuelto** (v0.6.1): ES/EN/PT auto-detect + switcher. /admin y /docs
@@ -538,9 +590,12 @@ PENDIENTE: `RESEND_API_KEY` — sin cuenta Resend el email queda en modo mock
 6. **Catálogo sin videos**: `videoUrl` queda undefined en la seed por ahora.
 8. **Tests: vitest (299 unit/integration, 16 archivos) + Playwright E2E.
    Arquitectura de tests con fake D1 + vitest para backend, Playwright para UI.**
-9. **`astro dev` no hidrata (0/4 islas, 404 `/@id/astro:scripts/before-hydration.js`)**:
-   bug preexistente, no causado por la migración monocroma. Verificar siempre
-   contra `npm run build` + `dist/client` servido, nunca contra el dev server.
+9. **`astro dev` hidrata 4/4 desde `dceb0a9`** (2026-10-22): el bug 0/4 islas era
+   `run_worker_first = true` (booleano) en `wrangler.toml` enrutando las requests
+   de dev al worker antes del middleware de Vite; el fix es la forma ARRAY con
+   las rutas de página/API. Si reaparece: revisar `run_worker_first`, NO la
+   cadena @astrojs/react. Para verificación visual de producción, el gate sigue
+   siendo `npm run build` + `astro preview` (o prod).
 10. **Puente legacy `--lava-*` sigue en uso** (~20 archivos): drained
     incrementalmente, no bloquea funcionalidad.
 11. **`.dev.vars` gitignored** contiene `TWENTYFIRST_API_KEY` (21st.dev) para
