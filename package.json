@@ -31,11 +31,12 @@
   "dependencies": {
     "@astrojs/cloudflare": "^14.3.3",
     "@astrojs/db": "^0.21.3",
-    "@astrojs/react": "^4.4.2",
+    "@astrojs/react": "^7.1.1",
     "astro": "^7.3.2",
     "better-auth": "^1.7.7",
     "drizzle-orm": "^0.45.4",
     "framer-motion": "^11.18.2",
+    "oxc-transform-react": "^0.145.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "resend": "^6.30.0",
