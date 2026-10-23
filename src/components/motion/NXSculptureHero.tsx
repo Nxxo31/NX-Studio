@@ -37,25 +37,25 @@ export default function NXSculptureHero(props: NXHeroProps) {
       body={props.body}
       primaryCta={props.primaryCta}
       secondaryCta={props.secondaryCta}
-      hint={props.hint}
-      hintTouch={props.hintTouch}
-      background="#050505"
-      darkBackground="#050505"
+      background="transparent"
+      darkBackground="transparent"
       accentColor="#fafafa"
-      headingFont="var(--font-display)"
       accentFont="'Instrument Serif', 'Times New Roman', serif"
       bodyFont="var(--font-body)"
       loadFonts={true}
       backdropText={props.backdropText ?? "NX"}
       showCredit={false}
       height="100svh"
+      /* Solo-texto (2026-10-22, decision operador): la escultura liquida WebGL2
+       * se retiro del hero — el fondo global (agujero negro) ES el visual.
+       * Fondo transparente para que el canvas en z-0 se vea a traves del hero. */
+      sculpture={false}
+      interactive={false}
+      hint=""
+      hintTouch=""
       sculptureScale={0.95}
       mobileSculptureScale={1}
       sculptureY={3}
-      interactive={true}
-      strength={1}
-      liquid={1.15}
-      intro={true}
       restStyle="image"
     />
   )

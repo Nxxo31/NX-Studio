@@ -1084,6 +1084,9 @@ export interface SculptureHeroProps {
   imageAlt?: string
   /** Only for images without transparency: the flat background colour inside the image. */
   imageBackground?: string
+  /** false = text-only hero (no sculpture image, no WebGL engine). The
+   *  background stays transparent so a page-level backdrop shows through. */
+  sculpture?: boolean
 
   brand?: string
   navLinks?: SculptureHeroLink[]
@@ -1407,6 +1410,7 @@ export default function SculptureHero(props: SculptureHeroProps) {
     accentFont = DEFAULTS.accentFont,
     bodyFont = DEFAULTS.bodyFont,
     loadFonts = true,
+    sculpture = true,
     sculptureScale = 1,
     mobileSculptureScale = 1,
     sculptureX = 0,
@@ -1638,6 +1642,7 @@ export default function SculptureHero(props: SculptureHeroProps) {
   // (re)load the sculpture whenever the theme or layout asks for another image;
   // the canvas dips out while the static image covers the swap
   React.useEffect(() => {
+    if (!sculpture) return
     const root = rootRef.current
     const engine = engineRef.current
     if (!root) return
@@ -1676,7 +1681,7 @@ export default function SculptureHero(props: SculptureHeroProps) {
       image.onload = null
       image.onerror = null
     }
-  }, [activeSrc, relayout])
+  }, [sculpture, activeSrc, relayout])
 
   // live option updates without re-creating the engine
   React.useEffect(() => {
@@ -1710,10 +1715,14 @@ export default function SculptureHero(props: SculptureHeroProps) {
           {backdropText}
         </div>
       ) : null}
-      <div ref={stageRef} className="sh-stage" aria-hidden="true">
-        <img ref={imgRef} className="sh-fallback" src={activeSrc} alt="" crossOrigin="anonymous" draggable={false} />
-      </div>
-      <span style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>{imageAlt}</span>
+      {sculpture ? (
+        <div ref={stageRef} className="sh-stage" aria-hidden="true">
+          <img ref={imgRef} className="sh-fallback" src={activeSrc} alt="" crossOrigin="anonymous" draggable={false} />
+        </div>
+      ) : null}
+      {sculpture ? (
+        <span style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>{imageAlt}</span>
+      ) : null}
 
       {showNav && (
         <nav ref={navRef} className="sh-nav" aria-label="Primary">
