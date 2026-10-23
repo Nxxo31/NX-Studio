@@ -60,8 +60,8 @@ const alternates = LOCALES.map((l) => ({
     <title>{title}</title>
   </head>
   <body class="bg-nx-bg text-nx-text antialiased relative">
-    {/* Fondo global: agujero negro monocromatico (React island WebGL2, z-0).
-        El contenido vive en z-10. Identidad unica: no hay modo claro/oscuro. */}
+    {/* Fondo global: agujero negro con rampa térmica original en color (React island WebGL2, z-0).
+        El contenido vive en z-10. Identidad única: no hay modo claro/oscuro. */}
     <div class="nx-blackhole-backdrop fixed inset-0 z-0" aria-hidden="true">
       <BlackHole client:load />
     </div>
