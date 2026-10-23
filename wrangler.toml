@@ -11,11 +11,39 @@ compatibility_date = "2026-10-01"
 compatibility_flags = ["nodejs_compat", "disable_nodejs_process_v2"]
 workers_dev = true
 
-# El worker corre ANTES que los assets estáticos: el middleware i18n necesita
-# ver cada request (cf-ipcountry → 302 al locale) aunque la página final sea
-# un archivo pre-renderizado servido vía el binding ASSETS.
+# El worker corre ANTES que los assets SOLO en rutas de página/API: el
+# middleware i18n necesita ver cada request de página (cf-ipcountry → 302
+# al locale) aunque la página final sea un archivo pre-renderizado servido
+# vía el binding ASSETS.
+#
+# FORMA ARRAY, NO BOOLEANA (fix 2026-10-22 del "Bug conocido: astro dev no
+# hidrata" de AGENTS.md): con `run_worker_first = true`, el plugin de
+# Cloudflare enruta TODAS las requests del dev server al worker en
+# miniflare ANTES del middleware de Vite — /@vite/client, /@id/astro:scripts/*
+# y todo el grafo de módulos devolvían 404 y 0/4 islas hidrataban
+# (cloudflare/workers-sdk#14626). Con la forma array, las URLs internas de
+# Vite y los assets estáticos (/_astro/*, imágenes) caen directo a Vite /
+# al binding ASSETS (sin cold start del worker por asset); las rutas
+# desconocidas sin asset siguen llegando al worker (fallback 404 intacto).
 [assets]
-run_worker_first = true
+run_worker_first = [
+  "/",
+  "/en", "/en/*",
+  "/pt", "/pt/*",
+  "/productos", "/productos/*",
+  "/templates", "/templates/*",
+  "/servicios", "/servicios/*",
+  "/laboratorio", "/laboratorio/*",
+  "/cotizador", "/cotizador/*",
+  "/contacto", "/contacto/*",
+  "/docs", "/docs/*",
+  "/brand", "/brand/*",
+  "/logos", "/logos/*",
+  "/style-lab", "/style-lab/*",
+  "/api/*",
+  "/portal", "/portal/*",
+  "/admin", "/admin/*",
+]
 # Para Pages, no se necesita `main` — el runtime lo detecta desde dist/_worker.js
 # automáticamente. Sí necesitamos la lista de páginas (público) desde `dist/`.
 
