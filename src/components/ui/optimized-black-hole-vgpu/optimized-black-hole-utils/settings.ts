@@ -74,6 +74,6 @@ export function defaultHeroSettings(): HeroSettings {
       spare2: -0.67,
       spare3: 0.69,
     },
-    stars: { brightness: 1, density: 1, contrast: 13, warmth: 0, twinkle: 0 },
+    stars: { brightness: 1, density: 1, contrast: 13, warmth: 1, twinkle: 0 },
   };
 }
