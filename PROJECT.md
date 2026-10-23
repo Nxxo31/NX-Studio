@@ -27,7 +27,7 @@ prerendered para SEO y velocidad.
 
 ## Identidad de marca · Sistema de diseño canónico
 
-**Identidad actual: monocromática única (v0.9.0, 2026-10-21). Sin dark/light mode.**
+**Identidad actual: monocromática única (v0.9.0, 2026-10-21). Sin dark/light mode.** Única excepción de color: la rampa térmica del agujero negro (2026-10-23).
 
 El sitio entero usa **una sola escala de grises** calibrada contra el fondo del
 agujero negro. Tokens canónicos en `src/styles/global.css` (`@theme` + `:root`).
@@ -50,11 +50,15 @@ Tipografía: `--font-display` (Space Grotesk) · `--font-body` (Inter) ·
 
 ### Fondo global: agujero negro
 
-`src/components/ui/optimized-black-hole.tsx` (WebGL2 crudo, ~180 líneas, cero
-dependencias) se renderiza como `position: fixed; z-index: 0` detrás del
-contenido en `Base.astro`. Monocromo por construcción (`uMono = 1` en el shader).
-Es el **único glow permitido** del proyecto — excepción explícita a la
-prohibición histórica de glows, y la razón por la que `#050505` es el color base.
+`src/components/ui/optimized-black-hole.tsx` (host fino) +
+`optimized-black-hole-utils/renderer.ts` (WebGL2, cero dependencias) se renderiza
+como `position: fixed; z-index: 0` detrás del contenido en `Base.astro`.
+**Rampa térmica original en color** (restaurada 2026-10-23 por decisión del
+operador, commit `09a93e6`): brasa → ámbar → blanco cálido con doppler beaming
+relativista — valores canónicos del autor del componente (vercel-labs/vgpu).
+Es el **único glow permitido** del proyecto y desde 2026-10-23 también la
+**única excepción de color del sitio** (la UI permanece monocroma). La opción
+`monochrome` del renderer permite volver al gris legacy v0.9.0.
 
 Degradación: si WebGL2 no está disponible, `canvas.style.display = 'none'` y el
 sitio sigue legible. Respeta `prefers-reduced-motion`, pausa fuera de viewport
@@ -109,9 +113,9 @@ dejar hueco visual. `NXSculptureHero.tsx` — theme fijo `'dark'`,
 Playwright sobre `dist/client`: nav y CTAs en blanco, sin chips de tema,
 agujero negro monocromo visible detrás del contenido.
 
-**Nota operativa:** `astro dev` no hidrata ninguna isla (0/4, 404 en
-`/@id/astro:scripts/before-hydration.js`). Preexistente, no causado por este
-sprint. Workaround: `npm run build` + servir `dist/client`.
+**Nota operativa (actualizada 2026-10-23):** `astro dev` hidrata 4/4 desde
+`dceb0a9` — el bug 0/4 islas era `run_worker_first` booleano en `wrangler.toml`.
+Detalle en §Limitaciones conocidas 9.
 
 **Bridges legacy:** `global.css:328-336` mantiene `--lava-core/edge/deep/glow/
 glow-soft`, `--bg-void/ember` mapeados a tokens actuales, más las clases
@@ -339,6 +343,7 @@ cacheado — `unset CLOUDFLARE_API_TOKEN` primero; ver `docs/deploy.md`).
 | Q4 | Fix hidratación React #425/#423 (inline `<style>` RCDATA) | `35e054cd` |
 | Fix dev | `astro dev` hidrata 4/4 — `run_worker_first` array | `dceb0a9` |
 | Hero | Hero solo-texto — escultura retirada, el agujero negro es el visual | `27d6581` |
+| Q6 | Restauración de la rampa térmica original del agujero negro (color) | `09a93e6` |
 
 ## Sprint v0.4.0 (cerrado)
 

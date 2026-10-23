@@ -77,6 +77,11 @@ Tokens canónicos: `src/styles/global.css` (`@theme` + `:root`).
 glows, y la razón de que `#050505` sea el color base. No lo trates como una
 violación a corregir.
 
+**Y desde 2026-10-23 es también la única excepción de COLOR del sitio** (decisión
+operador, commit `09a93e6`): el disco de acreción usa la rampa térmica original
+del componente — brasa → ámbar → blanco cálido con doppler beaming. La UI sigue
+monocroma: no propagues el color del backdrop a componentes, tokens ni CTAs.
+
 ## Interacciones
 
 - Hover botón = `translateY(-1px)` + brightness.
@@ -100,6 +105,7 @@ violación a corregir.
 - No crear tokens fuera de `global.css`.
 - No añadir un segundo fondo animado ni CSS gradients sustituyendo el agujero negro.
 - No usar `--nx-text-dim` para body text.
+- No extender el color del agujero negro a la UI — la excepción es solo del backdrop.
 - No introducir `lava-*` nuevos (el bridge legacy se está drenando).
 
 ## Histórico
