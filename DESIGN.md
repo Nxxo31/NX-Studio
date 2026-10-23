@@ -78,9 +78,10 @@ glows, y la razón de que `#050505` sea el color base. No lo trates como una
 violación a corregir.
 
 **Y desde 2026-10-23 es también la única excepción de COLOR del sitio** (decisión
-operador, commit `09a93e6`): el disco de acreción usa la rampa térmica original
-del componente — brasa → ámbar → blanco cálido con doppler beaming. La UI sigue
-monocroma: no propagues el color del backdrop a componentes, tokens ni CTAs.
+operador, commits `09a93e6` + `401b306`): el pipeline WebGPU original de 21st.dev
+está activo — disco de acreción volumétrico con lente gravitacional real, rampa
+térmica brasa → ámbar → blanco cálido y doppler beaming. La UI sigue monocroma:
+no propagues el color del backdrop a componentes, tokens ni CTAs.
 
 ## Interacciones
 

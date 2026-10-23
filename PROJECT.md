@@ -50,15 +50,20 @@ Tipografía: `--font-display` (Space Grotesk) · `--font-body` (Inter) ·
 
 ### Fondo global: agujero negro
 
-`src/components/ui/optimized-black-hole.tsx` (host fino) +
-`optimized-black-hole-utils/renderer.ts` (WebGL2, cero dependencias) se renderiza
-como `position: fixed; z-index: 0` detrás del contenido en `Base.astro`.
-**Rampa térmica original en color** (restaurada 2026-10-23 por decisión del
-operador, commit `09a93e6`): brasa → ámbar → blanco cálido con doppler beaming
-relativista — valores canónicos del autor del componente (vercel-labs/vgpu).
-Es el **único glow permitido** del proyecto y desde 2026-10-23 también la
-**única excepción de color del sitio** (la UI permanece monocroma). La opción
-`monochrome` del renderer permite volver al gris legacy v0.9.0.
+`src/components/ui/optimized-black-hole.tsx` (host con detección de WebGPU) se
+renderiza como `position: fixed; z-index: 0` detrás del contenido en
+`Base.astro`. **Pipeline ORIGINAL de 21st.dev/vgpu activo** ("Optimized Black
+Hole", decisión operador 2026-10-23, commit `401b306`): raymarching de geodésicas
+nulas (lente gravitacional real — el disco se curva sobre y bajo el horizonte),
+bake a G-buffers, disco volumétrico 3D, anti-aliasing y bloom HDR, con la rampa
+térmica en color (brasa → ámbar → blanco cálido, valores canónicos del autor).
+Requiere `vgpu@0.4.1` — única versión cuyo runtime acepta los módulos WGSL v1
+del componente (0.6.0 exige "ShaderSource v2"; 0.5.0 falla en texturas) — y
+entra por dynamic import: el chunk solo lo descarga quien tiene WebGPU.
+**Fallback WebGL2** (`optimized-black-hole-utils/renderer.ts`, rampa en color):
+navegadores sin WebGPU, fallos de init o `prefers-reduced-motion` (frame
+estático). Sigue siendo el **único glow permitido** del proyecto y la **única
+excepción de color del sitio** (la UI permanece monocroma).
 
 Degradación: si WebGL2 no está disponible, `canvas.style.display = 'none'` y el
 sitio sigue legible. Respeta `prefers-reduced-motion`, pausa fuera de viewport
@@ -71,11 +76,12 @@ condicional del stage y guard en el effect de carga). El fondo global — el
 agujero negro — es el único visual del hero; el hero va con fondo transparente
 para que el canvas en z-0 se vea a través. Commit `27d6581`.
 
-Existe un **segundo backend dormido** en `src/components/ui/optimized-black-hole-vgpu/`
-(WebGPU + WGSL de 21st.dev, edit monocromático ya aplicado). No se importa desde
-ningún sitio. Activarlo está **decidido como no** (2026-10-21): ~8.7 MB unpacked /
-57 deps transitivas, y sin un wrapper de fallback a WebGL2 el sitio muestra un
-rectángulo negro a pantalla completa en Safari <26 y Firefox <141.
+El **backend WebGPU** (`optimized-black-hole-vgpu/`, WebGPU + WGSL de 21st.dev)
+está **ACTIVO desde 2026-10-23** (decisión operador: "quiero que se vea como el
+original de 21st.dev") con las tres ediciones monocromas revertidas (SATURATION,
+rampa térmica, estrellas) y `vgpu@0.4.1`. El wrapper de fallback a WebGL2 elimina
+el riesgo histórico del rectángulo negro en Safari <26 y Firefox <141: sin
+WebGPU se ve el fallback en color, nunca una pantalla negra.
 
 > **Override normativo:** las reglas operativas viven en `AGENTS.md`. Este
 > documento describe; `AGENTS.md` obliga. Ante conflicto, `AGENTS.md` manda.
@@ -344,6 +350,7 @@ cacheado — `unset CLOUDFLARE_API_TOKEN` primero; ver `docs/deploy.md`).
 | Fix dev | `astro dev` hidrata 4/4 — `run_worker_first` array | `dceb0a9` |
 | Hero | Hero solo-texto — escultura retirada, el agujero negro es el visual | `27d6581` |
 | Q6 | Restauración de la rampa térmica original del agujero negro (color) | `09a93e6` |
+| Q7 | Pipeline WebGPU original (21st.dev/vgpu) activo con fallback WebGL2 | `401b306` |
 
 ## Sprint v0.4.0 (cerrado)
 
