@@ -88,7 +88,39 @@ WebGPU se ve el fallback en color, nunca una pantalla negra.
 
 Histórico: lava neon v0.2.0→v0.4.0 (Matrix orange, chamfers) →
 steel-indigo v0.5.0 (5 paletas, Linear vibe) → brutalism v0.7.0 (2026-10-14) →
-glass/depth v0.8.0 → **monocromático v0.9.0 (2026-10-21)**.
+glass/depth v0.8.0 → monocromático v0.9.0 (2026-10-21) →
+**comercial v0.9.1 (2026-10-23)**.
+
+### Sprint comercial v0.9.1 (2026-10-23)
+
+Posicionamiento freelance universal con base de precios real. Autorizado por el
+operador ("precios nacionales e internacionales", eslogan, nada es gratis).
+
+**Research:** mercado Colombia 2025-2026 (Syncra, MatuByte, Izaweb, ELSASTO,
+Plataforment, Vytra) + internacional (Clutch, Ptolemay, Startup House) —
+persistido en `docs/research-pricing-patterns.md`.
+
+**Añadido:** `src/data/pricing-baseline.ts` (7 presets con rangos COP/USD/semanas
++ tarifas/hora CO e intl + piso mínimo), `src/data/services.ts` (16 servicios
+trilingües data-driven), `src/components/BackHome.astro` (en todas las
+subpáginas). Cotizador: "Paso 0" presets que precargan features y muestran el
+rango de mercado; chips de mercado en el panel; nota de piso ("ningún proyecto
+es gratis"). Nav/Footer añadidos al cotizador (no los tenía). Contacto: grid
+estilizada WhatsApp/email/ubicación/disponibilidad. Servicios: catálogo completo
+de 16 cards (antes 3) con CTA al cotizador. Scrim de legibilidad en Base.astro
+(z-5, tipografía no se funde con el fondo); tokens texto a #ffffff/#f2f2f2.
+
+**Motor:** `MIN_PROJECT_USD = 150` con clamp en `computeQuote` (totalLow >=
+piso). i18n es/en/pt: hero.badge = eslogan, meta.defaultDescription + eslogan,
+chatbot mock_greeting/mock_pricing/mock_services con rangos reales de mercado.
+
+**Tests:** `tests/unit/i18n-call-sites.test.ts` — badge assertion actualizada
+al eslogan. 299/299 verdes.
+
+**Deuda conocida:** assets prerrenderizados /en//pt/ se copian del default
+(fallbackType rewrite) → sirven copy ES; solo /productos y /templates (SSR) se
+localizan por middleware. Pendiente decisión: SSR global o generación por
+locale en build.
 
 ### Sprint monocromático v0.9.0 (2026-10-21)
 
