@@ -2,7 +2,7 @@
   "meta": {
     "siteName": "NX-Studio",
     "defaultTitle": "NX-Studio — Software que escala contigo",
-    "defaultDescription": "Estudio de desarrollo LATAM. Arquitectura de software a medida, QA as a service, templates comprables. Cotizador interactivo."
+    "defaultDescription": "Estudio de desarrollo LATAM. Arquitectura de software a medida, QA as a service, templates comprables. Cotizador interactivo. Si puedes imaginarlo, puedes crearlo."
   },
   "nav": {
     "inicio": "Inicio",
@@ -16,7 +16,7 @@
     "menu": "Menú"
   },
   "hero": {
-    "badge": "online · disponibilidad Q4 2026",
+    "badge": "si puedes imaginarlo, puedes crearlo",
     "headlineA": "Software que",
     "headlineEm": "funciona",
     "headlineB": "no solo se ve bien.",
@@ -834,11 +834,11 @@
     "help_text": "Comandos disponibles:\n• /help — muestra esta ayuda\n• /reset — borra la conversación\n• /portalsignup — ir al portal de cliente\n\nTambién puedes preguntarme en español, inglés o portugués sobre precios, servicios, templates, laboratorio o contacto.",
     "reset_done": "Conversación reiniciada. ¿En qué te ayudo?",
     "portalsignup": "Te llevo al portal de cliente en una nueva pestaña. Si aún no tienes cuenta, podemos crearla cuando llegues.",
-    "mock_greeting": "¡Hola! Soy SophIA, asistente virtual de NX-Studio. ¿En qué te ayudo hoy? Pregúntame sobre precios, servicios, templates o escribe /help para ver todos los comandos.",
-    "mock_pricing": "Los precios dependen del alcance. Cada proyecto arranca con una sesión de descubrimiento gratuita; después te enviamos una propuesta con rango indicativo y banda sugerida. Para una estimación inmediata, abre el cotizador (/cotizador) o escríbeme qué necesitas y te derivo con el equipo.",
+    "mock_greeting": "¡Hola! Soy SophIA, asistente virtual de NX-Studio. Si puedes imaginarlo, puedes crearlo. ¿En qué te ayudo hoy? Pregúntame por precios, servicios, templates o escribe /help para ver los comandos.",
+    "mock_pricing": "Con base real de mercado (Colombia 2025-2026): landing $500.000–$1.500.000 COP; sitio corporativo + blog $1.200.000–$3.000.000; e-commerce $2.500.000–$20.000.000; web app/SaaS $10M–$50M COP; app móvil $4M–$40M; IA/chatbot $2M–$15M. Internacional: landing $1.500–$8.000 USD; corporativo $2.500–$12.000; e-commerce $5.000–$60.000; web app/SaaS $15.000–$100.000 USD. Ningún proyecto es gratis: hasta un blog tiene costo de diseño, desarrollo, dominio y hosting. Para tu cotización exacta abre el cotizador (/cotizador) o cuéntame qué necesitas.",
     "mock_handoff": "Te conecto con el equipo humano. Mientras tanto, cuéntame tu proyecto en 2-3 líneas y agilizamos el primer contacto. Respuesta habitual en menos de 24h hábiles.",
     "mock_unknown": "No estoy segura de haber entendido. Puedo ayudarte con precios, servicios, templates, laboratorio o conectar contigo con un humano. Prueba /help para ver comandos.",
-    "mock_services": "Ofrecemos tres líneas: aplicaciones a medida, QA & testing embedido, e IA aplicada (chatbots, agentes, RAG). Cada una tiene un entregable concreto. ¿Cuál te interesa explorar?",
+    "mock_services": "Hacemos: desarrollo web a medida, apps móviles, IA aplicada (chatbots, RAG, agentes), automatizaciones e integraciones (WhatsApp Cloud, DIAN, pasarelas de pago), productos SaaS, e-commerce y marketplaces, testing & QA, seguridad de software, UI/UX y design systems, data & BI, cloud & DevOps, migraciones de legacy, mantenimiento y soporte, consultoría y arquitectura, templates comprables y SEO técnico. ¿Cuál te interesa? Todos los puedes cotizar en /cotizador.",
     "mock_templates": "Tenemos templates production-ready (landing, dashboard, e-commerce) listos para comprar y desplegar. Licencia MIT, sin royalties, soporte en el primer sprint. Pásate por /templates para ver el catálogo.",
     "mock_labs": "El laboratorio IA es donde experimentamos con generación de mockups, agentes y prototipos. Sin backend, todo en tu navegador. Si quieres ver uno en vivo, /laboratorio.",
     "mock_contact": "Para contacto directo: formulario en /contacto (guarda en backend y notifica al equipo), o /cotizador para estimación inmediata. También /portalsignup si prefieres crear cuenta en el portal.",

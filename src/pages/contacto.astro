@@ -1,5 +1,8 @@
 ---
 import Layout from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import BackHome from '../components/BackHome.astro';
 import { FEATURES } from '../data/pricing';
 import { getT, getLocale, localeUrl } from '~/i18n';
 
@@ -29,10 +32,12 @@ const i18nScript = {
 ---
 
 <Layout title={t('pages.contacto.title')} description={t('pages.contacto.description')}>
+  <Nav />
+  <main>
   <section class="relative px-6 py-16 lg:py-20">
     <div class="mx-auto max-w-3xl">
       <header class="mb-10 reveal">
-        <a href={localeUrl('/', locale)} class="font-mono text-xs text-nx-dim hover:text-lava-edge transition mb-3 inline-block">{t('pages.contacto.back')}</a>
+        <BackHome />
         <span class="lava-tag mb-3">{t('pages.contacto.tag')}</span>
         <h1 class="font-display text-4xl lg:text-5xl font-bold tracking-tight mb-4">
           {t('pages.contacto.headingA')} <span class="text-lava">{t('pages.contacto.headingEm')}</span>
@@ -41,6 +46,30 @@ const i18nScript = {
           {t('pages.contacto.sub')}
         </p>
       </header>
+
+      {/* Info de contacto estilizada — decisión operador 2026-10-23 */}
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8 reveal">
+        <a href="https://wa.me/573103312705" target="_blank" rel="noopener" class="lava-card p-5 block card-hover">
+          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-2">// whatsapp</div>
+          <div class="font-display font-semibold">+57 310 331 2705</div>
+          <div class="text-xs text-nx-muted mt-1">Respuesta en menos de 24h</div>
+        </a>
+        <a href="mailto:sebasvelascodev3101@gmail.com" class="lava-card p-5 block card-hover">
+          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-2">// email</div>
+          <div class="font-display font-semibold text-sm break-all">sebasvelascodev3101@gmail.com</div>
+          <div class="text-xs text-nx-muted mt-1">Propuestas y soporte</div>
+        </a>
+        <div class="lava-card p-5">
+          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-2">// ubicación</div>
+          <div class="font-display font-semibold">Colombia · LATAM</div>
+          <div class="text-xs text-nx-muted mt-1">Trabajo remoto global (UTC-5)</div>
+        </div>
+        <div class="lava-card p-5">
+          <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-2">// disponibilidad</div>
+          <div class="font-display font-semibold">Q4 2026</div>
+          <div class="text-xs text-nx-muted mt-1">Cupos limitados de proyecto</div>
+        </div>
+      </div>
 
       <div id="quote-banner" class="hidden lava-card lava-card-accent p-4 lg:p-5 mb-6 font-mono text-sm reveal"></div>
 
@@ -152,6 +181,8 @@ const i18nScript = {
       </aside>
     </div>
   </section>
+  </main>
+  <Footer />
 </Layout>
 
 <style is:global>

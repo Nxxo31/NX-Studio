@@ -2,7 +2,7 @@
   "meta": {
     "siteName": "NX-Studio",
     "defaultTitle": "NX-Studio — Software que escala com você",
-    "defaultDescription": "Estúdio de desenvolvimento LATAM. Arquitetura de software sob medida, QA as a service, templates prontos para compra. Cotizador interativo."
+    "defaultDescription": "Estúdio de desenvolvimento LATAM. Arquitetura de software sob medida, QA as a service, templates prontos para compra. Cotizador interativo. Se você pode imaginar, você pode criar."
   },
   "nav": {
     "inicio": "Início",
@@ -16,7 +16,7 @@
     "menu": "Menu"
   },
   "hero": {
-    "badge": "online · disponibilidade Q4 2026",
+    "badge": "se você pode imaginar, você pode criar",
     "headlineA": "Software que",
     "headlineEm": "funciona",
     "headlineB": "não só é bonito.",
@@ -834,11 +834,11 @@
     "help_text": "Comandos disponíveis:\n• /help — mostra esta ajuda\n• /reset — limpa a conversa\n• /portalsignup — ir ao portal do cliente\n\nVocê também pode me perguntar em espanhol, inglês ou português sobre preços, serviços, templates, laboratório ou contato.",
     "reset_done": "Conversa reiniciada. Como posso ajudar?",
     "portalsignup": "Levando você ao portal do cliente em uma nova aba. Se ainda não tem conta, pode criar uma quando chegar lá.",
-    "mock_greeting": "Olá! Sou a SophIA, assistente virtual da NX-Studio. Em que posso ajudar hoje? Pergunte sobre preços, serviços, templates ou digite /help para ver todos os comandos.",
-    "mock_pricing": "Os preços dependem do escopo. Todo projeto começa com uma chamada de descoberta gratuita; depois enviamos uma proposta com faixa indicativa e banda sugerida. Para uma estimativa imediata, abra o cotizador (/cotizador) ou me diga o que precisa que eu já encaminho para a equipe.",
+    "mock_greeting": "Olá! Sou SophIA, assistente virtual da NX-Studio. Se você pode imaginar, você pode criar. Como posso ajudar? Pergunte sobre preços, serviços, templates ou digite /help para ver os comandos.",
+    "mock_pricing": "Com base real de mercado (Colômbia 2025-2026 + internacional): landing $500K–$1,5M COP (US$ 1,5K–8K); site corporativo + blog $1,2M–$3M COP (US$ 2,5K–12K); e-commerce $2,5M–$20M COP (US$ 5K–60K); web app/SaaS $10M–$50M COP (US$ 15K–100K); app móvel $4M–$40M COP (US$ 10K–80K); IA/chatbot $2M–$15M COP (US$ 5K–40K). Nenhum projeto é grátis: até um blog tem custo de design, desenvolvimento, domínio e hospedagem. Para sua cotação exata abra a calculadora (/cotizador) ou me diga o que precisa.",
     "mock_handoff": "Vou te conectar com a equipe humana. Enquanto isso, conte seu projeto em 2-3 linhas para agilizarmos o primeiro contato. Resposta habitual em menos de 24h úteis.",
     "mock_unknown": "Não tenho certeza se entendi. Posso ajudar com preços, serviços, templates, laboratório ou te passar para um humano. Tente /help para ver comandos.",
-    "mock_services": "Temos três linhas: aplicações sob medida, QA & testing embarcado, e IA aplicada (chatbots, agentes, RAG). Cada uma tem um entregável concreto. Qual te interessa explorar?",
+    "mock_services": "Fazemos: desenvolvimento web sob medida, apps móveis, IA aplicada (chatbots, RAG, agentes), automações e integrações (WhatsApp Cloud, gateways de pagamento), produtos SaaS, e-commerce e marketplaces, testing & QA, segurança de software, UI/UX e design systems, data & BI, cloud & DevOps, migrações de legacy, manutenção e suporte, consultoria e arquitetura, templates compráveis e SEO técnico. Qual te interessa? Todos podem ser cotados em /cotizador.",
     "mock_templates": "Temos templates production-ready (landing, dashboard, e-commerce) prontos para comprar e deploy. Licença MIT, sem royalties, suporte no primeiro sprint. Passe em /templates para ver o catálogo.",
     "mock_labs": "O laboratório de IA é onde experimentamos geração de mockups, agentes e protótipos. Sem backend, tudo no seu navegador. Se quiser ver um ao vivo, /laboratorio.",
     "mock_contact": "Para contato direto: formulário em /contacto (salva no backend e notifica a equipe), ou /cotizador para estimativa imediata. Também /portalsignup se preferir criar conta no portal.",

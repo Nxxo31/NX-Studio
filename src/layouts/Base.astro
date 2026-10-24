@@ -65,6 +65,10 @@ const alternates = LOCALES.map((l) => ({
     <div class="nx-blackhole-backdrop fixed inset-0 z-0" aria-hidden="true">
       <BlackHole client:load />
     </div>
+    {/* Scrim de legibilidad: oscurece suavemente el fondo animado arriba y
+        abajo (donde vive el texto) sin tapar el agujero negro del centro.
+        Decisión operador 2026-10-23: "que la tipografía no se fusione con el fondo". */}
+    <div class="fixed inset-0 pointer-events-none" aria-hidden="true" style="z-index: 5; background: linear-gradient(180deg, rgba(5,5,5,0.62) 0%, rgba(5,5,5,0.20) 26%, rgba(5,5,5,0.16) 72%, rgba(5,5,5,0.55) 100%);"></div>
     <div class="relative z-10">
       <slot />
     </div>

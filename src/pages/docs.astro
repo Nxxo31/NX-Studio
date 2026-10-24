@@ -6,6 +6,7 @@
 import Base from '~/layouts/Base.astro';
 import Nav from '~/components/Nav.astro';
 import Footer from '~/components/Footer.astro';
+import BackHome from '~/components/BackHome.astro';
 
 // Página 100% estática — se prerrenderiza en build (SEO + velocidad).
 // i18n: excluida del set runtime — prerendered ES only (ver t_034afadb);
@@ -16,6 +17,7 @@ export const prerender = true;
 <Base title="Docs — cómo trabajamos — NX-Studio" description="Documentación pública de NX-Studio: modelo de pricing, formas de engagement y licencia de templates.">
   <Nav />
   <main class="mx-auto max-w-3xl px-6 py-24">
+    <BackHome />
     <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--lava-edge);">Docs</p>
     <h1 class="mt-2 font-display text-3xl font-bold">Cómo trabajamos</h1>
     <p class="mt-3 text-sm text-nx-muted">

@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
+import BackHome from "../../components/BackHome.astro";
 import { categories } from "../../data/catalog";
 import { getLiveRepos, mergeProjects } from "../../lib/github";
 import ProjectSlider from "../../components/motion/ProjectSlider";
@@ -63,6 +64,7 @@ const fechaCorta = (iso: string) => {
     <section class="relative px-6 pt-20 pb-12 md:pt-28 md:pb-16">
       <div class="mx-auto max-w-6xl">
         <header class="reveal">
+          <BackHome />
           <span class="lava-tag mb-4">// proyectos reales</span>
           <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]">
             {total} proyectos <span class="text-lava">terminados</span>

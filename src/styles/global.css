@@ -13,7 +13,7 @@
   --color-nx-bg: #050505;
   --color-nx-surface: #0e0e0e;
   --color-nx-raised: #171717;
-  --color-nx-ink: #ededed;
+  --color-nx-ink: #f2f2f2;
   --color-nx-border: rgba(255, 255, 255, 0.09);
   --color-nx-border-strong: rgba(255, 255, 255, 0.16);
 
@@ -29,7 +29,7 @@
   --color-nx-accent: #b8b8b8;
   --color-nx-accent-soft: #d4d4d4;
 
-  --color-nx-text: #f5f5f5;
+  --color-nx-text: #ffffff;
   --color-nx-text-muted: #a3a3a3;
   --color-nx-text-dim: #6b6b6b;
   --color-nx-text-on-primary: #050505;
@@ -66,7 +66,7 @@
   --nx-primary-deep:     #a3a3a3;
   --nx-primary-tint:     rgba(250, 250, 250, 0.14);
 
-  --nx-ink:              #ededed;
+  --nx-ink:              #f2f2f2;
   --nx-secondary:        #b8b8b8;
   --nx-secondary-soft:   #d4d4d4;
   --nx-secondary-deep:   #8a8a8a;
@@ -82,7 +82,7 @@
   --nx-border:           rgba(255, 255, 255, 0.09);
   --nx-border-strong:    rgba(255, 255, 255, 0.16);
 
-  --nx-text:             #f5f5f5;
+  --nx-text:             #ffffff;
   --nx-text-muted:       #a3a3a3;
   --nx-text-dim:         #6b6b6b;
   --nx-text-on-primary:  #050505;

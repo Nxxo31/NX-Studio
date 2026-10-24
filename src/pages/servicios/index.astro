@@ -2,19 +2,25 @@
 import Base from "../../layouts/Base.astro";
 import Nav from "../../components/Nav.astro";
 import Footer from "../../components/Footer.astro";
+import BackHome from "../../components/BackHome.astro";
+import { SERVICES, serviceText } from "../../data/services";
 import { getT, getLocale, localeUrl } from "~/i18n";
 
 const t = getT(Astro);
 const locale = getLocale(Astro);
 
-// Índice de servicios especializados; copy vía i18n (pages.servicios.*).
-// Las páginas individuales viven en /servicios/<slug>.astro.
-const servicios = [
-  {
-    slug: 'testing',
-    icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
-  },
-];
+// Eslogan del estudio (decisión operador 2026-10-23).
+const SLOGAN = {
+  es: "Si puedes imaginarlo, puedes crearlo.",
+  en: "If you can imagine it, you can create it.",
+  pt: "Se você pode imaginar, você pode criar.",
+} as Record<string, string>;
+
+const CTA_LABEL = {
+  es: "Cotizar este servicio →",
+  en: "Quote this service →",
+  pt: "Cotar este serviço →",
+} as Record<string, string>;
 ---
 
 <Base title={t('pages.servicios.title')} description={t('pages.servicios.description')}>
@@ -23,44 +29,40 @@ const servicios = [
     <section class="relative px-6 py-20 lg:py-28">
       <div class="mx-auto max-w-6xl">
         <header class="mb-14 reveal">
-          <span class="lava-tag mb-4">// servicios.v0.4</span>
+          <BackHome />
+          <span class="lava-tag mb-4">// servicios — catálogo completo</span>
           <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
             {t('pages.servicios.headingA')} <span class="text-lava">{t('pages.servicios.headingEm')}</span>
           </h1>
+          <p class="text-lava-edge text-lg font-medium mb-2">{SLOGAN[locale] ?? SLOGAN.es}</p>
           <p class="text-nx-muted max-w-2xl text-lg">
             {t('pages.servicios.sub')}
           </p>
         </header>
 
-        <div class="mb-14">
-          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">{t('pages.servicios.coreTitle')}</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[0, 1].map((i) => (
-              <article class="lava-card p-6 reveal">
-                <span class="lava-tag mb-3">{t(`pages.servicios.core.${i}.tag`)}</span>
-                <p class="text-nx-muted leading-relaxed">{t(`pages.servicios.core.${i}.desc`)}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5 reveal">{t('pages.servicios.specializedTitle')}</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {servicios.map((s) => (
-              <a href={localeUrl(`/servicios/${s.slug}`, locale)} class="lava-card p-6 reveal flex flex-col gap-3 card-hover">
+        {/* Catálogo completo de servicios — data-driven desde src/data/services.ts */}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {SERVICES.map((s) => {
+            const c = serviceText(s, locale as "es" | "en" | "pt");
+            const href = s.slug === "qa"
+              ? localeUrl("/servicios/testing", locale)
+              : localeUrl("/cotizador", locale);
+            return (
+              <article class="lava-card p-6 reveal flex flex-col gap-3 card-hover">
                 <div class="flex items-start justify-between">
-                  <span class="lava-tag">{t(`pages.servicios.items.${s.slug}.tag`)}</span>
+                  <span class="lava-tag">{c.tag}</span>
                   <svg class="w-5 h-5 text-lava-edge shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d={s.icon} />
                   </svg>
                 </div>
-                <h3 class="font-display text-xl font-semibold">{t(`pages.servicios.items.${s.slug}.title`)}</h3>
-                <p class="text-sm text-nx-muted leading-relaxed flex-1">{t(`pages.servicios.items.${s.slug}.desc`)}</p>
-                <span class="font-mono text-xs text-lava-edge">{t('pages.servicios.viewDetail')}</span>
-              </a>
-            ))}
-          </div>
+                <h3 class="font-display text-xl font-semibold">{c.title}</h3>
+                <p class="text-sm text-nx-muted leading-relaxed flex-1">{c.desc}</p>
+                <a href={href} class="font-mono text-xs text-lava-edge hover:text-lava transition mt-1">
+                  {CTA_LABEL[locale] ?? CTA_LABEL.es}
+                </a>
+              </article>
+            );
+          })}
         </div>
 
         <div class="mt-16 lava-card lava-card-accent p-8 lg:p-10 reveal">

@@ -64,6 +64,11 @@ export const ENGAGEMENT_SHAPES: Record<EngagementShape, {
 
 export const BASE_RATE = 75; // USD/hora blended (LATAM-aligned)
 
+/** Piso mínimo del estudio: NINGÚN proyecto es gratis — hasta el más simple
+ *  (un blog, una landing) tiene costo de diseño, desarrollo, dominio y hosting.
+ *  Base: research de mercado Colombia 2025-2026 (landing mínima ~$500.000 COP). */
+export const MIN_PROJECT_USD = 150;
+
 export const FEATURES: Feature[] = [
   // Core
   { id: 'discovery',     name: 'Discovery + Scoping',     description: 'Workshop inicial, modelo de datos, sitemap, arquitectura de solución', hours: 12, rate: BASE_RATE, category: 'core' },
@@ -156,8 +161,8 @@ export function computeQuote(input: QuoteInput): QuoteBreakdown {
 
   // Rango ±15% (alineado con industria: estimaciones indicativas, no exactas)
   const mid = (subtotalFeatures + baseFee) * totalMultiplier;
-  const totalLow = Math.round(mid * 0.85);
-  const totalHigh = Math.round(mid * 1.15);
+  const totalLow = Math.max(Math.round(mid * 0.85), MIN_PROJECT_USD);
+  const totalHigh = Math.max(Math.round(mid * 1.15), MIN_PROJECT_USD * 2);
   const totalHours = features.reduce((acc, f) => acc + f.hours, 0) + shape.baseHours;
 
   let bandLabel: 'Starter' | 'Standard' | 'Growth' | 'Enterprise';

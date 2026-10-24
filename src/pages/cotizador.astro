@@ -1,6 +1,10 @@
 ---
 import Layout from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import BackHome from '../components/BackHome.astro';
 import { FEATURES, MODIFIERS, ENGAGEMENT_SHAPES, CATEGORIES, type EngagementShape } from '../data/pricing';
+import { PRESETS, MARKET, formatCop, formatUsd } from '../data/pricing-baseline';
 import { getT, getLocale, localeUrl } from '~/i18n';
 
 const t = getT(Astro);
@@ -23,14 +27,51 @@ const i18nLabels = {
   baseFee: t('pages.cotizador.breakdown.baseFee'),
   multiplier: t('pages.cotizador.breakdown.multiplier'),
 };
+
+// Copy nuevo del cotizador — trilingüe inline (data-driven, sin tocar 3 JSONs).
+type PresetCopy = { step0: string; presetsSub: string; marketCo: string; marketIntl: string; floor: string; maintenance: string };
+const PRESET_COPY: Record<string, PresetCopy> = {
+  es: {
+    step0: 'Paso 0 — ¿Qué necesitas?',
+    presetsSub: 'Rangos reales de mercado: Colombia (COP) e internacional (USD), research 2025-2026. Elige un punto de partida y el motor arma tu cotización exacta abajo.',
+    marketCo: 'Mercado Colombia',
+    marketIntl: 'Internacional',
+    floor: 'Ningún proyecto es gratis: hasta el más simple — un blog, una landing — tiene costo de diseño, desarrollo, dominio y hosting.',
+    maintenance: 'Mantenimiento recomendado: 15–25% del valor del desarrollo al año.',
+  },
+  en: {
+    step0: 'Step 0 — What do you need?',
+    presetsSub: 'Real market ranges: Colombia (COP) and international (USD), 2025-2026 research. Pick a starting point and the engine builds your exact quote below.',
+    marketCo: 'Colombia market',
+    marketIntl: 'International',
+    floor: 'No project is free: even the simplest one — a blog, a landing — costs design, development, domain and hosting.',
+    maintenance: 'Recommended maintenance: 15–25% of the development value per year.',
+  },
+  pt: {
+    step0: 'Passo 0 — O que você precisa?',
+    presetsSub: 'Faixas reais de mercado: Colômbia (COP) e internacional (USD), research 2025-2026. Escolha um ponto de partida e o motor monta sua cotação exata abaixo.',
+    marketCo: 'Mercado Colômbia',
+    marketIntl: 'Internacional',
+    floor: 'Nenhum projeto é grátis: até o mais simples — um blog, uma landing — tem custo de design, desenvolvimento, domínio e hospedagem.',
+    maintenance: 'Manutenção recomendada: 15–25% do valor do desenvolvimento ao ano.',
+  },
+};
+const C = PRESET_COPY[locale] ?? PRESET_COPY.es;
+
+// Presets serializables para el script client-side.
+const presetsData = PRESETS.map((p) => ({ id: p.id, shape: p.shape, features: p.features, cop: p.cop, usd: p.usd }));
+const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintenance };
 ---
 
 <Layout title={t('pages.cotizador.title')} description={t('pages.cotizador.description')}>
+  <Nav />
+  <main>
   <section class="relative px-6 py-20 lg:py-28">
     <div class="mx-auto max-w-6xl">
 
       <!-- Header -->
       <header class="mb-12 reveal">
+        <BackHome />
         <span class="lava-tag mb-4">// pricing-engine v0.1</span>
         <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
           {t('pages.cotizador.headingA')} <span class="text-lava">{t('pages.cotizador.headingEm')}</span>
@@ -42,6 +83,22 @@ const i18nLabels = {
           {t('pages.cotizador.disclaimer')}
         </p>
       </header>
+
+      <!-- Paso 0: presets con rangos de mercado (nacional + internacional) -->
+      <div class="mb-10 reveal">
+        <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-2">{C.step0}</h2>
+        <p class="text-sm text-nx-muted mb-4 max-w-3xl">{C.presetsSub}</p>
+        <div id="presets" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {PRESETS.map((p) => (
+            <button type="button" data-preset={p.id} class="preset-btn lava-card p-4 text-left transition cursor-pointer" aria-pressed="false">
+              <div class="font-display font-semibold text-sm mb-2">{p.label[locale] ?? p.label.es}</div>
+              <div class="font-mono text-[10px] text-nx-muted">{formatCop(p.cop[0])} – {formatCop(p.cop[1])}</div>
+              <div class="font-mono text-[10px] text-nx-dim">{formatUsd(p.usd[0])} – {formatUsd(p.usd[1])} USD · {p.weeks[0]}–{p.weeks[1]} sem</div>
+            </button>
+          ))}
+        </div>
+        <p class="text-xs text-nx-dim mt-3 font-mono">{C.floor}</p>
+      </div>
 
       <!-- Engagement shape selector -->
       <div class="mb-10 reveal">
@@ -141,6 +198,7 @@ const i18nLabels = {
               <span id="q-hours">0h</span> {t('pages.cotizador.panel.estimated')} · base fee <span id="q-base">$0</span>
               <span id="q-usd" class="text-nx-dim"></span>
             </div>
+            <div id="q-market" class="mt-3 flex flex-wrap gap-2"></div>
             <div class="mt-3 flex items-center gap-2">
               <label for="q-currency" class="font-mono text-[10px] uppercase tracking-widest text-nx-muted">{t('pages.cotizador.panel.currency')}</label>
               <select id="q-currency" class="font-mono text-xs bg-transparent border border-nx-border px-2 py-1 text-nx-text">
@@ -183,12 +241,14 @@ const i18nLabels = {
 
     </div>
   </section>
+  </main>
+  <Footer />
 </Layout>
 
-<script define:vars={{ i18nFeatures, i18nShapes, i18nModifiers, i18nBands, i18nLabels }} is:inline>
+<script define:vars={{ i18nFeatures, i18nShapes, i18nModifiers, i18nBands, i18nLabels, presetsData, marketCopy }} is:inline>
   // define:vars declara los mapas i18n como consts en este scope; los expongo
   // para el script module (el breakdown client-side los consume).
-  window.__cotizadorI18n = { i18nFeatures, i18nShapes, i18nModifiers, i18nBands, i18nLabels };
+  window.__cotizadorI18n = { i18nFeatures, i18nShapes, i18nModifiers, i18nBands, i18nLabels, presets: presetsData, marketCopy };
 </script>
 <script>
   import { computeQuote, ENGAGEMENT_SHAPES, type EngagementShape } from '../data/pricing';
@@ -381,6 +441,48 @@ const i18nLabels = {
       if (idx >= 0) state.modifierIds.splice(idx, 1);
       else state.modifierIds.push(id);
       render();
+    });
+  });
+
+  // Wire preset buttons — punto de partida con rangos de mercado (CO + intl)
+  const M = (window as any).__cotizadorI18n as {
+    presets: Array<{ id: string; shape: EngagementShape; features: string[]; cop: [number, number]; usd: [number, number] }>;
+    marketCopy: { co: string; intl: string; maintenance: string };
+  };
+  let activePreset: string | null = null;
+
+  function renderMarket(): void {
+    const el = document.getElementById('q-market');
+    if (!el) return;
+    const p = M.presets.find((x) => x.id === activePreset);
+    if (!p) { el.innerHTML = ''; return; }
+    const copF = (n: number) => {
+      try {
+        return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n);
+      } catch { return `$${fmt.format(n)} COP`; }
+    };
+    el.innerHTML = `
+      <span class="lava-tag">${M.marketCopy.co}: ${copF(p.cop[0])} – ${copF(p.cop[1])}</span>
+      <span class="lava-tag">${M.marketCopy.intl}: $${fmt.format(p.usd[0])} – $${fmt.format(p.usd[1])} USD</span>
+      <span class="font-mono text-[10px] text-nx-dim w-full">${M.marketCopy.maintenance}</span>
+    `;
+  }
+
+  document.querySelectorAll<HTMLElement>('.preset-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const p = M.presets.find((x) => x.id === btn.dataset.preset);
+      if (!p) return;
+      activePreset = p.id;
+      state.shape = p.shape;
+      state.featureIds = [...p.features];
+      document.querySelectorAll<HTMLElement>('.preset-btn').forEach((b) => {
+        const on = b.dataset.preset === p.id;
+        b.classList.toggle('lava-card-accent', on);
+        b.setAttribute('aria-pressed', String(on));
+      });
+      render();
+      renderMarket();
+      document.getElementById('quote-panel')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
   });
 

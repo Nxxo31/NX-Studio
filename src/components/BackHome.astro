@@ -1,0 +1,20 @@
+---
+// Botón "volver al inicio" — presente en todas las subpáginas (decisión
+// operador 2026-10-23: navegación explícita de regreso al home).
+import { getLocale, localeUrl } from "~/i18n";
+
+const locale = getLocale(Astro);
+
+const COPY = {
+  es: "← Volver al inicio",
+  en: "← Back to home",
+  pt: "← Voltar ao início",
+} as Record<string, string>;
+---
+
+<a
+  href={localeUrl("/", locale)}
+  class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-nx-muted hover:text-nx-primary transition mb-6"
+>
+  {COPY[locale] ?? COPY.es}
+</a>

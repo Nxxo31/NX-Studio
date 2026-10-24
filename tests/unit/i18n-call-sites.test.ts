@@ -69,7 +69,9 @@ describe('i18n: call sites literales de src/ resuelven en los dicts', () => {
     expect(t('pages.hero.badge')).toBe('pages.hero.badge');
     // Namespace correcto → copy real.
     expect(t('hero.badge')).not.toBe('hero.badge');
-    expect(t('hero.badge')).toMatch(/online/i);
+    // 2026-10-23: el badge del hero pasó de "online · Q4 2026" al eslogan del
+    // estudio (decisión operador): "si puedes imaginarlo, puedes crearlo".
+    expect(t('hero.badge')).toMatch(/imaginarlo|imagine|imaginar/i);
   });
 
   it('toda key literal existe en es.json (default) — si no, se renderiza cruda', () => {
