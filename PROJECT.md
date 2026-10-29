@@ -216,6 +216,66 @@ nav translúcida `rgba(10,10,10,0.8)` + blur, CTA del hero con tinta
 `rgb(5,5,5)` sobre blanco (visible), canvas en `data-backend="webgpu"`,
 `backdrop-filter` computando `blur(18px) saturate(1.4)` en las cards.
 
+### Sprint v0.11.0 · Instrumentación de captación (2026-10-29)
+
+Objetivo del operador: "continuar con el desarrollo de NX-Studio" con cinco
+frentes de captación: instrumentación, email real, catálogo con capturas
+reales, SEO técnico y newsletter. Todo verificado contra el código y el
+entorno real (no supuesto).
+
+**1. Instrumentación (primera parte, sin proveedor obligatorio).**
+`src/lib/attribution.ts` guarda el **primer toque** de la sesión (utm +
+referrer + landing) en `sessionStorage`; `POST /api/analytics` lo inserta en la
+tabla nueva `analytics_event` (best-effort: si D1 falla, la página no se
+rompe). Eventos canónicos: `page_view`, `contact_form_start`,
+`quote_calculated` (debounce 1.5 s), `quote_cta_click`, `lead_submitted`,
+`newsletter_signup`. Panel nuevo `/admin/analitica` (embudo + orígenes +
+rutas). Plausible queda **opcional** detrás de `PLAUSIBLE_DOMAIN` /
+`PUBLIC_ANALYTICS_DOMAIN`: sin dominio, los datos siguen yendo a D1.
+
+**2. Atribución en cada lead.** 9 columnas nuevas en `licitacion`
+(`utm_source/medium/campaign/content/term`, `referrer`, `landing_path`,
+`email_sent`, `email_error`) + `migrations/0004_analitica.sql`. El email al
+operador incluye la línea de origen y el admin muestra origen y estado del
+aviso por lead.
+
+**3. Email de leads: el hallazgo importante.** El despliegue es un **Worker**
+con static assets, no Pages. Verificado contra la API de Cloudflare
+(2026-10-29): el worker `nx-studio` tenía **solo** `BETTER_AUTH_SECRET` y
+`CONTACT_EMAIL` — **sin `RESEND_API_KEY`**. Consecuencia real: `createEmailService`
+caía en **modo mock** (solo loguea) → **ningún lead avisaba al operador**
+(aunque sí se guardaba en D1). Además `docs/deploy.md` mandaba
+`wrangler pages secret put`, que **no llega** al runtime del worker. Fix:
+comando correcto documentado (`wrangler secret put --config
+dist/server/wrangler.json`), `EMAIL_FROM` configurable (el `onboarding@resend.dev`
+por defecto solo entrega al email de la cuenta de Resend), `replyTo` al lead,
+estado `email_sent` visible en admin y sonda `GET /api/health` que devuelve
+solo modos, nunca valores.
+
+**4. Catálogo con prueba visual.** Las capturas reales existían en
+`public/projects/` (6 proyectos, ~23 MB) y **no se usaban**: el catálogo
+servía 15 placeholders SVG de 2.7 KB. Ahora 4 proyectos con captura real
+(`grani-usco`, `multra-eu`, `tic-tac-toe`, `nx-studio-site`) usan JPEG
+optimizados a 1280 px (multra-eu full: 3618 KB → 937 KB) y los 15
+placeholders se regeneraron con la **identidad actual** (base #050505, disco
+de acreción, tinta #f2f2f2/#c2c2c2) — los anteriores eran lava neon sobre
+navy, la identidad v0.8.0.
+
+**5. SEO técnico.** `sitemap.xml` dinámico (route SSR construida desde el
+catálogo y los templates, con `xhtml:link` por locale), `public/robots.txt`
+(excluye `/admin`, `/portal`, `/api`), JSON-LD `Organization` en el layout,
+`ItemList` de `Service` en `/servicios` y `SoftwareApplication` en
+`/productos/[slug]`.
+
+**6. Newsletter.** Tabla `newsletter_subscriber` (+`migrations/0005_newsletter.sql`),
+`POST /api/newsletter` (idempotente por email, honeypot), banda de captura en
+el home (es/en/pt) y `/admin/newsletter` con export CSV. Evento
+`newsletter_signup`.
+
+**Verificación:** build exit 0 + i18n-guard OK (93 HTML, 677 keys), vitest
+305/305 (6 tests nuevos de analítica y newsletter), CSS compilado y DOM real
+inspeccionado con Playwright.
+
 ### Sprint monocromático v0.9.0 (2026-10-21)
 
 Colapso del sistema de paletas a escala de grises única. Autorizado por el

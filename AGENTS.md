@@ -64,6 +64,34 @@ No introduzcas un tercer fondo animado, ni CSS gradients como sustituto del aguj
 
 No queda ni una clase `lava-*` en el repo. El 2026-10-29 se migraron 284 ocurrencias en 30 archivos a `nx-*` y se eliminó el bridge de `global.css` (tokens `--lava-*`, `--bg-void`, `--bg-ember`, clases `.lava-card/.lava-btn/.lava-tag/.hairline`, utilidades `.text-lava-edge/.bg-lava-soft` y las reglas `[data-palette="glass-light"]` del sistema de paletas extinto). **No reintroduzcas `lava-*`** ni ninguna otra familia de nombres legacy: el vocabulario es `--nx-*` (tokens), `.glass-*` (superficies), `.nx-btn` / `.nx-tag` / `.nx-hairline` (controles) y utilidades Tailwind `text-nx-muted` / `text-nx-dim` / `text-nx-secondary`.
 
+### Instrumentación de captación (v0.11.0)
+
+Todo lead guarda **de dónde vino** (utm + referrer + landing) y el sitio registra
+**eventos de primera parte** en D1. No hay IPs, cookies ni emails en los
+eventos.
+
+| Pieza | Dónde | Qué hace |
+|---|---|---|
+| Atribución (cliente) | `src/lib/attribution.ts` | `captureAttribution()` guarda el **primer toque** de la sesión en `sessionStorage` (`nx_attribution`); `getAttribution()` lo lee; `trackEvent()` manda el evento. |
+| Eventos | `POST /api/analytics` | Inserta en `analytics_event` (best-effort: si D1 falla, la página no se ve afectada). |
+| Eventos | `page_view`, `contact_form_start`, `lead_submitted`, `quote_calculated`, `quote_cta_click`, `newsletter_signup` | Nombres canónicos; no inventar otros sin actualizar `/admin/analitica`. |
+| Atribución del lead | `licitacion.utm_*`, `licitacion.referrer`, `licitacion.landing_path` | Se rellenan desde el form de `/contacto`. |
+| Panel | `/admin/analitica`, `/admin/newsletter` | Embudo (page views, cotizaciones, leads, orígenes) y suscriptores con export CSV. |
+| Externo (opcional) | `PLAUSIBLE_DOMAIN` en `src/lib/attribution.ts` o `PUBLIC_ANALYTICS_DOMAIN` | Si está vacío, NO se carga Plausible: los datos siguen yendo a D1. |
+
+**Email de leads (obligatorio en prod):** `src/lib/email.ts` cae en **modo mock**
+si no hay `RESEND_API_KEY` (solo loguea, no envía). El lead se guarda igual
+pero con `email_sent = 0`, y `/admin/licitacion` lo muestra como **"sin aviso"**.
+Comprobación sin exponer valores: `GET /api/health` →
+`{ email: "live"|"mock", email_from: "dominio"|"onboarding" }`.
+
+> El despliegue es un **Worker** con static assets (`wrangler deploy --config
+> dist/server/wrangler.json`), NO Pages: los secretos van con
+> `wrangler secret put <NAME> --config dist/server/wrangler.json`. Un
+> `wrangler pages secret put` NO llega al runtime del worker.
+> Verificado 2026-10-29: el worker solo tenía `BETTER_AUTH_SECRET` y
+> `CONTACT_EMAIL` → ningún lead generaba aviso.
+
 ### Accesibilidad obligatoria
 
 - Animaciones respetan `prefers-reduced-motion: reduce`
@@ -179,8 +207,16 @@ npx wrangler pages dev dist --port 4321
 curl -s -o /dev/null -w "/ %{http_code}\n" http://127.0.0.1:4321/
 
 # Suites
-npm run test       # vitest 299 tests
+npm run test       # vitest 305 tests
 npm run test:e2e   # playwright (necesita el preview en 4322)
+
+# Email de leads: secret en el WORKER (no en Pages) + sonda de estado
+npx wrangler secret put RESEND_API_KEY --config dist/server/wrangler.json
+curl -s https://nx-studio.nx-studio.workers.dev/api/health
+
+# Migraciones D1 (remotas; NO se aplican solas con el deploy)
+npx wrangler d1 execute nx-studio-db --remote --file migrations/0004_analitica.sql
+npx wrangler d1 execute nx-studio-db --remote --file migrations/0005_newsletter.sql
 
 # Deploy producción (Workers con static assets)
 npx wrangler deploy --config dist/server/wrangler.json

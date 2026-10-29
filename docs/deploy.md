@@ -47,17 +47,39 @@ npm run build
 unset CLOUDFLARE_API_TOKEN
 npx wrangler deploy --config dist/server/wrangler.json
 
-# 3. Secrets de producción (BETTER_AUTH_SECRET y CONTACT_EMAIL ya seteados
-#    2026-10-13; falta RESEND_API_KEY cuando exista cuenta Resend)
+# 3. Secrets de producción — se ponen en el WORKER, no en Pages.
+#    El despliegue es `wrangler deploy --config dist/server/wrangler.json`
+#    (Workers con static assets), así que el comando correcto es
+#    `wrangler secret put --config dist/server/wrangler.json`.
+#    (Un `wrangler pages secret put` NO llega al worker: el secreto no existe
+#    en runtime.)
+#    Estado verificado 2026-10-29: el worker nx-studio solo tiene
+#    BETTER_AUTH_SECRET y CONTACT_EMAIL. FALTA RESEND_API_KEY -> sin ella el
+#    aviso de leads NO se envia (la app cae en modo mock; el lead si se guarda
+#    en D1 con email_sent=0).
 npx wrangler secret put RESEND_API_KEY --config dist/server/wrangler.json
+
+# 3b. Remitente verificado (opcional pero recomendado).
+#     Sin EMAIL_FROM, el from por defecto es onboarding@resend.dev, que
+#     SOLO entrega al email de la cuenta de Resend. Si CONTACT_EMAIL es otro,
+#     el envio falla. Con un dominio verificado en Resend:
+npx wrangler secret put EMAIL_FROM --config dist/server/wrangler.json
+#     valor: NX-Studio <leads@tu-dominio.com>
+
+# 3c. Comprobar (no expone valores, solo modos):
+#     GET https://nx-studio.nx-studio.workers.dev/api/health
+#     -> { "email": "live" | "mock", "email_from": "dominio" | "onboarding" }
 
 # 4. Migraciones D1 a la DB remota — NO se aplican solas con el deploy.
 #    Requiere unset CLOUDFLARE_API_TOKEN (el oauth cacheado sí sirve).
 #    Estado: base + seeds aplicados 2026-10-13; 0002_portal + 0003_admin
 #    aplicados 2026-10-22 (15 tablas en remoto, verificado con PRAGMA).
+#    0004_analitica + 0005_newsletter (v0.11.0) anaden 2 tablas y 9 columnas.
 unset CLOUDFLARE_API_TOKEN
 npx wrangler d1 execute nx-studio-db --remote --file migrations/0002_portal.sql
 npx wrangler d1 execute nx-studio-db --remote --file migrations/0003_admin.sql
+npx wrangler d1 execute nx-studio-db --remote --file migrations/0004_analitica.sql
+npx wrangler d1 execute nx-studio-db --remote --file migrations/0005_newsletter.sql
 ```
 
 ## Rollback
