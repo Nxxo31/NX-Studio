@@ -1,0 +1,183 @@
+---
+// /admin/analitica — embudo de captacion (v0.11.0).
+//
+// Datos de primera parte (D1, tabla analytics_event): page views, eventos de
+// conversion y origenes. No hay IPs, cookies ni emails: solo ruta, locale,
+// utm_source, referrer y props.
+//
+// Los eventos llegan desde el beacon del cliente (src/lib/attribution.ts).
+// Si ademas hay Plausible configurado, ese dashboard complementa esta vista.
+
+import Base from '~/layouts/Base.astro';
+import Table from '~/components/ui/Table.astro';
+import Button from '~/components/ui/Button.astro';
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { createDb } from '~/db';
+import {
+  countByName,
+  countSince,
+  listRecent,
+  topPaths,
+  topSources,
+} from '~/server/analytics-repo';
+
+export const prerender = false;
+
+const env = runtimeEnv as unknown as { DB: D1Database };
+const db = createDb(env.DB);
+
+const sp = Astro.url.searchParams;
+const days = [7, 30, 90].includes(Number(sp.get('dias'))) ? Number(sp.get('dias')) : 7;
+const since = Date.now() - days * 24 * 60 * 60 * 1000;
+
+const empty = { name: '—', count: 0 };
+let total = 0;
+let byName: { name: string; count: number }[] = [];
+let sources: { source: string; count: number }[] = [];
+let paths: { path: string; count: number }[] = [];
+let recent: Awaited<ReturnType<typeof listRecent>> = [];
+
+try {
+  total = await countSince(db, since);
+  byName = await countByName(db, since);
+  sources = await topSources(db, since);
+  paths = await topPaths(db, since);
+  recent = await listRecent(db, 40);
+} catch (e) {
+  console.error('analytics admin failed:', e);
+}
+
+const countOf = (name: string) => byName.find((b) => b.name === name)?.count ?? 0;
+const fmtNum = (n: number) => n.toLocaleString('es-CO');
+---
+
+<Base title="Analítica — Admin NX-Studio" description="Embudo de captación: page views, conversiones y orígenes.">
+  <main class="mx-auto max-w-6xl px-6 py-16">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--nx-primary);">Operador</p>
+        <h1 class="mt-2 font-display text-3xl font-bold">Analítica</h1>
+        <p class="mt-1 text-sm text-nx-muted">Primera parte (D1) · últimos {days} días · {fmtNum(total)} eventos</p>
+      </div>
+      <nav class="flex flex-wrap gap-2 text-xs font-mono">
+        <a href="/admin" class="admin-nav-link">Dashboard</a>
+        <a href="/admin/licitacion" class="admin-nav-link">Licitaciones</a>
+      </nav>
+    </div>
+
+    <div class="mt-6 flex flex-wrap gap-2">
+      {[7, 30, 90].map((d) => (
+        <a href={`/admin/analitica?dias=${d}`} class="admin-nav-link">
+          {d} días{d === days ? ' ·' : ''}
+        </a>
+      ))}
+    </div>
+
+    <section class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {[
+        { label: 'Page views', value: countOf('page_view') },
+        { label: 'Cotizaciones', value: countOf('quote_calculated') },
+        { label: 'CTA cotizador', value: countOf('quote_cta_click') },
+        { label: 'Leads', value: countOf('lead_submitted') },
+      ].map((k) => (
+        <div class="glass-card p-4">
+          <div class="font-mono text-xs uppercase tracking-widest text-nx-muted">{k.label}</div>
+          <div class="font-display text-3xl font-bold text-nx-primary">{fmtNum(k.value)}</div>
+        </div>
+      ))}
+    </section>
+
+    <section class="mt-8 grid gap-6 lg:grid-cols-2">
+      <div>
+        <h2 class="font-display text-xl font-bold">Orígenes (utm_source)</h2>
+        <div class="mt-3">
+          <Table empty="Sin datos de origen en la ventana">
+            <tr slot="head">
+              <th>Origen</th>
+              <th>Eventos</th>
+            </tr>
+            {sources.length === 0 ? (
+              <tr>
+                <td colspan="2" class="text-nx-dim">Sin datos de origen en la ventana</td>
+              </tr>
+            ) : (
+              sources.map((s) => (
+                <tr>
+                  <td class="font-mono text-xs">{s.source}</td>
+                  <td class="font-mono text-xs">{fmtNum(s.count)}</td>
+                </tr>
+              ))
+            )}
+          </Table>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="font-display text-xl font-bold">Rutas más vistas</h2>
+        <div class="mt-3">
+          <Table empty="Sin page views en la ventana">
+            <tr slot="head">
+              <th>Ruta</th>
+              <th>Eventos</th>
+            </tr>
+            {paths.length === 0 ? (
+              <tr>
+                <td colspan="2" class="text-nx-dim">Sin page views en la ventana</td>
+              </tr>
+            ) : (
+              paths.map((p) => (
+                <tr>
+                  <td class="font-mono text-xs">{p.path}</td>
+                  <td class="font-mono text-xs">{fmtNum(p.count)}</td>
+                </tr>
+              ))
+            )}
+          </Table>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-10">
+      <h2 class="font-display text-xl font-bold">Eventos recientes</h2>
+      <div class="mt-3">
+        <Table empty="Sin eventos todavía">
+          <tr slot="head">
+            <th>Cuando</th>
+            <th>Evento</th>
+            <th>Ruta</th>
+            <th>Origen</th>
+            <th>Props</th>
+          </tr>
+          {recent.length === 0 ? (
+            <tr>
+              <td colspan="5" class="text-nx-dim">Sin eventos todavía</td>
+            </tr>
+          ) : (
+            recent.map((e) => (
+              <tr>
+                <td class="font-mono text-xs">{new Date(e.createdAt).toLocaleString('es-CO')}</td>
+                <td class="font-mono text-xs">{e.name}</td>
+                <td class="font-mono text-xs">{e.path ?? '—'}</td>
+                <td class="font-mono text-xs">{e.utmSource ?? '—'}</td>
+                <td class="font-mono text-xs text-nx-dim">
+                  {e.props ? e.props.slice(0, 80) : '—'}
+                </td>
+              </tr>
+            ))
+          )}
+        </Table>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .admin-nav-link {
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--nx-border);
+    border-radius: 4px;
+    color: var(--nx-ink);
+    text-decoration: none;
+  }
+  .admin-nav-link:hover { border-color: var(--nx-primary); }
+</style>
