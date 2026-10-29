@@ -1,16 +1,18 @@
 ---
 version: stable
-name: NX-Studio Theme System (Monochrome v0.9.0)
-description: Una sola escala de grises calibrada contra el agujero negro WebGL2. Sin dark/light mode. Sin archivo de paletas.
+name: NX-Studio Theme System (Monochrome Galactic v0.10.0)
+description: Una sola escala de grises sobre el agujero negro, tipografía futurista self-hosted y superficies de cristal translúcidas. Sin dark/light mode. Sin archivo de paletas.
 
 colors:
   bg: "#050505"
   surface: "#0e0e0e"
-  raised: "#171717"
-  ink: "#ededed"
-  text: "#f5f5f5"
-  text-muted: "#a3a3a3"
-  text-dim: "#6b6b6b"
+  surface-raised: "#171717"
+  surface-translucent: "rgba(14, 14, 14, 0.66)"
+  surface-translucent-strong: "rgba(10, 10, 10, 0.80)"
+  ink: "#f2f2f2"
+  text: "#ffffff"
+  muted: "#c2c2c2"
+  dim: "#8f8f8f"
   primary: "#fafafa"
   primary-soft: "#d4d4d4"
   primary-deep: "#a3a3a3"
@@ -22,9 +24,9 @@ colors:
   danger: "#d3a9a9"
 
 typography:
-  display: "Space Grotesk, system-ui, sans-serif"
-  body: "Inter, system-ui, sans-serif"
-  mono: "JetBrains Mono, ui-monospace, monospace"
+  display: "Orbitron Variable, system-ui, sans-serif"
+  body: "Inter Variable, system-ui, sans-serif"
+  mono: "JetBrains Mono Variable, ui-monospace, monospace"
 
 radius:
   xs: 4px
@@ -38,7 +40,8 @@ radius:
 
 components:
   card:
-    backgroundColor: "{colors.surface}"
+    backgroundColor: "{colors.surface-translucent}"
+    backdropFilter: "blur(18px) saturate(140%)"
     borderColor: "rgba(255, 255, 255, 0.09)"
     borderRadius: "14px"
   button:
@@ -46,17 +49,21 @@ components:
     textColor: "{colors.text-on-primary}"
 ---
 
-# NX-Studio Theme System — MONOCHROME v0.9.0
+# NX-Studio Theme System — MONOCROMÁTICO GALÁCTICO v0.10.0
 
-Escala de grises **única**. Sin `data-palette`, sin `prefers-color-scheme`, sin
-anti-FOUC de tema. El color base `#050505` está calibrado contra el fondo del
-agujero negro para que el contenido flote sobre él sin costura visible.
+Escala de grises **única**, montada sobre el agujero negro. Sin `data-palette`,
+sin `prefers-color-scheme`, sin anti-FOUC de tema. El color base `#050505` está
+calibrado contra el fondo del agujero negro para que el contenido flote sobre
+él sin costura visible.
 
 Tokens canónicos: `src/styles/global.css` (`@theme` + `:root`).
 
 ## Gramática
 
-- **Tinta** (`--nx-ink #ededed` / `--nx-text #f5f5f5`): estructura y texto.
+- **Tinta** (`--nx-ink #f2f2f2` / `--nx-text #ffffff`): estructura y texto.
+- **Gris escalonado** (`--nx-muted #c2c2c2` / `--nx-dim #8f8f8f`): texto
+  secundario y terciario. Antes no existían como utilidades (el sitio renderizaba
+  en blanco puro); hoy son la base de la jerarquía tipográfica.
 - **Blanco roto** (`--nx-primary #fafafa`): **solo** CTAs y texto invertido
   sobre primario. Es el valor de máximo contraste del sistema, no un color de
   decoración.
@@ -68,20 +75,59 @@ Tokens canónicos: `src/styles/global.css` (`@theme` + `:root`).
 - **Bordes hairline**: `rgba(255,255,255,0.09)` base, `0.16` fuerte. La
   separación se hace por luminancia, no por color.
 - **Radius progresivo**: xs 4 → 4xl 48px.
-- **Background**: agujero negro WebGL2 (`optimized-black-hole.tsx`) como
-  `fixed; z-index: 0`. No hay mesh CSS, ni gradientes de fondo, ni blur pesado.
+- **Background**: agujero negro (WebGPU, fallback WebGL2) como `fixed;
+  z-index: 0`. No hay mesh CSS, ni gradientes de fondo, ni blur pesado.
+
+### Tema galáctico: la galaxia no se tapa
+
+El backdrop es un agujero negro con disco de acreción volumétrico. El sitio se
+diseña **encima** de él, con superficies de cristal translúcidas:
+
+| Token | Valor | Uso |
+|---|---|---|
+| `--nx-surface-translucent` | `rgba(14,14,14,0.66)` | cards, `.glass`, superficies de contenido |
+| `--nx-surface-translucent-strong` | `rgba(10,10,10,0.80)` | nav, footer, panel del chatbot |
+
+Con `backdrop-filter: blur(18px) saturate(140%)` el disco se difumina detrás del
+panel y el texto compite con ruido, no con la galaxia. **Una superficie opaca
+anula el efecto**: no hay nada detrás que difuminar.
+
+> Escribe solo `backdrop-filter` (el estándar). Si añades a mano
+> `-webkit-backdrop-filter`, Lightning CSS conserva únicamente el prefiado y el
+> CSS compilado pierde la propiedad estándar.
+
+### Tipografía futurista
+
+Las tres familias son **self-hosted** (OFL, `@fontsource-variable/*@5.3.0`):
+cero peticiones a Google Fonts en runtime.
+
+- **Display — Orbitron Variable**: geométrica, de trazo grueso. Es la voz
+  futurista de los headings. Tracking neutro `0.005em` (negativo la vuelve
+  ilegible) y **fuera de `@layer utilities`** para ganar a `tracking-*` de
+  Tailwind.
+- **Body — Inter Variable**: lectura larga.
+- **Mono — JetBrains Mono Variable**: códigos, números, etiquetas y el acento
+  del hero en MAYÚSCULAS (el serif instrumentado quedó descartado).
 
 ### Carve-out: el agujero negro ES un glow
 
-Único glow permitido. Es una excepción deliberada a la prohibición histórica de
-glows, y la razón de que `#050505` sea el color base. No lo trates como una
-violación a corregir.
+Único glow permitido y **única excepción de color del sitio** (decisión
+operador, commits `09a93e6` + `401b306`): el pipeline WebGPU original de
+21st.dev está activo — disco de acreción volumétrico con lente gravitacional
+real, rampa térmica brasa → ámbar → blanco cálido y doppler beaming. La UI
+sigue monocroma: **no propagues el color del backdrop a componentes, tokens ni
+CTAs**.
 
-**Y desde 2026-10-23 es también la única excepción de COLOR del sitio** (decisión
-operador, commits `09a93e6` + `401b306`): el pipeline WebGPU original de 21st.dev
-está activo — disco de acreción volumétrico con lente gravitacional real, rampa
-térmica brasa → ámbar → blanco cálido y doppler beaming. La UI sigue monocroma:
-no propagues el color del backdrop a componentes, tokens ni CTAs.
+El renderer WebGL2 es el fallback (sin WebGPU, fallo de init o
+`prefers-reduced-motion`) y comparte la misma rampa.
+
+### Hero
+
+Solo-texto desde 2026-10-22: la escultura líquida se retiró del hero y el
+agujero negro es el único visual (`sculpture={false}`, hero transparente). El
+copy vive en la parte baja, con un scrim local (`.sh-root::before`) que lo
+separa del disco. La tinta la fija el prop `textColor` del componente
+vendorizado: nunca la infiere del fondo.
 
 ## Interacciones
 
@@ -89,25 +135,26 @@ no propagues el color del backdrop a componentes, tokens ni CTAs.
 - Hover card = elevación por borde + superficie, sin offset duro.
 - Motion: React islands con `framer-motion` en home; CSS animations +
   `IntersectionObserver` `.reveal` en el resto para mantener el bundle mínimo.
-- Hero: **solo-texto** (2026-10-22). La escultura líquida se retiró del hero; el
-  fondo global de agujero negro es el único visual — el hero va transparente.
 
 ## Do
 
 - Usar `var(--nx-*)` o las clases Tailwind `text-nx-text`, `bg-nx-surface`,
-  `border-nx-border`.
+  `border-nx-border`, `text-nx-muted`, `text-nx-dim`.
+- Declarar cada color dos veces: `--color-nx-*` en `@theme` (para la utilidad
+  Tailwind) y `--nx-*` en `:root` (para `var()`).
 - Verificar contra `npm run build` + `astro preview` (o prod). `astro dev`
   hidrata 4/4 desde `dceb0a9` — ver `AGENTS.md § Bug RESUELTO`.
-- Migrar `lava-*` → `nx-*` en cualquier archivo que toques.
+- Comprobar el CSS **compilado** (`dist/client/_astro/*.css`), no el fuente.
 
 ## Don't
 
 - No reintroducir paletas, dark/light mode, ni `PaletteSwitcher`.
 - No crear tokens fuera de `global.css`.
 - No añadir un segundo fondo animado ni CSS gradients sustituyendo el agujero negro.
-- No usar `--nx-text-dim` para body text.
+- No usar `--nx-dim` para body text.
 - No extender el color del agujero negro a la UI — la excepción es solo del backdrop.
-- No introducir `lava-*` nuevos (el bridge legacy se está drenando).
+- No reintroducir `lava-*` ni otra familia legacy de nombres.
+- No escribir `-webkit-backdrop-filter` a mano.
 
 ## Histórico
 
@@ -116,4 +163,7 @@ no propagues el color del backdrop a componentes, tokens ni CTAs.
 - v0.7.0 (2026-10-14): brutalism.
 - v0.8.0 (2026-10-14): glass/depth — 2 paletas, lava `#ff4500`, `data-palette`.
 - **v0.9.0 (2026-10-21)**: monocromo. Una escala de grises, sin paletas,
-  agujero negro WebGL2 como fondo global. Superset de los tres anteriores.
+  agujero negro como fondo global. Superset de los tres anteriores.
+- **v0.9.1 (2026-10-23)**: pipeline WebGPU original activo + sprint comercial.
+- **v0.10.0 (2026-10-29)**: tipografía futurista self-hosted (Orbitron),
+  superficies translúcidas, puente `--lava-*` drenado, tokens reparados.

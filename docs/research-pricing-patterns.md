@@ -42,18 +42,26 @@ Inspirado en: Arc.dev (plantillas + marketplace), Cadence (engagement semanal). 
 ### 6. Catálogo de proyectos (sin videos por ahora)
 Mantener la estructura actual de `src/data/catalog.ts` (11 repos reales). Los `videoUrl?` se llenarán cuando los proyectos estén finalizados. Por ahora: screenshot + repo link + descripción + impacto + stack + status (live/prototype/archived).
 
-## Identidad visual (lava neon naranja/rojizo)
-Estilo Matrix NX-Studio: grid lines, scan effects, monospace UI accents. Paleta:
-- `--lava-core: #ff4500` (naranja primario)
-- `--lava-edge: #ff6a00` (highlight)
-- `--lava-deep: #8b0000` (sombra / acentos secundarios)
-- `--lava-glow: rgba(255, 69, 0, 0.6)` (glow/shadow)
-- `--bg-void: #0a0608` (fondo casi negro con tinte rojizo)
-- `--bg-ember: #1a0a0a`
-- `--text-primary: #f5e6d3`
-- `--text-muted: #a89580`
+## Identidad visual (monocromática futurista + temática galáctica)
+**Actualizado 2026-10-29 (v0.10.0).** Este research es de pricing/estructura,
+NO visual: la identidad vigente es la de `DESIGN.md` / `AGENTS.md`. Resumen:
 
-Geometría: bordes angulares con chamfers (cortes diagonales), grid lines sutiles, scan line animation opcional, monospace para números/códigos.
+- Una sola escala de grises calibrada contra el agujero negro (`#050505` base),
+  sin paletas, sin dark/light mode.
+- Tokens: `--nx-bg #050505`, `--nx-surface #0e0e0e`, `--nx-surface-raised
+  #171717`, `--nx-ink #f2f2f2`, `--nx-text #ffffff`, `--nx-muted #c2c2c2`,
+  `--nx-dim #8f8f8f`, `--nx-primary #fafafa` (solo CTA), `--nx-secondary /
+  --nx-accent #b8b8b8`.
+- Superficies translúcidas `--nx-surface-translucent` (0.66) y
+  `--nx-surface-translucent-strong` (0.80) con `blur(18px)`: el disco de
+  acreción se ve a través del cristal.
+- Tipografía self-hosted: Orbitron (display) · Inter (body) · JetBrains Mono
+  (mono y etiquetas en mayúsculas).
+- Geometría: radius progresivo 4→48px, hairline borders, sin chamfers ni scan
+  lines. El único glow y la única excepción de color es el agujero negro.
+
+> Histórico (v0.2.0–v0.4.0): lava neon naranja/rojizo (`#ff4500`). **Drenado el
+> 2026-10-29** — no reintroducir esos tokens ni clases `lava-*`.
 
 ## Servicios a añadir
 - **OSINT** — investigación de fuentes abiertas (personas, empresas, marcas, dominios, redes)

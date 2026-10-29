@@ -1,67 +1,64 @@
 # NX-Studio
 
 Sitio web **empresarial** de NX-Studio — estudio de desarrollo LATAM.
-Stack: Astro 7 (SSG) + Tailwind v4 + TypeScript.
+Stack: Astro 7 (SSR en Cloudflare Workers) + Tailwind v4 + TypeScript + React islands.
 
-**Live:** https://nxxo31.github.io/NX-Studio/
+**Live:** https://nx-studio.nx-studio.workers.dev
 
 ## Features
 
-- **Pricing engine interactivo** — `/cotizador` calcula rangos de inversión en tiempo real
-- **Servicios especializados** — OSINT, Testing & QA con pricing transparente
-- **Templates marketplace** — starters MIT-licensed (Landing, Dashboard, E-commerce)
-- **Lava neon identity** — paleta naranja/rojizo con geometría angular Matrix-style
-- **SSG puro** — desplegado en GitHub Pages, sin backend, sin SSR
-- **Security-first** — headers estrictos, canonical URLs, sin superficie de ataque runtime
+- **Agujero negro global** — pipeline WebGPU original de 21st.dev (disco de acreción volumétrico con lente gravitacional real) con fallback WebGL2; es el único glow y la única excepción de color del sitio
+- **Identidad monocromática futurista** — una escala de grises sobre el fondo, tipografía self-hosted (Orbitron · Inter · JetBrains Mono) y superficies de cristal translúcidas
+- **Pricing engine interactivo** — `/cotizador` calcula rangos de inversión en tiempo real (nada es gratis: hay piso de mercado)
+- **Portal de cliente** — `/portal`: licitaciones, proyectos, perfil, mensajes, notificaciones (D1 + better-auth)
+- **Panel admin** — `/admin`: catálogo, licitaciones, plantillas, usuarios, auditoría, deploys
+- **Catálogo de productos** — 11 repos reales mapeados a productos; plantillas comprables en `/templates`
+- **Chatbot SophIA** — asistente flotante con FSM y respuestas por página
+- **Trilingüe** — ES/EN/PT con auto-detect y switcher
 
 ## Project Structure
 
 ```
 src/
-├── pages/                  # Rutas Astro
-│   ├── index.astro         # Home
-│   ├── cotizador.astro     # Pricing engine
-│   ├── laboratorio.astro   # Chat IA + mockup preview
-│   ├── contacto.astro      # Formulario de contacto
-│   ├── servicios/
-│   │   ├── index.astro     # Índice
-│   │   ├── osint.astro
-│   │   └── testing.astro
-│   └── templates/
-│       ├── index.astro     # Marketplace
-│       └── [slug].astro    # Detalle por template
-├── components/             # Nav, Hero, Footer, WebGLBackground
-├── layouts/                # Base layout con security headers
-├── lib/                    # (vacío — lógica vive en /data/)
-├── data/                   # Single source of truth: pricing, templates, catalog
-└── styles/                 # global.css con tokens lava neon
+├── pages/                  # Rutas Astro (marketing + /portal + /admin + /api)
+├── components/             # Nav, Footer, Brand, chatbot, motion islands, style-lab
+│   └── ui/                 # agujero negro (WebGPU + fallback WebGL2), vendor liquid-sculpture-hero
+├── layouts/                # Base.astro: canvas del fondo, scrim, headers de seguridad
+├── lib/                    # auth, rbac, mockups, chatbot FSM, deploy log
+├── server/                 # handlers + repos (Drizzle → D1)
+├── data/                   # single source of truth: pricing, templates, catalog, services
+├── i18n/                   # es.json · en.json · pt.json + detector
+├── db/                     # schema Drizzle
+└── styles/                 # global.css (tokens @theme + :root) y chatbot.css
 ```
 
 ## Getting Started
 
 ```bash
-# Install
 npm install
-
-# Dev
-npm run dev -- --port 4321 --host 127.0.0.1
-
-# Build (static output to ./dist/)
-npm run build
-
-# Preview production build
-npm run preview -- --port 4321 --host 127.0.0.1
+npm run build                                  # build de producción + i18n-guard
+npx astro preview --port 4322 --host 127.0.0.1   # verificación visual (NO uses dev para esto)
+npm run test                                   # vitest (299)
+npm run test:e2e                               # playwright (necesita el preview en :4322)
 ```
+
+> `npm run dev` no es confiable para verificación visual: el sitio se ve sin
+> animaciones y sin el fondo. Usa `build` + `preview`.
 
 ## Deploy
 
-Push to `main` → GitHub Actions build → deploy to `nxxo31.github.io/NX-Studio/`.
+```bash
+npx wrangler deploy --config dist/server/wrangler.json
+```
+
+Detalle de secrets, migraciones D1 y rollback: `docs/deploy.md`.
 
 ## Docs
 
-- `PROJECT.md` — single source of truth (sprints, arquitectura, limitaciones)
-- `AGENTS.md` — reglas del proyecto para agentes
-- `docs/research-pricing-patterns.md` — benchmarks de pricing
+- `PROJECT.md` — single source of truth (identidad, sprints, arquitectura, limitaciones)
+- `AGENTS.md` — reglas operativas del proyecto (manda sobre PROJECT.md)
+- `DESIGN.md` — sistema de diseño canónico (tokens, gramática, do/don't)
+- `docs/research-pricing-patterns.md` — benchmarks de pricing (estructurales, no visuales)
 
 ## License
 

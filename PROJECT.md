@@ -36,17 +36,31 @@ agujero negro. Tokens canónicos en `src/styles/global.css` (`@theme` + `:root`)
 | Rol | Token | Valor |
 |---|---|---|
 | Fondo base (calibrado al agujero negro) | `--nx-bg` | `#050505` |
-| Superficie | `--nx-surface` | `#0e0e0e` |
+| Superficie opaca | `--nx-surface` | `#0e0e0e` |
 | Superficie elevada | `--nx-surface-raised` | `#171717` |
-| Tinta estructural | `--nx-ink` | `#ededed` |
-| Texto | `--nx-text` | `#f5f5f5` |
+| Superficie translúcida | `--nx-surface-translucent` | `rgba(14,14,14,0.66)` |
+| Superficie translúcida densa | `--nx-surface-translucent-strong` | `rgba(10,10,10,0.80)` |
+| Tinta estructural | `--nx-ink` | `#f2f2f2` |
+| Texto | `--nx-text` | `#ffffff` |
+| Texto secundario | `--nx-muted` | `#c2c2c2` |
+| Texto terciario | `--nx-dim` | `#8f8f8f` |
 | CTA / blanco roto | `--nx-primary` | `#fafafa` |
 | Acento lavado | `--nx-secondary` / `--nx-accent` | `#b8b8b8` |
 | Semánticos desaturados | `--nx-success` / `--nx-warn` / `--nx-danger` | `#b6cfc0` / `#cfc4a6` / `#d3a9a9` |
 
-Tipografía: `--font-display` (Space Grotesk) · `--font-body` (Inter) ·
-`--font-mono` (JetBrains Mono). Radius progresivo `--radius-xs` 4px →
+Tipografía **self-hosted** (OFL, cero peticiones a Google Fonts en runtime):
+`--font-display` (Orbitron Variable) · `--font-body` (Inter Variable) ·
+`--font-mono` (JetBrains Mono Variable). Radius progresivo `--radius-xs` 4px →
 `--radius-4xl` 48px.
+
+**REGLA de tokens (obligatoria):** cada color se declara DOS veces — con prefijo
+`--color-*` en `@theme` (para que exista la utilidad Tailwind: `--color-nx-muted`
+→ clase `text-nx-muted`) y con prefijo `--nx-*` en `:root` (para
+`var(--nx-muted)` en CSS puro). Sin el prefijo `--color-*` la utilidad NO se
+genera y el build no avisa: la regla simplemente no existe. Pasó el
+2026-10-28 con `text-nx-muted` (114 usos) y `text-nx-dim` (70 usos) sin token →
+219 elementos renderizados en blanco puro. Verificar contra el CSS **compilado**
+(`dist/client/_astro/*.css`), nunca contra el fuente.
 
 ### Fondo global: agujero negro
 
@@ -82,6 +96,13 @@ original de 21st.dev") con las tres ediciones monocromas revertidas (SATURATION,
 rampa térmica, estrellas) y `vgpu@0.4.1`. El wrapper de fallback a WebGL2 elimina
 el riesgo histórico del rectángulo negro en Safari <26 y Firefox <141: sin
 WebGPU se ve el fallback en color, nunca una pantalla negra.
+
+**Superficies translúcidas (v0.10.0):** los paneles del sitio
+(`.glass-card`, `.glass`, nav, footer, chatbot) usan `--nx-surface-translucent`
+(0.66) o `--nx-surface-translucent-strong` (0.80) con `backdrop-filter:
+blur(18px) saturate(140%)`. El disco de acreción se ve a través del cristal: es
+la regla "la galaxia no se tapa". Antes eran superficies opacas (`--nx-surface`)
+y el blur no difuminaba nada porque no había nada detrás que difuminar.
 
 > **Override normativo:** las reglas operativas viven en `AGENTS.md`. Este
 > documento describe; `AGENTS.md` obliga. Ante conflicto, `AGENTS.md` manda.
@@ -122,6 +143,79 @@ al eslogan. 299/299 verdes.
 localizan por middleware. Pendiente decisión: SSR global o generación por
 locale en build.
 
+### Sprint v0.10.0 · Tipografía futurista + transparencia galáctica + poda (2026-10-29)
+
+Autorizado por el operador: "quitar todo lo que ya no está dentro de los specs y
+actualizar toda la documentación y el proyecto al estilo monocromático
+futurista con temática galáctica".
+
+**Tipografía.** Las tres familias del sistema nunca se cargaban (no había ni un
+`@font-face` ni `<link>` a webfonts): las 133 refs a `font-display` y 267 a
+`font-mono` eran no-ops visuales y el body caía a `system-ui`. Ahora son
+**self-hosted** con `@fontsource-variable/{orbitron,inter,jetbrains-mono}@5.3.0`
+(`--save-exact`, OFL): `--font-display` = **Orbitron** (geométrica, futurista),
+`--font-body` = Inter, `--font-mono` = JetBrains Mono. Display con tracking
+neutro `0.005em` (Orbitron con tracking negativo es ilegible) mediante regla
+`.font-display` **sin capa CSS**, que gana a las utilidades `tracking-*` de
+Tailwind. El acento del hero va en mono MAYÚSCULAS (no serif).
+
+**Contraste del hero.** `NXSculptureHero` pasaba `background="transparent"` al
+componente vendorizado; su `hexToRgb()` no lo parsea, caía al fallback claro y
+terminaba con tinta `#151514` sobre `#050505` (≈1.2:1, ilegible) y con la
+etiqueta del CTA invisible (`color: var(--sh-bg)` = transparent). Se fija
+`textColor="var(--nx-text)"` desde el wrapper y se sobrescriben `.sh-root .sh-*`
+(especificidad 0,2,0, porque el vendor inyecta su `<style>` después de
+`global.css` en el orden del documento) + `.sh-root::before` como scrim local
+del hero.
+
+**Utilities muertas (bug real, 219 elementos).** En Tailwind v4 SOLO las
+variables `--color-*` de `@theme` generan utilidades. `text-nx-muted` (114
+usos), `text-nx-dim` (70) y `bg-nx-surface-overlay` (3) no generaban CSS: esos
+elementos heredaban blanco puro del body y el header de nav no tenía fondo.
+Corregido renombrando los tokens a `--color-nx-muted` / `--color-nx-dim` /
+`--color-nx-surface-overlay` (y los 38 usos `text-nx-text-muted`/`text-nx-text-dim`
+normalizados). Verificado contra el CSS compilado.
+
+**Transparencia.** `--nx-surface-translucent` (0.66) y
+`--nx-surface-translucent-strong` (0.80) con blur(18px): nav, footer, cards,
+chatbot y hero dejan ver la galaxia. Se corrigió además un bug de build: al
+escribir `backdrop-filter` **y** `-webkit-backdrop-filter` a mano, Lightning CSS
+conservaba solo el prefiado y el CSS compilado perdía la propiedad estándar
+(Firefox se quedaba sin blur). Se escribe solo la estándar y el build añade
+el prefijo.
+
+**Puente legacy `--lava-*` DRAINED.** 284 ocurrencias en 30 archivos migradas
+a `nx-*`/Tailwind: `.lava-card`→`.glass-card`, `.lava-btn`→`.nx-btn`,
+`.lava-tag`→`.nx-tag`, `.hairline`→`.nx-hairline`, `text-lava-edge`→
+`text-nx-secondary`, `--lava-core/edge/deep/glow/glow-soft`→ tokens `nx-*`,
+`--bg-void/ember`→`--nx-bg/--nx-surface`. Eliminados el bloque "Backward-compat",
+el bridge `--lava-*`, las reglas `[data-palette="glass-light"]` (sistema de
+paletas extinto) y `.lava-scan`/`.orb`/`.glow-lava` (0 usos). **0 clases `lava-*`
+en el DOM.**
+
+**Poda (autorizada: "todo lo que no se use y caché del desarrollo").**
+Huérfanos sin ninguna referencia: `Hero.astro`, `Lab.astro`,
+`ProjectPreview.astro`, `TexturedPanel.astro`, `motion/AnimatedHero.tsx`,
+`ui/Field.astro`, `ui/optimized-black-hole-vgpu/optimized-black-hole.tsx`
+(el wrapper; la carpeta `optimized-black-hole-vgpu/` SIGUE VIVA: es el pipeline
+WebGPU) y los 4 `.webp` de `public/assets/sculpture/` (790 KB que nunca se
+descargaban: la escultura salió del hero el 2026-10-22, `sculpture={false}`).
+Artefactos: 4 capturas PNG en la raíz, `_archive/2026-10-11/` (3 docs ya
+consolidados), `docs/research-2026/` (research viejo), `e2e-run.log`,
+`playwright-report/`, `test-results/`, `.build-check/`, `.vitest/`,
+`src/styles/tmptest/` y el worktree `.wt-hero-fix`.
+
+**Copy.** Textos de i18n y del catálogo de templates que describían la
+identidad lava neon reescritos a la identidad actual (es/en/pt).
+
+**Resultado:** `npm run build` exit 0, i18n-guard OK (93 HTML),
+`npm run test` 299/299 verdes. Verificación visual con Playwright sobre
+`dist/client` (nunca `astro dev`): `h1` computa `"Orbitron Variable"`, `text-nx-muted`
+= `rgb(194,194,194)` y `text-nx-dim` = `rgb(143,143,143)` (ya no blanco puro),
+nav translúcida `rgba(10,10,10,0.8)` + blur, CTA del hero con tinta
+`rgb(5,5,5)` sobre blanco (visible), canvas en `data-backend="webgpu"`,
+`backdrop-filter` computando `blur(18px) saturate(1.4)` en las cards.
+
 ### Sprint monocromático v0.9.0 (2026-10-21)
 
 Colapso del sistema de paletas a escala de grises única. Autorizado por el
@@ -155,11 +249,11 @@ agujero negro monocromo visible detrás del contenido.
 `dceb0a9` — el bug 0/4 islas era `run_worker_first` booleano en `wrangler.toml`.
 Detalle en §Limitaciones conocidas 9.
 
-**Bridges legacy:** `global.css:328-336` mantiene `--lava-core/edge/deep/glow/
-glow-soft`, `--bg-void/ember` mapeados a tokens actuales, más las clases
-`.lava-card/.lava-card-accent/.lava-btn/.lava-btn-ghost/.lava-tag/.hairline` y
-utilidades `.text-lava-edge/.bg-lava-soft`. Rinden en escala de grises y siguen
-en uso en ~20 archivos. Se drenan de forma incremental, no en un commit aparte.
+**Bridges legacy (DRAINED en v0.10.0):** en v0.9.0 `global.css` mantenía
+`--lava-core/edge/deep/glow/glow-soft`, `--bg-void/ember` y las clases
+`.lava-card/.lava-card-accent/.lava-btn/.lava-btn-ghost/.lava-tag/.hairline`.
+El 2026-10-29 se migraron los 284 usos restantes a `nx-*` y se eliminó el
+bridge por completo.
 
 ### Sprint brutalism (2026-10-14) — histórico, superseded por v0.9.0
 
@@ -589,7 +683,7 @@ PENDIENTE: `RESEND_API_KEY` — sin cuenta Resend el email queda en modo mock
 | Styling | Tailwind CSS (vía Vite plugin) | 4.3.3 |
 | TypeScript | | 5.7 |
 | Hosting | Cloudflare Workers (SSR + static assets) | nx-studio.nx-studio.workers.dev |
-| Identity | Monocromática única + agujero negro WebGL2 como fondo global | v0.9.0 |
+| Identity | Monocromática única + temática galáctica (agujero negro WebGPU) | v0.10.0 |
 
 ## Decisiones arquitectónicas
 
@@ -602,7 +696,7 @@ PENDIENTE: `RESEND_API_KEY` — sin cuenta Resend el email queda en modo mock
 | OSINT pricing | Role-based (analyst/senior/specialist) | Alineado con benchmarks Smart Intelligence |
 | QA pricing | Tiers + platform fee separado | Transparencia (OutpostQA pattern) |
 | Templates | One-time payment, MIT-licensed | Modelo Arc.dev marketplace |
-| Identidad | Lava neon naranja/rojizo | Distintiva vs competencia púrpura/azul |
+| Identidad | Monocromática única con temática galáctica | Distintiva vs competencia púrpura/azul; el agujero negro es el único glow y la única excepción de color |
 
 ## Seguridad
 
@@ -640,8 +734,17 @@ PENDIENTE: `RESEND_API_KEY` — sin cuenta Resend el email queda en modo mock
    las rutas de página/API. Si reaparece: revisar `run_worker_first`, NO la
    cadena @astrojs/react. Para verificación visual de producción, el gate sigue
    siendo `npm run build` + `astro preview` (o prod).
-10. **Puente legacy `--lava-*` sigue en uso** (~20 archivos): drained
-    incrementalmente, no bloquea funcionalidad.
+10. **Puente legacy `--lava-*`: RESUELTO en v0.10.0** — 284 ocurrencias
+    migradas a `nx-*` y bridge eliminado del CSS (0 clases `lava-*` en el DOM).
+11. **E2E requiere preview server y el runtime local de wrangler está roto en
+    esta máquina**: `npx wrangler pages dev dist` muere con
+    `No such module "@cloudflare/unenv-preset/node/process"` (workerd vs
+    `@cloudflare/workers-types` instalados), así que la suite Playwright no
+    levanta sola. `playwright.config.ts` no define `webServer`: hay que
+    arrancar `npx astro preview --port 4322` a mano (sirve el output estático,
+    suficiente para las páginas de marketing) y `baseURL` apunta a
+    `127.0.0.1:4322`. Las rutas SSR (`/portal`, `/admin`, `/api`) requieren el
+    runtime de wrangler.
 11. **`.dev.vars` gitignored** contiene `TWENTYFIRST_API_KEY` (21st.dev) para
     el backend VGPU dormido. Si ese backend se reactiva, el nombre de env var
     debe reconciliarse con lo que `@21st.dev/vgpu` espere.
@@ -664,8 +767,10 @@ PENDIENTE: `RESEND_API_KEY` — sin cuenta Resend el email queda en modo mock
 ## Histórico documentos consolidados (archivado 2026-10-11)
 
 Los siguientes 3 documentos fueron consolidados o superseded por las
-secciones de este PROJECT.md. Se mueven a `_archive/2026-10-11/`
-para cumplir la regla "no archivos .md sueltos" (memo #172):
+secciones de este PROJECT.md. Se movieron a `_archive/2026-10-11/` para cumplir
+la regla "no archivos .md sueltos" (memo #172) y **esa carpeta se eliminó del
+repo el 2026-10-29 (v0.10.0)**: el contenido ya está aquí y el historial
+completo queda en `git log`.
 
 | Archivo                          | Tamaño | Razón del archivo                                       |
 |----------------------------------|--------|--------------------------------------------------------|
@@ -674,6 +779,7 @@ para cumplir la regla "no archivos .md sueltos" (memo #172):
 | `RESEARCH.md`                    | 9 KB   | Research de competencia y pricing. Migrado a dark-memory memo #186 |
 
 Mantenido en root (no es cruft):
-- `DESIGN.md` (155 líneas, 4.8 KB) — sistema de diseño canónico.
+- `DESIGN.md` — sistema de diseño canónico.
+- `AGENTS.md` — reglas operativas (manda sobre este documento).
 
-Acceso al histórico: `_archive/2026-10-11/` sigue accesible vía git log.
+Acceso al histórico: `git log -- _archive/2026-10-11/`.
