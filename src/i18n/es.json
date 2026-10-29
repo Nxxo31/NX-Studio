@@ -979,5 +979,15 @@
       "notFound": "Recurso no encontrado.",
       "validationFailed": "Validación fallida."
     }
+  },
+  "newsletter": {
+    "title": "Notas de construcción",
+    "subtitle": "Cada dos semanas: lo que publicamos, precios reales y en qué estamos trabajando. Sin spam.",
+    "placeholder": "tu@email.com",
+    "cta": "Suscribirme",
+    "success": "Listo. Te avisamos cuando haya algo nuevo.",
+    "error": "No pudimos guardarlo. Intenta de nuevo en un momento.",
+    "invalid": "Revisa el email.",
+    "privacy": "Un email cada dos semanas. Sales cuando quieras."
   }
 }

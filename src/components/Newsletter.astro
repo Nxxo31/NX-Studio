@@ -1,0 +1,124 @@
+---
+// Banda de newsletter — captura de email para nutrir leads que no estan
+// listos para contratar todavia (v0.11.0).
+//
+// El copy vive en i18n (es/en/pt). El alta es publica y idempotente por
+// email (ver src/server/newsletter-repo.ts).
+
+import { getT } from "../i18n";
+
+const t = getT(Astro);
+
+const newsletterI18n = {
+  ok: t('newsletter.success'),
+  error: t('newsletter.error'),
+  invalid: t('newsletter.invalid'),
+};
+---
+
+<section class="px-6 py-20" data-newsletter>
+  <div class="mx-auto max-w-4xl">
+    <div class="glass-card glass-card-accent p-8 md:p-12">
+      <p class="font-mono text-xs uppercase tracking-widest text-nx-secondary">
+        // newsletter
+      </p>
+      <h2 class="mt-3 font-display text-3xl font-bold md:text-4xl">{t('newsletter.title')}</h2>
+      <p class="mt-3 max-w-2xl text-nx-muted">{t('newsletter.subtitle')}</p>
+
+      <form class="mt-6 flex flex-col gap-3 sm:flex-row" data-newsletter-form novalidate>
+        <label class="sr-only" for="nl-email">{t('newsletter.placeholder')}</label>
+        <input
+          id="nl-email"
+          name="email"
+          type="email"
+          required
+          autocomplete="email"
+          placeholder={t('newsletter.placeholder')}
+          class="w-full flex-1 rounded-md border border-nx-border-strong bg-nx-surface-translucent px-4 py-3 font-mono text-sm text-nx-text placeholder:text-nx-dim focus:border-nx-primary focus:outline-none"
+        />
+        {/* Honeypot anti-bot: invisible para humanos, tentador para bots. */}
+        <input
+          type="text"
+          name="honeypot"
+          tabindex="-1"
+          autocomplete="off"
+          class="hidden"
+          aria-hidden="true"
+        />
+        <button
+          type="submit"
+          class="nx-btn justify-center"
+          data-newsletter-submit
+        >
+          {t('newsletter.cta')}
+        </button>
+      </form>
+
+      <p class="mt-3 font-mono text-xs text-nx-dim" data-newsletter-note>
+        {t('newsletter.privacy')}
+      </p>
+      <p class="mt-2 hidden font-mono text-xs" data-newsletter-status role="status"></p>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ newsletterI18n }} is:inline>
+  window.__newsletterI18n = newsletterI18n;
+</script>
+<script>
+  import { trackEvent } from "../lib/attribution";
+
+  const I18N = (window as any).__newsletterI18n as {
+    ok: string;
+    error: string;
+    invalid: string;
+  };
+
+  const root = document.querySelector('[data-newsletter]');
+  const form = root?.querySelector('[data-newsletter-form]') as HTMLFormElement | null;
+  const status = root?.querySelector('[data-newsletter-status]') as HTMLElement | null;
+  const submit = root?.querySelector('[data-newsletter-submit]') as HTMLButtonElement | null;
+
+  if (form && status) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const email = String(fd.get('email') || '').trim();
+      if (!email || !email.includes('@')) {
+        status.className = 'mt-2 font-mono text-xs text-nx-danger';
+        status.setAttribute('data-state', 'error');
+        status.textContent = `✕ ${I18N.invalid}`;
+        return;
+      }
+      if (submit) submit.disabled = true;
+      try {
+        const res = await fetch('/api/newsletter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            honeypot: String(fd.get('honeypot') || ''),
+            locale: window.document.documentElement.lang || null,
+            source: 'home',
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (data.ok) {
+          trackEvent('newsletter_signup', { locale: window.document.documentElement.lang || 'es' });
+          status.className = 'mt-2 font-mono text-xs text-nx-success';
+          status.setAttribute('data-state', 'ok');
+          status.textContent = `✓ ${I18N.ok}`;
+          form.reset();
+        } else {
+          throw new Error('subscribe failed');
+        }
+      } catch {
+        status.className = 'mt-2 font-mono text-xs text-nx-danger';
+        status.setAttribute('data-state', 'error');
+        status.textContent = `✕ ${I18N.error}`;
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  }
+</script>

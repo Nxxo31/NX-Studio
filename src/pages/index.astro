@@ -3,6 +3,7 @@ import "../styles/global.css";
 import Base from "../layouts/Base.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import Newsletter from "../components/Newsletter.astro";
 import NXSculptureHero from "../components/motion/NXSculptureHero";
 import ProjectSlider from "../components/motion/ProjectSlider";
 import { projects } from "../data/catalog";
@@ -202,5 +203,6 @@ const heroBody = `${t('hero.sub1')} ${t('hero.subStrong')}. ${t('hero.sub2')}`;
     </section>
 
   </main>
+  <Newsletter />
   <Footer />
 </Base>

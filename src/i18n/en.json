@@ -979,5 +979,15 @@
       "notFound": "Resource not found.",
       "validationFailed": "Validation failed."
     }
+  },
+  "newsletter": {
+    "title": "Build notes",
+    "subtitle": "Every two weeks: what we ship, real prices, and what we are working on. No spam.",
+    "placeholder": "you@email.com",
+    "cta": "Subscribe",
+    "success": "Done. We will let you know when there is something new.",
+    "error": "We could not save it. Please try again in a moment.",
+    "invalid": "Check the email address.",
+    "privacy": "One email every two weeks. Leave whenever you want."
   }
 }

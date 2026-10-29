@@ -1,0 +1,92 @@
+---
+// /admin/newsletter — suscriptores del newsletter (v0.11.0).
+//
+// Exportable a CSV desde el navegador (el operador lo pega en su gestor de
+// correo). ES-only, como el resto del admin.
+
+import Base from '~/layouts/Base.astro';
+import Table from '~/components/ui/Table.astro';
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { createDb } from '~/db';
+import { countActive, listAll } from '~/server/newsletter-repo';
+
+export const prerender = false;
+
+const env = runtimeEnv as unknown as { DB: D1Database };
+const db = createDb(env.DB);
+
+let subs: Awaited<ReturnType<typeof listAll>> = [];
+let activos = 0;
+try {
+  subs = await listAll(db);
+  activos = await countActive(db);
+} catch (e) {
+  console.error('newsletter admin failed:', e);
+}
+
+const csv = subs
+  .map((s) => [s.email, s.locale ?? '', s.source ?? '', s.status, new Date(s.createdAt).toISOString()])
+  .map((row) => row.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(','))
+  .join('\n');
+const csvHref = `data:text/csv;charset=utf-8,${encodeURIComponent(`email,locale,source,status,created_at\n${csv}`)}`;
+---
+
+<Base title="Newsletter — Admin NX-Studio" description="Suscriptores del newsletter.">
+  <main class="mx-auto max-w-6xl px-6 py-16">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--nx-primary);">Operador</p>
+        <h1 class="mt-2 font-display text-3xl font-bold">Newsletter</h1>
+        <p class="mt-1 text-sm text-nx-muted">{activos} activos · {subs.length} en total</p>
+      </div>
+      <nav class="flex flex-wrap gap-2 text-xs font-mono">
+        <a href="/admin" class="admin-nav-link">Dashboard</a>
+        <a href="/admin/analitica" class="admin-nav-link">Analítica</a>
+        <a href="/admin/licitacion" class="admin-nav-link">Licitaciones</a>
+        <a href={csvHref} download="newsletter-nx-studio.csv" class="admin-nav-link">Exportar CSV</a>
+      </nav>
+    </div>
+
+    <div class="mt-8">
+      <Table empty="Sin suscriptores todavía">
+        <tr slot="head">
+          <th>Email</th>
+          <th>Locale</th>
+          <th>Origen</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+        </tr>
+        {subs.length === 0 ? (
+          <tr>
+            <td colspan="5" class="text-nx-dim">Sin suscriptores todavía</td>
+          </tr>
+        ) : (
+          subs.map((s) => (
+            <tr>
+              <td class="font-mono text-xs">{s.email}</td>
+              <td class="font-mono text-xs">{s.locale ?? '—'}</td>
+              <td class="font-mono text-xs">{s.source ?? '—'}</td>
+              <td>
+                <span class={s.status === 'activo' ? 'text-nx-success' : 'text-nx-dim'}>
+                  {s.status}
+                </span>
+              </td>
+              <td class="font-mono text-xs">{new Date(s.createdAt).toLocaleDateString('es-CO')}</td>
+            </tr>
+          ))
+        )}
+      </Table>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .admin-nav-link {
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--nx-border);
+    border-radius: 4px;
+    color: var(--nx-ink);
+    text-decoration: none;
+  }
+  .admin-nav-link:hover { border-color: var(--nx-primary); }
+</style>
