@@ -27,12 +27,19 @@ export const POST: APIRoute = async ({ request }) => {
     DB: D1Database;
     RESEND_API_KEY?: string;
     CONTACT_EMAIL?: string;
+    EMAIL_FROM?: string;
   } & Record<string, unknown>;
 
   const db = createDb(env.DB);
+  // `from` por dominio verificado en Resend (EMAIL_FROM). Sin el, se usa el
+  // onboarding de Resend, que SOLO entrega al email de la cuenta: si
+  // CONTACT_EMAIL es otro, el envio falla y el lead queda con email_sent=0.
   const email = createEmailService({
     apiKey: env.RESEND_API_KEY ?? import.meta.env.RESEND_API_KEY ?? '',
-    defaultFrom: 'onboarding@resend.dev',
+    defaultFrom:
+      env.EMAIL_FROM ??
+      import.meta.env.EMAIL_FROM ??
+      'NX-Studio <onboarding@resend.dev>',
   });
 
   const deps: SubmitDeps = {

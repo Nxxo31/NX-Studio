@@ -30,6 +30,13 @@ export type CreateLicitacionInput = {
   displayCurrency?: string | null;
   displayMin?: number | null;
   displayMax?: number | null;
+  utmSource?: string | null;
+  utmMedium?: string | null;
+  utmCampaign?: string | null;
+  utmContent?: string | null;
+  utmTerm?: string | null;
+  referrer?: string | null;
+  landingPath?: string | null;
 };
 
 export async function create(db: DB, input: CreateLicitacionInput): Promise<Licitacion> {
@@ -59,6 +66,13 @@ export async function create(db: DB, input: CreateLicitacionInput): Promise<Lici
     displayCurrency: input.displayCurrency ?? null,
     displayMin: input.displayMin ?? null,
     displayMax: input.displayMax ?? null,
+    utmSource: input.utmSource ?? null,
+    utmMedium: input.utmMedium ?? null,
+    utmCampaign: input.utmCampaign ?? null,
+    utmContent: input.utmContent ?? null,
+    utmTerm: input.utmTerm ?? null,
+    referrer: input.referrer ?? null,
+    landingPath: input.landingPath ?? null,
     userId: input.userId ?? null,
     createdAt: now,
     updatedAt: now,
@@ -89,6 +103,24 @@ export async function listAll(db: DB): Promise<Licitacion[]> {
 }
 
 export type LicitacionStatus = Licitacion['status'];
+
+/**
+ * Marca si el aviso por email al operador se pudo enviar (v0.11.0).
+ * Con RESEND_API_KEY ausente el servicio cae en modo mock: el lead se
+ * guarda igual, pero con email_sent=0 para que el admin lo vea.
+ */
+export async function updateEmailStatus(
+  db: DB,
+  id: string,
+  sent: boolean,
+  error?: string | null
+): Promise<void> {
+  await db
+    .update(licitacion)
+    .set({ emailSent: sent, emailError: error ? error.slice(0, 500) : null })
+    .where(eq(licitacion.id, id))
+    .run();
+}
 
 export async function updateStatus(
   db: DB,

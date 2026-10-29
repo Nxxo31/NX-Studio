@@ -9,10 +9,18 @@ export type EmailMessage = {
   subject: string;
   html: string;
   text?: string;
+  /** Reply-To: para que el operador responda directo al lead. */
+  replyTo?: string;
 };
 
 export type EmailService = {
   send: (msg: EmailMessage) => Promise<void>;
+  /**
+   * 'live' = se envia de verdad. 'mock' = sin RESEND_API_KEY: solo loguea.
+   * El lead se marca email_sent=0 cuando es mock, para que ningun contacto
+   * quede invisible por falta de configuracion.
+   */
+  mode?: 'live' | 'mock';
 };
 
 /**
@@ -28,6 +36,7 @@ export function createEmailService(opts: { apiKey?: string; defaultFrom: string 
   if (!apiKey) {
     // Mock mode: solo loguea. No envía emails reales.
     return {
+      mode: 'mock' as const,
       send: async (msg) => {
         if (typeof console !== 'undefined') {
           console.log(`[email mock] to=${msg.to} subject=${msg.subject}`);
@@ -39,6 +48,7 @@ export function createEmailService(opts: { apiKey?: string; defaultFrom: string 
   const resend = new Resend(apiKey);
 
   return {
+    mode: 'live' as const,
     send: async (msg) => {
       await resend.emails.send({
         from: msg.from ?? defaultFrom,
@@ -46,6 +56,7 @@ export function createEmailService(opts: { apiKey?: string; defaultFrom: string 
         subject: msg.subject,
         html: msg.html,
         text: msg.text,
+        replyTo: msg.replyTo,
       });
     },
   };

@@ -62,6 +62,7 @@ const fmtUsd = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'US
       </div>
       <nav class="flex flex-wrap gap-2 text-xs font-mono">
         <a href="/admin" class="admin-nav-link">Dashboard</a>
+        <a href="/admin/analitica" class="admin-nav-link">Analítica</a>
       </nav>
     </div>
 
@@ -116,6 +117,8 @@ const fmtUsd = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'US
             <th>Status</th>
             <th>Banda</th>
             <th>Rango</th>
+            <th>Origen</th>
+            <th>Email</th>
             <th>Recibida</th>
             <th>Acciones</th>
           </tr>
@@ -127,6 +130,24 @@ const fmtUsd = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'US
               <td><span class="admin-tag">{l.status}</span></td>
               <td>{l.banda}</td>
               <td class="font-mono text-xs">{fmtUsd.format(l.precioMin)}–{fmtUsd.format(l.precioMax)}</td>
+              <td class="font-mono text-xs">
+                {l.utmSource ? (
+                  <span title={`${l.utmMedium ?? ''} ${l.utmCampaign ?? ''} ${l.referrer ?? ''}`.trim()}>
+                    {l.utmSource}{l.utmCampaign ? ` / ${l.utmCampaign}` : ''}
+                  </span>
+                ) : l.referrer ? (
+                  <span title={l.referrer}>referrer</span>
+                ) : (
+                  <span class="text-nx-dim">directo</span>
+                )}
+              </td>
+              <td class="font-mono text-xs">
+                {l.emailSent ? (
+                  <span class="text-nx-success">enviado</span>
+                ) : (
+                  <span class="text-nx-warn" title={l.emailError ?? ''}>sin aviso</span>
+                )}
+              </td>
               <td class="font-mono text-xs">{new Date(l.createdAt).toLocaleDateString('es-CO')}</td>
               <td>
                 <div class="flex flex-wrap gap-1">

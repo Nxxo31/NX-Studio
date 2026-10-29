@@ -3,7 +3,7 @@
 
 import { z } from 'zod';
 import type { DB } from '~/db';
-import { create } from '~/server/licitacion-repo';
+import { create, updateEmailStatus } from '~/server/licitacion-repo';
 import { FEATURES, computeQuote } from '~/data/pricing';
 import type { EmailService } from '~/lib/email';
 import type { AuthEnv } from '~/lib/auth';
@@ -24,6 +24,15 @@ export const licitacionSchema = z.object({
   display_currency: z.string().min(1).max(8).optional().nullable(),
   display_total_low: z.number().nonnegative().optional().nullable(),
   display_total_high: z.number().nonnegative().optional().nullable(),
+  // Atribucion (v0.11.0): de donde vino el lead. Opcional — si el visitante
+  // llego directo sin UTM, queda null.
+  utm_source: z.string().max(120).optional().nullable(),
+  utm_medium: z.string().max(120).optional().nullable(),
+  utm_campaign: z.string().max(120).optional().nullable(),
+  utm_content: z.string().max(120).optional().nullable(),
+  utm_term: z.string().max(120).optional().nullable(),
+  referrer: z.string().max(300).optional().nullable(),
+  landing_path: z.string().max(200).optional().nullable(),
 });
 
 export type LicitacionInput = z.infer<typeof licitacionSchema>;
@@ -109,6 +118,13 @@ export async function handleLicitacionSubmit(
       displayCurrency: data.display_currency ?? null,
       displayMin: data.display_total_low ?? null,
       displayMax: data.display_total_high ?? null,
+      utmSource: data.utm_source ?? null,
+      utmMedium: data.utm_medium ?? null,
+      utmCampaign: data.utm_campaign ?? null,
+      utmContent: data.utm_content ?? null,
+      utmTerm: data.utm_term ?? null,
+      referrer: data.referrer ?? null,
+      landingPath: data.landing_path ?? null,
     });
 
     // Metadatos del quote (el repo computa pricing para persistir; aquí se
@@ -125,9 +141,11 @@ export async function handleLicitacionSubmit(
     );
     const fmtNum = (n?: number | null) =>
       n != null ? n.toLocaleString('en-US', { maximumFractionDigits: 0 }) : '?';
+    const source = attributionLine(data);
     try {
       await deps.email.send({
         to: deps.contactEmail,
+        replyTo: data.email,
         subject: `[NX-Studio] Licitación #${row.id.slice(0, 8)} · ${data.nombre}`,
         html: `
           <h2>Nueva licitación #${row.id}</h2>
@@ -140,15 +158,30 @@ export async function handleLicitacionSubmit(
           <p><b>Rango:</b> $${row.precioMin.toLocaleString()} - $${row.precioMax.toLocaleString()} (${row.banda}) · ${quoteMeta.totalHours}h estimadas</p>
           ${data.display_currency ? `<p><b>Visto por el cliente en:</b> ${escapeHtml(data.display_currency)} ${fmtNum(data.display_total_low)} – ${fmtNum(data.display_total_high)}</p>` : ''}
           <p><b>Features:</b> ${featureNames.map(escapeHtml).join(', ') || '(ninguna)'}</p>
+          ${source ? `<p><b>Origen:</b> ${escapeHtml(source)}</p>` : ''}
           ${userId ? `<p><b>User ID:</b> ${userId}</p>` : ''}
           <hr/>
           <p>${escapeHtml(data.descripcion).replace(/\n/g, '<br/>')}</p>
         `,
       });
+      // Modo mock (sin RESEND_API_KEY): el lead se guarda pero el aviso NO
+      // salio. email_sent=0 lo hace visible en el admin.
+      const isMock = deps.email.mode === 'mock';
+      await updateEmailStatus(
+        deps.db,
+        row.id,
+        !isMock,
+        isMock
+          ? 'RESEND_API_KEY ausente: el aviso quedo en modo mock (no se envio)'
+          : null
+      );
     } catch (err) {
+      const detail = err instanceof Error ? err.message : String(err);
       console.error('Email notification failed (non-blocking):', err);
+      // El lead queda en D1 con email_sent=0: el admin lo ve y puede
+      // contactarlo por otro canal. Un lead nunca se pierde en silencio.
+      await updateEmailStatus(deps.db, row.id, false, detail).catch(() => undefined);
     }
-
     return {
       ok: true,
       licitacion_id: row.id,
@@ -186,4 +219,27 @@ function escapeHtml(s: string): string {
     "'": '&#39;',
   };
   return s.split('').map((ch) => map[ch] ?? ch).join('');
+}
+
+/** Linea legible de origen del lead para el email y el admin. */
+function attributionLine(data: {
+  utm_source?: string | null;
+  utm_medium?: string | null;
+  utm_campaign?: string | null;
+  utm_content?: string | null;
+  referrer?: string | null;
+  landing_path?: string | null;
+}): string | null {
+  const parts: string[] = [];
+  if (data.utm_source) {
+    parts.push(
+      `utm: ${[data.utm_source, data.utm_medium, data.utm_campaign]
+        .filter(Boolean)
+        .join(' / ')}`
+    );
+  }
+  if (data.utm_content) parts.push(`contenido: ${data.utm_content}`);
+  if (data.referrer) parts.push(`referrer: ${data.referrer}`);
+  if (data.landing_path) parts.push(`landing: ${data.landing_path}`);
+  return parts.length > 0 ? parts.join(' · ') : null;
 }
