@@ -94,10 +94,10 @@ export function getMockupTokens(): string[] {
   return [
     '--nx-bg',
     '--nx-surface',
-    '--nx-raised',
+    '--nx-surface-raised',
     '--nx-text',
-    '--nx-text-muted',
-    '--nx-text-dim',
+    '--nx-muted',
+    '--nx-dim',
     '--nx-primary',
     '--nx-primary-soft',
     '--nx-text-on-primary',
@@ -176,7 +176,7 @@ export function buildDashboardMockup(input: { name: string; tagline: string }): 
 
 const PRODUCT_POOL = [
   { name: 'Camisa brutal', price: '$48' },
-  { name: 'Mochila lava', price: '$129' },
+  { name: 'Mochila', price: '$129' },
   { name: 'Polera 100%', price: '$55' },
   { name: 'Botella NX', price: '$32' },
   { name: 'Cuaderno A5', price: '$18' },
@@ -213,10 +213,10 @@ function esc(s: string): string {
 const ROOT_TOKENS = [
   '--nx-bg',
   '--nx-surface',
-  '--nx-raised',
+  '--nx-surface-raised',
   '--nx-text',
-  '--nx-text-muted',
-  '--nx-text-dim',
+  '--nx-muted',
+  '--nx-dim',
   '--nx-primary',
   '--nx-primary-soft',
   '--nx-text-on-primary',
@@ -258,8 +258,8 @@ function renderLandingHtml(b: LandingBundle, s: MockupStrings): string {
     // Topbar
     `<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--nx-border);background:var(--nx-surface);">`,
     `<span style="width:9px;height:9px;border-radius:50%;background:var(--nx-primary);"></span>`,
-    `<span style="font-size:11px;letter-spacing:0.18em;color:var(--nx-text-muted);">${esc(b.name.toUpperCase())}</span>`,
-    `<span style="margin-left:auto;font-size:10px;color:var(--nx-text-dim);">// landing.${esc(b.kind)}</span>`,
+    `<span style="font-size:11px;letter-spacing:0.18em;color:var(--nx-muted);">${esc(b.name.toUpperCase())}</span>`,
+    `<span style="margin-left:auto;font-size:10px;color:var(--nx-dim);">// landing.${esc(b.kind)}</span>`,
     `</div>`,
     // Hero
     `<div style="padding:18px 16px;background:linear-gradient(135deg,var(--nx-primary) 0%,var(--nx-primary-soft) 100%);color:var(--nx-text-on-primary);">`,
@@ -276,15 +276,15 @@ function renderLandingHtml(b: LandingBundle, s: MockupStrings): string {
     ...b.features.map((f, i) =>
       [
         `<div style="padding:10px;background:var(--nx-surface);border:1px solid var(--nx-border);border-radius:6px;${i === 1 ? 'border-top:3px solid var(--nx-primary);' : ''}">`,
-        `<div style="font-size:9px;letter-spacing:0.15em;color:var(--nx-text-dim);">// FEATURA ${String(i + 1).padStart(2, '0')}</div>`,
+        `<div style="font-size:9px;letter-spacing:0.15em;color:var(--nx-dim);">// FEATURA ${String(i + 1).padStart(2, '0')}</div>`,
         `<div style="font-size:12px;font-weight:700;color:var(--nx-text);margin:4px 0;">${esc(f.title)}</div>`,
-        `<div style="font-size:10px;color:var(--nx-text-muted);line-height:1.4;">${esc(f.desc)}</div>`,
+        `<div style="font-size:10px;color:var(--nx-muted);line-height:1.4;">${esc(f.desc)}</div>`,
         `</div>`,
       ].join(''),
     ),
     `</div>`,
     // Footer
-    `<div style="padding:8px 14px;border-top:1px solid var(--nx-border);background:var(--nx-surface);display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--nx-text-dim);">`,
+    `<div style="padding:8px 14px;border-top:1px solid var(--nx-border);background:var(--nx-surface);display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--nx-dim);">`,
     `<span>${esc(s.license)} · ${esc(s.price)}</span>`,
     `<span>${esc(b.name)}</span>`,
     `</div>`,
@@ -298,8 +298,8 @@ function renderDashboardHtml(b: DashboardBundle, s: MockupStrings): string {
     // Topbar
     `<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--nx-border);background:var(--nx-surface);">`,
     `<span style="width:9px;height:9px;border-radius:50%;background:var(--nx-primary);"></span>`,
-    `<span style="font-size:11px;letter-spacing:0.18em;color:var(--nx-text-muted);">${esc(b.name.toUpperCase())}</span>`,
-    `<span style="margin-left:auto;font-size:10px;color:var(--nx-text-dim);">// ${esc(b.kind)}.v1</span>`,
+    `<span style="font-size:11px;letter-spacing:0.18em;color:var(--nx-muted);">${esc(b.name.toUpperCase())}</span>`,
+    `<span style="margin-left:auto;font-size:10px;color:var(--nx-dim);">// ${esc(b.kind)}.v1</span>`,
     `</div>`,
     // Body
     `<div style="display:grid;grid-template-columns:96px 1fr;min-height:180px;">`,
@@ -307,7 +307,7 @@ function renderDashboardHtml(b: DashboardBundle, s: MockupStrings): string {
     `<div style="background:var(--nx-surface);border-right:1px solid var(--nx-border);padding:10px 8px;display:flex;flex-direction:column;gap:4px;">`,
     ...b.sidebar.map((it) =>
       [
-        `<div style="font-size:10px;padding:6px 8px;border-radius:4px;color:${it.active ? 'var(--nx-text-on-primary)' : 'var(--nx-text-muted)'};background:${it.active ? 'var(--nx-primary)' : 'transparent'};font-weight:${it.active ? '700' : '400'};letter-spacing:0.05em;">${esc(it.label)}</div>`,
+        `<div style="font-size:10px;padding:6px 8px;border-radius:4px;color:${it.active ? 'var(--nx-text-on-primary)' : 'var(--nx-muted)'};background:${it.active ? 'var(--nx-primary)' : 'transparent'};font-weight:${it.active ? '700' : '400'};letter-spacing:0.05em;">${esc(it.label)}</div>`,
       ].join(''),
     ),
     `</div>`,
@@ -317,10 +317,10 @@ function renderDashboardHtml(b: DashboardBundle, s: MockupStrings): string {
     `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">`,
     ...b.stats.map((st, i) =>
       [
-        `<div style="padding:10px;background:var(--nx-raised);border:1px solid var(--nx-border);border-radius:6px;${i === 1 ? 'box-shadow:0 0 0 1px var(--nx-primary);' : ''}">`,
-        `<div style="font-size:9px;letter-spacing:0.12em;color:var(--nx-text-dim);">${esc(st.label.toUpperCase())}</div>`,
+        `<div style="padding:10px;background:var(--nx-surface-raised);border:1px solid var(--nx-border);border-radius:6px;${i === 1 ? 'box-shadow:0 0 0 1px var(--nx-primary);' : ''}">`,
+        `<div style="font-size:9px;letter-spacing:0.12em;color:var(--nx-dim);">${esc(st.label.toUpperCase())}</div>`,
         `<div style="font-size:18px;font-weight:800;color:var(--nx-text);margin:3px 0;">${esc(st.value)}</div>`,
-        `<div style="font-size:9px;color:${st.trendUp ? 'var(--nx-primary)' : 'var(--nx-text-muted)'};">${esc(st.trend)}</div>`,
+        `<div style="font-size:9px;color:${st.trendUp ? 'var(--nx-primary)' : 'var(--nx-muted)'};">${esc(st.trend)}</div>`,
         `</div>`,
       ].join(''),
     ),
@@ -328,7 +328,7 @@ function renderDashboardHtml(b: DashboardBundle, s: MockupStrings): string {
     // Table
     `<div style="border:1px solid var(--nx-border);border-radius:6px;overflow:hidden;">`,
     `<div style="display:grid;grid-template-columns:2fr 1fr 1fr 0.5fr;background:var(--nx-surface);padding:7px 10px;border-bottom:1px solid var(--nx-border);">`,
-    ...b.table.columns.map((c) => `<span style="font-size:9px;letter-spacing:0.12em;color:var(--nx-text-dim);">${esc(c.toUpperCase())}</span>`),
+    ...b.table.columns.map((c) => `<span style="font-size:9px;letter-spacing:0.12em;color:var(--nx-dim);">${esc(c.toUpperCase())}</span>`),
     `</div>`,
     ...b.table.rows.map((row) =>
       [
@@ -338,8 +338,8 @@ function renderDashboardHtml(b: DashboardBundle, s: MockupStrings): string {
           const statusColor =
             row.status === 'ok' ? 'var(--nx-primary)' :
             row.status === 'warn' ? '#fbbf24' :
-            'var(--nx-text-dim)';
-          return `<span style="${isStatus ? `color:${statusColor};font-weight:700;` : 'color:var(--nx-text-muted);'}">${esc(c)}</span>`;
+            'var(--nx-dim)';
+          return `<span style="${isStatus ? `color:${statusColor};font-weight:700;` : 'color:var(--nx-muted);'}">${esc(c)}</span>`;
         }),
         `</div>`,
       ].join(''),
@@ -348,7 +348,7 @@ function renderDashboardHtml(b: DashboardBundle, s: MockupStrings): string {
     `</div>`,
     `</div>`,
     // Footer
-    `<div style="padding:7px 14px;border-top:1px solid var(--nx-border);background:var(--nx-surface);font-size:10px;color:var(--nx-text-dim);display:flex;justify-content:space-between;">`,
+    `<div style="padding:7px 14px;border-top:1px solid var(--nx-border);background:var(--nx-surface);font-size:10px;color:var(--nx-dim);display:flex;justify-content:space-between;">`,
     `<span>${esc(s.license)} · ${esc(b.tagline).slice(0, 30)}</span>`,
     `<span>${esc(b.name)}</span>`,
     `</div>`,
@@ -362,12 +362,12 @@ function renderEcommerceHtml(b: EcommerceBundle, s: MockupStrings): string {
     // Topbar
     `<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--nx-border);background:var(--nx-surface);">`,
     `<span style="width:9px;height:9px;border-radius:50%;background:var(--nx-primary);"></span>`,
-    `<span style="font-size:11px;letter-spacing:0.18em;color:var(--nx-text-muted);">${esc(b.name.toUpperCase())}</span>`,
-    `<span style="margin-left:auto;font-size:10px;color:var(--nx-text-dim);">// ${esc(b.kind)}.v1</span>`,
+    `<span style="font-size:11px;letter-spacing:0.18em;color:var(--nx-muted);">${esc(b.name.toUpperCase())}</span>`,
+    `<span style="margin-left:auto;font-size:10px;color:var(--nx-dim);">// ${esc(b.kind)}.v1</span>`,
     `</div>`,
     // Search bar
     `<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--nx-border);">`,
-    `<div style="flex:1;padding:6px 10px;background:var(--nx-surface);border:1px solid var(--nx-border);border-radius:5px;font-size:10px;color:var(--nx-text-dim);">buscar productos...</div>`,
+    `<div style="flex:1;padding:6px 10px;background:var(--nx-surface);border:1px solid var(--nx-border);border-radius:5px;font-size:10px;color:var(--nx-dim);">buscar productos...</div>`,
     `<span style="display:inline-flex;align-items:center;gap:4px;padding:6px 10px;background:var(--nx-primary);color:var(--nx-text-on-primary);font-size:10px;font-weight:700;border-radius:5px;">CART · ${b.cart.count}</span>`,
     `</div>`,
     // Product grid
@@ -376,7 +376,7 @@ function renderEcommerceHtml(b: EcommerceBundle, s: MockupStrings): string {
       [
         `<div style="background:var(--nx-surface);border:1px solid var(--nx-border);border-radius:6px;overflow:hidden;">`,
         // Image placeholder via gradient (no <img>, no http URL).
-        `<div style="aspect-ratio:1/1;background:linear-gradient(135deg,var(--nx-surface) 0%,var(--nx-raised) 100%);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--nx-text-dim);">IMG</div>`,
+        `<div style="aspect-ratio:1/1;background:linear-gradient(135deg,var(--nx-surface) 0%,var(--nx-surface-raised) 100%);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--nx-dim);">IMG</div>`,
         `<div style="padding:6px 8px;">`,
         `<div style="font-size:10px;font-weight:700;color:var(--nx-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}</div>`,
         `<div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">`,
@@ -389,7 +389,7 @@ function renderEcommerceHtml(b: EcommerceBundle, s: MockupStrings): string {
     ),
     `</div>`,
     // Footer
-    `<div style="padding:8px 14px;border-top:1px solid var(--nx-border);background:var(--nx-surface);display:flex;justify-content:space-between;font-size:10px;color:var(--nx-text-dim);">`,
+    `<div style="padding:8px 14px;border-top:1px solid var(--nx-border);background:var(--nx-surface);display:flex;justify-content:space-between;font-size:10px;color:var(--nx-dim);">`,
     `<span>${esc(s.license)} · cart total: ${esc(b.cart.total)}</span>`,
     `<span>${esc(b.name)}</span>`,
     `</div>`,

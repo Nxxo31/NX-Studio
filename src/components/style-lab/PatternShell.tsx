@@ -14,9 +14,9 @@ export default function PatternShell({ number, name, tagline, children, onPick }
     <section className="relative min-h-screen w-full flex flex-col">
       <div className="sticky top-0 z-30 flex items-center justify-between px-6 py-3 border-b border-nx-border bg-nx-bg/80 backdrop-blur-md">
         <div className="flex items-center gap-4">
-          <span className="font-mono text-xs text-nx-text-dim uppercase tracking-widest">Pattern {number}</span>
+          <span className="font-mono text-xs text-nx-dim uppercase tracking-widest">Pattern {number}</span>
           <span className="font-display text-sm font-semibold text-nx-text">{name}</span>
-          <span className="hidden md:inline font-mono text-xs text-nx-text-dim">— {tagline}</span>
+          <span className="hidden md:inline font-mono text-xs text-nx-dim">— {tagline}</span>
         </div>
         <button
           onClick={onPick}

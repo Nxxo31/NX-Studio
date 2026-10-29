@@ -30,11 +30,11 @@ const CTA_LABEL = {
       <div class="mx-auto max-w-6xl">
         <header class="mb-14 reveal">
           <BackHome />
-          <span class="lava-tag mb-4">// servicios — catálogo completo</span>
+          <span class="nx-tag mb-4">// servicios — catálogo completo</span>
           <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
-            {t('pages.servicios.headingA')} <span class="text-lava">{t('pages.servicios.headingEm')}</span>
+            {t('pages.servicios.headingA')} <span class="text-nx-primary">{t('pages.servicios.headingEm')}</span>
           </h1>
-          <p class="text-lava-edge text-lg font-medium mb-2">{SLOGAN[locale] ?? SLOGAN.es}</p>
+          <p class="text-nx-secondary text-lg font-medium mb-2">{SLOGAN[locale] ?? SLOGAN.es}</p>
           <p class="text-nx-muted max-w-2xl text-lg">
             {t('pages.servicios.sub')}
           </p>
@@ -48,16 +48,16 @@ const CTA_LABEL = {
               ? localeUrl("/servicios/testing", locale)
               : localeUrl("/cotizador", locale);
             return (
-              <article class="lava-card p-6 reveal flex flex-col gap-3 card-hover">
+              <article class="glass-card p-6 reveal flex flex-col gap-3 card-hover">
                 <div class="flex items-start justify-between">
-                  <span class="lava-tag">{c.tag}</span>
-                  <svg class="w-5 h-5 text-lava-edge shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <span class="nx-tag">{c.tag}</span>
+                  <svg class="w-5 h-5 text-nx-secondary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d={s.icon} />
                   </svg>
                 </div>
                 <h3 class="font-display text-xl font-semibold">{c.title}</h3>
                 <p class="text-sm text-nx-muted leading-relaxed flex-1">{c.desc}</p>
-                <a href={href} class="font-mono text-xs text-lava-edge hover:text-lava transition mt-1">
+                <a href={href} class="font-mono text-xs text-nx-secondary hover:text-nx-primary transition mt-1">
                   {CTA_LABEL[locale] ?? CTA_LABEL.es}
                 </a>
               </article>
@@ -65,8 +65,8 @@ const CTA_LABEL = {
           })}
         </div>
 
-        <div class="mt-16 lava-card lava-card-accent p-8 lg:p-10 reveal">
-          <span class="lava-tag mb-3">// pricing</span>
+        <div class="mt-16 glass-card glass-card-accent p-8 lg:p-10 reveal">
+          <span class="nx-tag mb-3">// pricing</span>
           <h2 class="font-display text-2xl lg:text-3xl font-bold mb-3">
             {t('pages.servicios.ctaBox.title')}
           </h2>
@@ -74,8 +74,8 @@ const CTA_LABEL = {
             {t('pages.servicios.ctaBox.desc')}
           </p>
           <div class="flex flex-wrap gap-3">
-            <a href={localeUrl('/cotizador', locale)} class="lava-btn">{t('pages.servicios.ctaBox.primary')}</a>
-            <a href={localeUrl('/contacto', locale)} class="lava-btn lava-btn-ghost">{t('pages.servicios.ctaBox.secondary')}</a>
+            <a href={localeUrl('/cotizador', locale)} class="nx-btn">{t('pages.servicios.ctaBox.primary')}</a>
+            <a href={localeUrl('/contacto', locale)} class="nx-btn nx-btn-ghost">{t('pages.servicios.ctaBox.secondary')}</a>
           </div>
         </div>
       </div>

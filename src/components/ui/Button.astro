@@ -13,8 +13,8 @@ interface Props {
   value?: string;
 }
 const { variant = 'primary', size = 'md', href, type = 'button', disabled = false, class: className = '', id, name, value } = Astro.props;
-const variantClass = variant === 'primary' ? 'lava-btn' : variant === 'danger' ? 'lava-btn-danger' : 'lava-btn-ghost';
-const sizeClass = size === 'sm' ? 'lava-btn-sm' : size === 'lg' ? 'lava-btn-lg' : '';
+const variantClass = variant === 'primary' ? 'nx-btn' : variant === 'danger' ? 'nx-btn-danger' : 'nx-btn-ghost';
+const sizeClass = size === 'sm' ? 'nx-btn-sm' : size === 'lg' ? 'nx-btn-lg' : '';
 const cls = [variantClass, sizeClass, className].filter(Boolean).join(' ');
 ---
 {href ? (<a href={href} class={cls} id={id}><slot /></a>) : (<button type={type} class={cls} id={id} name={name} value={value} disabled={disabled}><slot /></button>)}

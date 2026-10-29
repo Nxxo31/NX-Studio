@@ -37,7 +37,7 @@ const nav: { key: Active; href: string; labelKey: string }[] = [
     <a href="/portal" class="portal-brand">NX-Studio<span aria-hidden="true">·</span><span class="portal-brand-tag">portal</span></a>
     <form method="POST" action="/api/auth/sign-out" class="portal-logout-form">
       <span class="portal-user-email" title={user.email}>{user.name || user.email}</span>
-      <button type="submit" class="lava-btn-ghost lava-btn-sm">{t('portal.shell.nav.logout')}</button>
+      <button type="submit" class="nx-btn-ghost nx-btn-sm">{t('portal.shell.nav.logout')}</button>
     </form>
   </header>
 

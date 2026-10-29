@@ -35,7 +35,7 @@ export const TEMPLATES: Template[] = [
       'Documentación + video walkthrough 20min',
     ],
     excludes: [
-      'Diseño custom (la plantilla viene con identidad lava neon)',
+      'Diseño custom (la plantilla conserva su identidad propia)',
       'Copywriting',
       'Hosting mensual (Vercel free tier OK)',
       'Soporte post-compra',
@@ -61,7 +61,7 @@ export const TEMPLATES: Template[] = [
     ],
     excludes: [
       'Auth provider custom',
-      'Diseño fuera del tema lava neon',
+      'Diseño fuera de la identidad del sitio',
       'Deployment',
     ],
     featured: true,

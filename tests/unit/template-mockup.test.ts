@@ -62,7 +62,7 @@ describe('template-mockup · getMockupTokens', () => {
     expect(tokens).toContain('--nx-text');
     expect(tokens).toContain('--nx-primary');
     expect(tokens).toContain('--nx-text-on-primary');
-    expect(tokens).toContain('--nx-text-muted');
+    expect(tokens).toContain('--nx-muted');
     expect(tokens).toContain('--nx-border');
     // Tokens suficientes para diseñar ≥3 paletas temáticas.
     expect(tokens.length).toBeGreaterThanOrEqual(8);

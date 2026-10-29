@@ -35,10 +35,10 @@ test.describe("Portal Cliente · auth + guard", () => {
 
   test("UI components (Button/Input) renderizan classnames esperados en /portal/login", async ({ page }) => {
     await page.goto(`${BASE}/portal/login`, { waitUntil: "domcontentloaded" });
-    // El form de login usa <Button> (lava-btn class) y <Input> (nx-input class)
+    // El form de login usa <Button> (nx-btn class) y <Input> (nx-input class)
     // — verificamos que las clases CSS estén en el HTML servido.
     const html = await page.content();
-    expect(html).toMatch(/class="[^"]*lava-btn[^"]*"/);
+    expect(html).toMatch(/class="[^"]*nx-btn[^"]*"/);
     expect(html).toMatch(/class="[^"]*nx-input[^"]*"/);
     expect(html).toMatch(/class="[^"]*nx-input-label[^"]*"/);
   });

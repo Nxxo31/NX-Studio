@@ -226,7 +226,7 @@
             "5": "Documentation + 20min video walkthrough"
           },
           "excludes": {
-            "0": "Custom design (the template ships with lava neon identity)",
+            "0": "Custom design (the template keeps its own identity)",
             "1": "Copywriting",
             "2": "Monthly hosting (Vercel free tier OK)",
             "3": "Post-purchase support"
@@ -249,7 +249,7 @@
           },
           "excludes": {
             "0": "Custom auth provider",
-            "1": "Design outside the lava neon theme",
+            "1": "Design outside the site's identity",
             "2": "Deployment"
           },
           "version": "v0.9.4",
@@ -625,7 +625,7 @@
         "render": "Render: inline SVG + CSS gradients (no external images)",
         "sizes": "Sizes: 28px · 36px · 48px · 64px (lossless)",
         "palette": "Palette:",
-        "typography": "Typography: Space Grotesk 700 + JetBrains Mono 500",
+        "typography": "Typography: Orbitron 700 + JetBrains Mono 500",
         "a11y": "Accessibility: aria-label, hover respects prefers-reduced-motion",
         "anim": "Hover animation: -8° rotation + scale 1.05 (300ms cubic-bezier)",
         "js": "Bundled JS: 0 bytes (all CSS + inline SVG)"
@@ -675,7 +675,7 @@
         },
         "prism": {
           "tag": "creative · futuristic",
-          "desc": "Triangle forming an X with faces in lava + indigo + gold. Fractal, light-bending.",
+          "desc": "Triangle forming an X with faces in grayscale. Fractal, light-bending.",
           "feel": "Creative, AI-first, visual. Vibe Suno / Udio / ideograms."
         },
         "wave": {
@@ -724,7 +724,7 @@
         "brutal-dark": {
           "tag": "dark · structural · DEFAULT",
           "desc": "Warm near-black with structural cream ink. Lava as the only accent, hard shadows with zero blur.",
-          "use": "The site's default dark theme. Thick cream borders, lava blocks and an exposed grid."
+          "use": "The site's default dark theme. Thick cream borders, translucent blocks and an exposed grid."
         },
         "brutal-cream": {
           "tag": "light · paper · max contrast",

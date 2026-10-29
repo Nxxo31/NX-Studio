@@ -11,9 +11,9 @@ const locale = getLocale(Astro);
   <main class="px-6 py-16">
     <div class="mx-auto max-w-6xl">
       <header class="mb-12">
-        <span class="lava-tag mb-3">{t('pages.brand.tag')}</span>
+        <span class="nx-tag mb-3">{t('pages.brand.tag')}</span>
         <h1 class="font-display text-4xl lg:text-5xl font-bold tracking-tight">
-          {t('pages.brand.heading')} <span class="text-lava">NX-Studio</span>
+          {t('pages.brand.heading')} <span class="text-nx-primary">NX-Studio</span>
         </h1>
         <p class="mt-4 text-nx-muted text-lg max-w-2xl">
           {t('pages.brand.sub')}
@@ -23,7 +23,7 @@ const locale = getLocale(Astro);
       <!-- Variante 1: WORDMARK (para Nav) -->
       <section class="mb-16">
         <div class="font-mono text-xs uppercase tracking-widest text-nx-dim mb-3">{t('pages.brand.v1.tag')}</div>
-        <div class="lava-card p-8 flex items-center gap-8">
+        <div class="glass-card p-8 flex items-center gap-8">
           <Brand variant="wordmark" size="lg" />
           <Brand variant="wordmark" size="md" />
           <Brand variant="wordmark" size="sm" />
@@ -36,7 +36,7 @@ const locale = getLocale(Astro);
       <!-- Variante 2: LOCKUP (para hero, footer, OG cards) -->
       <section class="mb-16">
         <div class="font-mono text-xs uppercase tracking-widest text-nx-dim mb-3">{t('pages.brand.v2.tag')}</div>
-        <div class="lava-card p-8 flex items-center gap-8">
+        <div class="glass-card p-8 flex items-center gap-8">
           <Brand variant="lockup" size="lg" />
           <Brand variant="lockup" size="md" />
         </div>
@@ -48,7 +48,7 @@ const locale = getLocale(Astro);
       <!-- Variante 3: MARK (para favicon, badges) -->
       <section class="mb-16">
         <div class="font-mono text-xs uppercase tracking-widest text-nx-dim mb-3">{t('pages.brand.v3.tag')}</div>
-        <div class="lava-card p-8 flex items-center gap-8">
+        <div class="glass-card p-8 flex items-center gap-8">
           <Brand variant="mark" size="xl" />
           <Brand variant="mark" size="lg" />
           <Brand variant="mark" size="md" />
@@ -62,7 +62,7 @@ const locale = getLocale(Astro);
       <!-- Sobre fondo oscuro (cómo se ve en producción) -->
       <section class="mb-16">
         <div class="font-mono text-xs uppercase tracking-widest text-nx-dim mb-3">{t('pages.brand.context.tag')}</div>
-        <div class="lava-card p-6">
+        <div class="glass-card p-6">
           <div class="border-b border-nx-border bg-nx-bg" style="position:relative;">
             <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
               <Brand variant="wordmark" size="md" />
@@ -71,7 +71,7 @@ const locale = getLocale(Astro);
                 <li><span class="nav-link">{t('nav.servicios')}</span></li>
                 <li><span class="nav-link">{t('nav.templates')}</span></li>
               </ul>
-              <span class="lava-btn" style="padding: 0.5rem 1.25rem;">{t('nav.cta')}</span>
+              <span class="nx-btn" style="padding: 0.5rem 1.25rem;">{t('nav.cta')}</span>
             </nav>
           </div>
           <div class="px-6 py-12 text-center text-nx-muted">
@@ -81,7 +81,7 @@ const locale = getLocale(Astro);
       </section>
 
       <!-- Specs técnicas -->
-      <section class="lava-card lava-card-accent p-6 lg:p-8">
+      <section class="glass-card glass-card-accent p-6 lg:p-8">
         <h2 class="font-display text-2xl font-bold mb-4">{t('pages.brand.specs.title')}</h2>
         <ul class="font-mono text-sm text-nx-muted space-y-2">
           <li>· {t('pages.brand.specs.render')}</li>
@@ -95,7 +95,7 @@ const locale = getLocale(Astro);
       </section>
 
       <div class="mt-8 text-center">
-        <a href={localeUrl('/', locale)} class="font-mono text-xs text-nx-dim hover:text-lava-edge transition">
+        <a href={localeUrl('/', locale)} class="font-mono text-xs text-nx-dim hover:text-nx-secondary transition">
           {t('pages.brand.back')}
         </a>
       </div>

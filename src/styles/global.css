@@ -1,10 +1,22 @@
 @import "tailwindcss";
 @import "./chatbot.css";
 
+/* Fuentes self-hosted (OFL) — sin peticiones a Google Fonts en runtime.
+   Solo subconjunto latin: el sitio es es/en/pt. */
+@import "@fontsource-variable/orbitron/wght.css";
+@import "@fontsource-variable/inter/wght.css";
+@import "@fontsource-variable/jetbrains-mono/wght.css";
+
 /* ============================================================
-   NX-Studio · Sistema de tokens — GLASS / DEPTH (v0.8.0)
-   Steel-indigo evolucionado. Navy profundo + glass cards + lava accent
-   + Framer Motion micro-interactions. shadcn/ui-compatible.
+   NX-Studio · Sistema de tokens — MONOCROMÁTICO GALÁCTICO (v0.10.0)
+   Una sola escala de grises sobre el agujero negro. Superficies de
+   cristal translúcidas para que el disco de acreción se vea a través.
+   Tipografía self-hosted (Orbitron / Inter / JetBrains Mono).
+
+   REGLA: un color se declara DOS veces — con prefijo --color-* en @theme
+   (para que exista la utilidad Tailwind) y con prefijo --nx-* en :root
+   (para consumirlo con var() en CSS puro). Sin el prefijo --color-* la
+   utilidad NO se genera: no hay error, la regla simplemente no existe.
    ============================================================ */
 
 @theme {
@@ -12,7 +24,8 @@
      Escala de grises calibrada contra el fondo del agujero negro. */
   --color-nx-bg: #050505;
   --color-nx-surface: #0e0e0e;
-  --color-nx-raised: #171717;
+  --color-nx-surface-raised: #171717;
+  --color-nx-surface-overlay: rgba(14, 14, 14, 0.72);
   --color-nx-ink: #f2f2f2;
   --color-nx-border: rgba(255, 255, 255, 0.09);
   --color-nx-border-strong: rgba(255, 255, 255, 0.16);
@@ -30,18 +43,25 @@
   --color-nx-accent-soft: #d4d4d4;
 
   --color-nx-text: #ffffff;
-  --color-nx-text-muted: #a3a3a3;
-  --color-nx-text-dim: #6b6b6b;
+  --color-nx-muted: #c2c2c2;
+  --color-nx-dim: #8f8f8f;
   --color-nx-text-on-primary: #050505;
+
+  /* Superficies translucidas: el fondo (agujero negro) se ve a traves del panel.
+     alpha 0.66 deja leer el disco de acrecion sin perder contraste AA del texto. */
+  --color-nx-surface-translucent: rgba(14, 14, 14, 0.66);
+  --color-nx-surface-translucent-strong: rgba(10, 10, 10, 0.80);
 
   --color-nx-success: #b6cfc0;
   --color-nx-warn: #cfc4a6;
   --color-nx-danger: #d3a9a9;
   --color-nx-info: #b8b8b8;
 
-  --font-display: "Space Grotesk", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* Tipografia self-hosted (OFL) — ver imports al inicio del archivo.
+     Display = Orbitron (futurista, geométrica). Body = Inter. Mono = JetBrains Mono. */
+  --font-display: "Orbitron Variable", system-ui, sans-serif;
+  --font-body: "Inter Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
 
   /* Glass/depth: radius moderado (no brutalism-square, no full-round) */
   --radius-xs: 4px;
@@ -78,13 +98,15 @@
   --nx-surface:          #0e0e0e;
   --nx-surface-raised:   #171717;
   --nx-surface-overlay:  rgba(14, 14, 14, 0.72);
+  --nx-surface-translucent: rgba(14, 14, 14, 0.66);
+  --nx-surface-translucent-strong: rgba(10, 10, 10, 0.80);
 
   --nx-border:           rgba(255, 255, 255, 0.09);
   --nx-border-strong:    rgba(255, 255, 255, 0.16);
 
   --nx-text:             #ffffff;
-  --nx-text-muted:       #a3a3a3;
-  --nx-text-dim:         #6b6b6b;
+  --nx-muted:            #c2c2c2;
+  --nx-dim:              #8f8f8f;
   --nx-text-on-primary:  #050505;
 
   --nx-success:          #b6cfc0;
@@ -137,8 +159,15 @@ body {
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  letter-spacing: 0.005em;
   font-weight: 700;
+}
+
+/* Orbitron es geometrica y de trazo grueso: el tracking negativo la vuelve
+   ilegible. Esta regla (sin capa CSS) gana sobre las utilidades tracking-*
+   de Tailwind en cualquier elemento con .font-display. */
+.font-display {
+  letter-spacing: 0.005em;
 }
 
 code, kbd, .mono {
@@ -149,16 +178,14 @@ code, kbd, .mono {
    Utilidades Glass
    ============================================================ */
 .glass {
-  background: var(--nx-surface-overlay);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  background: var(--nx-surface-translucent);
+  backdrop-filter: blur(18px) saturate(140%);
   border: 1px solid var(--nx-border);
   border-radius: var(--radius-lg);
 }
 .glass-strong {
-  background: var(--nx-surface);
+  background: var(--nx-surface-translucent-strong);
   backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
   border: 1px solid var(--nx-border-strong);
   border-radius: var(--radius-lg);
 }
@@ -166,9 +193,6 @@ code, kbd, .mono {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--nx-border);
   border-radius: var(--radius-lg);
-}
-.glow-lava {
-  box-shadow: var(--nx-glow);
 }
 .divider {
   height: 1px;
@@ -179,12 +203,12 @@ code, kbd, .mono {
    Componentes · steel-indigo glass
    ============================================================ */
 
-/* Card glass */
-.lava-card,
+/* Card glass — translucido: el disco de acrecion se ve a traves del panel.
+   El blur(18px) difumina la fuente para que el texto no compita con el ruido. */
 .glass-card {
   position: relative;
-  background: var(--nx-surface);
-  backdrop-filter: blur(14px) saturate(140%);
+  background: var(--nx-surface-translucent);
+  backdrop-filter: blur(18px) saturate(140%);
   border: 1px solid var(--nx-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--nx-shadow);
@@ -195,14 +219,13 @@ code, kbd, .mono {
   border-color: var(--nx-border-strong);
   box-shadow: var(--nx-shadow-lg);
 }
-.glass-card-accent,
-.lava-card-accent {
+.glass-card-accent {
   border-color: var(--nx-primary-tint);
   box-shadow: var(--nx-shadow), 0 0 0 1px var(--nx-primary-tint);
 }
 
-/* Button · lava primary */
-.lava-btn {
+/* Button · primario del sistema */
+.nx-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -220,19 +243,19 @@ code, kbd, .mono {
   transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
   cursor: pointer;
 }
-.lava-btn:hover {
+.nx-btn:hover {
   transform: translateY(-1px);
   box-shadow: var(--nx-shadow-lg), var(--nx-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   filter: brightness(1.05);
 }
-.lava-btn:active { transform: translateY(0); filter: brightness(0.98); }
-.lava-btn-ghost {
+.nx-btn:active { transform: translateY(0); filter: brightness(0.98); }
+.nx-btn-ghost {
   color: var(--nx-text);
   background: transparent;
   border: 1px solid var(--nx-border-strong);
   box-shadow: none;
 }
-.lava-btn-ghost:hover {
+.nx-btn-ghost:hover {
   background: var(--nx-surface);
   border-color: var(--nx-primary);
   color: var(--nx-primary);
@@ -240,8 +263,8 @@ code, kbd, .mono {
   filter: none;
 }
 
-/* Tag · glass */
-.lava-tag {
+/* Tag · cristal */
+.nx-tag {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -258,24 +281,8 @@ code, kbd, .mono {
   backdrop-filter: blur(8px);
 }
 
-/* Glass light (AA, QA 2026-10-22 / t_ad290f52): en light el tag lleva tinta
-   #c2410c (5.0:1) que solo se sostiene sobre fondo claro predecible. Con el
-   tinte translúcido el contraste dependía del fondo que quedara debajo (la
-   captura oscura del slider daba 4.23:1; tiras con textura, ~4.4:1). Pill
-   opaca: 5.18:1 garantizados sobre cualquier fondo. */
-[data-palette="glass-light"] .lava-tag {
-  background: #ffffff;
-  border-color: rgba(194, 65, 12, 0.35);
-}
-
-/* Chip activo del PaletteSwitcher en light: fondo opaco en lugar del tinte
-   --nx-info-bg (10% indigo), que dejaba el tinta #c2410c en ~4.4:1. */
-[data-palette="glass-light"] [data-set-palette][aria-pressed="true"] {
-  background: #ffffff;
-}
-
-/* Hairline (legacy) */
-.hairline {
+/* Hairline */
+.nx-hairline {
   background: linear-gradient(90deg, transparent, var(--nx-border-strong), transparent);
   height: 1px;
   opacity: 1;
@@ -286,10 +293,6 @@ code, kbd, .mono {
   background-image: radial-gradient(circle, var(--nx-texture-color) 1.2px, transparent 1.2px);
   background-size: 24px 24px;
 }
-
-/* Legacy brutalism neutralizado */
-.lava-scan { display: none; }
-.orb { display: none; }
 
 /* Reveal (CSS-only fallback para no-JS) */
 .reveal {
@@ -309,7 +312,7 @@ code, kbd, .mono {
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--nx-text-muted);
+  color: var(--nx-muted);
   border-radius: var(--radius-sm);
   transition: color 0.2s, background 0.2s;
 }
@@ -323,7 +326,7 @@ code, kbd, .mono {
   border: 1px solid var(--nx-primary-tint);
 }
 
-/* card-hover (legacy alias para ProjectPreview) */
+/* card-hover — elevación de card al hover */
 .card-hover {
   transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
@@ -331,25 +334,6 @@ code, kbd, .mono {
   transform: translateY(-3px);
   border-color: var(--nx-primary-tint);
   box-shadow: var(--nx-shadow-lg);
-}
-
-/* ============================================================
-   Backward-compat
-   ============================================================ */
-.text-lava { color: var(--nx-primary); }
-.text-lava-edge { color: var(--nx-secondary); }
-.bg-lava-soft { background: var(--nx-primary-tint); }
-.border-lava { border-color: var(--nx-primary); }
-
-/* Bridge legacy --lava-* */
-:root {
-  --lava-core: var(--nx-primary);
-  --lava-edge: var(--nx-secondary);
-  --lava-deep: var(--nx-primary-deep);
-  --lava-glow: var(--nx-glow);
-  --lava-glow-soft: var(--nx-primary-tint);
-  --bg-void: var(--nx-bg);
-  --bg-ember: var(--nx-surface);
 }
 
 /* ============================================================
@@ -382,4 +366,65 @@ code, kbd, .mono {
 .animate-fade-up { animation: nx-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ============================================================
+   Hero (SculptureHero vendored) — overrides de legibilidad
+   El componente 21st.dev inyecta su <style> dentro del <section>
+   en el body, es decir DESPUES de esta hoja en el orden del
+   documento. Por eso los overrides usan .sh-root .sh-* (0,2,0)
+   para ganar por especificidad y no por orden.
+   ============================================================ */
+
+/* Scrim local del hero: el global de Base.astro se bajo para que la galaxia
+   se vea, asi que el texto del hero necesita su propio velo. Va entre el
+   canvas (z-0) y el contenido (z-2) via ::before, y ancla abajo donde vive
+   el copy (la retícula del vendor alinea el contenido al final). */
+.sh-root::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(5, 5, 5, 0.78) 0%,
+    rgba(5, 5, 5, 0.52) 26%,
+    rgba(5, 5, 5, 0.18) 52%,
+    rgba(5, 5, 5, 0) 72%
+  );
+}
+
+/* La tinta la fija el prop textColor del componente (var(--nx-text)).
+   Aqui solo se corrigen opacidades, pesos y tracking. */
+.sh-root .sh-eyebrow {
+  opacity: 0.88;
+  color: var(--nx-muted);
+}
+.sh-root .sh-body {
+  opacity: 0.95;
+  color: var(--nx-text);
+}
+/* Orbitron no admite tracking negativo ni italica sintetica:
+   el acento va en mono (--font-mono) en mayusculas. */
+.sh-root .sh-h1 {
+  font-weight: 700;
+  letter-spacing: 0.005em;
+}
+.sh-root .sh-accent {
+  font-style: normal;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-size: 0.62em;
+  color: var(--nx-primary);
+}
+/* El boton del vendor usa color:var(--sh-bg) (transparent) sobre fondo
+   var(--sh-fg): con texto claro el label quedaba invisible. */
+.sh-root .sh-btn {
+  color: var(--nx-text-on-primary);
+}
+.sh-root .sh-txt {
+  color: var(--nx-text);
+  border-bottom-color: color-mix(in srgb, var(--nx-text) 45%, transparent);
 }

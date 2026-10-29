@@ -37,7 +37,7 @@ export default function PatternMarquee() {
           </motion.h2>
           <motion.p
             variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.1 } } }}
-            className="mt-4 max-w-2xl text-nx-text-muted text-lg"
+            className="mt-4 max-w-2xl text-nx-muted text-lg"
           >
             Software que escala contigo. Construimos aplicaciones a medida, QA as a service, y templates comprables.
           </motion.p>
@@ -52,9 +52,9 @@ export default function PatternMarquee() {
                 whileHover={{ y: -3 }}
                 className="glass-card p-5"
               >
-                <div className="font-mono text-[10px] uppercase tracking-widest text-nx-text-dim">// 0{i+1}</div>
+                <div className="font-mono text-[10px] uppercase tracking-widest text-nx-dim">// 0{i+1}</div>
                 <div className="mt-2 font-display text-lg font-semibold text-nx-text">{t}</div>
-                <div className="mt-1 text-xs text-nx-text-muted">Empezá con un estimado en 5 minutos.</div>
+                <div className="mt-1 text-xs text-nx-muted">Empezá con un estimado en 5 minutos.</div>
               </motion.div>
             ))}
           </motion.div>

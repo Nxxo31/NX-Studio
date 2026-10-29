@@ -1,11 +1,14 @@
 /**
  * Guard anti-regresión i18n (kanban t_7e96b98d).
  *
- * Contexto: v0.8.0 (bf711ec) cableó el AnimatedHero island con
+ * Contexto: v0.8.0 (bf711ec) cableó el island del hero con
  * t('pages.hero.*'), un namespace que NO existe en los dicts — el copy del
  * hero vive bajo `hero.*` top-level. getT() devuelve la key cruda como
  * fallback (`?? key`) y el prerender estático la hornea en el HTML servido
  * de /, /en/ y /pt/ (visible al usuario en prod desde 2026-10-14).
+ * Ese island era `AnimatedHero` (eliminado el 2026-10-29 como huérfano; hoy
+ * el hero es `NXSculptureHero`). El guard sigue siendo válido para cualquier
+ * call site futuro.
  *
  * Este test asegura que TODO call site literal `t('…')` en src/ resuelva a
  * copy real en los tres dicts (es/en/pt). Si alguien inventa un namespace

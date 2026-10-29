@@ -220,7 +220,7 @@ const logos = [
           </linearGradient>
         </defs>
         <circle cx="36" cy="36" r="30" fill="none" stroke="url(#g-mon)" stroke-width="1.5" stroke-dasharray="185" stroke-linecap="round"/>
-        <text x="36" y="46" font-family="Space Grotesk, system-ui, sans-serif" font-size="24" font-weight="700" letter-spacing="2" fill="url(#g-mon)" text-anchor="middle">NX</text>
+        <text x="36" y="46" font-family="Orbitron Variable, system-ui, sans-serif" font-size="24" font-weight="700" letter-spacing="2" fill="url(#g-mon)" text-anchor="middle">NX</text>
       </svg>
     `,
     code: `<Brand variant="mark" colorway="monogram" />`,
@@ -232,9 +232,9 @@ const logos = [
   <main class="px-6 py-16">
     <div class="mx-auto max-w-7xl">
       <header class="mb-12">
-        <span class="lava-tag mb-3">{t('pages.logos.tag')}</span>
+        <span class="nx-tag mb-3">{t('pages.logos.tag')}</span>
         <h1 class="font-display text-4xl lg:text-5xl font-bold tracking-tight">
-          {t('pages.logos.headingA')} <span class="text-lava">{t('pages.logos.headingEm')}</span> {t('pages.logos.headingB')}
+          {t('pages.logos.headingA')} <span class="text-nx-primary">{t('pages.logos.headingEm')}</span> {t('pages.logos.headingB')}
         </h1>
         <p class="mt-4 text-nx-muted text-lg max-w-3xl">
           {t('pages.logos.sub')}
@@ -243,16 +243,16 @@ const logos = [
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {logos.map((l) => (
-          <article class="lava-card p-6 flex flex-col" data-logo={l.id}>
+          <article class="glass-card p-6 flex flex-col" data-logo={l.id}>
             <div class="aspect-square grid place-items-center mb-4 bg-nx-bg rounded" set:html={l.svg} />
-            <span class="lava-tag mb-2">// {t(`pages.logos.items.${l.id}.tag`)}</span>
+            <span class="nx-tag mb-2">// {t(`pages.logos.items.${l.id}.tag`)}</span>
             <h3 class="font-display text-xl font-bold mb-2">{l.name}</h3>
             <p class="text-xs text-nx-muted mb-3 flex-1">{t(`pages.logos.items.${l.id}.desc`)}</p>
             <div class="border-t border-nx-border pt-3">
               <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim mb-1">{t('pages.logos.vibeLabel')}</div>
               <p class="text-xs text-nx-muted italic">{t(`pages.logos.items.${l.id}.feel`)}</p>
             </div>
-            <button class="mt-4 lava-btn lava-btn-ghost text-xs w-full" onclick={`navigator.clipboard.writeText('${l.code}')`}>
+            <button class="mt-4 nx-btn nx-btn-ghost text-xs w-full" onclick={`navigator.clipboard.writeText('${l.code}')`}>
               {t('pages.logos.copySnippet')}
             </button>
           </article>
@@ -260,7 +260,7 @@ const logos = [
       </div>
 
       <!-- Selector para probar en Nav -->
-      <section class="lava-card lava-card-accent p-6 mb-8">
+      <section class="glass-card glass-card-accent p-6 mb-8">
         <h2 class="font-display text-2xl font-bold mb-4">{t('pages.logos.testNav.title')}</h2>
         <p class="text-xs text-nx-muted mb-4">{t('pages.logos.testNav.desc')}</p>
 
@@ -268,7 +268,7 @@ const logos = [
           {logos.map((l) => (
             <button
               data-try-logo={l.id}
-              class="palette-chip aspect-square grid place-items-center p-2 rounded border border-nx-border hover:border-lava-edge transition"
+              class="palette-chip aspect-square grid place-items-center p-2 rounded border border-nx-border hover:border-nx-primary-edge transition"
               title={l.name}
               style="aspect-ratio: 1"
             >
@@ -308,8 +308,8 @@ const logos = [
       <!-- Specs por logo -->
       <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {logos.map((l) => (
-          <details class="lava-card p-6">
-            <summary class="font-display font-bold cursor-pointer hover:text-lava transition">
+          <details class="glass-card p-6">
+            <summary class="font-display font-bold cursor-pointer hover:text-nx-primary transition">
               {l.id} · {l.name} — {t('pages.logos.specsSuffix')}
             </summary>
             <div class="mt-4 space-y-2">
@@ -319,7 +319,7 @@ const logos = [
               </div>
               <div>
                 <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim">{t('pages.logos.integrateAs')}</div>
-                <code class="text-xs font-mono text-lava-edge">{l.code}</code>
+                <code class="text-xs font-mono text-nx-secondary">{l.code}</code>
               </div>
             </div>
           </details>
@@ -329,9 +329,9 @@ const logos = [
       <!-- Footer -->
       <div class="text-center mt-12">
         <p class="text-xs text-nx-dim mb-3">
-          {t('pages.logos.footerNoteA')} <code class="font-mono text-lava-edge">Brand.astro</code> {t('pages.logos.footerNoteB')}
+          {t('pages.logos.footerNoteA')} <code class="font-mono text-nx-secondary">Brand.astro</code> {t('pages.logos.footerNoteB')}
         </p>
-        <a href={localeUrl('/brand', locale)} class="font-mono text-xs text-nx-dim hover:text-lava-edge transition">
+        <a href={localeUrl('/brand', locale)} class="font-mono text-xs text-nx-dim hover:text-nx-secondary transition">
           {t('pages.logos.back')}
         </a>
       </div>

@@ -226,7 +226,7 @@
             "5": "Documentación + video walkthrough 20min"
           },
           "excludes": {
-            "0": "Diseño custom (la plantilla viene con identidad lava neon)",
+            "0": "Diseño custom (la plantilla conserva su identidad propia)",
             "1": "Copywriting",
             "2": "Hosting mensual (Vercel free tier OK)",
             "3": "Soporte post-compra"
@@ -249,7 +249,7 @@
           },
           "excludes": {
             "0": "Auth provider custom",
-            "1": "Diseño fuera del tema lava neon",
+            "1": "Diseño fuera de la identidad del sitio",
             "2": "Deployment"
           },
           "version": "v0.9.4",
@@ -625,7 +625,7 @@
         "render": "Render: SVG inline + CSS gradients (sin imágenes externas)",
         "sizes": "Tamaños: 28px · 36px · 48px · 64px (sin pérdida)",
         "palette": "Paleta:",
-        "typography": "Tipografía: Space Grotesk 700 + JetBrains Mono 500",
+        "typography": "Tipografía: Orbitron 700 + JetBrains Mono 500",
         "a11y": "Accesibilidad: aria-label, hover respeta prefers-reduced-motion",
         "anim": "Animación hover: rotación -8° + scale 1.05 (300ms cubic-bezier)",
         "js": "Bundled JS: 0 bytes (todo CSS + SVG inline)"
@@ -675,7 +675,7 @@
         },
         "prism": {
           "tag": "creativo · futurista",
-          "desc": "Triángulo formando una X con las caras en lava + indigo + oro. Fractal, light-bending.",
+          "desc": "Triángulo formando una X con las caras en escala de grises. Fractal, light-bending.",
           "feel": "Creativo, IA-first, visual. Vibe Suno / Udio / ideogramas."
         },
         "wave": {
@@ -724,7 +724,7 @@
         "brutal-dark": {
           "tag": "dark · estructural · DEFAULT",
           "desc": "Near-black cálido con tinta crema estructural. Lava como único acento, sombras duras sin blur.",
-          "use": "Tema oscuro por defecto del sitio. Bordes gruesos crema, bloques lava y grilla expuesta."
+          "use": "Tema oscuro por defecto del sitio. Bordes gruesos crema, bloques translúcidos y grilla expuesta."
         },
         "brutal-cream": {
           "tag": "light · papel · contraste máximo",

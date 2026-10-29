@@ -44,7 +44,7 @@ const s = sizes[size];
   aria-label="NX-Studio — Inicio"
 >
   {/* GLIFO HEXAGONAL — letter N y X fusionadas dentro de un hexágono.
-      Brutalismo: trazo lava sólido, sin gradientes ni glow. */}
+      Monocromo: trazo sólido, sin gradientes ni glow. */}
   {variant !== 'mark' || variant === 'mark' ? (
     <span class="brand-glyph" aria-hidden="true">
       <svg
@@ -124,7 +124,7 @@ const s = sizes[size];
     transform: rotate(-8deg) scale(1.05);
   }
 
-  /* Color del glifo — lava sólido, definido por la paleta activa */
+  /* Color del glifo — tinta sólida del sistema monocromo */
   .brand-dot { fill: var(--nx-primary); }
 
   /* Texto */
@@ -158,7 +158,7 @@ const s = sizes[size];
     font-family: var(--font-mono);
     font-weight: 500;
     letter-spacing: 0.18em;
-    color: var(--nx-text-dim);
+    color: var(--nx-dim);
     text-transform: uppercase;
   }
 

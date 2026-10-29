@@ -14,7 +14,7 @@ export default function PatternKinetic() {
         <motion.div style={{ scale, opacity, y }} className="w-full text-center">
           <motion.span
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
-            className="font-mono text-xs uppercase tracking-[0.3em] text-nx-text-dim"
+            className="font-mono text-xs uppercase tracking-[0.3em] text-nx-dim"
           >
             NX-Studio · 2026
           </motion.span>
@@ -36,7 +36,7 @@ export default function PatternKinetic() {
 
           <motion.p
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.9 }}
-            className="mt-8 font-mono text-sm text-nx-text-muted"
+            className="mt-8 font-mono text-sm text-nx-muted"
           >
             Producto · Servicio · Plantillas
           </motion.p>
@@ -44,7 +44,7 @@ export default function PatternKinetic() {
 
         <motion.div
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 1.1 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-nx-text-dim"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-nx-dim"
         >
           <span className="font-mono text-[10px] uppercase tracking-widest">scroll</span>
           <span className="block w-px h-8 bg-nx-border-strong" />

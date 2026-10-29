@@ -72,9 +72,9 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
       <!-- Header -->
       <header class="mb-12 reveal">
         <BackHome />
-        <span class="lava-tag mb-4">// pricing-engine v0.1</span>
+        <span class="nx-tag mb-4">// pricing-engine v0.1</span>
         <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
-          {t('pages.cotizador.headingA')} <span class="text-lava">{t('pages.cotizador.headingEm')}</span>
+          {t('pages.cotizador.headingA')} <span class="text-nx-primary">{t('pages.cotizador.headingEm')}</span>
         </h1>
         <p class="text-nx-muted max-w-2xl text-lg">
           {t('pages.cotizador.sub')}
@@ -90,7 +90,7 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
         <p class="text-sm text-nx-muted mb-4 max-w-3xl">{C.presetsSub}</p>
         <div id="presets" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {PRESETS.map((p) => (
-            <button type="button" data-preset={p.id} class="preset-btn lava-card p-4 text-left transition cursor-pointer" aria-pressed="false">
+            <button type="button" data-preset={p.id} class="preset-btn glass-card p-4 text-left transition cursor-pointer" aria-pressed="false">
               <div class="font-display font-semibold text-sm mb-2">{p.label[locale] ?? p.label.es}</div>
               <div class="font-mono text-[10px] text-nx-muted">{formatCop(p.cop[0])} – {formatCop(p.cop[1])}</div>
               <div class="font-mono text-[10px] text-nx-dim">{formatUsd(p.usd[0])} – {formatUsd(p.usd[1])} USD · {p.weeks[0]}–{p.weeks[1]} sem</div>
@@ -108,10 +108,10 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
             <button
               type="button"
               data-shape={s.id}
-              class="shape-btn lava-card p-4 text-left transition cursor-pointer"
+              class="shape-btn glass-card p-4 text-left transition cursor-pointer"
               aria-pressed="false"
             >
-              <div class="font-mono text-[10px] uppercase tracking-widest text-lava-edge mb-1">{s.id}</div>
+              <div class="font-mono text-[10px] uppercase tracking-widest text-nx-secondary mb-1">{s.id}</div>
               <div class="font-display font-semibold mb-2">{t(`pages.cotizador.shapes.${s.id}.name`)}</div>
               <div class="text-xs text-nx-muted leading-relaxed">{t(`pages.cotizador.shapes.${s.id}.description`)}</div>
               <div class="mt-3 font-mono text-xs text-nx-dim">
@@ -136,10 +136,10 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
                 {cat.items.map((f) => (
                   <label
                     data-feature={f.id}
-                    class="feature-tile lava-card p-4 cursor-pointer flex items-start gap-3 transition"
+                    class="feature-tile glass-card p-4 cursor-pointer flex items-start gap-3 transition"
                   >
                     <input type="checkbox" class="sr-only peer" />
-                    <div class="mt-0.5 h-4 w-4 shrink-0 border border-nx-border-strong rounded-sm flex items-center justify-center peer-checked:bg-lava peer-checked:border-lava transition">
+                    <div class="mt-0.5 h-4 w-4 shrink-0 border border-nx-border-strong rounded-sm flex items-center justify-center peer-checked:bg-nx-primary peer-checked:border-nx-primary transition">
                       <svg class="w-3 h-3 text-black opacity-0 peer-checked:opacity-100" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5">
                         <path d="M2 6.5L5 9.5L10 2.5" stroke-linecap="round" stroke-linejoin="round" />
                       </svg>
@@ -151,7 +151,7 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
                       </div>
                       <p class="text-xs text-nx-muted leading-relaxed">{t(`pages.cotizador.features.${f.id}.description`)}</p>
                       {f.optional && (
-                        <span class="lava-tag mt-2" style="font-size: 0.625rem;">{t('pages.cotizador.optional')}</span>
+                        <span class="nx-tag mt-2" style="font-size: 0.625rem;">{t('pages.cotizador.optional')}</span>
                       )}
                     </div>
                   </label>
@@ -169,10 +169,10 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
           {MODIFIERS.map((m) => (
             <label
               data-modifier={m.id}
-              class="modifier-tile lava-card p-4 cursor-pointer flex items-start gap-3 transition"
+              class="modifier-tile glass-card p-4 cursor-pointer flex items-start gap-3 transition"
             >
               <input type="checkbox" class="sr-only peer" />
-              <div class="mt-0.5 h-4 w-4 shrink-0 border border-nx-border-strong rounded-sm peer-checked:bg-lava peer-checked:border-lava transition"></div>
+              <div class="mt-0.5 h-4 w-4 shrink-0 border border-nx-border-strong rounded-sm peer-checked:bg-nx-primary peer-checked:border-nx-primary transition"></div>
               <div class="flex-1">
                 <div class="font-display font-medium text-sm mb-1">{t(`pages.cotizador.modifiers.${m.id}.name`)}</div>
                 <p class="text-xs text-nx-muted leading-relaxed">{t(`pages.cotizador.modifiers.${m.id}.description`)}</p>
@@ -183,16 +183,16 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
       </div>
 
       <!-- Live quote (sticky right) -->
-      <aside id="quote-panel" class="lava-card lava-card-accent p-6 lg:p-8 sticky bottom-4 z-10">
+      <aside id="quote-panel" class="glass-card glass-card-accent p-6 lg:p-8 sticky bottom-4 z-10">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
 
           <div class="md:col-span-2">
-            <div class="font-mono text-xs uppercase tracking-widest text-lava-edge mb-2">{t('pages.cotizador.panel.range')}</div>
+            <div class="font-mono text-xs uppercase tracking-widest text-nx-secondary mb-2">{t('pages.cotizador.panel.range')}</div>
             <div class="flex items-baseline gap-2 flex-wrap">
               <span id="q-low"  class="font-display text-3xl lg:text-4xl font-bold">$0</span>
               <span class="text-nx-dim text-2xl">—</span>
               <span id="q-high" class="font-display text-3xl lg:text-4xl font-bold">$0</span>
-              <span id="q-band" class="lava-tag ml-2">{t('pages.cotizador.bands.Starter')}</span>
+              <span id="q-band" class="nx-tag ml-2">{t('pages.cotizador.bands.Starter')}</span>
             </div>
             <div class="text-xs text-nx-muted mt-2 font-mono">
               <span id="q-hours">0h</span> {t('pages.cotizador.panel.estimated')} · base fee <span id="q-base">$0</span>
@@ -222,17 +222,17 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
           </div>
 
           <div class="md:col-span-1 flex flex-col md:items-end gap-2">
-            <a id="q-cta" href={localeUrl('/contacto', locale)} class="lava-btn text-center">
+            <a id="q-cta" href={localeUrl('/contacto', locale)} class="nx-btn text-center">
               {t('pages.cotizador.panel.cta')}
             </a>
-            <a id="q-whatsapp" href="https://wa.me/573103312705" target="_blank" rel="noopener" class="lava-btn lava-btn-ghost text-center text-sm">
+            <a id="q-whatsapp" href="https://wa.me/573103312705" target="_blank" rel="noopener" class="nx-btn nx-btn-ghost text-center text-sm">
               {t('pages.cotizador.panel.whatsappCta')}
             </a>
           </div>
         </div>
 
         <details class="mt-6">
-          <summary class="font-mono text-xs uppercase tracking-widest text-nx-muted cursor-pointer hover:text-lava-edge transition">
+          <summary class="font-mono text-xs uppercase tracking-widest text-nx-muted cursor-pointer hover:text-nx-secondary transition">
             {t('pages.cotizador.panel.breakdown')}
           </summary>
           <div id="q-breakdown" class="mt-4 space-y-2 font-mono text-xs"></div>
@@ -366,10 +366,10 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
             <span>$${fmt.format(subtotal)}</span>
           </div>
         `).join('')}
-        ${quote.modifiers.length ? `<div class="hairline my-2"></div>` + quote.modifiers.map((m) =>
-          `<div class="flex justify-between text-lava-edge"><span>· ${L.i18nModifiers[m.id] ?? m.name}</span><span>×${m.multiplier.toFixed(2)}</span></div>`
+        ${quote.modifiers.length ? `<div class="nx-hairline my-2"></div>` + quote.modifiers.map((m) =>
+          `<div class="flex justify-between text-nx-secondary"><span>· ${L.i18nModifiers[m.id] ?? m.name}</span><span>×${m.multiplier.toFixed(2)}</span></div>`
         ).join('') : ''}
-        <div class="hairline my-2"></div>
+        <div class="nx-hairline my-2"></div>
         <div class="flex justify-between"><span>${L.i18nLabels.subtotalFeatures}</span><span>$${fmt.format(quote.subtotalFeatures)}</span></div>
         <div class="flex justify-between text-nx-muted"><span>${L.i18nLabels.baseFee}</span><span>$${fmt.format(quote.baseFee)}</span></div>
         <div class="flex justify-between text-nx-muted"><span>${L.i18nLabels.multiplier}</span><span>×${quote.multiplier.toFixed(3)}</span></div>
@@ -379,7 +379,7 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
     // Visual state of shape buttons
     document.querySelectorAll<HTMLElement>('.shape-btn').forEach((btn) => {
       const isActive = btn.dataset.shape === state.shape;
-      btn.classList.toggle('lava-card-accent', isActive);
+      btn.classList.toggle('glass-card-accent', isActive);
       btn.setAttribute('aria-pressed', String(isActive));
     });
 
@@ -388,7 +388,7 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
       const id = tile.dataset.feature;
       if (!id) return;
       const isOn = state.featureIds.includes(id);
-      tile.classList.toggle('lava-card-accent', isOn);
+      tile.classList.toggle('glass-card-accent', isOn);
       const cb = tile.querySelector('input[type=checkbox]');
       if (cb) (cb as HTMLInputElement).checked = isOn;
     });
@@ -398,7 +398,7 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
       const id = tile.dataset.modifier;
       if (!id) return;
       const isOn = state.modifierIds.includes(id);
-      tile.classList.toggle('lava-card-accent', isOn);
+      tile.classList.toggle('glass-card-accent', isOn);
       const cb = tile.querySelector('input[type=checkbox]');
       if (cb) (cb as HTMLInputElement).checked = isOn;
     });
@@ -462,8 +462,8 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
       } catch { return `$${fmt.format(n)} COP`; }
     };
     el.innerHTML = `
-      <span class="lava-tag">${M.marketCopy.co}: ${copF(p.cop[0])} – ${copF(p.cop[1])}</span>
-      <span class="lava-tag">${M.marketCopy.intl}: $${fmt.format(p.usd[0])} – $${fmt.format(p.usd[1])} USD</span>
+      <span class="nx-tag">${M.marketCopy.co}: ${copF(p.cop[0])} – ${copF(p.cop[1])}</span>
+      <span class="nx-tag">${M.marketCopy.intl}: $${fmt.format(p.usd[0])} – $${fmt.format(p.usd[1])} USD</span>
       <span class="font-mono text-[10px] text-nx-dim w-full">${M.marketCopy.maintenance}</span>
     `;
   }
@@ -477,7 +477,7 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
       state.featureIds = [...p.features];
       document.querySelectorAll<HTMLElement>('.preset-btn').forEach((b) => {
         const on = b.dataset.preset === p.id;
-        b.classList.toggle('lava-card-accent', on);
+        b.classList.toggle('glass-card-accent', on);
         b.setAttribute('aria-pressed', String(on));
       });
       render();

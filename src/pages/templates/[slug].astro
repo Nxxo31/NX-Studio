@@ -69,7 +69,7 @@ const mockupStrings = {
       <div class="mx-auto max-w-6xl">
         <a
           href={localeUrl('/templates', locale)}
-          class="font-mono text-xs text-nx-muted hover:text-lava-edge transition inline-flex items-center gap-2 mb-6"
+          class="font-mono text-xs text-nx-muted hover:text-nx-secondary transition inline-flex items-center gap-2 mb-6"
         >
           {t('pages.templateSlug.back')}
         </a>
@@ -78,7 +78,7 @@ const mockupStrings = {
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <header class="reveal">
             <div class="flex items-center gap-2 mb-3 flex-wrap">
-              <span class="lava-tag">{tplKind(template.category)}</span>
+              <span class="nx-tag">{tplKind(template.category)}</span>
               {template.featured && (
                 <span class="font-mono text-[10px] text-nx-text-on-primary bg-nx-primary px-2 py-0.5 rounded uppercase tracking-wider">
                   ★ featured
@@ -91,13 +91,13 @@ const mockupStrings = {
             <h1 class="font-display text-4xl lg:text-5xl font-bold tracking-tight mb-4">
               {tt('name')}
             </h1>
-            <p class="text-lava-edge font-mono text-lg mb-4">{tt('tagline')}</p>
+            <p class="text-nx-secondary font-mono text-lg mb-4">{tt('tagline')}</p>
             <p class="text-nx-muted max-w-2xl text-base leading-relaxed mb-6">{tt('desc')}</p>
 
             <div class="flex items-end gap-6 mb-6 flex-wrap">
               <div>
                 <div class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-1">{t('pages.templateSlug.oneTime')}</div>
-                <div class="font-display text-4xl font-bold text-lava-edge">
+                <div class="font-display text-4xl font-bold text-nx-secondary">
                   {priceOf(template.price)}
                 </div>
                 <div class="text-xs text-nx-dim font-mono mt-1">{t('pages.templateSlug.licenseNote')}</div>
@@ -117,7 +117,7 @@ const mockupStrings = {
             <div class="flex flex-wrap gap-3" data-testid="tpl-detail-cta">
               <a
                 href={`${localeUrl('/contacto', locale)}?topic=template&slug=${template.slug}`}
-                class="lava-btn"
+                class="nx-btn"
                 data-testid="tpl-buy-btn"
               >
                 {t('pages.templateSlug.buy')} {tt('name')} →
@@ -127,14 +127,14 @@ const mockupStrings = {
                   href={template.demoUrl}
                   rel="noopener"
                   target="_blank"
-                  class="lava-btn lava-btn-ghost"
+                  class="nx-btn nx-btn-ghost"
                   data-testid="tpl-demo-btn"
                 >
                   {t('pages.templateSlug.view_demo')} ↗
                 </a>
               ) : (
                 <span
-                  class="lava-btn lava-btn-ghost opacity-60 cursor-not-allowed"
+                  class="nx-btn nx-btn-ghost opacity-60 cursor-not-allowed"
                   aria-disabled="true"
                   title="Demo coming soon"
                   data-testid="tpl-demo-btn-disabled"
@@ -144,7 +144,7 @@ const mockupStrings = {
               )}
               <a
                 href={localeUrl('/cotizador', locale)}
-                class="lava-btn lava-btn-ghost"
+                class="nx-btn nx-btn-ghost"
               >
                 {t('pages.templateSlug.cta.custom')}
               </a>
@@ -162,7 +162,7 @@ const mockupStrings = {
             />
             {/* Mockup label strip */}
             <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-              <span class="font-mono text-[10px] uppercase tracking-widest text-nx-text-muted bg-nx-bg/80 backdrop-blur-sm px-2 py-1 rounded">
+              <span class="font-mono text-[10px] uppercase tracking-widest text-nx-muted bg-nx-bg/80 backdrop-blur-sm px-2 py-1 rounded">
                 {tplKind(template.category)} · preview
               </span>
               <span class="font-mono text-[10px] text-nx-primary bg-nx-bg/80 backdrop-blur-sm px-2 py-1 rounded">
@@ -188,18 +188,18 @@ const mockupStrings = {
 
         {/* Includes / Excludes */}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-          <article class="lava-card p-6 lg:p-8 reveal">
-            <h2 class="font-display text-xl font-bold mb-4 text-lava-edge">{t('pages.templateSlug.includesTitle')}</h2>
+          <article class="glass-card p-6 lg:p-8 reveal">
+            <h2 class="font-display text-xl font-bold mb-4 text-nx-secondary">{t('pages.templateSlug.includesTitle')}</h2>
             <ul class="space-y-2">
               {template.includes.map((_, i) => (
                 <li class="flex gap-2 text-sm text-nx-muted">
-                  <span class="text-lava-edge font-mono shrink-0">✓</span>
+                  <span class="text-nx-secondary font-mono shrink-0">✓</span>
                   <span>{t(`pages.templates.items.${template.slug}.includes.${i}`)}</span>
                 </li>
               ))}
             </ul>
           </article>
-          <article class="lava-card p-6 lg:p-8 reveal">
+          <article class="glass-card p-6 lg:p-8 reveal">
             <h2 class="font-display text-xl font-bold mb-4 text-nx-dim">{t('pages.templateSlug.excludesTitle')}</h2>
             <ul class="space-y-2">
               {template.excludes.map((_, i) => (
@@ -221,7 +221,7 @@ const mockupStrings = {
               </h2>
               <a
                 href={localeUrl('/templates', locale)}
-                class="font-mono text-xs text-nx-muted hover:text-lava-edge transition"
+                class="font-mono text-xs text-nx-muted hover:text-nx-secondary transition"
               >
                 {t('pages.templates.viewDetail')} →
               </a>
@@ -231,7 +231,7 @@ const mockupStrings = {
                 <li>
                   <a
                     href={localeUrl(`/templates/${r.slug}`, locale)}
-                    class="lava-card block p-4 hover:border-nx-primary transition"
+                    class="glass-card block p-4 hover:border-nx-primary transition"
                     data-testid="tpl-related-card"
                     data-template-slug={r.slug}
                   >
@@ -239,12 +239,12 @@ const mockupStrings = {
                       <span class="font-mono text-[10px] uppercase tracking-widest text-nx-primary">
                         {tplKind(r.category)}
                       </span>
-                      <span class="font-display text-base font-bold text-lava-edge">
+                      <span class="font-display text-base font-bold text-nx-secondary">
                         {priceOf(r.price)}
                       </span>
                     </div>
                     <h3 class="font-display text-base font-bold mb-1">{ttFor(r.slug, 'name') || r.name}</h3>
-                    <p class="text-xs text-nx-text-muted line-clamp-2">{r.tagline}</p>
+                    <p class="text-xs text-nx-muted line-clamp-2">{r.tagline}</p>
                   </a>
                 </li>
               ))}
@@ -253,7 +253,7 @@ const mockupStrings = {
         )}
 
         {/* Bottom CTA */}
-        <div class="lava-card lava-card-accent p-8 lg:p-10 reveal">
+        <div class="glass-card glass-card-accent p-8 lg:p-10 reveal">
           <h2 class="font-display text-2xl font-bold mb-3">{t('pages.templateSlug.cta.title')}</h2>
           <p class="text-nx-muted mb-6 max-w-2xl">
             {t('pages.templateSlug.cta.desc')}
@@ -261,11 +261,11 @@ const mockupStrings = {
           <div class="flex flex-wrap gap-3">
             <a
               href={`${localeUrl('/contacto', locale)}?topic=template&slug=${template.slug}`}
-              class="lava-btn"
+              class="nx-btn"
             >
               {t('pages.templateSlug.buy')} {tt('name')} →
             </a>
-            <a href={localeUrl('/cotizador', locale)} class="lava-btn lava-btn-ghost">
+            <a href={localeUrl('/cotizador', locale)} class="nx-btn nx-btn-ghost">
               {t('pages.templateSlug.cta.custom')}
             </a>
           </div>

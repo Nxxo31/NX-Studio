@@ -87,7 +87,7 @@ export default function ProjectSlider({ projects, labels }: Props) {
                 type="button"
                 onClick={() => go(-1)}
                 aria-label={`${labels.prev}: ${p.name}`}
-                className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full glass-card flex items-center justify-center text-nx-text hover:text-lava-edge transition-colors"
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full glass-card flex items-center justify-center text-nx-text hover:text-nx-secondary transition-colors"
                 style={{ padding: 0 }}
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -96,7 +96,7 @@ export default function ProjectSlider({ projects, labels }: Props) {
                 type="button"
                 onClick={() => go(1)}
                 aria-label={`${labels.next}: ${p.name}`}
-                className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full glass-card flex items-center justify-center text-nx-text hover:text-lava-edge transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full glass-card flex items-center justify-center text-nx-text hover:text-nx-secondary transition-colors"
                 style={{ padding: 0 }}
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -104,7 +104,7 @@ export default function ProjectSlider({ projects, labels }: Props) {
             </>
           )}
 
-          <span className="absolute left-4 top-4 lava-tag">{p.category}</span>
+          <span className="absolute left-4 top-4 nx-tag">{p.category}</span>
           <span className="absolute right-4 bottom-3 font-mono text-xs text-nx-dim bg-nx-bg/70 rounded px-2 py-0.5">
             {idx + 1} / {total}
           </span>
@@ -139,13 +139,13 @@ export default function ProjectSlider({ projects, labels }: Props) {
               className="flex flex-col flex-1"
             >
               <h3 className="font-display text-2xl lg:text-3xl font-bold text-nx-text">{p.name}</h3>
-              <p className="text-lava-edge font-mono text-sm mt-1.5 mb-5">{p.tagline}</p>
+              <p className="text-nx-secondary font-mono text-sm mt-1.5 mb-5">{p.tagline}</p>
 
               <p className="font-mono text-xs uppercase tracking-widest text-nx-dim mb-3">{labels.features}</p>
               <ul className="space-y-2.5 mb-6">
                 {p.highlights.map((h) => (
-                  <li key={h} className="flex items-start gap-2.5 text-sm text-nx-text-muted leading-snug">
-                    <svg className="mt-0.5 shrink-0 text-lava-edge" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <li key={h} className="flex items-start gap-2.5 text-sm text-nx-muted leading-snug">
+                    <svg className="mt-0.5 shrink-0 text-nx-secondary" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                       <path d="m3 8.5 3.2 3.2L13 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     {h}
@@ -154,7 +154,7 @@ export default function ProjectSlider({ projects, labels }: Props) {
               </ul>
 
               <div className="mt-auto">
-                <a href={p.href} className="lava-btn lava-btn-ghost">{labels.view}</a>
+                <a href={p.href} className="nx-btn nx-btn-ghost">{labels.view}</a>
               </div>
             </motion.div>
           </AnimatePresence>

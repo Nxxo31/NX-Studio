@@ -1,6 +1,6 @@
 // Brutalist mockup renderer for the Lab (/laboratorio).
 // Determinista, sin dependencias externas, sin keys, sin red. Renderiza un
-// wireframe brutalista (lava + tinta + bordes duros) a partir de un spec
+// wireframe brutalista (acento + tinta + bordes duros) a partir de un spec
 // derivado de las 5 respuestas del chat. Cada tipo (dashboard, landing,
 // mobile, ecommerce, tool) produce un SVG con layout propio. Seeded
 // variations = diferentes layouts para el mismo spec (botón Regenerar).
@@ -44,8 +44,8 @@ function header(name: string, section: string, variation: number): string {
 
 function chrome(footer = 'mockup generado · brutalismo'): string {
   return `
-    <text x="${W - 20}" y="${H - 16}" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="var(--nx-text-dim)">${esc(footer)}</text>
-    <text x="20" y="${H - 16}" font-family="ui-monospace, monospace" font-size="9" fill="var(--nx-text-dim)">NX-STUDIO · LAB v0.7</text>
+    <text x="${W - 20}" y="${H - 16}" text-anchor="end" font-family="ui-monospace, monospace" font-size="9" fill="var(--nx-dim)">${esc(footer)}</text>
+    <text x="20" y="${H - 16}" font-family="ui-monospace, monospace" font-size="9" fill="var(--nx-dim)">NX-STUDIO · LAB v0.7</text>
   `;
 }
 
@@ -55,14 +55,14 @@ function card(x: number, y: number, w: number, h: number, accent = false): strin
   return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="var(--nx-surface)" stroke="${stroke}" stroke-width="${sw}" />`;
 }
 
-function lavaBlock(x: number, y: number, w: number, h: number, text: string, size = 12): string {
+function accentBlock(x: number, y: number, w: number, h: number, text: string, size = 12): string {
   return `
     <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="var(--nx-primary)" stroke="var(--nx-ink)" stroke-width="2" />
     <text x="${x + w / 2}" y="${y + h / 2 + size / 3}" text-anchor="middle" font-family="ui-monospace, monospace" font-size="${size}" font-weight="700" fill="var(--nx-text-on-primary)" letter-spacing="1.5">${esc(text.toUpperCase())}</text>
   `;
 }
 
-function labelText(x: number, y: number, text: string, size = 10, color = 'var(--nx-text-muted)'): string {
+function labelText(x: number, y: number, text: string, size = 10, color = 'var(--nx-muted)'): string {
   return `<text x="${x}" y="${y}" font-family="ui-monospace, monospace" font-size="${size}" fill="${color}" letter-spacing="0.5">${esc(text.toUpperCase())}</text>`;
 }
 
@@ -90,7 +90,7 @@ function renderDashboard(spec: MockupSpec): string {
       `,
     ).join('')}
     <!-- main -->
-    ${labelText(170, 84, '// RESUMEN', 10, 'var(--nx-text-dim)')}
+    ${labelText(170, 84, '// RESUMEN', 10, 'var(--nx-dim)')}
     ${valueText(170, 116, spec.tagline || 'Vista general', 20)}
     <!-- metric cards -->
     ${card(170, 140, 170, 100, v % 2 === 0)}
@@ -104,7 +104,7 @@ function renderDashboard(spec: MockupSpec): string {
     ${card(530, 140, 170, 100, false)}
     ${labelText(544, 164, 'TASA · CONVERSION', 9)}
     ${valueText(544, 198, `${metric3.toFixed(1)}%`)}
-    ${labelText(544, 218, 'meta 4.5%', 9, 'var(--nx-text-muted)')}
+    ${labelText(544, 218, 'meta 4.5%', 9, 'var(--nx-muted)')}
     <!-- chart-like row -->
     ${card(170, 256, 530, 130, false)}
     ${labelText(184, 280, '// ACTIVIDAD · 30 DÍAS', 9)}
@@ -115,9 +115,9 @@ function renderDashboard(spec: MockupSpec): string {
       const fill = i === 17 ? 'var(--nx-primary)' : 'var(--nx-ink)';
       return `<rect x="${x}" y="${y}" width="10" height="${h}" fill="${fill}" />`;
     }).join('')}
-    ${lavaBlock(170, 402, 200, 40, 'Generar reporte', 12)}
+    ${accentBlock(170, 402, 200, 40, 'Generar reporte', 12)}
     ${card(380, 402, 320, 40)}
-    <text x="392" y="427" font-family="ui-monospace, monospace" font-size="11" fill="var(--nx-text-muted)">${esc(truncate('Última sync: hace 4 min · 2 alertas pendientes', 50))}</text>
+    <text x="392" y="427" font-family="ui-monospace, monospace" font-size="11" fill="var(--nx-muted)">${esc(truncate('Última sync: hace 4 min · 2 alertas pendientes', 50))}</text>
     ${chrome()}
   `;
 }
@@ -133,7 +133,7 @@ function renderLanding(spec: MockupSpec): string {
     ${labelText(40, 100, '// HERO', 10, 'var(--nx-text-on-primary)')}
     <text x="40" y="142" font-family="ui-monospace, monospace" font-size="28" font-weight="800" fill="var(--nx-text-on-primary)">${esc(truncate(spec.tagline || 'Tu próximo producto empieza aquí', 30))}</text>
     <text x="40" y="172" font-family="ui-monospace, monospace" font-size="12" fill="var(--nx-text-on-primary)" opacity="0.8">${esc(truncate(spec.problem, 60))}</text>
-    ${lavaBlock(40, 196, 180, 32, 'Empezar', 12)}
+    ${accentBlock(40, 196, 180, 32, 'Empezar', 12)}
     <rect x="232" y="196" width="160" height="32" fill="transparent" stroke="var(--nx-ink)" stroke-width="2" />
     <text x="312" y="217" text-anchor="middle" font-family="ui-monospace, monospace" font-size="11" font-weight="700" fill="var(--nx-text-on-primary)" letter-spacing="1.5">VER DEMO</text>
     <!-- 3 feature blocks -->
@@ -145,12 +145,12 @@ function renderLanding(spec: MockupSpec): string {
         <rect x="${x}" y="260" width="${w}" height="4" fill="${i === 1 ? 'var(--nx-primary)' : 'var(--nx-ink)'}" />
         ${labelText(x + 16, 290, `// FEATURA ${String(i + 1).padStart(2, '0')}`, 9)}
         <text x="${x + 16}" y="316" font-family="ui-monospace, monospace" font-size="14" font-weight="700" fill="var(--nx-text)">${esc(t.toUpperCase())}</text>
-        <text x="${x + 16}" y="338" font-family="ui-monospace, monospace" font-size="10" fill="var(--nx-text-muted)">${esc(truncate(spec.refs || 'Implementación directa, sin capas de más.', 50))}</text>
+        <text x="${x + 16}" y="338" font-family="ui-monospace, monospace" font-size="10" fill="var(--nx-muted)">${esc(truncate(spec.refs || 'Implementación directa, sin capas de más.', 50))}</text>
       `;
     }).join('')}
     <!-- footer band -->
     <rect x="0" y="400" width="${W}" height="60" fill="var(--nx-ink)" />
-    ${labelText(20, 426, 'PLATAFORMA', 9, 'var(--nx-text-dim)')}
+    ${labelText(20, 426, 'PLATAFORMA', 9, 'var(--nx-dim)')}
     <text x="20" y="448" font-family="ui-monospace, monospace" font-size="14" font-weight="700" fill="var(--nx-bg)">${esc(spec.platform.toUpperCase())} · READY</text>
     ${chrome()}
   `;
@@ -180,16 +180,16 @@ function renderMobile(spec: MockupSpec): string {
     ${card(cx + 14, py + 92, pw - 28, 86, true)}
     <text x="${cx + 28}" y="${py + 122}" font-family="ui-monospace, monospace" font-size="14" font-weight="700" fill="var(--nx-text-on-primary)">${esc(truncate(spec.tagline, 24))}</text>
     <text x="${cx + 28}" y="${py + 144}" font-family="ui-monospace, monospace" font-size="9" fill="var(--nx-text-on-primary)" opacity="0.85">${esc(truncate(spec.problem, 50))}</text>
-    ${lavaBlock(cx + 28, py + 154, 100, 18, 'Abrir', 9)}
+    ${accentBlock(cx + 28, py + 154, 100, 18, 'Abrir', 9)}
     <!-- 2 content cards -->
     ${card(cx + 14, py + 192, (pw - 34) / 2, 78, false)}
     ${labelText(cx + 28, py + 214, 'HOY', 9)}
     <text x="${cx + 28}" y="${py + 240}" font-family="ui-monospace, monospace" font-size="18" font-weight="700" fill="var(--nx-text)">${(seeded(v) * 100).toFixed(0)}%</text>
-    <text x="${cx + 28}" y="${py + 258}" font-family="ui-monospace, monospace" font-size="9" fill="var(--nx-text-muted)">PROGRESO</text>
+    <text x="${cx + 28}" y="${py + 258}" font-family="ui-monospace, monospace" font-size="9" fill="var(--nx-muted)">PROGRESO</text>
     ${card(cx + 20 + (pw - 34) / 2, py + 192, (pw - 34) / 2, 78, false)}
     ${labelText(cx + 34 + (pw - 34) / 2, py + 214, 'RANKING', 9)}
     <text x="${cx + 34 + (pw - 34) / 2}" y="${py + 240}" font-family="ui-monospace, monospace" font-size="18" font-weight="700" fill="var(--nx-text)">#${Math.round(seeded(v + 1) * 999).toString().padStart(3, '0')}</text>
-    <text x="${cx + 34 + (pw - 34) / 2}" y="${py + 258}" font-family="ui-monospace, monospace" font-size="9" fill="var(--nx-text-muted)">SEMANAL</text>
+    <text x="${cx + 34 + (pw - 34) / 2}" y="${py + 258}" font-family="ui-monospace, monospace" font-size="9" fill="var(--nx-muted)">SEMANAL</text>
     <!-- list -->
     ${[0, 1, 2].map((i) => {
       const y = py + 282 + i * 36;
@@ -213,7 +213,7 @@ function renderEcommerce(spec: MockupSpec): string {
   const v = spec.variation;
   const products = [
     ['Camisa brutal', '$48'],
-    ['Mochila lava', '$129'],
+    ['Mochila', '$129'],
     ['Cuaderno A5',   '$18'],
     ['Botella NX',    '$32'],
     ['Sticker pack',  '$8'],
@@ -226,8 +226,8 @@ function renderEcommerce(spec: MockupSpec): string {
     ${valueText(20, 102, truncate(spec.tagline, 32), 18)}
     <!-- search bar -->
     ${card(20, 118, W - 40, 36, false)}
-    <text x="36" y="142" font-family="ui-monospace, monospace" font-size="11" fill="var(--nx-text-muted)">buscar productos...</text>
-    ${lavaBlock(W - 110, 120, 80, 32, 'Carrito · 2', 10)}
+    <text x="36" y="142" font-family="ui-monospace, monospace" font-size="11" fill="var(--nx-muted)">buscar productos...</text>
+    ${accentBlock(W - 110, 120, 80, 32, 'Carrito · 2', 10)}
     <!-- product grid 3x2 -->
     ${products.map((p, i) => {
       const col = i % 3;
@@ -258,11 +258,11 @@ function renderTool(spec: MockupSpec): string {
     ${header(spec.name, 'herramienta', v)}
     ${labelText(20, 78, '// ENTRADA', 9)}
     ${card(20, 90, W - 40, 100, false)}
-    <text x="36" y="118" font-family="ui-monospace, monospace" font-size="11" fill="var(--nx-text-dim)">${esc(truncate(spec.problem || 'Ingresa tu consulta...', 60))}</text>
+    <text x="36" y="118" font-family="ui-monospace, monospace" font-size="11" fill="var(--nx-dim)">${esc(truncate(spec.problem || 'Ingresa tu consulta...', 60))}</text>
     <rect x="36" y="130" width="${W - 80}" height="3" fill="var(--nx-ink)" opacity="0.4" />
     <rect x="36" y="148" width="${(W - 80) * 0.7}" height="3" fill="var(--nx-ink)" opacity="0.4" />
     <rect x="36" y="166" width="${(W - 80) * 0.45}" height="3" fill="var(--nx-ink)" opacity="0.4" />
-    ${lavaBlock(20, 206, 140, 38, 'Ejecutar', 13)}
+    ${accentBlock(20, 206, 140, 38, 'Ejecutar', 13)}
     ${card(180, 206, W - 220, 38, true)}
     <text x="196" y="231" font-family="ui-monospace, monospace" font-size="11" font-weight="700" fill="var(--nx-text-on-primary)">${esc(truncate(spec.refs || 'config: brutalismo-v0.7 · auto', 50))}</text>
     <!-- result -->
@@ -274,7 +274,7 @@ function renderTool(spec: MockupSpec): string {
       const y = 342 + i * 22;
       return `
         <text x="44" y="${y}" font-family="ui-monospace, monospace" font-size="10" fill="var(--nx-text)">›</text>
-        <text x="62" y="${y}" font-family="ui-monospace, monospace" font-size="10" fill="var(--nx-text-muted)">${esc(truncate(['hash: ' + (seeded(v + i) * 9999).toFixed(0), 'feature: ' + (spec.user.split(' ')[0] || 'core'), 'metric: +' + (seeded(v + i + 1) * 100).toFixed(0) + '%', 'deploy: ready'][i], 50))}</text>
+        <text x="62" y="${y}" font-family="ui-monospace, monospace" font-size="10" fill="var(--nx-muted)">${esc(truncate(['hash: ' + (seeded(v + i) * 9999).toFixed(0), 'feature: ' + (spec.user.split(' ')[0] || 'core'), 'metric: +' + (seeded(v + i + 1) * 100).toFixed(0) + '%', 'deploy: ready'][i], 50))}</text>
       `;
     }).join('')}
     ${chrome()}

@@ -27,9 +27,9 @@ const idx = (n: number) => Array.from({ length: n }, (_, i) => i);
     <section class="relative px-6 py-20 lg:py-28">
       <div class="mx-auto max-w-6xl">
         <header class="mb-14 reveal">
-          <span class="lava-tag mb-4">// qa.v1</span>
+          <span class="nx-tag mb-4">// qa.v1</span>
           <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
-            {t('pages.serviciosTesting.headingA')} <span class="text-lava">{t('pages.serviciosTesting.headingEm')}</span>
+            {t('pages.serviciosTesting.headingA')} <span class="text-nx-primary">{t('pages.serviciosTesting.headingEm')}</span>
           </h1>
           <p class="text-nx-muted max-w-2xl text-lg">
             {t('pages.serviciosTesting.sub')}
@@ -38,32 +38,32 @@ const idx = (n: number) => Array.from({ length: n }, (_, i) => i);
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-12">
           {tiers.map((tier) => (
-            <article class={`lava-card p-6 lg:p-7 reveal flex flex-col ${tier.featured ? 'lava-card-accent' : ''}`}>
+            <article class={`glass-card p-6 lg:p-7 reveal flex flex-col ${tier.featured ? 'glass-card-accent' : ''}`}>
               <div class="flex items-start justify-between mb-3">
-                <span class="lava-tag">{t(`pages.serviciosTesting.tiers.${tier.id}.tag`)}</span>
-                {tier.featured && <span class="lava-tag" style="background: var(--lava-core); color: black;">{t('pages.serviciosTesting.featured')}</span>}
+                <span class="nx-tag">{t(`pages.serviciosTesting.tiers.${tier.id}.tag`)}</span>
+                {tier.featured && <span class="nx-tag" style="background: var(--nx-primary); color: black;">{t('pages.serviciosTesting.featured')}</span>}
               </div>
               <h2 class="font-display text-2xl font-bold mb-2">{t(`pages.serviciosTesting.tiers.${tier.id}.name`)}</h2>
               <p class="text-sm text-nx-muted leading-relaxed mb-5">{t(`pages.serviciosTesting.tiers.${tier.id}.desc`)}</p>
               <ul class="space-y-2 mb-5 flex-1">
                 {idx(tier.bulletCount).map((i) => (
                   <li class="flex gap-2 text-sm text-nx-muted">
-                    <span class="text-lava-edge font-mono shrink-0">▸</span>
+                    <span class="text-nx-secondary font-mono shrink-0">▸</span>
                     <span>{t(`pages.serviciosTesting.tiers.${tier.id}.bullets.${i}`)}</span>
                   </li>
                 ))}
               </ul>
-              <div class="hairline mb-3"></div>
+              <div class="nx-hairline mb-3"></div>
               <p class="text-xs font-mono text-nx-dim">{t(`pages.serviciosTesting.tiers.${tier.id}.platformNote`)}</p>
             </article>
           ))}
         </div>
 
-        <div class="lava-card p-6 lg:p-8 mb-12 reveal">
+        <div class="glass-card p-6 lg:p-8 mb-12 reveal">
           <h2 class="font-display text-xl font-bold mb-3">{t('pages.serviciosTesting.pricingModel.title')}</h2>
           <p class="text-nx-muted leading-relaxed mb-3">
             {t('pages.serviciosTesting.pricingModel.p1a')}
-            <b class="text-lava-edge">{t('pages.serviciosTesting.pricingModel.platformFee')}</b>
+            <b class="text-nx-secondary">{t('pages.serviciosTesting.pricingModel.platformFee')}</b>
             {t('pages.serviciosTesting.pricingModel.p1b')}
           </p>
           <p class="text-nx-dim text-xs font-mono">
@@ -71,15 +71,15 @@ const idx = (n: number) => Array.from({ length: n }, (_, i) => i);
           </p>
         </div>
 
-        <div class="lava-card lava-card-accent p-8 lg:p-10 reveal">
-          <span class="lava-tag mb-3">// intake</span>
+        <div class="glass-card glass-card-accent p-8 lg:p-10 reveal">
+          <span class="nx-tag mb-3">// intake</span>
           <h2 class="font-display text-2xl lg:text-3xl font-bold mb-3">
             {t('pages.serviciosTesting.ctaBox.title')}
           </h2>
           <p class="text-nx-muted mb-6 max-w-2xl">
             {t('pages.serviciosTesting.ctaBox.desc')}
           </p>
-          <a href={`${localeUrl('/contacto', locale)}?topic=qa`} class="lava-btn">{t('pages.serviciosTesting.ctaBox.cta')}</a>
+          <a href={`${localeUrl('/contacto', locale)}?topic=qa`} class="nx-btn">{t('pages.serviciosTesting.ctaBox.cta')}</a>
         </div>
       </div>
     </section>

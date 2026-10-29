@@ -65,9 +65,9 @@ const fechaCorta = (iso: string) => {
       <div class="mx-auto max-w-6xl">
         <header class="reveal">
           <BackHome />
-          <span class="lava-tag mb-4">// proyectos reales</span>
+          <span class="nx-tag mb-4">// proyectos reales</span>
           <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05]">
-            {total} proyectos <span class="text-lava">terminados</span>
+            {total} proyectos <span class="text-nx-primary">terminados</span>
             <span class="block mt-2 text-nx-muted text-2xl sm:text-3xl lg:text-4xl font-normal">
               que puedes ver funcionando hoy.
             </span>
@@ -81,15 +81,15 @@ const fechaCorta = (iso: string) => {
 
           <!-- Stats inline -->
           <div class="mt-8 grid grid-cols-3 gap-3 max-w-xl">
-            <div class="lava-card p-4">
-              <div class="font-display text-2xl font-bold text-lava-edge">{total}</div>
+            <div class="glass-card p-4">
+              <div class="font-display text-2xl font-bold text-nx-secondary">{total}</div>
               <div class="text-xs font-mono text-nx-dim uppercase tracking-widest mt-1">proyectos</div>
             </div>
-            <div class="lava-card p-4">
+            <div class="glass-card p-4">
               <div class="font-display text-2xl font-bold text-nx-success">{live}</div>
               <div class="text-xs font-mono text-nx-dim uppercase tracking-widest mt-1">en línea</div>
             </div>
-            <div class="lava-card p-4">
+            <div class="glass-card p-4">
               <div class="font-display text-2xl font-bold text-nx-warn">{prototypes}</div>
               <div class="text-xs font-mono text-nx-dim uppercase tracking-widest mt-1">en desarrollo</div>
             </div>
@@ -146,7 +146,7 @@ const fechaCorta = (iso: string) => {
         {grouped.map((g) => (
           <div class="cat-group" data-group={g.id} class:list={["mb-14"]}>
             <header class="flex items-center gap-3 mb-5 reveal">
-              <span class="font-display text-2xl text-lava-edge" aria-hidden="true">{g.icon}</span>
+              <span class="font-display text-2xl text-nx-secondary" aria-hidden="true">{g.icon}</span>
               <h2 class="font-display text-xl lg:text-2xl font-bold tracking-tight">{g.label}</h2>
               <span class="font-mono text-xs text-nx-dim">[{g.items.length}]</span>
             </header>
@@ -155,7 +155,7 @@ const fechaCorta = (iso: string) => {
               {g.items.map((p) => (
                 <a
                   href={`/productos/${p.slug}`}
-                  class="lava-card p-0 reveal flex flex-col card-hover group overflow-hidden"
+                  class="glass-card p-0 reveal flex flex-col card-hover group overflow-hidden"
                   data-project-card={p.category}
                   aria-label={`Ver detalle de ${p.name}`}
                 >
@@ -182,16 +182,16 @@ const fechaCorta = (iso: string) => {
                       <span class="font-mono text-xs text-nx-dim">{p.year}</span>
                     </div>
 
-                    <h3 class="font-display text-xl font-bold mb-1.5 text-nx-text group-hover:text-lava-edge transition">
+                    <h3 class="font-display text-xl font-bold mb-1.5 text-nx-text group-hover:text-nx-secondary transition">
                       {p.name}
                     </h3>
-                    <p class="text-sm text-lava-edge font-mono mb-3 leading-snug">{p.tagline}</p>
+                    <p class="text-sm text-nx-secondary font-mono mb-3 leading-snug">{p.tagline}</p>
 
                     <!-- Funcionalidades en lenguaje llano (2 primeras) -->
                     <ul class="space-y-1.5 mb-4 flex-1">
                       {p.highlights.slice(0, 2).map((h) => (
                         <li class="flex items-start gap-2 text-sm text-nx-muted leading-snug">
-                          <svg class="mt-1 shrink-0 text-lava-edge" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                          <svg class="mt-1 shrink-0 text-nx-secondary" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                             <path d="m3 8.5 3.2 3.2L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                           </svg>
                           {h}
@@ -205,7 +205,7 @@ const fechaCorta = (iso: string) => {
                           ? `★ ${p.github.stars} · ${p.github.language ?? ""} · ${fechaCorta(p.github.pushedAt)}`
                           : "repo público"}
                       </span>
-                      <span class="font-mono text-xs text-lava-edge group-hover:translate-x-0.5 transition">
+                      <span class="font-mono text-xs text-nx-secondary group-hover:translate-x-0.5 transition">
                         Ver detalle →
                       </span>
                     </div>
@@ -223,18 +223,18 @@ const fechaCorta = (iso: string) => {
          ============================================================ -->
     <section class="relative px-6 pb-24">
       <div class="mx-auto max-w-4xl">
-        <div class="lava-card lava-card-accent p-8 lg:p-10 reveal text-center">
-          <span class="lava-tag mb-3">// siguiente paso</span>
+        <div class="glass-card glass-card-accent p-8 lg:p-10 reveal text-center">
+          <span class="nx-tag mb-3">// siguiente paso</span>
           <h2 class="font-display text-2xl lg:text-3xl font-bold mb-3">
-            ¿Quieres un proyecto <span class="text-lava">así</span> para tu negocio?
+            ¿Quieres un proyecto <span class="text-nx-primary">así</span> para tu negocio?
           </h2>
           <p class="text-nx-muted max-w-2xl mx-auto mb-6">
             Elige qué necesitas en la cotización y mira al instante el rango de
             inversión. Sin registro, sin compromiso, sin tecnicismos.
           </p>
           <div class="flex flex-wrap items-center justify-center gap-3">
-            <a href="/cotizador" class="lava-btn">Cotizar mi proyecto →</a>
-            <a href="/contacto" class="lava-btn lava-btn-ghost">Hablemos primero</a>
+            <a href="/cotizador" class="nx-btn">Cotizar mi proyecto →</a>
+            <a href="/contacto" class="nx-btn nx-btn-ghost">Hablemos primero</a>
           </div>
         </div>
       </div>
@@ -256,7 +256,7 @@ const fechaCorta = (iso: string) => {
     font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--nx-text-muted);
+    color: var(--nx-muted);
     background: var(--nx-surface);
     border: 1px solid var(--nx-border);
     border-radius: 4px;
@@ -308,8 +308,8 @@ const fechaCorta = (iso: string) => {
     border-color: color-mix(in oklab, var(--nx-warn) 30%, transparent);
   }
   .status-archived {
-    color: var(--nx-text-dim);
-    background: color-mix(in oklab, var(--nx-text-dim) 12%, transparent);
+    color: var(--nx-dim);
+    background: color-mix(in oklab, var(--nx-dim) 12%, transparent);
     border-color: var(--nx-border);
   }
 

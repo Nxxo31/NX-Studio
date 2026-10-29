@@ -30,7 +30,7 @@ const links = [
 ];
 ---
 
-<header class="sticky top-0 z-50 border-b border-nx-border bg-nx-surface-overlay backdrop-blur-xl">
+<header class="sticky top-0 z-50 border-b border-nx-border bg-nx-surface-translucent-strong backdrop-blur-xl">
   <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
     <Brand variant="lockup" size="md" href={`${base}/`} />
 
@@ -42,7 +42,7 @@ const links = [
       ))}
       </ul>
 
-    <a href={localeUrl('/contacto', locale)} class="hidden md:inline-flex items-center gap-2 lava-btn" style="padding: 0.5rem 1.25rem;">
+    <a href={localeUrl('/contacto', locale)} class="hidden md:inline-flex items-center gap-2 nx-btn" style="padding: 0.5rem 1.25rem;">
       {t('nav.cta')}
     </a>
 
@@ -62,7 +62,7 @@ const links = [
       ))}
     </ul>
     <div class="px-6 pb-4">
-      <a href={localeUrl('/contacto', locale)} class="lava-btn w-full justify-center" style="padding: 0.5rem 1.25rem;">
+      <a href={localeUrl('/contacto', locale)} class="nx-btn w-full justify-center" style="padding: 0.5rem 1.25rem;">
         {t('nav.cta')}
       </a>
     </div>

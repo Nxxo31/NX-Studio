@@ -66,7 +66,7 @@ function parseStack(raw: string): string[] {
                   <td>{p.year}</td>
                   <td class="portal-table-stack">{stack.slice(0, 4).join(', ')}{stack.length > 4 ? '…' : ''}</td>
                   <td>{ms ? ms.title : <span class="portal-muted">{t('portal.proyectos.noMilestone')}</span>}</td>
-                  <td><a href={`/portal/proyectos/${p.slug}`} class="lava-btn-ghost lava-btn-sm">{t('portal.shell.actions.viewDetail')}</a></td>
+                  <td><a href={`/portal/proyectos/${p.slug}`} class="nx-btn-ghost nx-btn-sm">{t('portal.shell.actions.viewDetail')}</a></td>
                 </tr>
               );
             })}

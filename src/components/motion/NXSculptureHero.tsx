@@ -22,11 +22,6 @@ export interface NXHeroProps {
 export default function NXSculptureHero(props: NXHeroProps) {
   return (
     <SculptureHero
-      src="/assets/sculpture/light.webp"
-      darkSrc="/assets/sculpture/dark.webp"
-      mobileSrc="/assets/sculpture/mobile-light.webp"
-      mobileDarkSrc="/assets/sculpture/mobile-dark.webp"
-      imageAlt="Escultura abstracta de filamentos metálicos y partículas — obra de NX-Studio"
       brand="NX-Studio"
       showNav={false}
       themeToggle={false}
@@ -39,10 +34,19 @@ export default function NXSculptureHero(props: NXHeroProps) {
       secondaryCta={props.secondaryCta}
       background="transparent"
       darkBackground="transparent"
-      accentColor="#fafafa"
-      accentFont="'Instrument Serif', 'Times New Roman', serif"
+      /* FIX 2026-10-28: el componente vendored inferia la tinta del fondo con
+         hexToRgb(); "transparent" no parsea y cae al fallback claro, asi que
+         terminaba con fg=#151514 (tinta casi negra) sobre el agujero negro.
+         Se pasa textColor explicito (token del sistema) para fijar tinta clara. */
+      textColor="var(--nx-text)"
+      accentColor="var(--nx-primary)"
+      headingFont="var(--font-display)"
+      accentFont="var(--font-mono)"
       bodyFont="var(--font-body)"
-      loadFonts={true}
+      /* loadFonts={false}: el componente inyectaba Google Fonts (Geist +
+         Instrument Serif) en runtime. Las tres familias ya son locales
+         (self-hosted) y la tipografia de acento ahora es mono, no serif. */
+      loadFonts={false}
       backdropText={props.backdropText ?? "NX"}
       showCredit={false}
       height="100svh"

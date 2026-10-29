@@ -57,7 +57,7 @@ const statusLabel = {
       <div class="mx-auto max-w-5xl">
         <a
           href="/productos"
-          class="font-mono text-xs text-nx-muted hover:text-lava-edge transition inline-flex items-center gap-2 mb-6"
+          class="font-mono text-xs text-nx-muted hover:text-nx-secondary transition inline-flex items-center gap-2 mb-6"
         >
           ← Volver a proyectos
         </a>
@@ -75,13 +75,13 @@ const statusLabel = {
           <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.05] mb-3">
             {project.name}
           </h1>
-          <p class="text-lava-edge font-mono text-lg sm:text-xl mb-5">{project.tagline}</p>
+          <p class="text-nx-secondary font-mono text-lg sm:text-xl mb-5">{project.tagline}</p>
           <p class="text-nx-muted max-w-3xl text-lg leading-relaxed mb-6">{project.desc}</p>
 
           <div class="flex flex-wrap items-center gap-3">
-            <span class="lava-tag">{project.category}</span>
-            <span class="lava-tag">{project.impact}</span>
-            <span class="lava-tag">{statusLabel}</span>
+            <span class="nx-tag">{project.category}</span>
+            <span class="nx-tag">{project.impact}</span>
+            <span class="nx-tag">{statusLabel}</span>
           </div>
         </header>
       </div>
@@ -92,7 +92,7 @@ const statusLabel = {
          ============================================================ -->
     <section class="relative px-6 pb-12">
       <div class="mx-auto max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <article class="lava-card p-6 lg:p-8 reveal">
+        <article class="glass-card p-6 lg:p-8 reveal">
           <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-4">
             // stack
           </h2>
@@ -105,7 +105,7 @@ const statusLabel = {
           </div>
         </article>
 
-        <article class="lava-card lava-card-accent p-6 lg:p-8 reveal">
+        <article class="glass-card glass-card-accent p-6 lg:p-8 reveal">
           <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-4">
             // código fuente
           </h2>
@@ -117,7 +117,7 @@ const statusLabel = {
             href={project.repo}
             target="_blank"
             rel="noopener noreferrer"
-            class="lava-btn inline-flex"
+            class="nx-btn inline-flex"
             aria-label={`Abrir repositorio de ${project.name} en GitHub (nueva pestaña)`}
           >
             Ver repo en GitHub →
@@ -132,14 +132,14 @@ const statusLabel = {
          ============================================================ -->
     <section class="relative px-6 pb-12">
       <div class="mx-auto max-w-5xl">
-        <article class="lava-card lava-card-accent p-6 lg:p-8 reveal">
+        <article class="glass-card glass-card-accent p-6 lg:p-8 reveal">
           <h2 class="font-mono text-xs uppercase tracking-widest text-nx-muted mb-5">
             // qué hace — explicado sin tecnicismos
           </h2>
           <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
             {project.highlights.map((h) => (
-              <li class="flex items-start gap-3 text-nx-text-muted leading-snug">
-                <svg class="mt-1 shrink-0 text-lava-edge" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <li class="flex items-start gap-3 text-nx-muted leading-snug">
+                <svg class="mt-1 shrink-0 text-nx-secondary" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="m3 8.5 3.2 3.2L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
                 {h}
@@ -161,7 +161,7 @@ const statusLabel = {
         {images.length > 0 ? (
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {images.map((im, i) => (
-              <div class:list={["lava-card p-2 reveal overflow-hidden", i === 0 && "md:col-span-2"]}>
+              <div class:list={["glass-card p-2 reveal overflow-hidden", i === 0 && "md:col-span-2"]}>
                 <img
                   src={im}
                   alt={`${project.name} — vista ${i + 1}`}
@@ -172,7 +172,7 @@ const statusLabel = {
             ))}
           </div>
         ) : (
-          <article class="lava-card p-6 lg:p-8 reveal">
+          <article class="glass-card p-6 lg:p-8 reveal">
             <div class="browser-chrome">
               <div class="browser-dots">
                 <span class="dot dot-red"></span>
@@ -221,7 +221,7 @@ const statusLabel = {
             {related.map((r) => (
               <a
                 href={`/productos/${r.slug}`}
-                class="lava-card p-5 reveal flex flex-col card-hover group"
+                class="glass-card p-5 reveal flex flex-col card-hover group"
                 aria-label={`Ver detalle de ${r.name}`}
               >
                 <div class="flex items-center justify-between mb-2">
@@ -230,10 +230,10 @@ const statusLabel = {
                     {r.status === "live" ? "●" : r.status === "prototype" ? "◐" : "○"}
                   </span>
                 </div>
-                <h3 class="font-display text-lg font-bold mb-1.5 group-hover:text-lava-edge transition">
+                <h3 class="font-display text-lg font-bold mb-1.5 group-hover:text-nx-secondary transition">
                   {r.name}
                 </h3>
-                <p class="text-sm text-lava-edge font-mono mb-2">{r.tagline}</p>
+                <p class="text-sm text-nx-secondary font-mono mb-2">{r.tagline}</p>
                 <p class="text-xs text-nx-muted leading-relaxed flex-1">{r.desc}</p>
               </a>
             ))}
@@ -250,22 +250,22 @@ const statusLabel = {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <a
             href={`/productos/${prev.slug}`}
-            class="lava-card p-5 reveal flex flex-col card-hover group"
+            class="glass-card p-5 reveal flex flex-col card-hover group"
             aria-label={`Producto anterior: ${prev.name}`}
           >
             <span class="font-mono text-xs text-nx-dim mb-2">← anterior</span>
-            <span class="font-display text-lg font-bold group-hover:text-lava-edge transition">
+            <span class="font-display text-lg font-bold group-hover:text-nx-secondary transition">
               {prev.name}
             </span>
             <span class="text-sm text-nx-muted font-mono mt-1">{prev.tagline}</span>
           </a>
           <a
             href={`/productos/${next.slug}`}
-            class="lava-card p-5 reveal flex flex-col card-hover group text-right"
+            class="glass-card p-5 reveal flex flex-col card-hover group text-right"
             aria-label={`Producto siguiente: ${next.name}`}
           >
             <span class="font-mono text-xs text-nx-dim mb-2">siguiente →</span>
-            <span class="font-display text-lg font-bold group-hover:text-lava-edge transition">
+            <span class="font-display text-lg font-bold group-hover:text-nx-secondary transition">
               {next.name}
             </span>
             <span class="text-sm text-nx-muted font-mono mt-1">{next.tagline}</span>
@@ -279,17 +279,17 @@ const statusLabel = {
          ============================================================ -->
     <section class="relative px-6 pb-24">
       <div class="mx-auto max-w-4xl">
-        <div class="lava-card lava-card-accent p-8 lg:p-10 reveal text-center">
+        <div class="glass-card glass-card-accent p-8 lg:p-10 reveal text-center">
           <h2 class="font-display text-2xl lg:text-3xl font-bold mb-3">
-            ¿Quieres algo <span class="text-lava">similar</span> para tu negocio?
+            ¿Quieres algo <span class="text-nx-primary">similar</span> para tu negocio?
           </h2>
           <p class="text-nx-muted max-w-2xl mx-auto mb-6">
             Si {project.name} se parece a lo que necesitas, o quieres algo
             partiendo desde este stack, hablemos.
           </p>
           <div class="flex flex-wrap items-center justify-center gap-3">
-            <a href="/contacto" class="lava-btn">Iniciar conversación →</a>
-            <a href="/cotizador" class="lava-btn lava-btn-ghost">Cotizar mi proyecto</a>
+            <a href="/contacto" class="nx-btn">Iniciar conversación →</a>
+            <a href="/cotizador" class="nx-btn nx-btn-ghost">Cotizar mi proyecto</a>
           </div>
         </div>
       </div>
@@ -325,8 +325,8 @@ const statusLabel = {
     border-color: color-mix(in oklab, var(--nx-warn) 30%, transparent);
   }
   .status-archived {
-    color: var(--nx-text-dim);
-    background: color-mix(in oklab, var(--nx-text-dim) 12%, transparent);
+    color: var(--nx-dim);
+    background: color-mix(in oklab, var(--nx-dim) 12%, transparent);
     border-color: var(--nx-border);
   }
 
@@ -358,7 +358,7 @@ const statusLabel = {
   .browser-url {
     margin-left: 0.6rem;
     font-size: 0.7rem;
-    color: var(--nx-text-dim);
+    color: var(--nx-dim);
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -383,7 +383,7 @@ const statusLabel = {
     font-size: 0.65rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--nx-text-dim);
+    color: var(--nx-dim);
     margin-bottom: 0.4rem;
   }
   .browser-stat-value {

@@ -226,7 +226,7 @@
             "5": "Documentação + vídeo walkthrough de 20min"
           },
           "excludes": {
-            "0": "Design custom (o template vem com identidade lava neon)",
+            "0": "Design custom (o template vem com identidade propria)",
             "1": "Copywriting",
             "2": "Hospedagem mensal (Vercel free tier OK)",
             "3": "Suporte pós-compra"
@@ -249,7 +249,7 @@
           },
           "excludes": {
             "0": "Auth provider custom",
-            "1": "Design fora do tema lava neon",
+            "1": "Design fora da identidade do site",
             "2": "Deployment"
           },
           "version": "v0.9.4",
@@ -625,7 +625,7 @@
         "render": "Render: SVG inline + gradientes CSS (sem imagens externas)",
         "sizes": "Tamanhos: 28px · 36px · 48px · 64px (sem perda)",
         "palette": "Paleta:",
-        "typography": "Tipografia: Space Grotesk 700 + JetBrains Mono 500",
+        "typography": "Tipografia: Orbitron 700 + JetBrains Mono 500",
         "a11y": "Acessibilidade: aria-label, hover respeita prefers-reduced-motion",
         "anim": "Animação hover: rotação -8° + scale 1.05 (300ms cubic-bezier)",
         "js": "JS empacotado: 0 bytes (tudo CSS + SVG inline)"
@@ -675,7 +675,7 @@
         },
         "prism": {
           "tag": "criativo · futurista",
-          "desc": "Triângulo formando um X com faces em lava + índigo + ouro. Fractal, light-bending.",
+          "desc": "Triângulo formando um X com faces em escala de cinzas. Fractal, light-bending.",
           "feel": "Criativo, IA-first, visual. Vibe Suno / Udio / ideogramas."
         },
         "wave": {
@@ -724,7 +724,7 @@
         "brutal-dark": {
           "tag": "dark · estrutural · DEFAULT",
           "desc": "Near-black quente com tinta creme estrutural. Lava como único acento, sombras duras sem blur.",
-          "use": "Tema escuro padrão do site. Bordas grossas creme, blocos lava e grade exposta."
+          "use": "Tema escuro padrão do site. Bordas grossas creme, blocos translúcidos e grade exposta."
         },
         "brutal-cream": {
           "tag": "light · papel · contraste máximo",

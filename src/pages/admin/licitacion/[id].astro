@@ -39,25 +39,25 @@ if (row) {
     <a href="/admin" class="font-mono text-xs uppercase tracking-widest text-nx-muted hover:text-nx-text">← Volver al panel</a>
 
     {!row ? (
-      <div class="lava-card mt-8 p-8 text-center">
+      <div class="glass-card mt-8 p-8 text-center">
         <h1 class="font-display text-xl font-bold">Licitación no encontrada</h1>
         <p class="mt-2 font-mono text-sm text-nx-dim">{Astro.params.id}</p>
       </div>
     ) : (
-      <article class="lava-card mt-8 p-8">
+      <article class="glass-card mt-8 p-8">
         <div class="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p class="font-mono text-xs text-nx-dim">{row.id}</p>
             <h1 class="mt-1 font-display text-2xl font-bold">{row.nombre}</h1>
             <p class="mt-1 text-sm text-nx-muted">
-              <a href={`mailto:${row.email}`} class="underline decoration-[var(--lava-edge)]">{row.email}</a>
+              <a href={`mailto:${row.email}`} class="underline decoration-[var(--nx-secondary)]">{row.email}</a>
               {row.telefono ? ` · ${row.telefono}` : ''}
             </p>
             <p class="mt-1 text-sm text-nx-muted">
               {[row.empresa, row.pais].filter(Boolean).join(' · ') || 'Sin empresa/país'}
             </p>
           </div>
-          <span class="lava-tag">{row.status}</span>
+          <span class="nx-tag">{row.status}</span>
         </div>
 
         <dl class="mt-8 grid gap-4 border-t border-nx-border pt-6 text-sm sm:grid-cols-2">
@@ -89,7 +89,7 @@ if (row) {
           <div class="mt-6 border-t border-nx-border pt-6">
             <h2 class="font-mono text-xs uppercase tracking-widest text-nx-dim">Features cotizadas ({featureNames.length})</h2>
             <ul class="mt-3 flex flex-wrap gap-2">
-              {featureNames.map((n) => <li class="lava-tag">{n}</li>)}
+              {featureNames.map((n) => <li class="nx-tag">{n}</li>)}
             </ul>
           </div>
         )}
@@ -98,12 +98,12 @@ if (row) {
           <input type="hidden" name="id" value={row.id} />
           <label class="font-mono text-xs uppercase tracking-widest text-nx-dim" for="status-detail">Cambiar estado</label>
           <select id="status-detail" name="status"
-            class="border border-nx-border bg-transparent px-3 py-2 font-mono text-sm text-nx-text focus:border-[var(--lava-core)] focus:outline-none">
+            class="border border-nx-border bg-transparent px-3 py-2 font-mono text-sm text-nx-text focus:border-[var(--nx-primary)] focus:outline-none">
             {STATUS.map((s) => (
               <option value={s} selected={s === row.status}>{s}</option>
             ))}
           </select>
-          <button type="submit" class="lava-btn">Actualizar</button>
+          <button type="submit" class="nx-btn">Actualizar</button>
         </form>
 
         {row.userId && (

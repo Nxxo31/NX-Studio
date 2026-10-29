@@ -15,7 +15,7 @@ export default function PatternEditorial() {
         <div className="col-span-12 md:col-span-2">
           <motion.div
             initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-            className="font-mono text-[11px] uppercase tracking-[0.3em] text-nx-text-dim"
+            className="font-mono text-[11px] uppercase tracking-[0.3em] text-nx-dim"
           >
             NX-Studio<br />Est. 2023<br />Neiva · LATAM
           </motion.div>
@@ -45,7 +45,7 @@ export default function PatternEditorial() {
         <div className="col-span-12 md:col-span-2 md:text-right">
           <motion.p
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.6 }}
-            className="font-mono text-xs text-nx-text-muted"
+            className="font-mono text-xs text-nx-muted"
           >
             Estudio de software<br />que diseña y construye<br />productos para producción.
           </motion.p>
@@ -55,8 +55,8 @@ export default function PatternEditorial() {
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.4 }}
           className="col-span-12 mt-8 flex items-center gap-4"
         >
-          <a href="#" onClick={(e) => e.preventDefault()} className="lava-btn">Reservar consulta →</a>
-          <a href="#" onClick={(e) => e.preventDefault()} className="font-mono text-xs uppercase tracking-widest text-nx-text-muted hover:text-nx-text">Ver portafolio</a>
+          <a href="#" onClick={(e) => e.preventDefault()} className="nx-btn">Reservar consulta →</a>
+          <a href="#" onClick={(e) => e.preventDefault()} className="font-mono text-xs uppercase tracking-widest text-nx-muted hover:text-nx-text">Ver portafolio</a>
         </motion.div>
       </div>
     </div>

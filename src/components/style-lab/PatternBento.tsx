@@ -19,7 +19,7 @@ export default function PatternBento() {
           transition={{ duration: 0.6 }}
           className="mb-10"
         >
-          <span className="font-mono text-xs uppercase tracking-widest text-nx-text-dim">NX-Studio · glass/depth v0.8.0</span>
+          <span className="font-mono text-xs uppercase tracking-widest text-nx-dim">NX-Studio · glass/depth v0.8.0</span>
           <h2 className="mt-3 font-display text-4xl md:text-6xl font-bold tracking-tighter leading-[1.02] text-nx-text">
             Software que <span className="bg-gradient-to-r from-nx-primary to-nx-primary-soft bg-clip-text text-transparent">escala</span> contigo.
           </h2>
@@ -42,12 +42,12 @@ export default function PatternBento() {
               style={c.accent ? { borderColor: 'var(--nx-primary)', background: 'linear-gradient(180deg, var(--nx-surface), color-mix(in oklab, var(--nx-primary) 8%, var(--nx-surface)))' } : undefined}
             >
               <div className="flex items-center justify-between">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-nx-text-dim">{c.kicker}</span>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-nx-text-dim">{c.tag}</span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-nx-dim">{c.kicker}</span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-nx-dim">{c.tag}</span>
               </div>
               <div>
                 {c.title && <h3 className="font-display text-2xl font-bold text-nx-text">{c.title}</h3>}
-                <p className="mt-1 text-sm text-nx-text-muted leading-relaxed">{c.body}</p>
+                <p className="mt-1 text-sm text-nx-muted leading-relaxed">{c.body}</p>
               </div>
             </motion.article>
           ))}
