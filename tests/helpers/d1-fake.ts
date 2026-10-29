@@ -232,6 +232,15 @@ CREATE TABLE IF NOT EXISTS licitacion (
   display_currency TEXT,
   display_min REAL,
   display_max REAL,
+  utm_source TEXT,
+  utm_medium TEXT,
+  utm_campaign TEXT,
+  utm_content TEXT,
+  utm_term TEXT,
+  referrer TEXT,
+  landing_path TEXT,
+  email_sent INTEGER NOT NULL DEFAULT 0,
+  email_error TEXT,
   status TEXT NOT NULL DEFAULT 'nueva',
   user_id TEXT REFERENCES user(id) ON DELETE SET NULL,
   created_at INTEGER NOT NULL DEFAULT (unixepoch('subsec') * 1000),
@@ -290,6 +299,34 @@ CREATE TABLE IF NOT EXISTS compra (
 CREATE INDEX IF NOT EXISTS idx_licitacion_email ON licitacion(email);
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS idx_licitacion_status ON licitacion(status);
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS idx_licitacion_utm_source ON licitacion(utm_source, created_at DESC);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS analytics_event (
+  id TEXT PRIMARY KEY NOT NULL,
+  name TEXT NOT NULL,
+  path TEXT,
+  locale TEXT,
+  utm_source TEXT,
+  referrer TEXT,
+  props TEXT,
+  created_at INTEGER NOT NULL DEFAULT (unixepoch('subsec') * 1000)
+);
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS idx_analytics_event_created ON analytics_event(created_at DESC);
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS idx_analytics_event_name ON analytics_event(name, created_at DESC);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS newsletter_subscriber (
+  id TEXT PRIMARY KEY NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  locale TEXT,
+  source TEXT,
+  status TEXT NOT NULL DEFAULT 'activo' CHECK (status IN ('activo', 'baja')),
+  created_at INTEGER NOT NULL DEFAULT (unixepoch('subsec') * 1000)
+);
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS idx_newsletter_created ON newsletter_subscriber(created_at DESC);
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS idx_proyecto_slug ON proyecto(slug);
 --> statement-breakpoint

@@ -14,7 +14,7 @@ describe('DB · schema y migraciones', () => {
     expect(typeof db.update).toBe('function');
   });
 
-  it('applyMigrations crea las 12 tablas esperadas (4 auth + 4 business + 4 portal)', async () => {
+  it('applyMigrations crea las 14 tablas esperadas (4 auth + 4 business + 4 portal + analytics + newsletter)', async () => {
     const d1 = fakeD1();
     await applyMigrations(d1);
     const db = createDb(d1);
@@ -27,9 +27,11 @@ describe('DB · schema y migraciones', () => {
     const tableNames = tables.map(t => t.name).sort();
     expect(tableNames).toEqual([
       'account',
+      'analytics_event',
       'compra',
       'licitacion',
       'milestone',
+      'newsletter_subscriber',
       'portal_activity',
       'portal_message',
       'portal_session',

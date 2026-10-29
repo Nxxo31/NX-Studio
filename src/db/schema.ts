@@ -99,6 +99,19 @@ export const licitacion = sqliteTable('licitacion', {
   displayCurrency: text('display_currency'),
   displayMin: real('display_min'),
   displayMax: real('display_max'),
+  // ─── v0.11.0 Analitica de captacion (migrations/0004_analitica.sql) ───
+  // De donde vino el lead: UTM + referrer + pagina de aterrizaje.
+  utmSource: text('utm_source'),
+  utmMedium: text('utm_medium'),
+  utmCampaign: text('utm_campaign'),
+  utmContent: text('utm_content'),
+  utmTerm: text('utm_term'),
+  referrer: text('referrer'),
+  landingPath: text('landing_path'),
+  // Trazabilidad del aviso por email al operador: 0 = no se pudo enviar.
+  // El admin lo muestra para que ningun lead quede invisible.
+  emailSent: integer('email_sent', { mode: 'boolean' }).notNull().default(false),
+  emailError: text('email_error'),
   // Status gestionado por el operador
   status: text('status', { enum: ['nueva', 'contactada', 'propuesta_enviada', 'aceptada', 'rechazada', 'completada'] })
     .notNull()
@@ -264,6 +277,34 @@ export const deployLog = sqliteTable('deploy_log', {
   createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
 });
 
+// ─── v0.11.0 Analitica de captacion ─────────────────────────────────────
+// Eventos de primera parte: page views y conversiones. Existen aunque no se
+// configure un proveedor externo (Plausible) — el admin los consulta en
+// /admin/analitica. No guardamos IPs ni cookies: solo utm + referrer + ruta.
+
+export const analyticsEvent = sqliteTable('analytics_event', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  path: text('path'),
+  locale: text('locale'),
+  utmSource: text('utm_source'),
+  referrer: text('referrer'),
+  props: text('props'), // JSON serializado (sin PII)
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
+});
+
+// ─── v0.11.0 Newsletter ─────────────────────────────────────────────────
+// Suscriptores para nutrir leads que no estan listos para contratar todavia.
+
+export const newsletterSubscriber = sqliteTable('newsletter_subscriber', {
+  id: text('id').primaryKey(),
+  email: text('email').notNull().unique(),
+  locale: text('locale'),
+  source: text('source'),
+  status: text('status', { enum: ['activo', 'baja'] }).notNull().default('activo'),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
+});
+
 // Type exports para usar en el código de aplicación
 export type User = typeof user.$inferSelect;
 export type Licitacion = typeof licitacion.$inferSelect;
@@ -288,3 +329,7 @@ export type AuditLog = typeof auditLog.$inferSelect;
 export type NewAuditLog = typeof auditLog.$inferInsert;
 export type DeployLog = typeof deployLog.$inferSelect;
 export type NewDeployLog = typeof deployLog.$inferInsert;
+export type AnalyticsEvent = typeof analyticsEvent.$inferSelect;
+export type NewAnalyticsEvent = typeof analyticsEvent.$inferInsert;
+export type NewsletterSubscriber = typeof newsletterSubscriber.$inferSelect;
+export type NewNewsletterSubscriber = typeof newsletterSubscriber.$inferInsert;
