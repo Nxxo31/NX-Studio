@@ -4,6 +4,7 @@ import { getLocale, getT, localeUrl, LOCALES, DEFAULT_LOCALE } from "../i18n";
 import ChatbotWrapper from "../components/chatbot/ChatbotWrapper.astro";
 import BlackHole from "../components/ui/optimized-black-hole";
 import { shouldRenderChatbot } from "../lib/chatbot-fsm";
+import { PLAUSIBLE_DOMAIN } from "../lib/attribution";
 
 interface Props {
   title?: string;
@@ -57,6 +58,30 @@ const alternates = LOCALES.map((l) => ({
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    {/* Analitica externa (Plausible, cookieless) — opcional. Los eventos van
+        SIEMPRE a /api/analytics (D1, primera parte); esto solo agrega el
+        dashboard externo si hay dominio configurado. */}
+    {PLAUSIBLE_DOMAIN && (
+      <script
+        is:inline
+        data-domain={PLAUSIBLE_DOMAIN}
+        src="https://plausible.io/js/script.js"
+        defer
+      ></script>
+    )}
+    {/* JSON-LD de la organizacion: identidad del estudio para buscadores. */}
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'NX-Studio',
+      url: site,
+      logo: new URL('/favicon.svg', site).toString(),
+      description,
+      email: 'sebasvelascodev3101@gmail.com',
+      areaServed: 'LATAM',
+      knowsLanguage: ['es', 'en', 'pt'],
+      sameAs: ['https://github.com/Nxxo31'],
+    })} />
     <title>{title}</title>
   </head>
   <body class="bg-nx-bg text-nx-text antialiased relative">
@@ -77,6 +102,16 @@ const alternates = LOCALES.map((l) => ({
     </div>
 
     {shouldRenderChatbot(Astro.url.pathname) && <ChatbotWrapper />}
+
+    <script>
+      // Instrumentacion de captacion: captura la atribucion de la sesion
+      // (utm + referrer + landing) y registra el page view. Best-effort:
+      // si el beacon falla, la pagina no se ve afectada.
+      import { captureAttribution, trackEvent } from "../lib/attribution";
+
+      captureAttribution();
+      trackEvent("page_view");
+    </script>
 
     <script is:inline>
       // Reveal on scroll — global observer (vanilla, ~30 lines, sin dependencias)

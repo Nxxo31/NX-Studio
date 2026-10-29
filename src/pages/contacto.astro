@@ -211,6 +211,8 @@ const i18nScript = {
   window.__contactoI18n = { names: i18nFeatureNames, s: i18nScript };
 </script>
 <script>
+  import { getAttribution, trackEvent } from '../lib/attribution';
+
   // Features from pricing module — labels localizados via window.__contactoI18n.names
   const FEATURES = [
     { id: 'discovery', cat: 'core' },
@@ -293,6 +295,8 @@ const i18nScript = {
   const panel = document.getElementById('result-panel');
   if (form && panel) {
     const defaults = new Set(['discovery', 'design-system', 'api', 'db', 'auth', 'testing', 'deploy']);
+    // Primera interaccion = senal de intencion (funnel).
+    form.addEventListener('focusin', () => { trackEvent('contact_form_start'); }, { once: true });
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const fd = new FormData(form);
@@ -312,6 +316,8 @@ const i18nScript = {
         features,
         modifiers: [],
         honeypot: String(fd.get('honeypot') || ''),
+        // Atribucion: de donde vino el lead (utm + referrer + landing).
+        ...getAttribution(),
       };
       if (quoteCtx.currency) {
         payload.display_currency = quoteCtx.currency;
@@ -330,6 +336,11 @@ const i18nScript = {
         });
         const data = await res.json();
         if (data.ok) {
+          trackEvent('lead_submitted', {
+            tipo: String(fd.get('tipo') || 'webapp'),
+            banda: String(data.cotizacion?.band ?? ''),
+            features: String(features.length),
+          });
           const fmtDisp = (n: number, cur: string) => {
             try {
               return new Intl.NumberFormat(cur === 'COP' ? 'es-CO' : 'en-US', { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(n);

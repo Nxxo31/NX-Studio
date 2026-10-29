@@ -252,6 +252,7 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
 </script>
 <script>
   import { computeQuote, ENGAGEMENT_SHAPES, type EngagementShape } from '../data/pricing';
+  import { trackEvent } from '../lib/attribution';
 
   type State = {
     shape: EngagementShape;
@@ -312,9 +313,18 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
     i18nLabels: { shape: string; subtotalFeatures: string; baseFee: string; multiplier: string };
   };
 
+  // Senal de cotizacion: se dispara una vez el usuario deja de tocar el
+  // cotizador (debounce 1.5s) para no generar un evento por cada clic.
+  let quoteEventTimer: number | undefined;
+  function trackQuote(band: string, features: number, hours: number) {
+    if (quoteEventTimer) window.clearTimeout(quoteEventTimer);
+    quoteEventTimer = window.setTimeout(() => {
+      trackEvent('quote_calculated', { band, features, hours: Math.round(hours) });
+    }, 1500);
+  }
+
   function render() {
     const quote = computeQuote(state);
-
     // Panel header (moneda seleccionada + ancla USD)
     const rate = rates[state.currency] ?? 1;
     const lowConverted = Math.round(quote.totalLow * rate);
@@ -325,6 +335,7 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
     $('#q-base').textContent  = '$' + fmt.format(quote.baseFee);
     $('#q-count').textContent = String(state.featureIds.length);
     $('#q-band').textContent  = L.i18nBands[quote.bandLabel] ?? quote.bandLabel;
+    trackQuote(quote.bandLabel, state.featureIds.length, quote.totalHours);
     const usdNote = $('#q-usd');
     if (usdNote) usdNote.textContent = state.currency === 'USD' ? '' : ` · ≈ $${fmt.format(quote.totalLow)}-$${fmt.format(quote.totalHigh)} USD`;
 
@@ -403,6 +414,16 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
       if (cb) (cb as HTMLInputElement).checked = isOn;
     });
   }
+
+  // CTA del cotizador -> /contacto: conversion mayor del funnel.
+  document.getElementById('q-cta')?.addEventListener('click', () => {
+    const quote = computeQuote(state);
+    trackEvent('quote_cta_click', {
+      band: quote.bandLabel,
+      features: state.featureIds.length,
+      currency: state.currency,
+    });
+  });
 
   // Wire shape buttons
   document.querySelectorAll<HTMLElement>('.shape-btn').forEach((btn) => {
