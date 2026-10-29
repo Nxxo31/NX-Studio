@@ -42,12 +42,29 @@ const statusLabel = {
   prototype: "Prototipo · funcional",
   archived: "Archivado",
 }[project.status];
+
+// JSON-LD del producto: SoftwareApplication con su repo y stack.
+const site = Astro.site ?? "https://nx-studio.nx-studio.workers.dev";
+const productLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: project.name,
+  applicationCategory: project.category,
+  description: project.desc,
+  operatingSystem: 'Web',
+  url: new URL(`/productos/${project.slug}/`, site).toString(),
+  author: { '@type': 'Organization', name: 'NX-Studio', url: site },
+  ...(project.repo ? { codeRepository: project.repo } : {}),
+  ...(images[0] ? { image: new URL(images[0], site).toString() } : {}),
+  keywords: project.stack.join(', '),
+};
 ---
 
 <Base
   title={`${project.name} — Proyectos NX-Studio`}
   description={project.tagline}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(productLd)} />
   <Nav />
   <main>
     <!-- ============================================================

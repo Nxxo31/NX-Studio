@@ -21,9 +21,31 @@ const CTA_LABEL = {
   en: "Quote this service →",
   pt: "Cotar este serviço →",
 } as Record<string, string>;
+
+// JSON-LD: catalogo de servicios (ItemList of Service) para buscadores.
+const site = Astro.site ?? "https://nx-studio.nx-studio.workers.dev";
+const servicesLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: t('pages.servicios.title'),
+  itemListElement: SERVICES.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Service',
+      name: s.title[locale],
+      description: s.desc[locale],
+      serviceType: s.title[locale],
+      provider: { '@type': 'Organization', name: 'NX-Studio', url: site },
+      areaServed: 'LATAM',
+      url: new URL(localeUrl(`/servicios/#${s.slug}`, locale), site).toString(),
+    },
+  })),
+};
 ---
 
 <Base title={t('pages.servicios.title')} description={t('pages.servicios.description')}>
+  <script type="application/ld+json" set:html={JSON.stringify(servicesLd)} />
   <Nav />
   <main>
     <section class="relative px-6 py-20 lg:py-28">

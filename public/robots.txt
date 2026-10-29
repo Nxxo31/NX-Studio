@@ -1,0 +1,17 @@
+# NX-Studio — robots.txt
+#
+# Todo el sitio es indexable; solo se excluyen las superficies privadas
+# (panel admin, portal de cliente, APIs y assets de build).
+
+User-agent: *
+Allow: /
+
+Disallow: /admin
+Disallow: /admin/
+Disallow: /portal
+Disallow: /portal/
+Disallow: /api/
+Disallow: /_astro/
+
+# Sin credenciales ni datos sensibles en el sitio público: no hay nada que ocultar
+Sitemap: https://nx-studio.nx-studio.workers.dev/sitemap.xml
