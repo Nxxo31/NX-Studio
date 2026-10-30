@@ -272,9 +272,18 @@ catálogo y los templates, con `xhtml:link` por locale), `public/robots.txt`
 el home (es/en/pt) y `/admin/newsletter` con export CSV. Evento
 `newsletter_signup`.
 
+**7. E2E ejecutable en local + fix del chatbot.** Al cierre del sprint se
+desbloqueó la suite Playwright completa: el servidor local correcto es
+`npx wrangler dev --config dist/server/wrangler.json` (Worker con assets, no
+Pages — ver Limitación 11). **164/164 tests E2E en verde** (~1.4 min) y
+vitest **306/306**. La E2E destapó un bug real del chatbot: `/reset` no
+cancelaba la respuesta pendiente del bot, que llegaba después del greeting y
+dejaba el panel con 2 mensajes (fallaba en desktop y mobile). Fix: el timer de
+la respuesta se guarda en un ref y `doReset()` lo cancela.
+
 **Verificación:** build exit 0 + i18n-guard OK (93 HTML, 677 keys), vitest
-305/305 (6 tests nuevos de analítica y newsletter), CSS compilado y DOM real
-inspeccionado con Playwright.
+306/306 (6 tests nuevos de analítica y newsletter), Playwright 164/164 contra
+`wrangler dev` local, CSS compilado y DOM real inspeccionado con Playwright.
 
 ### Sprint monocromático v0.9.0 (2026-10-21)
 
@@ -796,15 +805,18 @@ PENDIENTE: `RESEND_API_KEY` — sin cuenta Resend el email queda en modo mock
    siendo `npm run build` + `astro preview` (o prod).
 10. **Puente legacy `--lava-*`: RESUELTO en v0.10.0** — 284 ocurrencias
     migradas a `nx-*` y bridge eliminado del CSS (0 clases `lava-*` en el DOM).
-11. **E2E requiere preview server y el runtime local de wrangler está roto en
-    esta máquina**: `npx wrangler pages dev dist` muere con
-    `No such module "@cloudflare/unenv-preset/node/process"` (workerd vs
-    `@cloudflare/workers-types` instalados), así que la suite Playwright no
-    levanta sola. `playwright.config.ts` no define `webServer`: hay que
-    arrancar `npx astro preview --port 4322` a mano (sirve el output estático,
-    suficiente para las páginas de marketing) y `baseURL` apunta a
-    `127.0.0.1:4322`. Las rutas SSR (`/portal`, `/admin`, `/api`) requieren el
-    runtime de wrangler.
+11. **Servidor local: `wrangler dev`, no `wrangler pages dev`** (resuelto
+    2026-10-29): el despliegue es un Worker con static assets, así que el
+    servidor local que reproduce la topología (SSR + binding ASSETS + D1 + KV +
+    `.dev.vars`) es `npx wrangler dev --config dist/server/wrangler.json
+    --port 4322 --ip 127.0.0.1`. Con él la suite **Playwright corre entera en
+    local: 164/164 en ~1.4 min**. `wrangler pages dev dist` muere al arrancar
+    el runtime (`No such module "@cloudflare/unenv-preset/node/process"`) por
+    el modo Pages + el flag `disable_nodejs_process_v2`; con wrangler ≥ 4.151
+    ese flag deja de hacer falta, pero quitarlo afecta a prod (riesgo
+    astro#14511) → decisión del operador. `astro preview` sí sirve el build
+    estático **y** las rutas SSR (verificado con `/sitemap.xml` y
+    `/api/health`).
 11. **`.dev.vars` gitignored** contiene `TWENTYFIRST_API_KEY` (21st.dev) para
     el backend VGPU dormido. Si ese backend se reactiva, el nombre de env var
     debe reconciliarse con lo que `@21st.dev/vgpu` espere.

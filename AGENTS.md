@@ -108,7 +108,7 @@ Comprobación sin exponer valores: `GET /api/health` →
 - Headers de seguridad en `Base.astro`: `X-Content-Type-Options: nosniff`, `referrer: strict-origin-when-cross-origin`
 - Canonical URLs por página (defense-in-depth para SEO anti-duplicación)
 - `.gitignore` estricto: `.env*`, SQLite artifacts, IDE/editor temp, coverage, `.vitest/`
-- **Secrets NUNCA en código fuente** — producción: `wrangler pages secret put <NAME> --project-name nx-studio`; local: `.dev.vars` (gitignored)
+- **Secrets NUNCA en código fuente** — producción: `wrangler secret put <NAME> --config dist/server/wrangler.json` (es un **Worker** con assets, no Pages: `wrangler pages secret put` NO llega al runtime); local: `.dev.vars` (gitignored)
 - Scripts third-party: revisar licencias antes de agregar dependencias
 - Validación en dos capas: HTML5 client-side + Zod server-side en /api/* — los envíos de contacto persisten en D1 y notifican vía Resend
 
@@ -150,7 +150,7 @@ Comprobación sin exponer valores: `GET /api/health` →
 4. Para tareas >1 archivo o UI work: pensar primero qué construir, mostrar mockups si es UI, luego escribir código
 5. **Build gate**: `npm run build` debe dar exit 0 con todas las páginas compiladas (incluye el i18n-guard)
 6. **Smoke test gate**: `npm run build` + servir `dist/client`, curl a todas las rutas afectadas, verificar HTTP 200
-7. **Test gates**: `npm run test` (vitest, 299 tests) verde antes de commit. `npm run test:e2e` (playwright) requiere un preview server en `127.0.0.1:4322` arrancado a mano (`npx astro preview --port 4322`): `playwright.config.ts` no define `webServer`. Ojo: en esta máquina el runtime local de wrangler está roto (`No such module "@cloudflare/unenv-preset/node/process"`), así que las rutas SSR (`/portal`, `/admin`, `/api`) no se pueden ejercitar localmente.
+7. **Test gates**: `npm run test` (vitest, 306 tests) verde antes de commit. `npm run test:e2e` (playwright, 164 tests) necesita el stack completo local: `npx wrangler dev --config dist/server/wrangler.json --port 4322 --ip 127.0.0.1` (ver "Servidor local" más abajo). `playwright.config.ts` no define `webServer`: hay que arrancarlo a mano.
 8. Update PROJECT.md con resultados ANTES de commit
 9. Commit atómico con conventional message (type(scope): description) — **1 cambio lógico = 1 commit**
 10. `git push origin main` solo con working tree limpio y gates verdes
@@ -188,6 +188,35 @@ internas de Vite pasan a Vite.
 `wrangler.toml`.** El gate de verificación visual de producción sigue siendo
 `npm run build` + `astro preview` (o prod directamente).
 
+## Servidor local: `wrangler dev`, NO `wrangler pages dev`
+
+El despliegue es un **Worker con static assets**, no Pages. El servidor local
+que reproduce esa topología (SSR + binding ASSETS + D1 + KV + `.dev.vars`) es:
+
+```bash
+npm run build
+npx wrangler dev --config dist/server/wrangler.json --port 4322 --ip 127.0.0.1
+```
+
+- Verificado 2026-10-29: sirve `/`, `/portal/login`, `/admin`, `/api/*` y
+  `/sitemap.xml` → la suite E2E completa corre en local (164/164, ~1.4 min).
+- `npx wrangler pages dev dist` **NO funciona** en este repo: muere al arrancar
+  el runtime con `No such module "@cloudflare/unenv-preset/node/process"`
+  (es el modo Pages + el flag `disable_nodejs_process_v2` de `wrangler.toml`;
+  con wrangler ≥ 4.151 el flag deja de hacer falta, pero quitarlo afecta a
+  prod → decisión del operador).
+- `npx astro preview --port 4322` sirve el build estático (páginas de
+  marketing) y **también las rutas SSR** con el adapter de Cloudflare: sirve
+  para verificación visual y para el smoke test, pero no expone D1 ni KV.
+
+```bash
+# Smoke test SSR local (el adapter cloudflare requiere wrangler para preview)
+npm run build
+npx wrangler dev --config dist/server/wrangler.json --port 4321 --ip 127.0.0.1
+# en otra terminal:
+curl -s -o /dev/null -w "/ %{http_code}\n" http://127.0.0.1:4321/
+```
+
 ## Comandos frecuentes
 
 ```bash
@@ -197,8 +226,11 @@ npm run dev -- --port 4321 --host 127.0.0.1
 # Build producción (incluye el i18n-guard)
 npm run build
 
-# Preview estático para verificación visual y e2e (puerto que espera playwright)
+# Preview estático para verificación visual (puerto que espera playwright)
 npx astro preview --port 4322 --host 127.0.0.1
+
+# Servidor local FULL STACK (SSR + D1 + KV + .dev.vars) — el que usa la E2E
+npx wrangler dev --config dist/server/wrangler.json --port 4322 --ip 127.0.0.1
 
 # Smoke test SSR local (el adapter cloudflare requiere wrangler para preview)
 npm run build
@@ -207,8 +239,8 @@ npx wrangler pages dev dist --port 4321
 curl -s -o /dev/null -w "/ %{http_code}\n" http://127.0.0.1:4321/
 
 # Suites
-npm run test       # vitest 305 tests
-npm run test:e2e   # playwright (necesita el preview en 4322)
+npm run test       # vitest 306 tests
+npm run test:e2e   # playwright 164 tests (con wrangler dev en :4322)
 
 # Email de leads: secret en el WORKER (no en Pages) + sonda de estado
 npx wrangler secret put RESEND_API_KEY --config dist/server/wrangler.json
