@@ -227,6 +227,10 @@ export default function Chatbot({ pathname, locale, strings, storageKey = STORAG
 
   const isMountedRef = React.useRef(false);
   const storageRef = React.useRef<ChatbotStorage>(defaultStorage());
+  // Timer de la respuesta del bot en vuelo. El reset lo cancela: si no, la
+  // respuesta pendiente llega despues del reset y el panel queda con 2
+  // mensajes en vez del greeting solo.
+  const pendingReplyRef = React.useRef<number | null>(null);
   const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
   const fabRef = React.useRef<HTMLButtonElement | null>(null);
   const scrollerRef = useAutoScroll([storageRef.current.history.length, storageRef.current.state]);
@@ -315,6 +319,12 @@ export default function Chatbot({ pathname, locale, strings, storageKey = STORAG
   }, []);
 
   const doReset = React.useCallback(() => {
+    // Cancelar la respuesta en vuelo: si llega despues del reset, el panel
+    // muestra la respuesta vieja encima del greeting.
+    if (pendingReplyRef.current !== null) {
+      window.clearTimeout(pendingReplyRef.current);
+      pendingReplyRef.current = null;
+    }
     const fresh = resetHistory(storageRef.current);
     // Re-sembrar greeting inmediatamente para que el panel no quede vacío.
     const greeting = makeMessage("bot", t(INITIAL_GREETING_KEY), Date.now());
@@ -337,7 +347,8 @@ export default function Chatbot({ pathname, locale, strings, storageKey = STORAG
       setUI({ kind: "thinking" });
 
       // 2) compute bot response
-      window.setTimeout(() => {
+      pendingReplyRef.current = window.setTimeout(() => {
+        pendingReplyRef.current = null;
         if (!isMountedRef.current) return;
         const { response, sideEffect } = processInput(trimmed);
         // Side effects primero (comandos).
