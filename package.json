@@ -21,9 +21,11 @@
     "seed:proyectos": "tsx scripts/seed-proyectos.ts --apply-sql > _seed-proyectos.sql && echo 'Generated: _seed-proyectos.sql'",
     "seed:templates": "tsx scripts/seed-templates.ts --apply-sql > _seed-templates.sql && echo 'Generated: _seed-templates.sql'",
     "seed:dry": "tsx scripts/seed-proyectos.ts --dry-run && tsx scripts/seed-templates.ts",
+    "seed:admin": "tsx scripts/seed-admin.ts",
     "sync:proyectos": "tsx scripts/sync-project-images.ts",
     "db:create": "wrangler d1 create nx-studio-db",
     "db:migrate:local": "wrangler d1 execute nx-studio-db --local --file .wrangler/init.sql",
+    "db:migrate:dev": "wrangler d1 execute nx-studio-db --local --persist-to dist/server/.wrangler/state --file .wrangler/init.sql && wrangler d1 execute nx-studio-db --local --persist-to dist/server/.wrangler/state --file migrations/0002_portal.sql && wrangler d1 execute nx-studio-db --local --persist-to dist/server/.wrangler/state --file migrations/0003_admin.sql && wrangler d1 execute nx-studio-db --local --persist-to dist/server/.wrangler/state --file migrations/0004_analitica.sql && wrangler d1 execute nx-studio-db --local --persist-to dist/server/.wrangler/state --file migrations/0005_newsletter.sql && wrangler d1 execute nx-studio-db --local --persist-to dist/server/.wrangler/state --file migrations/0006_citas.sql",
     "db:migrate:remote": "wrangler d1 execute nx-studio-db --remote --file .wrangler/init.sql",
     "db:seed:local": "npm run seed:proyectos && npm run seed:templates && wrangler d1 execute nx-studio-db --local --file _seed-proyectos.sql && wrangler d1 execute nx-studio-db --local --file _seed-templates.sql",
     "db:seed:remote": "npm run seed:proyectos && npm run seed:templates && wrangler d1 execute nx-studio-db --remote --file _seed-proyectos.sql && wrangler d1 execute nx-studio-db --remote --file _seed-templates.sql"
