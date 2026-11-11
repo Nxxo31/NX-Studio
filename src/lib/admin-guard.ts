@@ -28,7 +28,9 @@ export const ADMIN_ROLES: AdminRole[] = ['admin', 'gatekeeper', 'designer', 'dev
 export type AdminGuardResult =
   | { action: 'next'; adminSession: { user: { id: string; role: AdminRole; email?: string; name?: string } } }
   | { action: 'redirect'; location: string }
-  | { action: 'forbidden'; reason: 'role-not-in-team' };
+  | { action: 'forbidden'; reason: 'role-not-in-team' }
+  /** API de admin sin sesión válida → 401 JSON (no redirect a HTML). */
+  | { action: 'unauthorized' };
 
 export interface AdminGuardContext {
   /** Pathname normalizado (sin base '/NX-Studio') */
@@ -41,6 +43,17 @@ export interface AdminGuardContext {
 
 function isAdminPath(pathname: string): boolean {
   return pathname === '/admin' || pathname.startsWith('/admin/');
+}
+
+/**
+ * Las APIs del panel (/api/admin/*) también pasan por este guard.
+ *
+ * Sin esto, `locals.portalSession` nunca se puebla en las rutas API y
+ * `withRole()` (que lee el rol de ahí) responde 401 SIEMPRE — incluso con
+ * una sesión de admin válida. El CRUD del panel queda inutilizable.
+ */
+function isAdminApiPath(pathname: string): boolean {
+  return pathname === '/api/admin' || pathname.startsWith('/api/admin/');
 }
 
 function escapeHtml(input: string): string {
@@ -86,7 +99,8 @@ function forbiddenPage(pathname: string): Response {
 }
 
 export async function adminGuard(ctx: AdminGuardContext): Promise<AdminGuardResult | { action: 'bypass' }> {
-  if (!isAdminPath(ctx.pathname)) {
+  const esApi = isAdminApiPath(ctx.pathname);
+  if (!isAdminPath(ctx.pathname) && !esApi) {
     return { action: 'bypass' };
   }
 
@@ -102,6 +116,8 @@ export async function adminGuard(ctx: AdminGuardContext): Promise<AdminGuardResu
     session = null;
   }
   if (!session || !session.user || typeof session.user.id !== 'string') {
+    // En una API devolvemos 401 JSON; en una página, redirect al login.
+    if (esApi) return { action: 'unauthorized' };
     return {
       action: 'redirect',
       location: `/admin/login?from=${encodeURIComponent(ctx.pathname)}`,
@@ -124,6 +140,25 @@ export async function adminGuard(ctx: AdminGuardContext): Promise<AdminGuardResu
       },
     },
   };
+}
+
+/** Respuesta 403 para APIs de admin (JSON, no HTML). */
+export function renderAdminForbiddenApi(pathname: string): Response {
+  return new Response(
+    JSON.stringify({ ok: false, error: 'forbidden', path: pathname }),
+    {
+      status: 403,
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
+}
+
+/** Respuesta 401 para APIs de admin sin sesión válida. */
+export function renderAdminUnauthorizedApi(): Response {
+  return new Response(JSON.stringify({ ok: false, error: 'unauthorized' }), {
+    status: 401,
+    headers: { 'Content-Type': 'application/json' },
+  });
 }
 
 /** Construye la Response 403 con el mensaje del spec. Útil para tests y

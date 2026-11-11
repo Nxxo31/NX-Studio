@@ -2,7 +2,12 @@ import { defineMiddleware } from 'astro:middleware';
 import { detectLocale, LOCALE_COOKIE } from './i18n/detect';
 import type { Locale } from './i18n/country-map';
 import { portalGuard } from './lib/portal-guard';
-import { adminGuard, renderAdminForbidden } from './lib/admin-guard';
+import {
+  adminGuard,
+  renderAdminForbidden,
+  renderAdminForbiddenApi,
+  renderAdminUnauthorizedApi,
+} from './lib/admin-guard';
 import type { PortalEnv } from './lib/portal-auth';
 import type { AuthEnv } from './lib/auth';
 import { env as runtimeEnv } from 'cloudflare:workers';
@@ -94,11 +99,17 @@ export const onRequest = defineMiddleware(async (context, next) => {
     request: context.request,
     env: runtimeEnv as unknown as AuthEnv,
   });
+  const esApiAdmin = logical === '/api/admin' || logical.startsWith('/api/admin/');
   if (adminResult.action === 'redirect') {
     return context.redirect(adminResult.location, 302);
   }
+  if (adminResult.action === 'unauthorized') {
+    // API de admin sin sesión válida → 401 JSON (un redirect a HTML rompe
+    // los fetch del panel).
+    return renderAdminUnauthorizedApi();
+  }
   if (adminResult.action === 'forbidden') {
-    return renderAdminForbidden(logical);
+    return esApiAdmin ? renderAdminForbiddenApi(logical) : renderAdminForbidden(logical);
   }
   if (adminResult.action === 'next') {
     (context.locals as { portalSession?: { user: { id: string; role: string } } }).portalSession = {
@@ -107,6 +118,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
   if (logical === '/admin' || logical.startsWith('/admin/')) {
     // /admin/* es i18n-bypass (interno, sin localización por ahora)
+    return next();
+  }
+  if (esApiAdmin) {
+    // /api/admin/* también es i18n-bypass.
     return next();
   }
 

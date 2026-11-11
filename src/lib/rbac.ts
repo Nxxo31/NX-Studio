@@ -39,6 +39,9 @@ export const RBAC_MATRIX: Record<string, Role[]> = {
   'audit_log.read': ['admin', 'gatekeeper'],
   'deploy.read': ['admin', 'gatekeeper', 'designer', 'dev'],
   'deploy.trigger': ['admin', 'gatekeeper'],
+  'cita.read': ['admin', 'gatekeeper', 'designer', 'dev'],
+  'cita.update': ['admin', 'gatekeeper'],
+  'cita.cancel': ['admin', 'gatekeeper'],
 };
 
 export function canRole(role: Role, action: string): boolean {
