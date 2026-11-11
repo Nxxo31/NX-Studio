@@ -519,6 +519,58 @@ cacheado — `unset CLOUDFLARE_API_TOKEN` primero; ver `docs/deploy.md`).
 | Validación  | Zod 3                                            |
 | Tests       | Vitest 5 + fake D1 (better-sqlite3 in-memory)    |
 
+## Agenda de citas con videollamada (2026-11-11)
+
+Cierre del back-end: el pipeline **cotizador → cita agendada → videollamada** ya
+funciona de punta a punta, y los tres bloqueantes de auth que impiden usar el
+portal y el panel quedaron arreglados.
+
+### Lo que se construyó
+
+| Pieza | Dónde | Qué hace |
+|---|---|---|
+| Agenda | `src/lib/agenda.ts` | Slots de 45 min, lun–vie 09:00–12:00 y 14:00–17:00 (hora de Bogotá), anticipación mínima 12 h, horizonte 60 días. Colombia es UTC-5 fijo → la conversión es aritmética y no depende del TZ del runtime. |
+| Persistencia | `migrations/0006_citas.sql` + tabla `cita` | Snapshot del presupuesto (banda, rango, horas estimadas), enlace de Meet, estado del ciclo de vida. Índice único parcial por `fecha` → red de seguridad contra la doble reserva. |
+| Repo | `src/server/cita-repo.ts` | CRUD + consultas de reservas del día (bloquean el calendario) y de citas por usuario/email. |
+| Handler | `src/server/agenda-handler.ts` | Valida (Zod + honeypot), **recomputa el precio en el servidor** (nunca confía en el total del cliente), verifica el slot, crea el Meet y avisa por email. |
+| API | `src/pages/api/agenda/disponibilidad.ts`, `src/pages/api/agenda/cita.ts` | Slots libres (público) y reserva (público). |
+| Meet | `src/lib/google-calendar.ts` | Google Calendar por REST (service account + JWT RS256 con WebCrypto, sin el SDK `googleapis`). Si no hay credenciales, `crearEventoMeet` devuelve `null` y la cita queda `pendiente` para que el operador pegue el enlace desde `/admin/citas`. |
+| UI pública | `src/pages/agendar.astro` | Paso 1: día y hora. Paso 2: datos + rango estimado recalculado. Confirmación con el enlace. |
+| UI operador | `src/pages/admin/citas.astro` | Listado con filtros, confirmar enlace, cancelar, completar, notas. Cada acción deja rastro en `audit_log`. |
+
+**El precio nunca lo dicta el cliente**: se recomputa con `computeQuote` a partir
+de (engagement, features, modifiers). Verificado: un submit con `precio_min=1`
+guarda el rango real ($8.798–$11.902, banda Standard, 138 h).
+
+### Bloqueantes de auth corregidos
+
+1. **El portal era inalcanzable.** El catch-all `/api/auth/*` (admin) emitía la
+   cookie `nx-studio`, pero `portalGuard` lee `nx-studio-portal-` → loop de
+   login (302 infinito). Ahora el portal tiene su propio catch-all
+   (`src/pages/api/portal/auth/[...all].ts`) con `basePath: '/api/portal/auth'`,
+   su propia tabla de sesiones (`portal_session`) y su prefijo de cookie.
+2. **El panel admin daba 403 a todos.** El signup deja `role='cliente'` y no
+   existía forma de crear un admin. Nuevo `npm run seed:admin` (hash scrypt de
+   better-auth, `--target=local|remote`).
+3. **`adminGuard` solo cubría `/admin/*`, no `/api/admin/*`** → `locals.portalSession`
+   nunca se poblaba en las APIs y `withRole()` respondía 401 siempre: **el CRUD
+   del panel no funcionaba**. Además `/api/admin/update-status` no validaba nada
+   en la app (dependía de la policy de Cloudflare Access, aún sin crear) →
+   cualquiera podía cambiar el estado de una licitación. Ahora hay guard + RBAC.
+
+### Pitfalls del frontend (afectan a cualquier página nueva)
+
+- **`define:vars` NO procesa TypeScript.** Genera un script clásico inline: los
+  `as HTMLInputElement` quedan como JS inválido (SyntaxError) y el script corre
+  durante el parseo, antes de que existan los elementos. Patrón correcto: un
+  `<script type="application/json">` con la config + un `<script>` normal
+  (módulo, deferred) que la lee.
+- **`trustedOrigins` de better-auth.** En local el `Origin` del navegador
+  (`http://127.0.0.1:4322`) no es el `BETTER_AUTH_URL` de producción →
+  "Invalid origin". `DEV_ORIGINS` añade los loopbacks permitidos.
+- **`__Secure-` no se reenvía sobre http://** por `http.cookiejar` ni por
+  Playwright. Para probar sesiones hay que reenviar el `Set-Cookie` crudo a mano.
+
 ## Estado de implementación
 
 | Fase | Descripción | Commit |

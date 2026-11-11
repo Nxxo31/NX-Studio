@@ -1,0 +1,346 @@
+---
+// /agendar — agendar una llamada de scoping con el precio del cotizador.
+//
+// FLUJO: /cotizador (el cliente ve su rango estimado) → "Agendar llamada" →
+// esta página → elige día y hora → deja sus datos → recibe la confirmación
+// con el enlace de videollamada.
+//
+// La página es SSR (prerender = false) porque lee query params (shape,
+// features, mods) y porque el precio se RECALCULA en el servidor con
+// computeQuote — el cliente nunca dicta la cifra.
+//
+// El enlace de Meet se crea automáticamente si hay credenciales de Google
+// Calendar; si no, la cita queda pendiente de que el operador confirme el
+// enlace y el cliente lo recibe por correo.
+
+import Base from '~/layouts/Base.astro';
+import { getT, getLocale } from '~/i18n';
+import { computeQuote, type EngagementShape } from '~/data/pricing';
+import { DURACION_MINUTOS, TIMEZONE } from '~/lib/agenda';
+
+export const prerender = false;
+
+const t = getT(getLocale(Astro));
+
+// ── Contexto del cotizador (query params) ───────────────────────────────
+const sp = Astro.url.searchParams;
+const shapeRaw = sp.get('shape') ?? 'fixed';
+const shape: EngagementShape = (['fixed', 'retainer', 'dedicated', 'tm'] as const).includes(
+  shapeRaw as EngagementShape
+)
+  ? (shapeRaw as EngagementShape)
+  : 'fixed';
+
+const features = (sp.get('features') ?? '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+const modifiers = (sp.get('mods') ?? '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+const licitacionId = sp.get('licitacion') ?? null;
+
+// ── Precio recalculado en el servidor (fuente de verdad) ────────────────
+const quote = computeQuote({ shape, featureIds: features, modifierIds: modifiers });
+
+const fmtUsd = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 0,
+});
+---
+
+<Base
+  title="Agenda tu llamada — NX-Studio"
+  description="Reserva una videollamada para revisar tu proyecto con el rango de precio que ya calculaste."
+>
+  <main class="mx-auto max-w-5xl px-6 py-16">
+    <header class="max-w-2xl">
+      <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--nx-primary);">// videollamada</p>
+      <h1 class="mt-2 font-display text-3xl font-bold md:text-4xl">Agenda tu llamada</h1>
+      <p class="mt-3 text-nx-muted">
+        45 minutos por videollamada para revisar el alcance de tu proyecto y ajustar el rango de precio
+        que ya tienes. Sin compromiso.
+      </p>
+    </header>
+
+    <div class="mt-10 grid gap-8 lg:grid-cols-[1fr_380px]">
+      <!-- ── Paso 1: día y hora ─────────────────────────────────────── -->
+      <section class="glass-card p-6" aria-labelledby="agenda-slots-title">
+        <h2 id="agenda-slots-title" class="font-display text-lg font-bold">1 · Elige día y hora</h2>
+        <p class="mt-1 font-mono text-xs text-nx-dim">
+          Horario de Bogotá ({TIMEZONE}). {DURACION_MINUTOS} minutos por llamada.
+        </p>
+
+        <div class="mt-5">
+          <label for="agenda-fecha" class="font-mono text-[10px] uppercase tracking-widest text-nx-muted">
+            Fecha
+          </label>
+          <input
+            id="agenda-fecha"
+            type="date"
+            class="nx-input mt-1"
+            data-testid="agenda-fecha"
+          />
+        </div>
+
+        <div id="agenda-slots" class="mt-5 grid gap-2 sm:grid-cols-3" data-testid="agenda-slots">
+          <p class="text-sm text-nx-muted">Cargando horarios disponibles…</p>
+        </div>
+
+        <p id="agenda-slots-error" class="mt-4 hidden text-sm" style="color: var(--nx-danger)" role="alert"></p>
+      </section>
+
+      <!-- ── Paso 2: datos + resumen ────────────────────────────────── -->
+      <section class="glass-card p-6" aria-labelledby="agenda-form-title">
+        <h2 id="agenda-form-title" class="font-display text-lg font-bold">2 · Tus datos</h2>
+
+        <div class="mt-4 border border-nx-border p-4">
+          <div class="font-mono text-[10px] uppercase tracking-widest text-nx-dim">Rango estimado</div>
+          <div class="mt-1 font-display text-2xl">
+            {fmtUsd.format(quote.totalLow)} – {fmtUsd.format(quote.totalHigh)}
+          </div>
+          <div class="mt-1 text-xs text-nx-muted">
+            Banda {quote.bandLabel} · {quote.totalHours}h estimadas
+          </div>
+          <p class="mt-2 text-xs text-nx-dim">
+            Es un rango, no un precio final. En la llamada cerramos el alcance y ajustamos esta cifra.
+          </p>
+        </div>
+
+        <form id="agenda-form" class="mt-5 space-y-3" data-testid="agenda-form">
+          <input id="agenda-slot" type="hidden" name="inicio" />
+
+          <div>
+            <label for="agenda-nombre" class="font-mono text-[10px] uppercase tracking-widest text-nx-muted">
+              Nombre *
+            </label>
+            <input id="agenda-nombre" name="nombre" required minlength="2" class="nx-input mt-1" />
+          </div>
+          <div>
+            <label for="agenda-email" class="font-mono text-[10px] uppercase tracking-widest text-nx-muted">
+              Email *
+            </label>
+            <input id="agenda-email" name="email" type="email" required class="nx-input mt-1" />
+          </div>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label for="agenda-telefono" class="font-mono text-[10px] uppercase tracking-widest text-nx-muted">
+                Teléfono
+              </label>
+              <input id="agenda-telefono" name="telefono" class="nx-input mt-1" />
+            </div>
+            <div>
+              <label for="agenda-empresa" class="font-mono text-[10px] uppercase tracking-widest text-nx-muted">
+                Empresa
+              </label>
+              <input id="agenda-empresa" name="empresa" class="nx-input mt-1" />
+            </div>
+          </div>
+          <div>
+            <label for="agenda-notas" class="font-mono text-[10px] uppercase tracking-widest text-nx-muted">
+              ¿Qué quieres que veamos en la llamada?
+            </label>
+            <textarea id="agenda-notas" name="notas" rows="3" class="nx-input mt-1"></textarea>
+          </div>
+
+          <button
+            type="submit"
+            id="agenda-submit"
+            class="nx-btn w-full"
+            data-testid="agenda-submit"
+            disabled
+          >
+            Reservar llamada
+          </button>
+          <p id="agenda-error" class="hidden text-sm" style="color: var(--nx-danger)" role="alert"></p>
+        </form>
+      </section>
+    </div>
+
+    <!-- ── Confirmación ──────────────────────────────────────────────── -->
+    <section
+      id="agenda-confirmacion"
+      class="mt-10 hidden glass-card glass-card-accent p-6"
+      aria-live="polite"
+      data-testid="agenda-confirmacion"
+    >
+      <h2 class="font-display text-xl font-bold">Llamada agendada</h2>
+      <div id="agenda-confirmacion-body" class="mt-3 text-sm text-nx-muted"></div>
+    </section>
+  </main>
+</Base>
+
+<script
+  type="application/json"
+  id="agenda-config"
+  set:html={JSON.stringify({
+    shape,
+    features,
+    modifiers,
+    licitacionId,
+    duracion: DURACION_MINUTOS,
+  })}
+></script>
+
+<script>
+  // Script MÓDULO (deferred): el DOM ya existe cuando corre.
+  // NO usar `define:vars` aquí: genera un script clásico inline que se
+  // ejecuta durante el parseo, antes de que existan los elementos de la
+  // página → los slots nunca se piden.
+  type AgendaConfig = {
+    shape: string;
+    features: string[];
+    modifiers: string[];
+    licitacionId: string | null;
+    duracion: number;
+  };
+
+  const CONFIG: AgendaConfig = JSON.parse(
+    document.getElementById('agenda-config')?.textContent ?? '{}'
+  );
+
+  const slotsBox = document.getElementById('agenda-slots');
+  const slotsError = document.getElementById('agenda-slots-error');
+  const fechaInput = document.getElementById('agenda-fecha') as HTMLInputElement | null;
+  const slotInput = document.getElementById('agenda-slot') as HTMLInputElement | null;
+  const submitBtn = document.getElementById('agenda-submit') as HTMLButtonElement | null;
+  const errorBox = document.getElementById('agenda-error');
+
+  // Fecha por defecto: mañana.
+  function manana(): string {
+    const d = new Date(Date.now() + 86_400_000);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  function mostrarErrorSlots(msg: string): void {
+    if (!slotsError) return;
+    slotsError.textContent = msg;
+    slotsError.classList.remove('hidden');
+  }
+
+  async function cargarSlots(): Promise<void> {
+    if (!slotsBox || !fechaInput || !slotInput || !submitBtn) return;
+    slotsBox.innerHTML = '<p class="text-sm text-nx-muted">Cargando horarios disponibles…</p>';
+    slotsError?.classList.add('hidden');
+    slotInput.value = '';
+    submitBtn.disabled = true;
+
+    const desde = fechaInput.value || manana();
+    try {
+      const res = await fetch(
+        `/api/agenda/disponibilidad?desde=${encodeURIComponent(desde)}&hasta=${encodeURIComponent(desde)}`
+      );
+      const body = await res.json();
+      if (!body.ok || !Array.isArray(body.slots) || body.slots.length === 0) {
+        slotsBox.innerHTML = '';
+        mostrarErrorSlots('No hay horarios disponibles ese día. Prueba con otra fecha.');
+        return;
+      }
+
+      slotsBox.innerHTML = '';
+      for (const slot of body.slots) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'nx-btn nx-btn-ghost text-sm';
+        btn.textContent = slot.etiqueta;
+        btn.dataset.inicio = String(slot.inicio);
+        btn.dataset.testid = 'agenda-slot';
+        btn.addEventListener('click', () => {
+          slotInput.value = String(slot.inicio);
+          slotsBox.querySelectorAll('button').forEach((b) => b.classList.remove('nx-btn'));
+          btn.classList.add('nx-btn');
+          submitBtn.disabled = false;
+        });
+        slotsBox.appendChild(btn);
+      }
+    } catch {
+      slotsBox.innerHTML = '';
+      mostrarErrorSlots('No pudimos cargar los horarios. Recarga la página.');
+    }
+  }
+
+  fechaInput?.addEventListener('change', () => void cargarSlots());
+
+  document.getElementById('agenda-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!slotInput || !submitBtn) return;
+    if (!slotInput.value) {
+      if (errorBox) {
+        errorBox.textContent = 'Elige primero un horario.';
+        errorBox.classList.remove('hidden');
+      }
+      return;
+    }
+
+    const form = e.currentTarget as HTMLFormElement;
+    const data = new FormData(form);
+    errorBox?.classList.add('hidden');
+    submitBtn.disabled = true;
+
+    try {
+      const res = await fetch('/api/agenda/cita', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          nombre: String(data.get('nombre') ?? ''),
+          email: String(data.get('email') ?? ''),
+          telefono: String(data.get('telefono') ?? '') || null,
+          empresa: String(data.get('empresa') ?? '') || null,
+          notas: String(data.get('notas') ?? '') || null,
+          inicio: Number(slotInput.value),
+          engagement: CONFIG.shape,
+          features: CONFIG.features,
+          modifiers: CONFIG.modifiers,
+          licitacion_id: CONFIG.licitacionId,
+        }),
+      });
+
+      const body = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        if (errorBox) {
+          errorBox.textContent =
+            body?.error === 'slot_no_disponible'
+              ? 'Ese horario ya no está disponible. Elige otro.'
+              : 'No pudimos reservar la cita. Revisa los datos e intenta de nuevo.';
+          errorBox.classList.remove('hidden');
+        }
+        submitBtn.disabled = false;
+        if (body?.error === 'slot_no_disponible') void cargarSlots();
+        return;
+      }
+
+      // Confirmación
+      const panel = document.getElementById('agenda-confirmacion');
+      const cuerpo = document.getElementById('agenda-confirmacion-body');
+      if (cuerpo) {
+        const meet = body.meet_url
+          ? `<p class="mt-2"><b>Enlace de la videollamada:</b> <a class="underline" href="${body.meet_url}">${body.meet_url}</a></p>`
+          : `<p class="mt-2">Te enviamos el enlace de videollamada por correo en cuanto esté confirmado.</p>`;
+        cuerpo.innerHTML = `
+          <p><b>Fecha:</b> ${body.fecha} · hora de Bogotá</p>
+          <p><b>Duración:</b> ${body.duracion_min} minutos</p>
+          ${meet}
+          <p class="mt-2">Te enviamos un correo con el resumen del presupuesto y el enlace. Si necesitas mover la cita, responde ese correo.</p>
+        `;
+      }
+      panel?.classList.remove('hidden');
+      panel?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      form.classList.add('hidden');
+    } catch {
+      if (errorBox) {
+        errorBox.textContent = 'No pudimos conectar. Inténtalo de nuevo en un momento.';
+        errorBox.classList.remove('hidden');
+      }
+      submitBtn.disabled = false;
+    }
+  });
+
+  // Carga inicial
+  if (fechaInput) {
+    fechaInput.value = manana();
+    void cargarSlots();
+  }
+</script>

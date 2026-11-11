@@ -1,0 +1,186 @@
+---
+// /admin/citas — agenda de llamadas de scoping.
+//
+// Tabla de citas con el presupuesto que el cliente vio en el cotizador.
+// Acciones por cita:
+//   - Confirmar el enlace de Meet (cuando Google Calendar no está configurado)
+//   - Cancelar
+//   - Marcar como completada
+//   - Guardar notas de la llamada
+//
+// Cada acción deja rastro en audit_log.
+
+import Base from '~/layouts/Base.astro';
+import Button from '~/components/ui/Button.astro';
+import { env as runtimeEnv } from 'cloudflare:workers';
+import { createDb } from '~/db';
+import { listAll as listCitas } from '~/server/cita-repo';
+import { calendarConfigurado } from '~/lib/google-calendar';
+import { fechaLocalBogota, horaLocalBogota, DURACION_MINUTOS } from '~/lib/agenda';
+
+export const prerender = false;
+
+const env = runtimeEnv as unknown as {
+  DB: D1Database;
+  GOOGLE_CALENDAR_CLIENT_EMAIL?: string;
+  GOOGLE_CALENDAR_PRIVATE_KEY?: string;
+  GOOGLE_CALENDAR_ID?: string;
+};
+
+const db = createDb(env.DB);
+const meetAutomatico = calendarConfigurado(env);
+
+let citas: Awaited<ReturnType<typeof listCitas>> = [];
+try {
+  citas = await listCitas(db);
+} catch (e) {
+  citas = [];
+}
+
+const fmtUsd = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 0,
+});
+
+const ESTADOS = ['pendiente', 'confirmada', 'cancelada', 'completada'] as const;
+const sp = Astro.url.searchParams;
+const filtroEstado = sp.get('estado') ?? '';
+
+const filtradas = filtroEstado
+  ? citas.filter((c) => c.estado === filtroEstado)
+  : citas;
+
+const pendientesDeEnlace = citas.filter((c) => c.estado === 'pendiente' && !c.meetUrl);
+---
+
+<Base title="Citas — Admin NX-Studio" description="Agenda de llamadas de scoping con el presupuesto cotizado.">
+  <main class="mx-auto max-w-6xl px-6 py-16">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--nx-primary);">Operador</p>
+        <h1 class="mt-2 font-display text-3xl font-bold">Citas</h1>
+        <p class="mt-2 text-sm text-nx-muted">
+          {citas.length} cita(s) en total · {pendientesDeEnlace.length} sin enlace confirmado
+        </p>
+      </div>
+      <a href="/admin" class="nx-btn nx-btn-ghost text-sm">← Volver al panel</a>
+    </div>
+
+    {!meetAutomatico && (
+      <div class="mt-6 border p-4 text-sm" style="border-color: var(--nx-warn); color: var(--nx-text)">
+        <b>Google Calendar no está configurado.</b> Las citas se guardan sin enlace de videollamada:
+        confirma el enlace a mano en cada fila (o pega la URL de una sala de Meet).
+        <span class="block mt-1 text-xs" style="color: var(--nx-muted)">
+          Para que el enlace se cree solo, configura <code>GOOGLE_CALENDAR_CLIENT_EMAIL</code>,
+          <code>GOOGLE_CALENDAR_PRIVATE_KEY</code> y <code>GOOGLE_CALENDAR_ID</code> como secrets del worker.
+        </span>
+      </div>
+    )}
+
+    <div class="mt-6 flex flex-wrap gap-2">
+      <a
+        href="/admin/citas"
+        class:list={[
+          'nx-tag',
+          filtroEstado === '' && 'glass-card-accent',
+        ]}>Todas ({citas.length})</a
+      >
+      {ESTADOS.map((e) => (
+        <a
+          href={`/admin/citas?estado=${e}`}
+          class:list={['nx-tag', filtroEstado === e && 'glass-card-accent']}
+        >
+          {e} ({citas.filter((c) => c.estado === e).length})
+        </a>
+      ))}
+    </div>
+
+    {filtradas.length === 0 ? (
+      <p class="mt-10 text-nx-muted">Sin citas que coincidan con el filtro.</p>
+    ) : (
+      <div class="mt-6 space-y-4">
+        {filtradas.map((cita) => (
+          <article class="glass-card p-5" data-testid="admin-cita">
+            <div class="flex flex-wrap items-start justify-between gap-4">
+              <div class="min-w-0">
+                <div class="flex flex-wrap items-center gap-2">
+                  <h2 class="font-display text-lg font-bold">{cita.nombre}</h2>
+                  <span class="nx-tag">{cita.estado}</span>
+                  {cita.meetUrl ? (
+                    <span class="nx-tag" style="color: var(--nx-success)">meet listo</span>
+                  ) : (
+                    <span class="nx-tag" style="color: var(--nx-warn)">falta enlace</span>
+                  )}
+                </div>
+                <p class="mt-1 text-sm text-nx-muted">
+                  <a href={`mailto:${cita.email}`} class="underline">{cita.email}</a>
+                  {cita.empresa ? ` · ${cita.empresa}` : ''}
+                  {cita.telefono ? ` · ${cita.telefono}` : ''}
+                </p>
+                <p class="mt-2 font-mono text-xs text-nx-dim">
+                  {fechaLocalBogota(cita.fecha.getTime())} · {horaLocalBogota(cita.fecha.getTime())} (Bogotá) ·
+                  {cita.duracionMin} min
+                </p>
+                {cita.banda && (
+                  <p class="mt-2 text-sm">
+                    <b>{cita.banda}</b> · {fmtUsd.format(cita.precioMin ?? 0)} – {fmtUsd.format(cita.precioMax ?? 0)}
+                    {cita.horasEstimadas ? ` · ${cita.horasEstimadas}h estimadas` : ''}
+                  </p>
+                )}
+                {cita.notas && <p class="mt-2 text-sm text-nx-muted">{cita.notas}</p>}
+              </div>
+
+              <div class="flex flex-col gap-2">
+                {cita.meetUrl ? (
+                  <a href={cita.meetUrl} target="_blank" rel="noopener" class="nx-btn nx-btn-ghost text-sm">
+                    Abrir Meet
+                  </a>
+                ) : (
+                  <form method="POST" action={`/api/admin/citas/${cita.id}`} class="flex gap-2">
+                    <input type="hidden" name="action" value="confirm-link" />
+                    <input
+                      type="url"
+                      name="meet_url"
+                      required
+                      placeholder="https://meet.google.com/xxx-xxxx-xxx"
+                      class="nx-input text-xs"
+                      data-testid="meet-url-input"
+                    />
+                    <Button type="submit" variant="primary" class="text-xs">Confirmar</Button>
+                  </form>
+                )}
+
+                <details>
+                  <summary class="font-mono text-[10px] uppercase tracking-widest text-nx-dim cursor-pointer">
+                    Notas de la llamada
+                  </summary>
+                  <form method="POST" action={`/api/admin/citas/${cita.id}`} class="mt-2 flex flex-col gap-2">
+                    <input type="hidden" name="action" value="notes" />
+                    <textarea name="notas" rows="3" class="nx-input text-xs">{cita.notas ?? ''}</textarea>
+                    <Button type="submit" variant="ghost" class="text-xs">Guardar notas</Button>
+                  </form>
+                </details>
+
+                <div class="flex gap-2">
+                  {cita.estado !== 'completada' && (
+                    <form method="POST" action={`/api/admin/citas/${cita.id}`}>
+                      <input type="hidden" name="action" value="complete" />
+                      <Button type="submit" variant="ghost" class="text-xs">Completada</Button>
+                    </form>
+                  )}
+                  {cita.estado !== 'cancelada' && (
+                    <form method="POST" action={`/api/admin/citas/${cita.id}`}>
+                      <input type="hidden" name="action" value="cancel" />
+                      <Button type="submit" variant="ghost" class="text-xs">Cancelar</Button>
+                    </form>
+                  )}
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    )}
+  </main>
+</Base>

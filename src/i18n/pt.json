@@ -46,7 +46,10 @@
     "linkDocs": "Docs · como trabalhamos",
     "colContacto": "Contato direto",
     "built": "Built with Astro + Tailwind + ⚡ Hermes",
-    "langLabel": "Idioma"
+    "langLabel": "Idioma",
+    "linkTerminos": "Termos de Uso",
+    "linkPrivacidad": "Política de Privacidade",
+    "linkCookies": "Política de Cookies"
   },
   "langSwitcher": {
     "label": "Idioma",
@@ -317,10 +320,11 @@
         "range": "Faixa indicativa",
         "estimated": "estimadas",
         "selected": "selecionadas",
-        "cta": "Receber estimativa →",
+        "cta": "Agendar chamada",
         "breakdown": "Ver detalhamento",
         "currency": "Moeda",
-        "whatsappCta": "WhatsApp direto"
+        "whatsappCta": "WhatsApp direto",
+        "contactoCta": "Enviar solicitação"
       },
       "bands": {
         "Starter": "Starter",
@@ -818,6 +822,199 @@
     },
     "productos": {
       "title": "Projetos — NX-Studio"
+    },
+    "legal": {
+      "tag": "Legal",
+      "contact": "Tem dúvidas?",
+      "contactText": "Escreva-nos e retornamos em até 24 horas úteis.",
+      "terminos": {
+        "title": "Termos de Uso — NX-Studio",
+        "description": "Condições que regem o uso deste site e a contratação de serviços.",
+        "lastUpdated": "Última atualização: 10 de novembro de 2026",
+        "sections": [
+          {
+            "title": "1. Aceitação dos Termos",
+            "content": "Ao acessar e usar este site (nx-studio.nx-studio.workers.dev) e contratar os serviços da NX-Studio, você concorda em ficar legalmente vinculado a estes Termos de Uso e à Política de Privacidade. Se não concordar, não use o site nem contrate nossos serviços."
+          },
+          {
+            "title": "2. Serviços Oferecidos",
+            "content": "A NX-Studio oferece serviços de desenvolvimento de software sob medida: aplicações web, móveis, SaaS, IA aplicada, automações, testing & QA, e templates compráveis. O escopo, preço e prazos são definidos em cada cotação aceita."
+          },
+          {
+            "title": "3. Processo de Contratação",
+            "content": "1) O cliente solicita cotação via /cotizador ou WhatsApp. 2) A NX-Studio entrega cotação com escopo, preço, prazos e condições. 3) O cliente aceita a cotação (email/WhatsApp). 4) Assina-se ordem de serviço ou contrato simples. 5) Início com pagamento inicial (50% típico). 6) Entregas por marcos + pagamento final na entrega."
+          },
+          {
+            "title": "4. Preços e Pagamentos",
+            "content": "Preços cotados em COP (Colômbia) ou USD (internacional). Pesquisa de mercado 2025-2026. Pagamento em conta pessoal do operador (Nequi, Bancolombia, Stripe Connect em seu nome). A NX-Studio NÃO processa pagamentos automatizados. Nota fiscal eletrônica DIAN emitida mediante pagamento."
+          },
+          {
+            "title": "5. Propriedade Intelectual",
+            "content": "Código e entregáveis tornam-se propriedade do cliente após pagamento total. A NX-Studio retém direitos sobre frameworks, bibliotecas próprias e metodologia. Licenças de terceiros (bibliotecas open source) respeitadas conforme sua licença."
+          },
+          {
+            "title": "6. Confidencialidade",
+            "content": "A NX-Studio assina NDA a pedido do cliente. Informações sensíveis (credenciais, dados de negócio, código) são tratadas com estrita confidencialidade e excluídas pós-projeto salvo acordo contrário."
+          },
+          {
+            "title": "7. Garantias e Responsabilidade",
+            "content": "Entregamos código funcional conforme spec acordado. Bugs críticos corrigidos sem custo em 30 dias pós-entrega. Sem garantia de resultados de negócio (vendas, usuários, ROI). Responsabilidade limitada ao valor do contrato."
+          },
+          {
+            "title": "8. Rescisão",
+            "content": "Qualquer parte pode rescindir com aviso por escrito. Trabalho realizado até a data é pago proporcionalmente. Código entregue até a data é entregue ao cliente."
+          },
+          {
+            "title": "9. Lei Aplicável e Jurisdição",
+            "content": "Leis da República da Colômbia. Jurisdição: Juízos de Neiva, Huila. Para clientes internacionais, acorda-se jurisdição no contrato."
+          },
+          {
+            "title": "10. Alterações nos Termos",
+            "content": "A NX-Studio pode atualizar estes termos. Alterações materiais notificadas por email/WhatsApp com 30 dias de antecedência. Uso continuado implica aceitação."
+          }
+        ]
+      },
+      "cookies": {
+        "title": "Política de Cookies — NX-Studio",
+        "description": "Quais cookies usamos, para que servem e como gerenciá-los.",
+        "lastUpdated": "Última atualização: 10 de novembro de 2026",
+        "sections": [
+          {
+            "title": "1. O que são Cookies?",
+            "content": "Pequenos arquivos de texto que o navegador salva no seu dispositivo para lembrar preferências, sessão e medir uso do site."
+          },
+          {
+            "title": "2. Tipos de Cookies que Usamos",
+            "content": "• Estritamente necessárias (sempre ativas): sessão (better-auth), CSRF, preferência de idioma, consentimento de cookies. Sem estas o site não funciona.\n• Analytics (opcional, requer consentimento): eventos de página, UTM, referrer, beacon server-side. Sem cookies de terceiros.\n• Funcionais (opcional): preferências de UI (tema, layout).\n• Marketing: NÃO usamos cookies de marketing/terceiros."
+          },
+          {
+            "title": "3. Como Gerenciar Consentimento",
+            "content": "Banner de cookies na primeira visita. Você pode aceitar tudo, apenas necessárias, ou personalizar. Muda preferências a qualquer momento pelo link 'Cookies' no footer."
+          },
+          {
+            "title": "4. Detalhe dos Cookies",
+            "content": "Estes são os cookies que a NX-Studio usa hoje. Não usamos cookies de marketing nem de terceiros.",
+            "table": {
+              "head": [
+                "Nome",
+                "Tipo",
+                "Finalidade",
+                "Duração"
+              ],
+              "rows": [
+                [
+                  "better-auth.session",
+                  "Necessária",
+                  "Sessão do usuário (better-auth)",
+                  "7 dias"
+                ],
+                [
+                  "nx-studio.locale",
+                  "Necessária",
+                  "Preferência de idioma (ES/EN/PT)",
+                  "1 ano"
+                ],
+                [
+                  "nx-studio.cookie-consent",
+                  "Necessária",
+                  "Registro do consentimento de cookies",
+                  "1 ano"
+                ],
+                [
+                  "nx-studio.theme",
+                  "Funcional",
+                  "Preferência de tema (claro/escuro)",
+                  "1 ano"
+                ]
+              ]
+            }
+          },
+          {
+            "title": "5. Como Desativar/Excluir",
+            "content": "Navegador → Configurações → Cookies → Excluir dados do site (nx-studio.nx-studio.workers.dev). Ou use o link 'Gerenciar cookies' no footer."
+          },
+          {
+            "title": "6. Alterações nesta Política",
+            "content": "Atualizações publicadas aqui com data. Alterações materiais notificadas via banner no site."
+          }
+        ]
+      },
+      "privacidad": {
+        "title": "Política de Privacidade — NX-Studio",
+        "description": "Como coletamos, usamos e protegemos seus dados pessoais.",
+        "lastUpdated": "Última atualização: 10 de novembro de 2026",
+        "sections": [
+          {
+            "title": "1. Responsável pelo Tratamento",
+            "content": "NX-Studio (Sebastian Velasco Ocampo), Neiva, Huila, Colômbia. Contato: sebasvelascodev3101@gmail.com · WhatsApp +57 310 331 2705."
+          },
+          {
+            "title": "2. Dados que Coletamos",
+            "content": "• Dados de contato: nome, email, telefone, empresa (formulário /cotizador, newsletter, contato).\n• Dados de navegação: IP, user-agent, rota, referrer, UTM, locale (beacon de analytics).\n• Dados de chat: mensagens no laboratório IA e chatbot SophIA.\n• Dados técnicos: IP, user-agent, headers (audit log, segurança)."
+          },
+          {
+            "title": "3. Finalidade e Base Legal",
+            "content": "• Cotação/serviço: execução de contrato / interesse legítimo (Art. 6.1.b/f GDPR).\n• Newsletter: consentimento explícito (Art. 6.1.a GDPR).\n• Analytics: interesse legítimo (melhoria do site, Art. 6.1.f GDPR).\n• Segurança/auditoria: obrigação legal / interesse legítimo (Art. 6.1.c/f GDPR)."
+          },
+          {
+            "title": "4. Compartilhamento de Dados",
+            "content": "Não vendemos seus dados. Compartilhamos apenas com: Resend (email transacional), Cloudflare (hosting/WAF/analytics), better-auth (auth), Deriv (bot de trading, apenas se contratar esse serviço). Todos sob DPA/SCCs."
+          },
+          {
+            "title": "5. Transferências Internacionais",
+            "content": "Servidores na Cloudflare (EUA/global). Resend (EUA). Transferências sob SCCs (Cláusulas Contratuais Padrão) e decisões de adequação onde aplicável."
+          },
+          {
+            "title": "6. Retenção",
+            "content": "• Cotações/leads: 3 anos pós-última interação (Art. 17 GDPR).\n• Newsletter: até descadastro voluntário (link unsubscribe em cada email).\n• Eventos analytics: 13 meses (job de purga automático).\n• Audit logs: 3 anos (conformidade, segurança).\n• Chat IA: 2 anos (melhoria de modelo, anonimizado)."
+          },
+          {
+            "title": "7. Direitos do Usuário (GDPR Arts. 15-22)",
+            "content": "Acesso, retificação, eliminação, limitação, portabilidade, oposição. Exercício: email sebasvelascodev3101@gmail.com ou WhatsApp +57 310 331 2705. Resposta em ≤ 30 dias."
+          },
+          {
+            "title": "8. Segurança",
+            "content": "TLS 1.3 em trânsito. Cloudflare WAF + Rate Limiting + Turnstile. Headers CSP/HSTS/X-Frame. Secrets no Cloudflare Secrets (não no repo). Auditoria de código e dependências (npm audit)."
+          },
+          {
+            "title": "9. Cookies e Tracking",
+            "content": "Ver Política de Cookies. Apenas cookies estritamente necessários (sessão, CSRF, preferência de idioma, consentimento de cookies). Analytics sem cookies (beacon server-side). Sem cookies de marketing sem consentimento."
+          },
+          {
+            "title": "10. Contato DPO",
+            "content": "Sebastian Velasco Ocampo (DPO). sebasvelascodev3101@gmail.com · WhatsApp +57 310 331 2705."
+          }
+        ]
+      }
+    },
+    "agendar": {
+      "title": "Agende sua chamada — NX-Studio",
+      "description": "Reserve uma videochamada para revisar seu projeto com a faixa de preço que você já calculou.",
+      "heading": "Agende sua chamada",
+      "sub": "45 minutos por videochamada para revisar o escopo do seu projeto e ajustar a faixa de preço que você já tem. Sem compromisso.",
+      "step1": "1 · Escolha dia e hora",
+      "step2": "2 · Seus dados",
+      "date": "Data",
+      "estimate": "Faixa estimada",
+      "band": "Faixa {band} · {hours}h estimadas",
+      "estimateNote": "É uma faixa, não um preço final. Na chamada fechamos o escopo e ajustamos esse número.",
+      "name": "Nome *",
+      "email": "Email *",
+      "phone": "Telefone",
+      "company": "Empresa",
+      "notes": "O que você quer que a gente veja na chamada?",
+      "submit": "Reservar chamada",
+      "slotRequired": "Escolha primeiro um horário.",
+      "slotTaken": "Esse horário não está mais disponível. Escolha outro.",
+      "noSlots": "Não há horários disponíveis nesse dia. Tente outra data.",
+      "loadError": "Não conseguimos carregar os horários. Recarregue a página.",
+      "networkError": "Não conseguimos conectar. Tente de novo em um momento.",
+      "genericError": "Não conseguimos reservar. Revise seus dados e tente de novo.",
+      "confirmed": "Chamada agendada",
+      "confirmedDate": "Data: {date} · hora de Bogotá",
+      "confirmedDuration": "Duração: {min} minutos",
+      "meetPending": "Enviamos o link da videochamada por e-mail assim que for confirmado.",
+      "confirmedNote": "Enviamos um e-mail com o resumo do orçamento e o link. Se precisar remarcar, responda esse e-mail."
     }
   },
   "chatbot": {

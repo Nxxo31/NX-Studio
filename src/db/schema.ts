@@ -305,6 +305,50 @@ export const newsletterSubscriber = sqliteTable('newsletter_subscriber', {
   createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
 });
 
+// ─── Citas de scoping (videollamada Meet) ────────────────────────────────
+// El cliente cotiza en /cotizador y agenda una llamada. La cita guarda el
+// snapshot del presupuesto (banda + rango) recalculado en el servidor, para
+// que la reunion parta de una cifra agreed y no de lo que dixo el cliente.
+//
+// meet_url se llena solo si hay credenciales de Google Calendar configuradas
+// (GOOGLE_CALENDAR_*). Sin ellas la cita queda 'pendiente' y el operador
+// confirma el enlace desde /admin/citas.
+
+export const cita = sqliteTable('cita', {
+  id: text('id').primaryKey(),
+  // Vínculos opcionales: cliente autenticado y licitacion de origen.
+  userId: text('user_id').references(() => user.id, { onDelete: 'set null' }),
+  licitacionId: text('licitacion_id').references(() => licitacion.id, { onDelete: 'set null' }),
+  // Snapshot del cliente (puede agendar sin cuenta).
+  nombre: text('nombre').notNull(),
+  email: text('email').notNull(),
+  telefono: text('telefono'),
+  empresa: text('empresa'),
+  // Inicio de la llamada en epoch ms (UTC). America/Bogota = UTC-5 fijo.
+  fecha: integer('fecha', { mode: 'timestamp_ms' }).notNull(),
+  duracionMin: integer('duracion_min').notNull().default(60),
+  timezone: text('timezone').notNull().default('America/Bogota'),
+  // Videollamada (Meet).
+  meetUrl: text('meet_url'),
+  meetId: text('meet_id'),
+  calendarEventId: text('calendar_event_id'),
+  // Ciclo de vida: pendiente | confirmada | cancelada | completada.
+  estado: text('estado', { enum: ['pendiente', 'confirmada', 'cancelada', 'completada'] })
+    .notNull()
+    .default('pendiente'),
+  // Snapshot del presupuesto del cotizador (recomputado server-side).
+  banda: text('banda'),
+  precioMin: real('precio_min'),
+  precioMax: real('precio_max'),
+  horasEstimadas: real('horas_estimadas'),
+  engagement: text('engagement'),
+  featuresJson: text('features_json'),
+  modifiersJson: text('modifiers_json'),
+  notas: text('notas'),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull().default(sql`(unixepoch('subsec') * 1000)`),
+});
+
 // Type exports para usar en el código de aplicación
 export type User = typeof user.$inferSelect;
 export type Licitacion = typeof licitacion.$inferSelect;
@@ -333,3 +377,5 @@ export type AnalyticsEvent = typeof analyticsEvent.$inferSelect;
 export type NewAnalyticsEvent = typeof analyticsEvent.$inferInsert;
 export type NewsletterSubscriber = typeof newsletterSubscriber.$inferSelect;
 export type NewNewsletterSubscriber = typeof newsletterSubscriber.$inferInsert;
+export type Cita = typeof cita.$inferSelect;
+export type NewCita = typeof cita.$inferInsert;

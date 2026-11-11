@@ -222,8 +222,15 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
           </div>
 
           <div class="md:col-span-1 flex flex-col md:items-end gap-2">
-            <a id="q-cta" href={localeUrl('/contacto', locale)} class="nx-btn text-center">
+            <a id="q-cta" href={localeUrl('/agendar', locale)} class="nx-btn text-center">
               {t('pages.cotizador.panel.cta')}
+            </a>
+            <a
+              id="q-cta-contacto"
+              href={localeUrl('/contacto', locale)}
+              class="nx-btn nx-btn-ghost text-center text-sm"
+            >
+              {t('pages.cotizador.panel.contactoCta')}
             </a>
             <a id="q-whatsapp" href="https://wa.me/573103312705" target="_blank" rel="noopener" class="nx-btn nx-btn-ghost text-center text-sm">
               {t('pages.cotizador.panel.whatsappCta')}
@@ -339,20 +346,28 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
     const usdNote = $('#q-usd');
     if (usdNote) usdNote.textContent = state.currency === 'USD' ? '' : ` · ≈ $${fmt.format(quote.totalLow)}-$${fmt.format(quote.totalHigh)} USD`;
 
-    // CTAs: /contacto con el contexto completo + WhatsApp prefilled
+    // CTAs: /agendar (con el contexto completo del presupuesto) + /contacto
+    const params = new URLSearchParams({
+      from: 'cotizador',
+      shape: state.shape,
+      features: state.featureIds.join(','),
+      mods: state.modifierIds.join(','),
+      cur: state.currency,
+      low: String(lowConverted),
+      high: String(highConverted),
+    });
+
     const cta = document.getElementById('q-cta') as HTMLAnchorElement | null;
     if (cta) {
-      const url = new URL(cta.getAttribute('href') || '/contacto', window.location.origin);
-      url.search = new URLSearchParams({
-        from: 'cotizador',
-        shape: state.shape,
-        features: state.featureIds.join(','),
-        mods: state.modifierIds.join(','),
-        cur: state.currency,
-        low: String(lowConverted),
-        high: String(highConverted),
-      }).toString();
+      const url = new URL(cta.getAttribute('href') || '/agendar', window.location.origin);
+      url.search = params.toString();
       cta.setAttribute('href', url.pathname + url.search);
+    }
+    const ctaContacto = document.getElementById('q-cta-contacto') as HTMLAnchorElement | null;
+    if (ctaContacto) {
+      const url = new URL(ctaContacto.getAttribute('href') || '/contacto', window.location.origin);
+      url.search = params.toString();
+      ctaContacto.setAttribute('href', url.pathname + url.search);
     }
     const wa = document.getElementById('q-whatsapp') as HTMLAnchorElement | null;
     if (wa) {
