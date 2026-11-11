@@ -37,7 +37,7 @@
     "hintTouch": "Toca la forma"
   },
   "footer": {
-    "tagline": "Estudio de software LATAM. Producto + servicio. Bots de trading, ERP multi-tenant, auditoría electoral, experiencias 3D y más. Neiva, Colombia · Servicio remoto global.",
+    "tagline": "Estudio de software LATAM. Producto + servicio. Bots de trading, sistemas para empresas, auditoría electoral, experiencias 3D y más. Neiva, Colombia · Servicio remoto global.",
     "author": "Sebastian Velasco Ocampo · Full-stack + IA",
     "colSitio": "Sitio",
     "linkCotizador": "Cotización",
@@ -218,63 +218,63 @@
       "items": {
         "landing-converter": {
           "name": "Landing Converter",
-          "tagline": "Landing de alta conversión con A/B testing integrado",
-          "desc": "Landing page con hero animado, secciones modulares, copy técnico, integraciones con Resend y Plausible, A/B testing nativo, OG cards dinámicas.",
+          "tagline": "Página de aterrizaje que convierte, con prueba A/B incluida",
+          "desc": "Página de aterrizaje con imagen principal animada, secciones que se reordenan fácil, textos técnicos, envío de correos con Resend, estadísticas con Plausible, prueba A/B de dos versiones y vistas previas para redes sociales.",
           "includes": {
-            "0": "Código fuente completo MIT-licensed",
-            "1": "Setup en Vercel guiado paso a paso",
-            "2": "A/B testing nativo (2 variants baked)",
-            "3": "Plausible analytics preconfigurado",
-            "4": "Resend integration (3 templates de email)",
-            "5": "Documentación + video walkthrough 20min"
+            "0": "Código fuente completo con licencia MIT (puedes usarlo comercialmente)",
+            "1": "Publicación en Vercel explicada paso a paso",
+            "2": "Prueba A/B incluida con dos versiones de la página",
+            "3": "Estadísticas de visitas con Plausible ya configurado",
+            "4": "Envío de correos con Resend (3 plantillas de email)",
+            "5": "Documentación y un video de 20 minutos explicando el uso"
           },
           "excludes": {
-            "0": "Diseño custom (la plantilla conserva su identidad propia)",
-            "1": "Copywriting",
-            "2": "Hosting mensual (Vercel free tier OK)",
-            "3": "Soporte post-compra"
+            "0": "Diseño a medida (la plantilla conserva su identidad propia)",
+            "1": "Redacción de los textos de venta",
+            "2": "Hosting mensual (el plan gratuito de Vercel alcanza)",
+            "3": "Acompañamiento después de la compra"
           },
           "version": "v1.2.0",
           "lastUpdated": "2026-09-14"
         },
         "dashboard-starter": {
           "name": "Dashboard Starter",
-          "tagline": "Panel admin con auth, tablas, charts y RBAC",
-          "desc": "Dashboard multi-tenant con autenticación, tablas con filtros server-side, charts (Recharts), exports CSV/PDF, RBAC, dark/light mode.",
+          "tagline": "Panel de control con inicio de sesión, tablas, gráficas y permisos",
+          "desc": "Panel de control para varias empresas, con inicio de sesión, tablas que se filtran desde el servidor, gráficas, exportación a Excel y PDF, permisos por rol y modo claro u oscuro.",
           "includes": {
-            "0": "Multi-tenant schema + RLS",
-            "1": "NextAuth (credentials + OAuth)",
-            "2": "RBAC con 3 roles (admin/editor/viewer)",
-            "3": "Tablas con paginación + filtros + sorts",
-            "4": "4 tipos de charts (line/bar/pie/area)",
-            "5": "Exports CSV + PDF",
-            "6": "Seed script + DB migrations"
+            "0": "Base de datos preparada para varias empresas, con los datos de cada una aislados",
+            "1": "Inicio de sesión con correo y contraseña, o con Google y redes sociales",
+            "2": "3 niveles de permisos: administrador, editor y lector",
+            "3": "Tablas con paginación, filtros y orden por columna",
+            "4": "4 tipos de gráfica (líneas, barras, circular y de área)",
+            "5": "Exportar a Excel (CSV) y a PDF",
+            "6": "Datos de ejemplo y la base de datos ya creada"
           },
           "excludes": {
-            "0": "Auth provider custom",
-            "1": "Diseño fuera de la identidad del sitio",
-            "2": "Deployment"
+            "0": "Proveedor de inicio de sesión propio",
+            "1": "Diseño que se aparte de la identidad del sitio",
+            "2": "Publicación en producción"
           },
           "version": "v0.9.4",
           "lastUpdated": "2026-10-02"
         },
         "ecommerce-headless": {
           "name": "Headless E-commerce",
-          "tagline": "Storefront con Stripe + Medusa backend",
-          "desc": "E-commerce headless: storefront Next.js + backend Medusa, Stripe payments, inventory, cart persistente, checkout optimizado.",
+          "tagline": "Tienda online con pagos por Stripe y gestión de pedidos",
+          "desc": "Tienda online donde la vitrina y el sistema de pedidos están separados: catálogo, control de stock, carrito que no se pierde al cerrar la página y pago con Stripe.",
           "includes": {
-            "0": "Storefront + admin panel básico",
-            "1": "Stripe checkout + webhooks",
-            "2": "Inventory tracking",
-            "3": "Cart persistente (localStorage + DB)",
-            "4": "Catálogo con filtros + búsqueda",
-            "5": "Orders management"
+            "0": "Tienda y panel básico de administración",
+            "1": "Pago con Stripe, con avisos automáticos cuando se confirma",
+            "2": "Control de inventario",
+            "3": "Carrito que se conserva al cerrar y queda guardado en el servidor",
+            "4": "Catálogo con filtros y buscador",
+            "5": "Gestión de pedidos"
           },
           "excludes": {
-            "0": "Shipping integrations (UPS/FedEx/DHL)",
-            "1": "Multi-currency / multi-locale",
-            "2": "Subscriptions",
-            "3": "Diseño custom"
+            "0": "Integración con transportadoras (UPS, FedEx, DHL)",
+            "1": "Varias monedas o varios idiomas",
+            "2": "Suscripciones periódicas",
+            "3": "Diseño a medida"
           },
           "version": "v1.0.1",
           "lastUpdated": "2026-08-20"

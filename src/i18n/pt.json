@@ -37,7 +37,7 @@
     "hintTouch": "Toque a forma"
   },
   "footer": {
-    "tagline": "Estúdio de software LATAM. Produto + serviço. Bots de trading, ERP multi-tenant, auditoria eleitoral, experiências 3D e mais. Neiva, Colômbia · Atendimento remoto global.",
+    "tagline": "Estúdio de software LATAM. Produto + serviço. Bots de trading, sistemas para empresas, auditoria eleitoral, experiências 3D e mais. Neiva, Colômbia · Atendimento remoto global.",
     "author": "Sebastian Velasco Ocampo · Full-stack + IA",
     "colSitio": "Site",
     "linkCotizador": "Orçamento",
@@ -218,63 +218,63 @@
       "items": {
         "landing-converter": {
           "name": "Landing Converter",
-          "tagline": "Landing de alta conversão com A/B testing integrado",
-          "desc": "Landing page com hero animado, seções modulares, copy técnico, integrações com Resend e Plausible, A/B testing nativo, OG cards dinâmicas.",
+          "tagline": "Página de chegada que converte, com teste A/B incluído",
+          "desc": "Página de chegada com banner principal animado, seções fáceis de reorganizar, textos técnicos, envio de e-mails com Resend, estatísticas com Plausible, teste A/B de duas versões e prévias para redes sociais.",
           "includes": {
-            "0": "Código-fonte completo MIT-licensed",
-            "1": "Setup na Vercel guiado passo a passo",
-            "2": "A/B testing nativo (2 variantes inclusas)",
-            "3": "Plausible analytics pré-configurado",
-            "4": "Integração Resend (3 templates de email)",
-            "5": "Documentação + vídeo walkthrough de 20min"
+            "0": "Código-fonte completo com licença MIT (pode usar comercialmente)",
+            "1": "Publicação na Vercel explicada passo a passo",
+            "2": "Teste A/B incluído com duas versões da página",
+            "3": "Estatísticas de visitas com Plausible já configurado",
+            "4": "Envio de e-mails com Resend (3 modelos de e-mail)",
+            "5": "Documentação e um vídeo de 20 minutos explicando o uso"
           },
           "excludes": {
-            "0": "Design custom (o template vem com identidade propria)",
-            "1": "Copywriting",
-            "2": "Hospedagem mensal (Vercel free tier OK)",
-            "3": "Suporte pós-compra"
+            "0": "Design sob medida (o modelo mantém a identidade própria)",
+            "1": "Redação dos textos de venda",
+            "2": "Hospedagem mensal (o plano gratuito da Vercel dá conta)",
+            "3": "Acompanhamento depois da compra"
           },
           "version": "v1.2.0",
           "lastUpdated": "2026-09-14"
         },
         "dashboard-starter": {
           "name": "Dashboard Starter",
-          "tagline": "Painel admin com auth, tabelas, charts e RBAC",
-          "desc": "Dashboard multi-tenant com autenticação, tabelas com filtros server-side, charts (Recharts), exports CSV/PDF, RBAC, dark/light mode.",
+          "tagline": "Painel de controle com login, tabelas, gráficos e permissões",
+          "desc": "Painel de controle para várias empresas, com login, tabelas filtradas no servidor, gráficos, exportação para Excel e PDF, permissões por perfil e modo claro ou escuro.",
           "includes": {
-            "0": "Schema multi-tenant + RLS",
-            "1": "NextAuth (credentials + OAuth)",
-            "2": "RBAC com 3 roles (admin/editor/viewer)",
-            "3": "Tabelas com paginação + filtros + sorts",
-            "4": "4 tipos de charts (line/bar/pie/area)",
-            "5": "Exports CSV + PDF",
-            "6": "Seed script + migrações de DB"
+            "0": "Banco de dados preparado para várias empresas, com os dados de cada uma isolados",
+            "1": "Login com e-mail e senha, ou com Google e redes sociais",
+            "2": "3 níveis de permissão: administrador, editor e leitor",
+            "3": "Tabelas com paginação, filtros e ordenação por coluna",
+            "4": "4 tipos de gráfico (linhas, barras, pizza e área)",
+            "5": "Exportar para Excel (CSV) e PDF",
+            "6": "Dados de exemplo e o banco de dados já criado"
           },
           "excludes": {
-            "0": "Auth provider custom",
-            "1": "Design fora da identidade do site",
-            "2": "Deployment"
+            "0": "Provedor de login próprio",
+            "1": "Design que se afaste da identidade do site",
+            "2": "Publicação em produção"
           },
           "version": "v0.9.4",
           "lastUpdated": "2026-10-02"
         },
         "ecommerce-headless": {
           "name": "Headless E-commerce",
-          "tagline": "Storefront com Stripe + backend Medusa",
-          "desc": "E-commerce headless: storefront Next.js + backend Medusa, pagamentos Stripe, inventário, carrinho persistente, checkout otimizado.",
+          "tagline": "Loja online com pagamentos por Stripe e gestão de pedidos",
+          "desc": "Loja online em que a vitrine e o sistema de pedidos são separados: catálogo, controle de estoque, carrinho que não se perde ao fechar a página e pagamento com Stripe.",
           "includes": {
-            "0": "Storefront + painel admin básico",
-            "1": "Checkout Stripe + webhooks",
-            "2": "Controle de inventário",
-            "3": "Carrinho persistente (localStorage + DB)",
-            "4": "Catálogo com filtros + busca",
+            "0": "Loja e painel básico de administração",
+            "1": "Pagamento com Stripe, com avisos automáticos quando o pagamento é confirmado",
+            "2": "Controle de estoque",
+            "3": "Carrinho que se conserva ao fechar e fica guardado no servidor",
+            "4": "Catálogo com filtros e busca",
             "5": "Gestão de pedidos"
           },
           "excludes": {
-            "0": "Integrações de envio (UPS/FedEx/DHL)",
-            "1": "Multi-moeda / multi-locale",
-            "2": "Assinaturas",
-            "3": "Design custom"
+            "0": "Integração com transportadoras (UPS, FedEx, DHL)",
+            "1": "Várias moedas ou vários idiomas",
+            "2": "Assinaturas recorrentes",
+            "3": "Design sob medida"
           },
           "version": "v1.0.1",
           "lastUpdated": "2026-08-20"
