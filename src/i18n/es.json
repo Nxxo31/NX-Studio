@@ -2,7 +2,7 @@
   "meta": {
     "siteName": "NX-Studio",
     "defaultTitle": "NX-Studio — Software que escala contigo",
-    "defaultDescription": "Estudio de desarrollo LATAM. Arquitectura de software a medida, QA as a service, templates comprables. Cotizador interactivo. Si puedes imaginarlo, puedes crearlo."
+    "defaultDescription": "Estudio de desarrollo LATAM. Software a medida, pruebas de calidad como servicio y plantillas listas para comprar. Cotizador interactivo. Si puedes imaginarlo, puedes crearlo."
   },
   "nav": {
     "inicio": "Inicio",
@@ -22,7 +22,7 @@
     "headlineB": "no solo se ve bien.",
     "sub1": "Estudio de desarrollo",
     "subStrong": "LATAM-first",
-    "sub2": "Construimos aplicaciones, QA y plantillas listas para producción. Tú ves el código desde el día uno. Sin caja negra.",
+    "sub2": "Construimos aplicaciones, pruebas de calidad y plantillas listas para producción. Tú ves el código desde el día uno. Sin caja negra.",
     "chip1": "11 proyectos OSS",
     "chip2": "24+ tecnologías",
     "chip3": "LATAM remote-first",
@@ -38,7 +38,7 @@
   },
   "footer": {
     "tagline": "Estudio de software LATAM. Producto + servicio. Bots de trading, sistemas para empresas, auditoría electoral, experiencias 3D y más. Neiva, Colombia · Servicio remoto global.",
-    "author": "Sebastian Velasco Ocampo · Full-stack + IA",
+    "author": "Sebastian Velasco Ocampo · Software e IA",
     "colSitio": "Sitio",
     "linkCotizador": "Cotización",
     "linkLaboratorio": "Laboratorio IA",
@@ -66,7 +66,7 @@
   "pages": {
     "index": {
       "title": "NX-Studio — Software que escala contigo",
-      "description": "Estudio de desarrollo LATAM. Software a medida, pruebas de calidad como servicio y plantillas listas para comprar. Cotizador interactivo.",
+      "description": "Estudio de desarrollo LATAM. Software a medida, pruebas de calidad y plantillas listas para comprar. Cotizador interactivo.",
       "services": {
         "tag": "// servicios",
         "headingA": "Lo que",
@@ -80,13 +80,13 @@
             "precio": "Desde $5,000"
           },
           "1": {
-            "title": "Testing y QA",
+            "title": "Pruebas de calidad",
             "resultado": "Tu software validado antes de que lo use tu cliente.",
-            "precio": "Desde $3,000/sprint"
+            "precio": "Desde $3.000 por ciclo"
           },
           "2": {
             "title": "IA aplicada",
-            "resultado": "Chatbots y agentes que entregan valor real, no demos.",
+            "resultado": "Asistentes que usan la información de tu empresa y tareas que se hacen solas.",
             "precio": "Desde $4,000"
           }
         },
@@ -103,7 +103,7 @@
             "label": "proyectos de código abierto publicados en GitHub"
           },
           "1": {
-            "label": "tecnologías en stack verificable"
+            "label": "tecnologías que puedes verificar tú mismo"
           },
           "2": {
             "label": "equipo remoto-first, timezone UTC-05"
@@ -165,27 +165,27 @@
     },
     "servicios": {
       "title": "Servicios — NX-Studio",
-      "description": "Desarrollo a medida, QA as a service y consultoría de arquitectura. Delivery LATAM-first con estándares internacionales.",
+      "description": "Desarrollo a medida, pruebas de calidad y consultoría de arquitectura. Entrega desde Latinoamérica con estándares internacionales.",
       "headingA": "Servicios",
       "headingEm": "especializados",
       "sub": "Capacidades core para construir productos digitales y servicios verticales de calidad profesional para validar software antes de que lo use tu cliente.",
       "coreTitle": "Capacidades core",
       "core": {
         "0": {
-          "tag": "// arquitectura",
-          "desc": "Diseño y construcción de sistemas que escalan con tu negocio. Web, mobile, ERP, integraciones."
+          "tag": "// sistemas",
+          "desc": "Diseño y construcción de sistemas que crecen con tu negocio: páginas web, apps, sistemas de gestión e integraciones con lo que ya usas."
         },
         "1": {
           "tag": "// ia",
-          "desc": "Chatbots, RAG, agentes, automatización con LLMs. Soluciones que entregan valor real, no demos."
+          "desc": "Asistentes que responden con la información de tu empresa y tareas que se hacen solas. Soluciones que se usan en el día a día, no prototipos."
         }
       },
       "specializedTitle": "Servicios especializados",
       "items": {
         "testing": {
           "tag": "// qa.v1",
-          "title": "Testing & QA",
-          "desc": "QA as a service con tiers Foundation / Accelerator / Strategic. Manual + automation, performance, accesibilidad WCAG 2.1 AA, security pen-testing."
+          "title": "Pruebas de calidad",
+          "desc": "Pruebas manuales y automatizadas con tres niveles de servicio (Foundation, Accelerator y Strategic): rendimiento, accesibilidad y seguridad."
         }
       },
       "viewDetail": "Ver detalle →",
@@ -198,10 +198,10 @@
     },
     "templates": {
       "title": "Templates — NX-Studio",
-      "description": "Plantillas de software listas para producción: compra, despliega y personaliza.",
+      "description": "Plantillas de software listas para usar: compra, publica y adapta.",
       "headingA": "Templates",
       "headingEm": "comprables",
-      "sub": "Starters production-ready para desafíos comunes. Código MIT-licensed, one-time payment, sin royalties. Compra el template y lánzalo en menos de 1 sprint.",
+      "sub": "Plantillas listas para usar en desafíos comunes. Código con licencia MIT, pago único, sin royalties. Compra la plantilla y publícala en menos de una semana.",
       "featuredTitle": "Destacados",
       "othersTitle": "Otros",
       "viewDetail": "Ver detalle →",
@@ -210,14 +210,14 @@
         "steps": {
           "0": "Seleccionas el template y nos contactas.",
           "1": "Te enviamos el repo privado + invoice (one-time).",
-          "2": "Setup guiado: deploy, env vars, dominio, integraciones.",
+          "2": "Puesta en marcha guiada: publicación, configuración, dominio e integraciones.",
           "3": "Handover con Q&A de 60 minutos."
         },
         "cta": "Iniciar compra →"
       },
       "items": {
         "landing-converter": {
-          "name": "Landing Converter",
+          "name": "Página de conversión",
           "tagline": "Página de aterrizaje que convierte, con prueba A/B incluida",
           "desc": "Página de aterrizaje con imagen principal animada, secciones que se reordenan fácil, textos técnicos, envío de correos con Resend, estadísticas con Plausible, prueba A/B de dos versiones y vistas previas para redes sociales.",
           "includes": {
@@ -238,7 +238,7 @@
           "lastUpdated": "2026-09-14"
         },
         "dashboard-starter": {
-          "name": "Dashboard Starter",
+          "name": "Panel de control",
           "tagline": "Panel de control con inicio de sesión, tablas, gráficas y permisos",
           "desc": "Panel de control para varias empresas, con inicio de sesión, tablas que se filtran desde el servidor, gráficas, exportación a Excel y PDF, permisos por rol y modo claro u oscuro.",
           "includes": {
@@ -259,7 +259,7 @@
           "lastUpdated": "2026-10-02"
         },
         "ecommerce-headless": {
-          "name": "Headless E-commerce",
+          "name": "Tienda online",
           "tagline": "Tienda online con pagos por Stripe y gestión de pedidos",
           "desc": "Tienda online donde la vitrina y el sistema de pedidos están separados: catálogo, control de stock, carrito que no se pierde al cerrar la página y pago con Stripe.",
           "includes": {
@@ -284,7 +284,7 @@
       "search_placeholder": "Buscar template…",
       "filter_all": "Todas",
       "filter_landing": "Landing",
-      "filter_dashboard": "Dashboard",
+      "filter_dashboard": "Panel de control",
       "filter_ecommerce": "E-commerce",
       "price_all": "Todos los precios",
       "price_free": "Free",
@@ -349,7 +349,7 @@
         },
         "backend": {
           "name": "Backend",
-          "description": "API, datos, auth, integraciones"
+          "description": "Conexiones con otros sistemas, base de datos e inicio de sesión"
         },
         "growth": {
           "name": "Growth",
@@ -357,17 +357,17 @@
         },
         "ops": {
           "name": "QA + Ops",
-          "description": "Testing, accesibilidad, deploy, docs"
+          "description": "Pruebas, accesibilidad, publicación y documentación"
         }
       },
       "shapes": {
         "fixed": {
-          "name": "Per-sprint / Fixed",
+          "name": "Precio fijo por ciclo",
           "description": "Alcance definido, precio fijo por release. Ideal para MVPs y entregables puntuales."
         },
         "retainer": {
           "name": "Monthly Retainer",
-          "description": "Equipo continuo, cuota mensual predecible. Para productos que shippean cada sprint."
+          "description": "Equipo continuo, cuota mensual predecible. Para productos que avanzan cada mes."
         },
         "dedicated": {
           "name": "Dedicated Team",
@@ -381,7 +381,7 @@
       "modifiers": {
         "rush": {
           "name": "Rush (+25%)",
-          "description": "Entrega en menos de 2 semanas o trabajo en fines de semana"
+          "description": "Entrega en menos de 2 semanas o trabajo en fin de semana"
         },
         "bundle": {
           "name": "Bundle discount (-10%)",
@@ -395,31 +395,31 @@
       "features": {
         "discovery": {
           "name": "Discovery + Scoping",
-          "description": "Workshop inicial, modelo de datos, sitemap, arquitectura de solución"
+          "description": "Taller inicial, modelo de datos y plan de la solución"
         },
         "design-system": {
           "name": "Design System base",
-          "description": "Tokens, componentes, theming, accesibilidad WCAG 2.1 AA"
+          "description": "Estilos y componentes coherentes en toda la app, con accesibilidad WCAG 2.1 AA"
         },
         "responsive": {
           "name": "Responsive + Mobile",
-          "description": "Breakpoints, optimización táctil, PWA opcional"
+          "description": "Diseño que se adapta al celular y la tablet, con opción de app instalable"
         },
         "landing": {
-          "name": "Landing page",
+          "name": "Página de aterrizaje",
           "description": "Hero, secciones, CTA, copy técnico, animaciones scroll"
         },
         "dashboard": {
-          "name": "Dashboard / Admin panel",
-          "description": "Tablas, filtros, charts, exports, roles"
+          "name": "Panel de control",
+          "description": "Tablas, filtros, gráficas, exportación a Excel y permisos por rol"
         },
         "auth": {
-          "name": "Auth + Roles",
-          "description": "NextAuth / Clerk, OAuth, magic links, RBAC"
+          "name": "Acceso y permisos",
+          "description": "Inicio de sesión con correo, Google o redes sociales, y enlace de un solo uso"
         },
         "api": {
-          "name": "API REST/GraphQL",
-          "description": "Endpoints, validación Zod, OpenAPI spec, rate limiting"
+          "name": "Conexiones entre sistemas",
+          "description": "Rutas de conexión, validación de datos, documentación y límites de uso"
         },
         "db": {
           "name": "Database + ORM",
@@ -434,7 +434,7 @@
           "description": "PostHog/Plausible, eventos custom, funnels"
         },
         "seo": {
-          "name": "SEO técnico + OG",
+          "name": "Que Google entienda tu sitio",
           "description": "Sitemap, robots, JSON-LD, hreflang, OG cards"
         },
         "i18n": {
@@ -446,29 +446,29 @@
           "description": "Vitest/Playwright, CI gate, coverage report"
         },
         "a11y": {
-          "name": "Auditoría a11y WCAG 2.1 AA",
+          "name": "Revisión de accesibilidad WCAG 2.1 AA",
           "description": "Lighthouse, axe-core, remediación priorizada"
         },
         "security": {
-          "name": "Pen-testing básico",
+          "name": "Revisión de seguridad básica",
           "description": "OWASP top10, dependency audit, headers CSP"
         },
         "deploy": {
-          "name": "Deploy + CI/CD",
+          "name": "Publicación automática",
           "description": "Vercel/GH Pages, GitHub Actions, environments, dominio custom"
         },
         "docs": {
           "name": "Docs técnicas",
-          "description": "README, AGENTS.md, runbooks, onboarding 30min"
+          "description": "Documentación, guías de operación y acompañamiento de 30 minutos"
         }
       }
     },
     "laboratorio": {
       "title": "Laboratorio IA — NX-Studio",
-      "description": "Experimentos de IA aplicada: agentes, RAG y automatización probados en producción real.",
+      "description": "Experimentos de IA aplicada: asistentes que usan tu información y tareas automatizadas, probados en producción real.",
       "tag": "/ laboratorio · beta",
       "heading": "Describe tu idea → recibe un mockup visual",
-      "sub": "Conversamos sobre lo que quieres construir, te hago preguntas de refinamiento y generamos una imagen conceptual de tu producto en segundos. Sin registro, sin backend, todo en tu navegador.",
+      "sub": "Conversamos sobre lo que quieres construir, te hago preguntas de refinamiento y generamos una imagen conceptual de tu producto en segundos. Sin registro, sin servidor externo, todo en tu navegador.",
       "chat": {
         "title": "◈ Chat de ideación",
         "sub": "Refinamos tu idea en 3–5 mensajes",
@@ -505,14 +505,14 @@
         "empty": "Sin spec aún"
       },
       "types": {
-        "dashboard": "Dashboard",
+        "dashboard": "Panel de control",
         "landing": "Landing",
         "mobile": "Mobile",
         "ecommerce": "E-commerce",
         "tool": "Herramienta"
       },
       "poweredBy": "brutalismo v0.7 · sin APIs externas",
-      "disclaimer": "◇ El laboratorio no usa backend ni servicios externos: los mockups se generan en tu navegador con el sistema brutalista. Tu conversación no se guarda en ningún servidor.",
+      "disclaimer": "◇ El laboratorio no usa servidor ni servicios externos: los mockups se generan en tu navegador con el sistema brutalista. Tu conversación no se guarda en ningún servidor.",
       "cta": {
         "title": "¿Te gustó lo que ves en el mockup?",
         "desc": "Reservamos 30 minutos gratis. Me lo describes en persona, lo refino contigo y te entrego un prototipo funcional en 72 horas.",
@@ -530,7 +530,7 @@
       "title": "Licitar / Contacto — NX-Studio",
       "description": "Cuéntanos qué necesitas construir. Respuesta en menos de 24h hábiles.",
       "back": "← Inicio",
-      "tag": "// licitacion · backend 24/7",
+      "tag": "// licitación · software 24/7",
       "headingA": "Inicia tu",
       "headingEm": "licitacion",
       "sub": "Completa el formulario. Tu peticion se guarda en nuestra base, el agente IA de NX-Studio la lee y te envia una propuesta detallada con presupuesto, mockup preview HTML y link de agendamiento.",
@@ -545,15 +545,15 @@
         "tipo": "Tipo de proyecto",
         "tipoOptions": {
           "webapp": "Webapp",
-          "landing": "Landing page",
+          "landing": "Página de aterrizaje",
           "mobile": "App mobile",
-          "testing": "QA / Testing",
+          "testing": "Pruebas de calidad",
           "template": "Comprar template",
           "otro": "Otro"
         },
         "engagement": "Engagement",
         "engagementOptions": {
-          "fixed": "Per-sprint / Fixed",
+          "fixed": "Precio fijo por ciclo",
           "retainer": "Monthly retainer",
           "dedicated": "Dedicated team",
           "tm": "Hourly / T&M"
@@ -738,65 +738,65 @@
       }
     },
     "serviciosTesting": {
-      "title": "Testing & QA as a service — NX-Studio",
-      "description": "QA embedido con tiers Foundation / Accelerator / Strategic. Automation, performance, accesibilidad WCAG 2.1 AA, pen-testing.",
+      "title": "Pruebas de calidad — NX-Studio",
+      "description": "Pruebas de calidad con tres niveles de servicio (Foundation, Accelerator y Strategic). Automatización, rendimiento, accesibilidad WCAG 2.1 AA y revisión de seguridad.",
       "headingA": "Testing &",
-      "headingEm": "QA as a service",
-      "sub": "QA embedido con tiers por outcome (no por horas). Platform fee separado de seat licenses para máxima transparencia. Pricing orientativo: sesión de descubrimiento.",
+      "headingEm": "que puedes contratar",
+      "sub": "Pruebas de calidad con tres niveles según el resultado (no por horas). Cuota mensual de plataforma separada de las licencias por usuario, para máxima transparencia. Precio orientativo: sesión de descubrimiento.",
       "featured": "featured",
       "tiers": {
         "foundation": {
-          "tag": "// qa · starter",
+          "tag": "// calidad · básico",
           "name": "Foundation",
-          "desc": "QA reactivo para equipos que recién empiezan a invertir en testing.",
+          "desc": "Pruebas reactivas para equipos que recién empiezan a invertir en calidad.",
           "bullets": {
-            "0": "Manual testing de regresión por sprint",
+            "0": "Pruebas manuales de regresión en cada ciclo",
             "1": "Bug reports con repro steps + severidad",
             "2": "Smoke tests en CI por PR",
             "3": "Reporte semanal de métricas básicas"
           },
-          "platformNote": "Platform fee + 1 QA part-time"
+          "platformNote": "Cuota de plataforma + 1 persona de calidad part-time"
         },
         "accelerator": {
-          "tag": "// qa · growth",
+          "tag": "// calidad · crecimiento",
           "name": "Accelerator",
-          "desc": "QA embedido con automation, performance y accesibilidad. Ideal para series A.",
+          "desc": "Pruebas de calidad con automatización, rendimiento y accesibilidad. Ideal para series A.",
           "bullets": {
             "0": "Todo Foundation, más:",
             "1": "Automation suite (Playwright + visual regression)",
             "2": "Performance budgets + Core Web Vitals tracking",
-            "3": "Accesibilidad WCAG 2.1 AA audits",
+            "3": "Auditorías de accesibilidad WCAG 2.1 AA",
             "4": "Security baseline (OWASP top 10)",
-            "5": "Dedicado 1 QA senior full-time"
+            "5": "1 persona de calidad senior a tiempo completo"
           },
-          "platformNote": "Platform fee + seat licenses (Playwright/axe/Lighthouse)"
+          "platformNote": "Cuota de plataforma + licencias por usuario (Playwright, axe, Lighthouse)"
         },
         "strategic": {
-          "tag": "// qa · scale",
+          "tag": "// calidad · escala",
           "name": "Strategic",
-          "desc": "Managed pod con QA lead, dedicated team y reporting ejecutivo.",
+          "desc": "Equipo dedicado con responsable de calidad, tiempo completo y reportes para la dirección.",
           "bullets": {
             "0": "Todo Accelerator, más:",
-            "1": "QA lead dedicado",
-            "2": "Pen-testing básico en cada release",
+            "1": "Responsable de calidad dedicado",
+            "2": "Revisión de seguridad básica en cada entrega",
             "3": "Reporte ejecutivo mensual",
             "4": "On-call rotation",
             "5": "Integration con Linear/Jira/Notion"
           },
-          "platformNote": "Platform fee + managed pod (2-4 QAs)"
+          "platformNote": "Cuota de plataforma + equipo dedicado (2-4 personas)"
         }
       },
       "pricingModel": {
         "title": "Modelo de pricing",
-        "p1a": "Cada tier combina un ",
-        "platformFee": "platform fee mensual",
+        "p1a": "Cada nivel combina un ",
+        "platformFee": "cuota de plataforma mensual",
         "p1b": " (cobertura del servicio, on-call, reporting) más el costo de los seat licenses de las herramientas utilizadas. Cero horas facturadas: pagas por capacidad desplegada, no por ticket.",
-        "warning": "⚠ Pricing exacto requiere scoping del codebase, stack y volumen de releases."
+        "warning": "⚠ El precio exacto requiere revisar tu código, la tecnología que usas y cuántas entregas haces al año."
       },
       "ctaBox": {
-        "title": "¿Cuál tier encaja con tu equipo?",
-        "desc": "Sesión gratuita de 30-45 minutos. Analizamos tu stack, volumen de releases y pain points actuales, y recomendamos el tier con ROI esperado.",
-        "cta": "Agendar scoping QA →"
+        "title": "¿Qué nivel encaja con tu equipo?",
+        "desc": "Sesión gratuita de 30-45 minutos. Analizamos tu tecnología, el volumen de entregas y los problemas actuales, y te recomendamos el nivel con el mejor retorno.",
+        "cta": "Agendar una sesión →"
       }
     },
     "templateSlug": {
@@ -996,7 +996,7 @@
       "step2": "2 · Tus datos",
       "date": "Fecha",
       "estimate": "Rango estimado",
-      "band": "Banda {band} · {hours}h estimadas",
+      "band": "Nivel {band} · {hours}h estimadas",
       "estimateNote": "Es un rango, no un precio final. En la llamada cerramos el alcance y ajustamos esta cifra.",
       "name": "Nombre *",
       "email": "Email *",
@@ -1032,13 +1032,13 @@
     "reset_done": "Conversación reiniciada. ¿En qué te ayudo?",
     "portalsignup": "Te llevo al portal de cliente en una nueva pestaña. Si aún no tienes cuenta, podemos crearla cuando llegues.",
     "mock_greeting": "¡Hola! Soy SophIA, asistente virtual de NX-Studio. Si puedes imaginarlo, puedes crearlo. ¿En qué te ayudo hoy? Pregúntame por precios, servicios, templates o escribe /help para ver los comandos.",
-    "mock_pricing": "Con base real de mercado (Colombia 2025-2026): landing $500.000–$1.500.000 COP; sitio corporativo + blog $1.200.000–$3.000.000; e-commerce $2.500.000–$20.000.000; web app/SaaS $10M–$50M COP; app móvil $4M–$40M; IA/chatbot $2M–$15M. Internacional: landing $1.500–$8.000 USD; corporativo $2.500–$12.000; e-commerce $5.000–$60.000; web app/SaaS $15.000–$100.000 USD. Ningún proyecto es gratis: hasta un blog tiene costo de diseño, desarrollo, dominio y hosting. Para tu cotización exacta abre el cotizador (/cotizador) o cuéntame qué necesitas.",
+    "mock_pricing": "Con base real de mercado (Colombia 2025-2026): página de aterrizaje $500.000–$1.500.000 COP; sitio corporativo + blog $1.200.000–$3.000.000; tienda en línea $2.500.000–$20.000.000; aplicación web o por suscripción $10M–$50M COP; app móvil $4M–$40M; IA o asistente $2M–$15M. Internacional: página de aterrizaje $1.500–$8.000 USD; corporativo $2.500–$12.000; tienda en línea $5.000–$60.000; aplicación web o por suscripción $15.000–$100.000 USD. Ningún proyecto es gratis: hasta un blog tiene costo de diseño, desarrollo, dominio y hosting. Para tu cotización exacta abre el cotizador (/cotizador) o cuéntame qué necesitas.",
     "mock_handoff": "Te conecto con el equipo humano. Mientras tanto, cuéntame tu proyecto en 2-3 líneas y agilizamos el primer contacto. Respuesta habitual en menos de 24h hábiles.",
     "mock_unknown": "No estoy segura de haber entendido. Puedo ayudarte con precios, servicios, templates, laboratorio o conectar contigo con un humano. Prueba /help para ver comandos.",
-    "mock_services": "Hacemos: desarrollo web a medida, apps móviles, IA aplicada (chatbots, RAG, agentes), automatizaciones e integraciones (WhatsApp Cloud, DIAN, pasarelas de pago), productos SaaS, e-commerce y marketplaces, testing & QA, seguridad de software, UI/UX y design systems, data & BI, cloud & DevOps, migraciones de legacy, mantenimiento y soporte, consultoría y arquitectura, templates comprables y SEO técnico. ¿Cuál te interesa? Todos los puedes cotizar en /cotizador.",
-    "mock_templates": "Tenemos templates production-ready (landing, dashboard, e-commerce) listos para comprar y desplegar. Licencia MIT, sin royalties, soporte en el primer sprint. Pásate por /templates para ver el catálogo.",
-    "mock_labs": "El laboratorio IA es donde experimentamos con generación de mockups, agentes y prototipos. Sin backend, todo en tu navegador. Si quieres ver uno en vivo, /laboratorio.",
-    "mock_contact": "Para contacto directo: formulario en /contacto (guarda en backend y notifica al equipo), o /cotizador para estimación inmediata. También /portalsignup si prefieres crear cuenta en el portal.",
+    "mock_services": "Hacemos: desarrollo web a medida, apps móviles, IA aplicada (asistentes que usan tu información), automatizaciones e integraciones (WhatsApp, DIAN, pasarelas de pago), productos por suscripción, tiendas en línea y marketplaces, pruebas de calidad, seguridad de software, diseño de interfaces, análisis de datos, nube y despliegue, migraciones de sistemas antiguos, mantenimiento y soporte, consultoría y arquitectura, plantillas comprables y optimización para Google. ¿Cuál te interesa? Todos los puedes cotizar en /cotizador.",
+    "mock_templates": "Tenemos plantillas listas para usar (página de conversión, panel de control, tienda online) que puedes comprar y publicar. Licencia MIT, sin royalties, soporte en el primer ciclo. Pásate por /templates para ver el catálogo.",
+    "mock_labs": "El laboratorio de IA es donde experimentamos con generación de mockups, asistentes y prototipos. Sin servidor externo, todo en tu navegador. Si quieres ver uno en vivo, /laboratorio.",
+    "mock_contact": "Para contacto directo: formulario en /contacto (guarda la solicitud en nuestro sistema y avisa al equipo), o /cotizador para estimación inmediata. También /portalsignup si prefieres crear cuenta en el portal.",
     "mock_thanks": "¡Un gusto! Si necesitas algo más, aquí estoy.",
     "aria_user_message": "Tu mensaje",
     "aria_bot_message": "SophIA dice",
@@ -1050,7 +1050,7 @@
   "portal": {
     "shell": {
       "nav": {
-        "dashboard": "Dashboard",
+        "dashboard": "Panel",
         "proyectos": "Proyectos",
         "mensajes": "Mensajes",
         "perfil": "Perfil",
@@ -1119,7 +1119,7 @@
       "labelDisplay": "Rango en moneda original",
       "nextMilestone": "Próxima milestone",
       "noMilestone": "Sin milestones abiertas.",
-      "backToDashboard": "← Volver al dashboard",
+      "backToDashboard": "← Volver al panel",
       "notFound": "Cotización no encontrada."
     },
     "proyectos": {

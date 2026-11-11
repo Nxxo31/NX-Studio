@@ -44,7 +44,7 @@ export const SERVICES: Service[] = [
   {
     slug: 'automation',
     icon: 'M13 10V3L4 14h7v7l9-11h-7z',
-    title: { es: 'Automatizaciones e integraciones', en: 'Automations & integrations', pt: 'Automações e integrações' },
+    title: { es: 'Automatizaciones y conexiones', en: 'Automations & connections', pt: 'Automações e conexões' },
     desc: { es: 'Conecta WhatsApp con tus sistemas de gestión y cobro (Wompi, PayU, PSE), con facturación electrónica que cumple la normativa local (DIAN).', en: 'Connect WhatsApp to your management and billing systems (Wompi, PayU, PSE), with electronic invoicing that meets local rules (DIAN).', pt: 'Conecte o WhatsApp aos seus sistemas de gestão e cobrança (Wompi, PayU, PSE), com faturação eletrônica que atende as regras locais (DIAN).' },
     tag: { es: '// automation', en: '// automation', pt: '// automação' },
     presetId: 'ia',
@@ -52,7 +52,7 @@ export const SERVICES: Service[] = [
   {
     slug: 'saas',
     icon: 'M4 4h16v6H4zM4 14h16v6H4zM8 7h.01M8 17h.01',
-    title: { es: 'Productos SaaS', en: 'SaaS products', pt: 'Produtos SaaS' },
+    title: { es: 'Productos por suscripción', en: 'Subscription products', pt: 'Produtos por assinatura' },
     desc: { es: 'Sistema donde empresas comparten la misma instalación, con cobro por suscripción y paneles de control, para crecer con tu negocio.', en: 'System where multiple customers share one installation, with subscription billing and access controls, to scale with your business.', pt: 'Sistema onde empresas compartilham a mesma instalação, com cobro por assinatura e painéis de controle, para crescer com o seu negócio.' },
     tag: { es: '// saas', en: '// saas', pt: '// saas' },
     presetId: 'webapp',
@@ -60,7 +60,7 @@ export const SERVICES: Service[] = [
   {
     slug: 'ecommerce',
     icon: 'M6 2l-2 5v13a2 2 0 002 2h12a2 2 0 002-2V7l-2-5zM4 7h16M9 11a3 3 0 006 0',
-    title: { es: 'E-commerce y marketplaces', en: 'E-commerce & marketplaces', pt: 'E-commerce e marketplaces' },
+    title: { es: 'Tiendas en línea y plataformas de compra y venta', en: 'Online stores and marketplaces', pt: 'Lojas online e marketplaces' },
     desc: { es: 'Tiendas en línea y mercados con carrito de compras, control de stock, envíos y pasarelas de pago locales.', en: 'Online stores and marketplaces with shopping cart, inventory management, shipping and local payment gateways.', pt: 'Lojas online e marketplaces com carrinho de compras, controle de estoque, envios e gateways de pagamento locais.' },
     tag: { es: '// commerce', en: '// commerce', pt: '// comércio' },
     presetId: 'ecommerce',
@@ -68,7 +68,7 @@ export const SERVICES: Service[] = [
   {
     slug: 'qa',
     icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
-    title: { es: 'Testing & QA', en: 'Testing & QA', pt: 'Testing & QA' },
+    title: { es: 'Pruebas de calidad', en: 'Quality testing', pt: 'Testes de qualidade' },
     desc: { es: 'Pruebas manuales y automatizadas, rendimiento, accesibilidad (WCAG 2.1 AA) y seguridad, con niveles Foundation, Accelerator y Strategic.', en: 'Manual and automated testing, performance, accessibility (WCAG 2.1 AA) and security, with Foundation, Accelerator and Strategic service tiers.', pt: 'Testes manuais e automatizados, desempenho, acessibilidade (WCAG 2.1 AA) e segurança, com níveis Foundation, Accelerator e Strategic.' },
     tag: { es: '// quality', en: '// quality', pt: '// qualidade' },
     presetId: 'qa',
@@ -84,7 +84,7 @@ export const SERVICES: Service[] = [
   {
     slug: 'design',
     icon: 'M12 19l7-7 3 3-7 7-3-3zM18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5zM2 2l7.586 7.586M11 11a2 2 0 11-4 0 2 2 0 014 0z',
-    title: { es: 'UI/UX y design systems', en: 'UI/UX & design systems', pt: 'UI/UX e design systems' },
+    title: { es: 'Diseño de interfaces', en: 'Interface design', pt: 'Design de interfaces' },
     desc: { es: 'Diseño de interfaces que convierten visitantes en clientes: investigación, wireframes y sistemas de componentes.', en: 'Design of interfaces that convert visitors into customers: research, wireframes, design tokens, prototypes and reusable component systems.', pt: 'Design de interfaces que convertem visitantes em clientes: research, wireframes, design tokens, protótipos e sistemas de componentes reutilizáveis.' },
     tag: { es: '// design', en: '// design', pt: '// design' },
     presetId: 'corporativo',
@@ -92,7 +92,7 @@ export const SERVICES: Service[] = [
   {
     slug: 'data',
     icon: 'M3 3v18h18M7 15v3M12 10v8M17 6v12',
-    title: { es: 'Data & BI', en: 'Data & BI', pt: 'Data & BI' },
+    title: { es: 'Datos y reportes', en: 'Data & reports', pt: 'Dados e relatórios' },
     desc: { es: 'Paneles con datos actualizados, reportes automáticos, procesamiento ligero y métricas que el negocio entiende.', en: 'Real-time dashboards with updated data, automated reporting, light ETL and metrics the business actually understands.', pt: 'Dashboards em tempo real com dados atualizados, relatórios automáticos, ETL leve e métricas que o negócio realmente entende.' },
     tag: { es: '// data', en: '// data', pt: '// data' },
     presetId: 'webapp',
@@ -100,7 +100,7 @@ export const SERVICES: Service[] = [
   {
     slug: 'cloud',
     icon: 'M17.5 19a4.5 4.5 0 100-9h-.3A7 7 0 104 15.9M12 12v9m-4-4l4-4 4 4',
-    title: { es: 'Cloud & DevOps', en: 'Cloud & DevOps', pt: 'Cloud & DevOps' },
+    title: { es: 'Nube y despliegue', en: 'Cloud & deployment', pt: 'Nuvem e publicação' },
     desc: { es: 'Despliegue automático en la nube (Cloudflare o AWS), infraestructura documentada, monitoreo y actualizaciones.', en: 'Automatic cloud deployment (Cloudflare or AWS), documented infrastructure, monitoring and updates without drama.', pt: 'Publicação automática na nuvem (Cloudflare ou AWS), infraestrutura documentada, monitoramento e atualizações sem drama.' },
     tag: { es: '// ops', en: '// ops', pt: '// ops' },
     presetId: 'webapp',
@@ -132,14 +132,14 @@ export const SERVICES: Service[] = [
   {
     slug: 'templates',
     icon: 'M4 3h16l-6 8v7l-4 2v-9zM4 3h16',
-    title: { es: 'Templates comprables', en: 'Buyable templates', pt: 'Templates compráveis' },
+    title: { es: 'Plantillas para comprar', en: 'Templates you can buy', pt: 'Modelos para comprar' },
     desc: { es: 'Landing pages, paneles de control y tiendas en línea listos para adaptar con tu propio código, licencia MIT y despliegue en pocas horas.', en: 'Landing pages, control panels and online stores ready to adapt with your own code, MIT license and deployment in hours.', pt: 'Landing pages, painéis e lojas online prontos para adaptar com seu próprio código, licença MIT e publicação em poucas horas.' },
     tag: { es: '// templates', en: '// templates', pt: '// templates' },
   },
   {
     slug: 'seo',
     icon: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3a2 2 0 104 0V7',
-    title: { es: 'SEO técnico', en: 'Technical SEO', pt: 'SEO técnico' },
+    title: { es: 'Que Google entienda tu sitio', en: 'Google-friendly site', pt: 'Site que o Google entende' },
     desc: { es: 'Optimización para que Google entienda tu sitio: carga rápida, datos estructurados, mapa del sitio e indexación en varios idiomas.', en: 'Optimization so Google understands your site: fast loading, structured data, a site map and correct indexing in several languages.', pt: 'Otimização para o Google entender seu site: carregamento rápido, dados estruturados, mapa do site e indexação em vários idiomas.' },
     tag: { es: '// seo', en: '// seo', pt: '// seo' },
     presetId: 'corporativo',

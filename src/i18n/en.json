@@ -2,7 +2,7 @@
   "meta": {
     "siteName": "NX-Studio",
     "defaultTitle": "NX-Studio — Software that scales with you",
-    "defaultDescription": "LATAM development studio. Custom software architecture, QA as a service, ready-to-buy templates. Interactive quote builder. If you can imagine it, you can create it."
+    "defaultDescription": "LATAM development studio. Custom software, quality testing you can hire, and ready-to-buy templates. Interactive quote builder. If you can imagine it, you can create it."
   },
   "nav": {
     "inicio": "Home",
@@ -22,7 +22,7 @@
     "headlineB": "not just looks good.",
     "sub1": "A",
     "subStrong": "LATAM-first",
-    "sub2": "development studio. We build production-ready applications, QA and templates. You see the code from day one. No black box.",
+    "sub2": "We build production-ready applications, quality testing and templates. You see the code from day one. No black box.",
     "chip1": "11 OSS projects",
     "chip2": "24+ technologies",
     "chip3": "LATAM remote-first",
@@ -38,7 +38,7 @@
   },
   "footer": {
     "tagline": "LATAM software studio. Product + service. Trading bots, business software, electoral auditing, 3D experiences and more. Neiva, Colombia · Remote service worldwide.",
-    "author": "Sebastian Velasco Ocampo · Full-stack + AI",
+    "author": "Sebastian Velasco Ocampo · Software & AI",
     "colSitio": "Site",
     "linkCotizador": "Get a quote",
     "linkLaboratorio": "AI Lab",
@@ -66,7 +66,7 @@
   "pages": {
     "index": {
       "title": "NX-Studio — Software that scales with you",
-      "description": "LATAM development studio. Custom software, quality testing as a service, and ready-to-buy templates. Interactive quote builder.",
+      "description": "LATAM development studio. Custom software, quality testing and ready-to-buy templates. Interactive quote builder.",
       "services": {
         "tag": "// services",
         "headingA": "What we",
@@ -80,13 +80,13 @@
             "precio": "From $5,000"
           },
           "1": {
-            "title": "Testing & QA",
+            "title": "Quality testing",
             "resultado": "Your software validated before your customer uses it.",
-            "precio": "From $3,000/sprint"
+            "precio": "From $3,000 per cycle"
           },
           "2": {
             "title": "Applied AI",
-            "resultado": "Chatbots and agents that deliver real value, not demos.",
+            "resultado": "Assistants that use your company's information and tasks that run themselves.",
             "precio": "From $4,000"
           }
         },
@@ -103,7 +103,7 @@
             "label": "open-source products published on GitHub"
           },
           "1": {
-            "label": "technologies in a verifiable stack"
+            "label": "technologies you can verify yourself"
           },
           "2": {
             "label": "remote-first team, UTC-05 timezone"
@@ -165,27 +165,27 @@
     },
     "servicios": {
       "title": "Services — NX-Studio",
-      "description": "Custom development, QA as a service and architecture consulting. LATAM-first delivery with international standards.",
+      "description": "Custom development, quality testing and architecture consulting. LATAM-first delivery with international standards.",
       "headingA": "Specialized",
       "headingEm": "services",
       "sub": "Core capabilities to build digital products and professional-grade vertical services to validate software before your customer uses it.",
       "coreTitle": "Core capabilities",
       "core": {
         "0": {
-          "tag": "// architecture",
-          "desc": "Design and construction of systems that scale with your business. Web, mobile, ERP, integrations."
+          "tag": "// systems",
+          "desc": "Design and construction of systems that grow with your business: websites, apps, management systems and integrations with what you already use."
         },
         "1": {
           "tag": "// ai",
-          "desc": "Chatbots, RAG, agents, LLM automation. Solutions that deliver real value, not demos."
+          "desc": "Assistants that answer using your company's information and tasks that run themselves. Solutions used every day, not prototypes."
         }
       },
       "specializedTitle": "Specialized services",
       "items": {
         "testing": {
           "tag": "// qa.v1",
-          "title": "Testing & QA",
-          "desc": "QA as a service with Foundation / Accelerator / Strategic tiers. Manual + automation, performance, WCAG 2.1 AA accessibility, security pen-testing."
+          "title": "Quality testing",
+          "desc": "Manual and automated testing with three service levels (Foundation, Accelerator and Strategic): performance, accessibility and security."
         }
       },
       "viewDetail": "View details →",
@@ -198,10 +198,10 @@
     },
     "templates": {
       "title": "Templates — NX-Studio",
-      "description": "Production-ready software templates: buy, deploy and customize.",
+      "description": "Ready-to-use software templates: buy, publish and customize.",
       "headingA": "Purchasable",
       "headingEm": "templates",
-      "sub": "Production-ready starters for common challenges. MIT-licensed code, one-time payment, no royalties. Buy the template and launch in under 1 sprint.",
+      "sub": "Ready-to-use starters for common challenges. MIT-licensed code, one-time payment, no royalties. Buy the template and publish it in under a week.",
       "featuredTitle": "Featured",
       "othersTitle": "Others",
       "viewDetail": "View details →",
@@ -210,14 +210,14 @@
         "steps": {
           "0": "You pick the template and contact us.",
           "1": "We send you the private repo + invoice (one-time).",
-          "2": "Guided setup: deploy, env vars, domain, integrations.",
+          "2": "Guided setup: publishing, configuration, domain and integrations.",
           "3": "Handover with a 60-minute Q&A."
         },
         "cta": "Start purchase →"
       },
       "items": {
         "landing-converter": {
-          "name": "Landing Converter",
+          "name": "Conversion page",
           "tagline": "Landing page that converts, with a built-in A/B test",
           "desc": "Landing page with an animated main banner, sections you can reorder easily, technical copy, email sending with Resend, visit stats with Plausible, a two-version A/B test and social media previews.",
           "includes": {
@@ -238,7 +238,7 @@
           "lastUpdated": "2026-09-14"
         },
         "dashboard-starter": {
-          "name": "Dashboard Starter",
+          "name": "Control panel",
           "tagline": "Control panel with sign-in, tables, charts and permissions",
           "desc": "Control panel for several companies, with sign-in, tables filtered on the server, charts, export to Excel and PDF, permissions per role, and light or dark mode.",
           "includes": {
@@ -259,11 +259,11 @@
           "lastUpdated": "2026-10-02"
         },
         "ecommerce-headless": {
-          "name": "Headless E-commerce",
+          "name": "Online store",
           "tagline": "Online store with Stripe payments and order management",
           "desc": "Online store where the customer-facing shop and the order system are separate: catalog, stock control, a cart that survives closing the page, and Stripe payments.",
           "includes": {
-            "0": "Storefront and a basic admin panel",
+            "0": "The store and a basic admin panel",
             "1": "Stripe checkout, with automatic notices when the payment goes through",
             "2": "Stock control",
             "3": "Cart that survives closing the page and is stored on the server",
@@ -284,7 +284,7 @@
       "search_placeholder": "Search template…",
       "filter_all": "All",
       "filter_landing": "Landing",
-      "filter_dashboard": "Dashboard",
+      "filter_dashboard": "Control panel",
       "filter_ecommerce": "E-commerce",
       "price_all": "Any price",
       "price_free": "Free",
@@ -349,7 +349,7 @@
         },
         "backend": {
           "name": "Backend",
-          "description": "API, data, auth, integrations"
+          "description": "Connections to other systems, database and sign-in"
         },
         "growth": {
           "name": "Growth",
@@ -357,17 +357,17 @@
         },
         "ops": {
           "name": "QA + Ops",
-          "description": "Testing, accessibility, deploy, docs"
+          "description": "Testing, accessibility, publishing and documentation"
         }
       },
       "shapes": {
         "fixed": {
-          "name": "Per-sprint / Fixed",
+          "name": "Fixed price per cycle",
           "description": "Defined scope, fixed price per release. Ideal for MVPs and one-off deliverables."
         },
         "retainer": {
           "name": "Monthly Retainer",
-          "description": "Ongoing team, predictable monthly fee. For products shipping every sprint."
+          "description": "Ongoing team, predictable monthly fee. For products that ship every month."
         },
         "dedicated": {
           "name": "Dedicated Team",
@@ -395,31 +395,31 @@
       "features": {
         "discovery": {
           "name": "Discovery + Scoping",
-          "description": "Kickoff workshop, data model, sitemap, solution architecture"
+          "description": "Initial workshop, data model and solution plan"
         },
         "design-system": {
           "name": "Base Design System",
-          "description": "Tokens, components, theming, WCAG 2.1 AA accessibility"
+          "description": "Consistent styles and components across the app, with WCAG 2.1 AA accessibility"
         },
         "responsive": {
           "name": "Responsive + Mobile",
-          "description": "Breakpoints, touch optimization, optional PWA"
+          "description": "Design that adapts to phone and tablet, with an optional installable app"
         },
         "landing": {
           "name": "Landing page",
           "description": "Hero, sections, CTA, technical copy, scroll animations"
         },
         "dashboard": {
-          "name": "Dashboard / Admin panel",
-          "description": "Tables, filters, charts, exports, roles"
+          "name": "Control panel",
+          "description": "Tables, filters, charts, Excel export and permissions per role"
         },
         "auth": {
-          "name": "Auth + Roles",
-          "description": "NextAuth / Clerk, OAuth, magic links, RBAC"
+          "name": "Access & permissions",
+          "description": "Sign-in with email, Google or social accounts, and one-time links"
         },
         "api": {
-          "name": "API REST/GraphQL",
-          "description": "Endpoints, Zod validation, OpenAPI spec, rate limiting"
+          "name": "System connections",
+          "description": "Connection routes, data validation, documentation and usage limits"
         },
         "db": {
           "name": "Database + ORM",
@@ -434,7 +434,7 @@
           "description": "PostHog/Plausible, custom events, funnels"
         },
         "seo": {
-          "name": "Technical SEO + OG",
+          "name": "Google-friendly site",
           "description": "Sitemap, robots, JSON-LD, hreflang, OG cards"
         },
         "i18n": {
@@ -446,29 +446,29 @@
           "description": "Vitest/Playwright, CI gate, coverage report"
         },
         "a11y": {
-          "name": "a11y audit WCAG 2.1 AA",
+          "name": "WCAG 2.1 AA accessibility review",
           "description": "Lighthouse, axe-core, prioritized remediation"
         },
         "security": {
-          "name": "Basic pen-testing",
+          "name": "Basic security review",
           "description": "OWASP top10, dependency audit, CSP headers"
         },
         "deploy": {
-          "name": "Deploy + CI/CD",
+          "name": "Automatic publishing",
           "description": "Vercel/GH Pages, GitHub Actions, environments, custom domain"
         },
         "docs": {
           "name": "Technical docs",
-          "description": "README, AGENTS.md, runbooks, 30min onboarding"
+          "description": "Documentation, operating guides and a 30-minute walkthrough"
         }
       }
     },
     "laboratorio": {
       "title": "AI Lab — NX-Studio",
-      "description": "Applied AI experiments: agents, RAG and automation proven in real production.",
+      "description": "Applied AI experiments: assistants that use your information and automated tasks, proven in real production.",
       "tag": "/ lab · beta",
       "heading": "Describe your idea → get a visual mockup",
-      "sub": "We chat about what you want to build, I ask you refinement questions and we generate a concept image of your product in seconds. No sign-up, no backend, everything in your browser.",
+      "sub": "We chat about what you want to build, I ask you refinement questions and we generate a concept image of your product in seconds. No signup, no external server, all in your browser.",
       "chat": {
         "title": "◈ Ideation chat",
         "sub": "We refine your idea in 3–5 messages",
@@ -505,14 +505,14 @@
         "empty": "No spec yet"
       },
       "types": {
-        "dashboard": "Dashboard",
+        "dashboard": "Control panel",
         "landing": "Landing",
         "mobile": "Mobile",
         "ecommerce": "E-commerce",
         "tool": "Tool"
       },
       "poweredBy": "brutalism v0.7 · no external APIs",
-      "disclaimer": "◇ The lab uses no backend or external services: mockups are generated in your browser with the brutalist system. Your conversation is not stored on any server.",
+      "disclaimer": "◇ The lab uses no server or external services: mockups are generated in your browser with the brutalist system. Your conversation is not stored on any server.",
       "cta": {
         "title": "Like what you see in the mockup?",
         "desc": "We set aside 30 free minutes. You describe it to me in person, I refine it with you and deliver a working prototype within 72 hours.",
@@ -530,7 +530,7 @@
       "title": "Start a project / Contact — NX-Studio",
       "description": "Tell us what you need to build. Reply within 24 business hours.",
       "back": "← Home",
-      "tag": "// bid · 24/7 backend",
+      "tag": "// bid · software 24/7",
       "headingA": "Start your",
       "headingEm": "bid",
       "sub": "Fill out the form. Your request is saved to our database, the NX-Studio AI agent reads it and sends you a detailed proposal with budget, HTML mockup preview and a scheduling link.",
@@ -547,13 +547,13 @@
           "webapp": "Webapp",
           "landing": "Landing page",
           "mobile": "Mobile app",
-          "testing": "QA / Testing",
+          "testing": "Quality testing",
           "template": "Buy a template",
           "otro": "Other"
         },
         "engagement": "Engagement",
         "engagementOptions": {
-          "fixed": "Per-sprint / Fixed",
+          "fixed": "Fixed price per cycle",
           "retainer": "Monthly retainer",
           "dedicated": "Dedicated team",
           "tm": "Hourly / T&M"
@@ -738,65 +738,65 @@
       }
     },
     "serviciosTesting": {
-      "title": "Testing & QA as a service — NX-Studio",
-      "description": "Embedded QA with Foundation / Accelerator / Strategic tiers. Automation, performance, WCAG 2.1 AA accessibility, pen-testing.",
+      "title": "Quality testing — NX-Studio",
+      "description": "Quality testing with three service levels (Foundation, Accelerator and Strategic). Automation, performance, WCAG 2.1 AA accessibility and a security review.",
       "headingA": "Testing &",
-      "headingEm": "QA as a service",
-      "sub": "Embedded QA with outcome-based tiers (not hourly). Platform fee separated from seat licenses for maximum transparency. Indicative pricing: discovery session.",
+      "headingEm": "you can hire",
+      "sub": "Quality testing with three outcome-based levels (not hourly). Monthly fee kept separate from per-user licenses, for maximum transparency. Indicative price: discovery session.",
       "featured": "featured",
       "tiers": {
         "foundation": {
-          "tag": "// qa · starter",
+          "tag": "// quality · basic",
           "name": "Foundation",
-          "desc": "Reactive QA for teams just starting to invest in testing.",
+          "desc": "Reactive testing for teams just starting to invest in quality.",
           "bullets": {
-            "0": "Manual regression testing per sprint",
+            "0": "Manual regression testing each cycle",
             "1": "Bug reports with repro steps + severity",
             "2": "CI smoke tests per PR",
             "3": "Weekly basic metrics report"
           },
-          "platformNote": "Platform fee + 1 part-time QA"
+          "platformNote": "Monthly fee + 1 part-time tester"
         },
         "accelerator": {
-          "tag": "// qa · growth",
+          "tag": "// quality · growth",
           "name": "Accelerator",
-          "desc": "Embedded QA with automation, performance and accessibility. Ideal for Series A.",
+          "desc": "Quality testing with automation, performance and accessibility. Ideal for Series A.",
           "bullets": {
             "0": "Everything in Foundation, plus:",
             "1": "Automation suite (Playwright + visual regression)",
             "2": "Performance budgets + Core Web Vitals tracking",
             "3": "WCAG 2.1 AA accessibility audits",
             "4": "Security baseline (OWASP top 10)",
-            "5": "1 dedicated senior full-time QA"
+            "5": "1 dedicated senior full-time tester"
           },
-          "platformNote": "Platform fee + seat licenses (Playwright/axe/Lighthouse)"
+          "platformNote": "Monthly fee + per-user licenses (Playwright, axe, Lighthouse)"
         },
         "strategic": {
-          "tag": "// qa · scale",
+          "tag": "// quality · scale",
           "name": "Strategic",
-          "desc": "Managed pod with QA lead, dedicated team and executive reporting.",
+          "desc": "Dedicated team with a quality lead, full-time and executive reporting.",
           "bullets": {
             "0": "Everything in Accelerator, plus:",
-            "1": "Dedicated QA lead",
-            "2": "Basic pen-testing on every release",
+            "1": "Dedicated quality lead",
+            "2": "Basic security review on every release",
             "3": "Monthly executive report",
             "4": "On-call rotation",
             "5": "Integration with Linear/Jira/Notion"
           },
-          "platformNote": "Platform fee + managed pod (2-4 QAs)"
+          "platformNote": "Monthly fee + dedicated team (2-4 testers)"
         }
       },
       "pricingModel": {
         "title": "Pricing model",
-        "p1a": "Each tier combines a ",
-        "platformFee": "monthly platform fee",
+        "p1a": "Each level combines a ",
+        "platformFee": "monthly fee",
         "p1b": " (service coverage, on-call, reporting) plus the cost of seat licenses for the tools used. Zero billed hours: you pay for deployed capability, not per ticket.",
-        "warning": "⚠ Exact pricing requires scoping of codebase, stack and release volume."
+        "warning": "⚠ Exact pricing requires reviewing your codebase, the technology you use and how many releases you make per year."
       },
       "ctaBox": {
-        "title": "Which tier fits your team?",
-        "desc": "Free 30–45 minute session. We analyze your stack, release volume and current pain points, and recommend the tier with expected ROI.",
-        "cta": "Schedule QA scoping →"
+        "title": "Which level fits your team?",
+        "desc": "Free 30-45 minute session. We analyze your technology, release volume and current pain points, and recommend the level with the best return.",
+        "cta": "Schedule a session →"
       }
     },
     "templateSlug": {
@@ -996,7 +996,7 @@
       "step2": "2 · Your details",
       "date": "Date",
       "estimate": "Estimated range",
-      "band": "{band} tier · {hours}h estimated",
+      "band": "{band} level · {hours}h estimated",
       "estimateNote": "This is a range, not a final price. On the call we close the scope and adjust this number.",
       "name": "Name *",
       "email": "Email *",
@@ -1032,13 +1032,13 @@
     "reset_done": "Conversation reset. How can I help?",
     "portalsignup": "Taking you to the client portal in a new tab. If you don't have an account yet, you can create one when you arrive.",
     "mock_greeting": "Hi! I'm SophIA, NX-Studio's virtual assistant. If you can imagine it, you can create it. How can I help today? Ask me about pricing, services, templates, or type /help for commands.",
-    "mock_pricing": "Based on real market research (Colombia 2025-2026 + international): landing $500K–$1.5M COP ($1.5K–$8K USD); corporate site + blog $1.2M–$3M COP ($2.5K–$12K USD); e-commerce $2.5M–$20M COP ($5K–$60K USD); web app/SaaS $10M–$50M COP ($15K–$100K USD); mobile app $4M–$40M COP ($10K–$80K USD); AI/chatbot $2M–$15M COP ($5K–$40K USD). No project is free: even a blog costs design, development, domain and hosting. For your exact quote open the calculator (/cotizador) or tell me what you need.",
+    "mock_pricing": "Based on real market research (Colombia 2025-2026): landing page $500K-$1.5M COP; corporate site + blog $1.2M-$3M; online store $2.5M-$20M; web app or subscription product $10M-$50M COP; mobile app $4M-$40M; AI or assistant $2M-$15M. International: landing page $1.5K-$8K USD; corporate $2.5K-$12K; online store $5K-$60K; web app or subscription product $15K-$100K USD. No project is free: even a blog costs design, development, domain and hosting. For your exact quote open the quote builder (/cotizador) or tell me what you need.",
     "mock_handoff": "I'll connect you with the human team. Meanwhile, tell me about your project in 2-3 lines and we'll speed up the first contact. Typical response in under 24 business hours.",
     "mock_unknown": "I'm not sure I understood. I can help with pricing, services, templates, the lab or handing you off to a human. Try /help for commands.",
-    "mock_services": "We build: custom web development, mobile apps, applied AI (chatbots, RAG, agents), automations & integrations (WhatsApp Cloud, payment gateways), SaaS products, e-commerce & marketplaces, testing & QA, software security, UI/UX & design systems, data & BI, cloud & DevOps, legacy migrations, maintenance & support, consulting & architecture, buyable templates and technical SEO. Which one interests you? Quote any of them at /cotizador.",
-    "mock_templates": "We have production-ready templates (landing, dashboard, e-commerce) ready to buy and deploy. MIT-licensed, no royalties, support during the first sprint. Head over to /templates to see the catalog.",
-    "mock_labs": "The AI lab is where we experiment with mockup generation, agents and prototypes. No backend, all in your browser. If you want to see one live, /laboratorio.",
-    "mock_contact": "For direct contact: form at /contacto (saves to backend and notifies the team), or /cotizador for an immediate estimate. Also /portalsignup if you prefer to create an account on the portal.",
+    "mock_services": "We build: custom web development, mobile apps, applied AI (assistants that use your information), automations and integrations (WhatsApp, DIAN, payment gateways), subscription products, online stores and marketplaces, quality testing, software security, interface design, data analysis, cloud and deployment, migrations of old systems, maintenance and support, consulting and architecture, templates you can buy and Google optimization. Which one interests you? You can quote all of them in /cotizador.",
+    "mock_templates": "We have ready-to-use templates (conversion page, control panel, online store) you can buy and publish. MIT license, no royalties, support in the first cycle. Head to /templates to see the catalog.",
+    "mock_labs": "The AI lab is where we experiment with mockup generation, assistants and prototypes. No external server, all in your browser. If you want to see one live, /laboratorio.",
+    "mock_contact": "For direct contact: form at /contacto (saves the request in our system and notifies the team), or /cotizador for an immediate estimate. Also /portalsignup if you prefer to create a portal account.",
     "mock_thanks": "You're welcome! If you need anything else, I'm right here.",
     "aria_user_message": "Your message",
     "aria_bot_message": "SophIA says",
@@ -1050,7 +1050,7 @@
   "portal": {
     "shell": {
       "nav": {
-        "dashboard": "Dashboard",
+        "dashboard": "Home",
         "proyectos": "Projects",
         "mensajes": "Messages",
         "perfil": "Profile",
@@ -1119,7 +1119,7 @@
       "labelDisplay": "Range in original currency",
       "nextMilestone": "Next milestone",
       "noMilestone": "No open milestones.",
-      "backToDashboard": "← Back to dashboard",
+      "backToDashboard": "← Back to home",
       "notFound": "Bid not found."
     },
     "proyectos": {
