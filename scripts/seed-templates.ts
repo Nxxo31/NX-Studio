@@ -6,6 +6,7 @@
 //
 // Source of truth: src/data/templates.ts (los 3 templates estáticos de NX-Studio).
 
+import { pathToFileURL } from 'node:url';
 import { TEMPLATES } from '../src/data/templates';
 import type { NewTemplate } from '../src/db/schema';
 
@@ -78,7 +79,10 @@ ON CONFLICT(slug) DO UPDATE SET
   return lines.join('\n');
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// CLI entry point. `pathToFileURL` es obligatorio en Windows (ver el
+// comentario equivalente en seed-proyectos.ts): la comparación ingenua con
+// `file://${process.argv[1]}` nunca coincide y el script no imprime nada.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const args = process.argv.slice(2);
   const sql = generateSeedSQL();
   if (args.includes('--apply-sql')) console.log(sql);

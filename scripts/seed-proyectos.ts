@@ -11,6 +11,7 @@
 // Source of truth: src/data/catalog.ts (los 11 proyectos estáticos de NX-Studio).
 // Cada uno se migra a la tabla `proyecto` con timestamp actual (unixepoch ms).
 
+import { pathToFileURL } from 'node:url';
 import { projects } from '../src/data/catalog';
 import type { NewProyecto } from '../src/db/schema';
 
@@ -90,8 +91,13 @@ ON CONFLICT(slug) DO UPDATE SET
   return lines.join('\n');
 }
 
-// CLI entry point
-if (import.meta.url === `file://${process.argv[1]}`) {
+// CLI entry point.
+//
+// `pathToFileURL` es obligatorio en Windows: process.argv[1] viene con
+// backslashes ('C:\...\seed-proyectos.ts') y la comparación ingenua
+// `file://${process.argv[1]}` nunca coincide → el script no imprimía NADA
+// y el seed remoto aplicaba 0 queries.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const args = process.argv.slice(2);
   const sql = generateSeedSQL();
 
