@@ -304,21 +304,37 @@ export function classifyType(answers: string[]): MockupType {
 }
 
 export function buildSpec(answers: { q: string; a: string }[], variation = 0): MockupSpec {
-  const user = answers[1]?.a?.split(/\.|,/)[0]?.trim() || 'usuario';
-  const problem = answers[2]?.a?.split(/\.|,/)[0]?.trim() || 'tarea principal';
-  const platformMatch = (answers[3]?.a || '').toLowerCase();
+  // answers[1] = respuesta a q0: "¿Quién es el usuario principal y qué problema concreto le resuelve?"
+  // Extract user and problem from the same answer, splitting by ; or . or ,
+  const answer1 = answers[1]?.a || '';
+  const userProblem = answer1.split(/[;,.]/);
+  const user = userProblem[0]?.trim() || 'usuario';
+  const problem = userProblem[1]?.trim() || 'tarea principal';
+
+  // platform from answers[2] = respuesta a q1: "¿En qué plataforma lo imaginas...?"
+  const platformMatch = (answers[2]?.a || '').toLowerCase();
   const platform: MockupSpec['platform'] =
     /\b(mobile|android|ios|app)\b/.test(platformMatch) ? 'mobile' :
     /\bdesktop\b/.test(platformMatch) ? 'desktop' :
     /\bweb\b/.test(platformMatch) ? 'web' : 'web';
-  const feelMatch = (answers[4]?.a || '').toLowerCase();
+
+  // feel from answers[3] = respuesta a q2: "¿Cuál es la sensación que quieres transmitir...?"
+  const feelMatch = (answers[3]?.a || '').toLowerCase();
   const feel: MockupSpec['feel'] =
     /\b(colorido|divertido|j[úu]g|u[íi]l)\b/.test(feelMatch) ? 'colorido' :
     /\b(futurista|neon|tech|cibern[eé]t)\b/.test(feelMatch) ? 'futurista' :
     /\b(c[áa]lido|org[áa]nico|natural|madera)\b/.test(feelMatch) ? 'organico' : 'minimalista';
-  const name = (answers[0]?.a || 'Mi producto').split(/[\s,]+/)[0].slice(0, 24) || 'Mi producto';
+
+  // refs from answers[4] = respuesta a q3: "¿Tienes referencia visual que te guste...?"
+  const refs = (answers[4]?.a || '').slice(0, 60) || '';
+
+  // name from answers[0] = la idea inicial: usar hasta 3 palabras, recortado a 24 chars, fallback 'Mi producto'
+  const idea = (answers[0]?.a || 'Mi producto').trim();
+  const ideaWords = idea.split(/[\s,]+/).slice(0, 3);
+  const name = ideaWords.join(' ').slice(0, 24) || 'Mi producto';
+
   const tagline = ((answers[0]?.a || 'Construye algo brutal').split(/\.|,/)[0] || '').slice(0, 40);
-  const refs = answers[4]?.a?.slice(0, 60) || '';
+
   return {
     type: classifyType(answers.map((x) => x.a)),
     name,

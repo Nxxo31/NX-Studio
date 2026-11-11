@@ -258,10 +258,23 @@ const i18nLab = {
     specArea.classList.remove('hidden');
   }
 
+  function nextFrame(fn: () => void) {
+    let completed = false;
+    const run = () => {
+      if (!completed) {
+        completed = true;
+        fn();
+      }
+    };
+    const timeout = setTimeout(run, 100);
+    requestAnimationFrame(run);
+    return timeout; // cleanup not needed for simple use, but returned for reference
+  }
+
   function generate() {
     if (state.messages.filter((m) => m.role === 'user').length < questions.length) return;
     setStatus(LAB.regenerating);
-    requestAnimationFrame(() => {
+    nextFrame(() => {
       try {
         renderMockupInto();
       } catch (e) {
