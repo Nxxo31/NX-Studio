@@ -1,8 +1,17 @@
 ---
-// /portal/login — formulario de acceso al portal.
-// Stub básico: muestra el form, deja mejor-auth manejando la sesión vía cookie
-// del adapter /api/auth/[...all]. El flujo real de magic link / sign-in
-// vive en el adapter de better-auth.
+// /portal/login — acceso al portal de cliente.
+//
+// El POST va a /api/portal/auth/sign-in/email (el catch-all del portal, que
+// usa createPortalAuth con cookie prefix 'nx-studio-portal-'). NO puede ir a
+// /api/auth/* (el del admin): esa instancia emite la cookie equivocada y el
+// portalGuard nunca reconoce la sesión → loop de login.
+//
+// El submit es por fetch (no form nativo) porque better-auth responde JSON y
+// queremos manejar el error en pantalla y redirigir al destino original
+// (`from`) en lugar de mostrar un JSON crudo.
+//
+// Magic link: se ofrece solo si hay RESEND_API_KEY configurada (el propio
+// endpoint responde 404 si el plugin está deshabilitado).
 
 import Base from '~/layouts/Base.astro';
 import Input from '~/components/ui/Input.astro';
@@ -16,29 +25,36 @@ const from = Astro.url.searchParams.get('from') || '/portal';
 const error = Astro.url.searchParams.get('error');
 ---
 
-<Base title="Portal login — NX-Studio" description="Accede a tu portal de cliente NX-Studio.">
+<Base title="Portal cliente — NX-Studio" description="Accede a tu portal de cliente NX-Studio.">
   <main class="mx-auto max-w-md px-6 py-16">
     <div class="portal-login-card">
-      <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--nx-secondary);">Portal Cliente</p>
+      <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--nx-primary);">Portal Cliente</p>
       <h1 class="mt-2 font-display text-2xl font-bold">Inicia sesión</h1>
       <p class="mt-1 text-sm text-nx-muted">Accede con tu email y contraseña.</p>
 
-      {error && <p class="mt-4 portal-flash portal-flash-error" role="alert">{error}</p>}
+      {error && <p class="mt-4 portal-flash portal-flash-error" role="alert">{t('portal.errors.unauthorized')}</p>}
 
-      <form method="POST" action={`/api/auth/sign-in/email?from=${encodeURIComponent(from)}`} class="portal-login-form" data-testid="portal-login-form">
+      <form id="portal-login-form" class="mt-4" data-testid="portal-login-form">
         <Input name="email" type="email" label="Email" required autocomplete="email" />
         <Input name="password" type="password" label="Contraseña" required autocomplete="current-password" minlength={8} />
         <Button type="submit" variant="primary">{t('portal.shell.nav.dashboard')}</Button>
       </form>
 
+      <p id="portal-login-error" class="portal-flash portal-flash-error hidden mt-4" role="alert"></p>
+
       <div class="portal-login-divider"><span>o</span></div>
 
-      <form method="POST" action={`/api/auth/sign-in/magic-link?from=${encodeURIComponent(from)}`} data-testid="portal-magic-form">
-        <Input name="email" type="email" label="Email para magic link" required autocomplete="email" />
+      <form id="portal-magic-form" data-testid="portal-magic-form">
+        <Input name="email" type="email" label="Email para enlace mágico" required autocomplete="email" />
         <Button type="submit" variant="ghost">Enviar enlace mágico</Button>
       </form>
 
-      <p class="mt-6 text-xs text-nx-muted">¿No tienes cuenta? <a href="/portal/register">Regístrate</a></p>
+      <p id="portal-magic-status" class="mt-3 hidden text-xs text-nx-muted" role="status"></p>
+
+      <p class="mt-6 text-xs text-nx-muted">
+        ¿No tienes cuenta? <a href="/portal/register" class="underline">Regístrate</a>
+        · <a href="/portal/forgot-password" class="underline">Olvidé mi contraseña</a>
+      </p>
     </div>
   </main>
 </Base>
@@ -56,8 +72,8 @@ const error = Astro.url.searchParams.get('error');
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    color: var(--color-nx-muted);
     margin: 1.5rem 0;
+    color: var(--color-nx-muted);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -66,3 +82,79 @@ const error = Astro.url.searchParams.get('error');
   .portal-flash { padding: 0.5rem 0.75rem; border-radius: 0.4rem; }
   .portal-flash-error { background: rgba(239, 68, 68, 0.14); color: #ef4444; }
 </style>
+
+<script type="application/json" id="portal-login-config" set:html={JSON.stringify({ from })}></script>
+
+<script>
+  // Script MÓDULO (deferred): el DOM ya existe cuando corre.
+  // NO usar `define:vars` aquí: genera un script clásico inline que se
+  // ejecuta durante el parseo, antes de que existan los formularios → los
+  // listeners nunca se adjuntan y el login no hace nada.
+  const CONFIG = JSON.parse(
+    document.getElementById('portal-login-config')?.textContent ?? '{}'
+  );
+  const FROM = typeof CONFIG.from === 'string' ? CONFIG.from : '/portal';
+  const AUTH_BASE = '/api/portal/auth';
+
+  function mostrarError(mensaje: string): void {
+    const el = document.getElementById('portal-login-error');
+    if (!el) return;
+    el.textContent = mensaje;
+    el.classList.remove('hidden');
+  }
+
+  // ── Login con email + contraseña ──────────────────────────────────────
+  document.getElementById('portal-login-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const data = new FormData(form);
+    const email = String(data.get('email') ?? '');
+    const password = String(data.get('password') ?? '');
+
+    try {
+      const res = await fetch(`${AUTH_BASE}/sign-in/email`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      if (res.ok) {
+        window.location.href = FROM;
+        return;
+      }
+      const body = await res.json().catch(() => null);
+      mostrarError(body?.message ?? 'No pudimos iniciar sesión. Revisa tus datos.');
+    } catch {
+      mostrarError('No pudimos conectar. Inténtalo de nuevo en un momento.');
+    }
+  });
+
+  // ── Magic link ────────────────────────────────────────────────────────
+  document.getElementById('portal-magic-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const data = new FormData(form);
+    const email = String(data.get('email') ?? '');
+    const status = document.getElementById('portal-magic-status');
+
+    try {
+      const res = await fetch(`${AUTH_BASE}/sign-in/magic-link`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email, callbackURL: window.location.origin + FROM }),
+      });
+      if (status) {
+        status.classList.remove('hidden');
+        if (res.ok) {
+          status.textContent = 'Te enviamos el enlace por correo. Revisa tu bandeja.';
+        } else {
+          status.textContent = 'El enlace mágico aún no está disponible. Usa tu contraseña.';
+        }
+      }
+    } catch {
+      if (status) {
+        status.classList.remove('hidden');
+        status.textContent = 'No pudimos conectar. Inténtalo de nuevo en un momento.';
+      }
+    }
+  });
+</script>

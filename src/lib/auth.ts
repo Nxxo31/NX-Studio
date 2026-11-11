@@ -32,6 +32,17 @@ export type AuthEnv = {
   GITHUB_CLIENT_SECRET?: string;
 };
 
+/**
+ * Orígenes de desarrollo permitidos por better-auth (ver portal-auth.ts).
+ * Sin ellos, el login del navegador en local responde "Invalid origin".
+ */
+const DEV_ORIGINS = [
+  'http://localhost:4321',
+  'http://127.0.0.1:4321',
+  'http://localhost:4322',
+  'http://127.0.0.1:4322',
+];
+
 /** Secret de desarrollo: solo se usa si no hay BETTER_AUTH_SECRET en env.
  *  Mismo patrón que portal-auth.ts (B7). */
 const DEV_SECRET = 'dev-secret-not-for-production-must-be-32-chars-min-xxxxxxx';
@@ -116,7 +127,9 @@ export function createAuth(env: AuthEnv) {
     advanced: {
       cookiePrefix: 'nx-studio',
     },
-    trustedOrigins: [env.BETTER_AUTH_URL ?? 'http://localhost:4321'],
+    trustedOrigins: [
+      ...new Set([env.BETTER_AUTH_URL ?? 'http://localhost:4321', ...DEV_ORIGINS]),
+    ],
   });
 }
 

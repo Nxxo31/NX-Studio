@@ -1,0 +1,105 @@
+---
+// /portal/register — alta de cliente en el portal.
+//
+// El POST va a /api/portal/auth/sign-up/email (catch-all del portal). El
+// usuario se crea en la tabla `user` compartida con el admin, pero la SESIÓN
+// que se emite es de portal (tabla portal_session, cookie nx-studio-portal-).
+//
+// Tras el registro, better-auth inicia sesión automáticamente (autoSignIn),
+// así que redirigimos al dashboard.
+
+import Base from '~/layouts/Base.astro';
+import Input from '~/components/ui/Input.astro';
+import Button from '~/components/ui/Button.astro';
+
+export const prerender = false;
+
+const from = Astro.url.searchParams.get('from') || '/portal';
+---
+
+<Base title="Crear cuenta — Portal cliente NX-Studio" description="Crea tu cuenta en el portal de cliente NX-Studio.">
+  <main class="mx-auto max-w-md px-6 py-16">
+    <div class="portal-login-card">
+      <p class="font-mono text-xs uppercase tracking-widest" style="color: var(--nx-primary);">Portal Cliente</p>
+      <h1 class="mt-2 font-display text-2xl font-bold">Crea tu cuenta</h1>
+      <p class="mt-1 text-sm text-nx-muted">Para ver tus proyectos, cotizaciones y citas.</p>
+
+      <form id="portal-register-form" class="mt-4" data-testid="portal-register-form">
+        <Input name="name" label="Nombre" required autocomplete="name" minlength={2} />
+        <Input name="email" type="email" label="Email" required autocomplete="email" />
+        <Input name="password" type="password" label="Contraseña" required autocomplete="new-password" minlength={8} />
+        <Input name="empresa" label="Empresa (opcional)" autocomplete="organization" />
+        <Input name="pais" label="País (opcional)" autocomplete="country-name" />
+        <Button type="submit" variant="primary">Crear cuenta</Button>
+      </form>
+
+      <p id="portal-register-error" class="portal-flash portal-flash-error hidden mt-4" role="alert"></p>
+
+      <p class="mt-6 text-xs text-nx-muted">
+        ¿Ya tienes cuenta? <a href="/portal/login" class="underline">Inicia sesión</a>
+      </p>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .portal-login-card {
+    background: var(--color-nx-surface, #11132a);
+    border: 1px solid var(--color-nx-border, rgba(255,255,255,0.08));
+    border-radius: 0.85rem;
+    padding: 2rem;
+    color: var(--color-nx-ink, #e8eaf6);
+  }
+  form { display: flex; flex-direction: column; gap: 0.75rem; }
+  .portal-flash { padding: 0.5rem 0.75rem; border-radius: 0.4rem; }
+  .portal-flash-error { background: rgba(239, 68, 68, 0.14); color: #ef4444; }
+</style>
+
+<script type="application/json" id="portal-register-config" set:html={JSON.stringify({ from })}></script>
+
+<script>
+  // Script MÓDULO (deferred): el DOM ya existe cuando corre.
+  // NO usar `define:vars` aquí: genera un script clásico inline que NO
+  // procesa TypeScript (los `as HTMLFormElement` quedan como JS inválido →
+  // SyntaxError) y que corre antes de que exista el formulario.
+  const CONFIG = JSON.parse(
+    document.getElementById('portal-register-config')?.textContent ?? '{}'
+  );
+  const FROM = typeof CONFIG.from === 'string' ? CONFIG.from : '/portal';
+  const AUTH_BASE = '/api/portal/auth';
+
+  document.getElementById('portal-register-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const data = new FormData(form);
+    const error = document.getElementById('portal-register-error');
+
+    const mostrar = (mensaje: string) => {
+      if (!error) return;
+      error.textContent = mensaje;
+      error.classList.remove('hidden');
+    };
+
+    try {
+      const res = await fetch(`${AUTH_BASE}/sign-up/email`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          name: String(data.get('name') ?? ''),
+          email: String(data.get('email') ?? ''),
+          password: String(data.get('password') ?? ''),
+          empresa: String(data.get('empresa') ?? '') || undefined,
+          pais: String(data.get('pais') ?? '') || undefined,
+        }),
+      });
+      if (res.ok) {
+        window.location.href = FROM;
+        return;
+      }
+      const body = await res.json().catch(() => null);
+      mostrar(body?.message ?? 'No pudimos crear la cuenta. Revisa los datos.');
+    } catch {
+      mostrar('No pudimos conectar. Inténtalo de nuevo en un momento.');
+    }
+  });
+</script>
