@@ -66,7 +66,7 @@
   "pages": {
     "index": {
       "title": "NX-Studio — Software that scales with you",
-      "description": "LATAM development studio. Custom software architecture, QA as a service, ready-to-buy templates. Interactive quote builder.",
+      "description": "LATAM development studio. Custom software, quality testing as a service, and ready-to-buy templates. Interactive quote builder.",
       "services": {
         "tag": "// services",
         "headingA": "What we",
@@ -297,11 +297,11 @@
       "of": "of",
       "item": "templates",
       "kinds": {
-        "Landing": "Landing",
-        "Dashboard": "Dashboard",
-        "E-commerce": "E-commerce",
-        "SaaS": "SaaS",
-        "Auth": "Auth",
+        "Landing": "Landing page",
+        "Dashboard": "Control panel",
+        "E-commerce": "Online store",
+        "SaaS": "Subscription",
+        "Auth": "Sign-in",
         "Blog": "Blog"
       }
     },

@@ -66,7 +66,7 @@
   "pages": {
     "index": {
       "title": "NX-Studio — Software que escala com você",
-      "description": "Estúdio de desenvolvimento LATAM. Arquitetura de software sob medida, QA as a service, templates prontos para compra. Cotizador interativo.",
+      "description": "Estúdio de desenvolvimento LATAM. Software sob medida, testes de qualidade como serviço e modelos prontos para comprar. Cotizador interativo.",
       "services": {
         "tag": "// serviços",
         "headingA": "O que",
@@ -297,11 +297,11 @@
       "of": "de",
       "item": "templates",
       "kinds": {
-        "Landing": "Landing",
-        "Dashboard": "Dashboard",
-        "E-commerce": "E-commerce",
-        "SaaS": "SaaS",
-        "Auth": "Auth",
+        "Landing": "Página de chegada",
+        "Dashboard": "Painel de controle",
+        "E-commerce": "Loja online",
+        "SaaS": "Assinatura",
+        "Auth": "Acessos",
         "Blog": "Blog"
       }
     },
