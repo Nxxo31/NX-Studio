@@ -1,0 +1,68 @@
+name: Update FX Rates
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-rates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch latest rates from exchangerate.host
+        id: fetch
+        run: |
+          echo "Fetching rates from exchangerate.host..."
+          RESPONSE=$(curl -s "https://api.exchangerate.host/latest?base=USD")
+          echo "response=$RESPONSE" >> $GITHUB_OUTPUT
+
+      - name: Extract rates and create JSON
+        id: build
+        run: |
+          RESPONSE="${{ steps.fetch.outputs.response }}"
+          DATE=$(date -u +%Y-%m-%d)
+          
+          RATES=$(echo "$RESPONSE" | jq -r '
+            .rates |
+            with_entries(
+              select(.key | IN("COP","BRL","MXN","ARS","CLP","PEN","UYU","CRC","DOP","VES","BOB","PYG","GTQ","HNL","NIO","PAB","USD","CAD","EUR","GBP","CHF","SEK","NOK","DKK","PLN","CZK","HUF","RON","BGN","HRK","ISK"))
+            ) |
+            to_entries |
+            map("\(.key): \(.value)") |
+            join(",\n  ")
+          ')
+          
+          cat > src/data/fx-rates.json << EOF
+          {
+            "base": "USD",
+            "date": "$DATE",
+            "rates": {
+        $RATES
+            },
+            "source": "exchangerate.host",
+            "note": "Auto-actualizado via GitHub Action cada lunes. Tasas USD base."
+          }
+          EOF
+          
+          echo "Rates updated for $DATE"
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          if git diff --quiet src/data/fx-rates.json; then
+            echo "No changes in rates"
+          else
+            git add src/data/fx-rates.json
+            git commit -m "chore(fx): update exchange rates $(date -u +%Y-%m-%d)"
+            git push
+            echo "Rates committed and pushed"
+          fi
