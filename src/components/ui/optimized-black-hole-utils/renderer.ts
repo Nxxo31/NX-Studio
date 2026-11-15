@@ -25,10 +25,10 @@ uniform float uMono;
 
 out vec4 outColor;
 
-const float SHADOW  = 0.118;
-const float DISK_IN = 0.168;
-const float DISK_OUT = 0.52;
-const float TILT = 3.1;
+const float SHADOW  = 0.15;
+const float DISK_IN = 0.38;
+const float DISK_OUT = 0.7;
+const float TILT = 2.2;
 const float LENS_K = 0.42;
 
 // Rampa termica del look original (restaurada 2026-10-23, decision operador):
@@ -73,7 +73,7 @@ vec2 rot(vec2 p, float a) {
 }
 
 void main() {
-  vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution) / uResolution.y;
+  vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution) / min(uResolution.x, uResolution.y);
   float t = uTime;
 
   vec2 p = uv - vec2(0.0, 0.04);

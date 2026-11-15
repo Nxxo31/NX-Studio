@@ -36,36 +36,39 @@ export function Example() {
     };
 
     const start = async () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const reduced =
-        typeof window.matchMedia === "function" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduced) {
-        useFallback("prefers-reduced-motion");
-        return;
-      }
-      if (typeof navigator === "undefined" || !("gpu" in navigator)) {
-        useFallback("navegador sin WebGPU");
-        return;
-      }
-      try {
-        const { createRenderer: createGpuRenderer } = await import(
-          "./optimized-black-hole-vgpu/optimized-black-hole-utils/renderer"
-        );
-        if (cancelled) return;
-        renderer = createGpuRenderer({ canvas });
-        setBackend("webgpu");
-        await renderer.ready;
-        if (!cancelled) setIsReady(true);
-      } catch (error) {
-        renderer?.dispose();
-        renderer = undefined;
-        useFallback(
-          error instanceof Error ? error.message : "init WebGPU fallo",
-        );
-      }
-    };
+          const canvas = canvasRef.current;
+          if (!canvas) return;
+          const reduced =
+            typeof window.matchMedia === "function" &&
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          if (reduced) {
+            useFallback("prefers-reduced-motion");
+            return;
+          }
+          if (typeof navigator === "undefined" || !("gpu" in navigator)) {
+            useFallback("navegador sin WebGPU");
+            return;
+          }
+          try {
+            const { createRenderer: createGpuRenderer } = await import(
+              "./optimized-black-hole-vgpu/optimized-black-hole-utils/renderer"
+            );
+            if (cancelled) return;
+            console.debug("[black-hole] WebGPU disponible, intentando vgpu...");
+            renderer = createGpuRenderer({ canvas });
+            setBackend("webgpu");
+            await renderer.ready;
+            if (!cancelled) setIsReady(true);
+            console.debug("[black-hole] vgpu listo");
+          } catch (error) {
+            console.debug("[black-hole] vgpu falló:", error instanceof Error ? error.message : error);
+            renderer?.dispose();
+            renderer = undefined;
+            useFallback(
+              error instanceof Error ? error.message : "init WebGPU fallo",
+            );
+          }
+        };
 
     void start();
     return () => {
@@ -75,34 +78,39 @@ export function Example() {
   }, []);
 
   useEffect(() => {
-    if (backend !== "webgl2") return;
-    let cancelled = false;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const renderer = createWebglRenderer({ canvas });
-    void renderer.ready.then(() => {
-      if (!cancelled) setIsReady(true);
-    });
-    return () => {
-      cancelled = true;
-      renderer.dispose();
-    };
-  }, [backend]);
+      if (backend !== "webgl2") return;
+      let cancelled = false;
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      console.debug("[black-hole] usando fallback WebGL2");
+      const renderer = createWebglRenderer({ canvas });
+      void renderer.ready.then(() => {
+        if (!cancelled) setIsReady(true);
+      });
+      return () => {
+        cancelled = true;
+        renderer.dispose();
+      };
+    }, [backend]);
 
   return (
-    <div
-      className="relative h-full w-full overflow-hidden bg-black"
-      data-backend={backend}
-    >
-      <canvas
-        key={backend === "webgl2" ? "fallback" : "primary"}
-        ref={canvasRef}
-        className={`block h-full w-full touch-none transition-opacity duration-500 ${
-          isReady ? "opacity-100" : "opacity-0"
-        }`}
-      />
-    </div>
-  );
+      <div
+        className="relative h-full w-full overflow-hidden bg-black"
+        data-backend={backend}
+      >
+        <canvas
+          key={backend === "webgl2" ? "fallback" : "primary"}
+          ref={canvasRef}
+          className={`block h-full w-full touch-none transition-opacity duration-500 ${
+            isReady ? "opacity-100" : "opacity-0"
+          }`}
+        />
+        {/* Indicador visual de backend — quitar en prod */}
+        <div className="fixed bottom-4 left-4 z-50 px-3 py-1.5 text-xs font-mono rounded bg-black/80 border border-white/20 backdrop-blur text-white/70">
+          Backend: {backend === "pending" ? "cargando…" : backend}
+        </div>
+      </div>
+    );
 }
 
 export default Example;

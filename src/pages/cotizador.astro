@@ -6,6 +6,8 @@ import BackHome from '../components/BackHome.astro';
 import { FEATURES, MODIFIERS, ENGAGEMENT_SHAPES, CATEGORIES, type EngagementShape } from '../data/pricing';
 import { PRESETS, MARKET, formatCop, formatUsd } from '../data/pricing-baseline';
 import { getT, getLocale, localeUrl } from '~/i18n';
+import { detectCurrency, formatCurrency, CURRENCIES, type Currency } from '~/lib/geo-currency';
+import fxRatesData from '../data/fx-rates.json';
 
 const t = getT(Astro);
 const locale = getLocale(Astro);
@@ -58,9 +60,21 @@ const PRESET_COPY: Record<string, PresetCopy> = {
 };
 const C = PRESET_COPY[locale] ?? PRESET_COPY.es;
 
+// ---- Detección de moneda server-side (Cloudflare cf-ipcountry) ----
+const visitorCurrency: Currency = detectCurrency(Astro.request);
+const fxRates = (fxRatesData as { rates: Record<string, number> }).rates ?? {};
+const usdToLocal = fxRates[visitorCurrency.code] ?? 1;
+
 // Presets serializables para el script client-side.
 const presetsData = PRESETS.map((p) => ({ id: p.id, shape: p.shape, features: p.features, cop: p.cop, usd: p.usd }));
 const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintenance };
+
+// Monedas disponibles para el selector (todas las de CURRENCIES)
+const availableCurrencies = Object.values(CURRENCIES).map((c) => ({
+  code: c.code,
+  name: c.name[locale] ?? c.name.es,
+  symbol: c.symbol,
+}));
 ---
 
 <Layout title={t('pages.cotizador.title')} description={t('pages.cotizador.description')}>
@@ -202,15 +216,11 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
             <div class="mt-3 flex items-center gap-2">
               <label for="q-currency" class="font-mono text-[10px] uppercase tracking-widest text-nx-muted">{t('pages.cotizador.panel.currency')}</label>
               <select id="q-currency" class="font-mono text-xs bg-transparent border border-nx-border px-2 py-1 text-nx-text">
-                <option value="COP" selected>COP</option>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="MXN">MXN</option>
-                <option value="BRL">BRL</option>
-                <option value="ARS">ARS</option>
-                <option value="CLP">CLP</option>
-                <option value="PEN">PEN</option>
-                <option value="GBP">GBP</option>
+                {availableCurrencies.map((c) => (
+                  <option value={c.code} selected={c.code === visitorCurrency.code}>
+                    {c.code} — {c.name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -252,7 +262,7 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
   <Footer />
 </Layout>
 
-<script define:vars={{ i18nFeatures, i18nShapes, i18nModifiers, i18nBands, i18nLabels, presetsData, marketCopy }} is:inline>
+<script define:vars={{ i18nFeatures, i18nShapes, i18nModifiers, i18nBands, i18nLabels, presetsData, marketCopy, visitorCurrency: { code: visitorCurrency.code, name: visitorCurrency.name[locale] ?? visitorCurrency.name.es, symbol: visitorCurrency.symbol }, availableCurrencies, fxRates }} is:inline>
   // define:vars declara los mapas i18n como consts en este scope; los expongo
   // para el script module (el breakdown client-side los consume).
   window.__cotizadorI18n = { i18nFeatures, i18nShapes, i18nModifiers, i18nBands, i18nLabels, presets: presetsData, marketCopy };
@@ -272,7 +282,7 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
     shape: 'fixed',
     featureIds: ['discovery', 'design-system', 'api', 'db', 'auth', 'responsive', 'testing', 'deploy', 'docs'],
     modifierIds: [],
-    currency: 'COP',
+    currency: visitorCurrency.code,
   };
 
   const $ = <T extends HTMLElement = HTMLElement>(sel: string) =>
@@ -280,9 +290,7 @@ const marketCopy = { co: C.marketCo, intl: C.marketIntl, maintenance: C.maintena
 
   const fmt = new Intl.NumberFormat('en-US');
 
-  const FALLBACK_RATES: Record<string, number> = {
-    USD: 1, COP: 3900, EUR: 0.92, MXN: 17.2, BRL: 5.4, ARS: 1150, CLP: 940, PEN: 3.75, GBP: 0.79,
-  };
+  const FALLBACK_RATES: Record<string, number> = { ...fxRates };
   let rates: Record<string, number> = { ...FALLBACK_RATES };
 
   function fmtCurrency(amount: number, cur: string): string {

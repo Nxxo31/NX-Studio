@@ -1,0 +1,181 @@
+---
+import Layout from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import BackHome from '../components/BackHome.astro';
+import { getT, getLocale, localeUrl } from '~/i18n';
+import { computeQuote, type EngagementShape } from '~/data/pricing';
+import { detectCurrency, formatCurrency, CURRENCIES, type Currency } from '~/lib/geo-currency';
+import fxRatesData from '../data/fx-rates.json';
+
+const t = getT(Astro);
+const locale = getLocale(Astro);
+
+// Parámetros del cotizador (vienen de /cotizador via query string)
+const sp = Astro.url.searchParams;
+const shapeRaw = sp.get('shape') ?? 'fixed';
+const shape: EngagementShape = (['fixed', 'retainer', 'dedicated', 'tm'] as const).includes(shapeRaw as EngagementShape)
+  ? (shapeRaw as EngagementShape)
+  : 'fixed';
+
+const features = (sp.get('features') ?? '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+const modifiers = (sp.get('mods') ?? '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+const currencyParam = sp.get('cur')?.toUpperCase();
+const lowParam = sp.get('low');
+const highParam = sp.get('high');
+
+// Detección de moneda (server-side)
+const visitorCurrency: Currency = detectCurrency(Astro.request);
+const fxRates = (fxRatesData as { rates: Record<string, number> }).rates ?? {};
+
+// Usa moneda del query string si es válida, si no la detectada
+const finalCurrencyCode = currencyParam && CURRENCIES[currencyParam] ? currencyParam : visitorCurrency.code;
+const finalCurrency = CURRENCIES[finalCurrencyCode] ?? visitorCurrency;
+
+const rate = fxRates[finalCurrencyCode] ?? 1;
+
+// Recalcula quote server-side (fuente de verdad)
+const quote = computeQuote({ shape, featureIds: features, modifierIds: modifiers });
+
+// Usa valores del query si vienen, si no recalcula
+const totalLow = lowParam ? Number(lowParam) : Math.round(quote.totalLow * rate);
+const totalHigh = highParam ? Number(highParam) : Math.round(quote.totalHigh * rate);
+const totalLowUsd = quote.totalLow;
+const totalHighUsd = quote.totalHigh;
+
+const fmtUsd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+
+---
+
+<Layout title={t('pages.cotizacion.title')} description={t('pages.cotizacion.description')}>
+  <Nav />
+  <main>
+    <section class="relative px-6 py-20 lg:py-28">
+      <div class="mx-auto max-w-4xl">
+        <header class="mb-12 reveal">
+          <BackHome />
+          <span class="nx-tag mb-4">// pricing-engine v0.1</span>
+          <h1 class="font-display text-4xl lg:text-6xl font-bold tracking-tight mb-4">
+            {t('pages.cotizacion.title')}
+          </h1>
+          <p class="text-nx-muted max-w-2xl text-lg">
+            {t('pages.cotizacion.sub')}
+          </p>
+        </header>
+
+        <div class="glass-card glass-card-accent p-8 reveal">
+          <div class="mb-6">
+            <span class="nx-tag mb-2">{t('pages.cotizacion.detected')}: <strong>{finalCurrency.name[locale] ?? finalCurrency.name.es}</strong> ({finalCurrency.code})</span>
+            <p class="text-xs text-nx-dim mt-2">{t('pages.cotizacion.rateNote')}: {rate} {finalCurrencyCode}/USD (actualizado cada 6h via exchangerate.host)</p>
+          </div>
+
+          <div class="grid gap-8 md:grid-cols-2">
+            <div class="price-card glass-card p-6">
+              <span class="label font-mono text-xs uppercase tracking-widest text-nx-secondary">{t('pages.cotizacion.range')}</span>
+              <div class="mt-2 flex items-baseline gap-3 flex-wrap">
+                <span class="font-display text-4xl lg:text-5xl font-bold">{formatCurrency(totalLow, finalCurrency)}</span>
+                <span class="text-nx-dim text-3xl">—</span>
+                <span class="font-display text-4xl lg:text-5xl font-bold">{formatCurrency(totalHigh, finalCurrency)}</span>
+              </div>
+              <div class="mt-4">
+                <span class="nx-tag">{t(`pages.cotizacion.bands.${quote.bandLabel}`)}</span>
+                <span class="nx-tag ml-2">{quote.totalHours}h {t('pages.cotizacion.estimated')}</span>
+              </div>
+            </div>
+
+            <div class="breakdown glass-card p-6">
+              <h3 class="font-display text-lg font-bold mb-4">{t('pages.cotizacion.breakdownTitle')}</h3>
+              <dl class="space-y-3 font-mono text-sm">
+                <div class="flex justify-between border-b border-nx-border pb-2">
+                  <dt>{t('pages.cotizacion.breakdown.shape')}: {t(`pages.cotizador.shapes.${quote.shape.id}.name`)}</dt>
+                  <dd>${fmtUsd.format(quote.baseFee)}</dd>
+                </div>
+                {quote.features.map(({ feature, subtotal }) => (
+                  <div class="flex justify-between text-nx-muted border-b border-nx-border/50 pb-2">
+                    <dt>· {t(`pages.cotizador.features.${feature.id}.name`)} <span class="text-nx-dim">({feature.hours}h × $${feature.rate})</span></dt>
+                    <dd>${fmtUsd.format(subtotal)}</dd>
+                  </div>
+                ))}
+                {quote.modifiers.length && (
+                  <>
+                    <div class="nx-hairline my-2"></div>
+                    {quote.modifiers.map((m) => (
+                      <div class="flex justify-between text-nx-secondary border-b border-nx-border/50 pb-2">
+                        <dt>· {t(`pages.cotizador.modifiers.${m.id}.name`)}</dt>
+                        <dd>×{m.multiplier.toFixed(2)}</dd>
+                      </div>
+                    ))}
+                  </>
+                )}
+                <div class="nx-hairline my-2"></div>
+                <div class="flex justify-between"><dt>{t('pages.cotizacion.breakdown.subtotalFeatures')}</dt><dd>${fmtUsd.format(quote.subtotalFeatures)}</dd></div>
+                <div class="flex justify-between text-nx-muted"><dt>{t('pages.cotizacion.breakdown.baseFee')}</dt><dd>${fmtUsd.format(quote.baseFee)}</dd></div>
+                <div class="flex justify-between text-nx-muted"><dt>{t('pages.cotizacion.breakdown.multiplier')}</dt><dd>×{quote.multiplier.toFixed(3)}</dd></div>
+                <div class="flex justify-between text-nx-primary font-bold border-t border-nx-border pt-2">
+                  <dt>{t('pages.cotizacion.breakdown.total')} (USD)</dt><dd>${fmtUsd.format(totalLowUsd)} – ${fmtUsd.format(totalHighUsd)}</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+
+          <div class="mt-8 text-center">
+            <p class="disclaimer text-xs text-nx-dim max-w-2xl mx-auto mb-6">
+              {t('pages.cotizacion.disclaimer')}
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href={localeUrl('/agendar', locale) + Astro.url.search} class="nx-btn w-full sm:w-auto">
+                {t('pages.cotizacion.agendar')}
+              </a>
+              <a href={localeUrl('/contacto', locale) + Astro.url.search} class="nx-btn nx-btn-ghost w-full sm:w-auto">
+                {t('pages.cotizacion.contacto')}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 reveal">
+          <details class="glass-card p-6">
+            <summary class="font-mono text-xs uppercase tracking-widest text-nx-muted cursor-pointer hover:text-nx-secondary transition">
+              {t('pages.cotizacion.changeCurrency')}
+            </summary>
+            <div class="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              {Object.values(CURRENCIES).map((c) => (
+                <button
+                  type="button"
+                  class="currency-option glass-card p-4 text-left transition cursor-pointer"
+                  data-currency={c.code}
+                  data-selected={c.code === finalCurrencyCode}
+                >
+                  <div class="font-mono text-xs text-nx-dim mb-1">{c.code}</div>
+                  <div class="font-display font-semibold">{c.name[locale] ?? c.name.es}</div>
+                  <div class="text-xs text-nx-dim mt-1">{c.symbol}{Math.round(quote.totalLow * (fxRates[c.code] ?? 1)).toLocaleString()}</div>
+                </button>
+              ))}
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<script is:inline>
+  // Currency switcher: recarga la página con la nueva moneda
+  document.querySelectorAll('.currency-option').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const code = btn.dataset.currency;
+      const url = new URL(window.location.href);
+      url.searchParams.set('cur', code);
+      window.location.href = url.toString();
+    });
+  });
+</script>
