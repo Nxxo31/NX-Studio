@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import BackHome from '../../components/BackHome.astro';
+import LegalSections from '../../components/LegalSections.astro';
+import { getT, getLocale } from '~/i18n';
+
+const t = getT(Astro);
+const locale = getLocale(Astro);
+---
+
+<Base title={t('pages.legal.privacidad.title')} description={t('pages.legal.privacidad.description')}>
+  <Nav />
+  <main class="px-6 py-16">
+    <div class="mx-auto max-w-4xl">
+      <header class="text-center mb-12">
+        <BackHome />
+        <span class="nx-tag">{t('pages.legal.tag')}</span>
+        <h1 class="mt-3 font-display text-4xl font-bold md:text-5xl">
+          {t('pages.legal.privacidad.title')}
+        </h1>
+        <p class="mt-4 text-nx-muted font-mono text-sm">
+          {t('pages.legal.privacidad.lastUpdated')}
+        </p>
+      </header>
+
+      <div class="max-w-none">
+        <LegalSections slug="privacidad" />
+      </div>
+
+      <div class="mt-12 p-6 glass-card border-nx-border">
+        <h3 class="font-display text-lg font-bold mb-3">{t('pages.legal.contact')}</h3>
+        <p class="text-nx-muted mb-4">{t('pages.legal.contactText')}</p>
+        <div class="flex flex-wrap gap-3">
+          <a href="https://wa.me/573103312705" target="_blank" rel="noopener" class="nx-btn">
+            WhatsApp +57 310 331 2705
+          </a>
+          <a href="mailto:sebasvelascodev3101@gmail.com" class="nx-btn nx-btn-ghost">
+            sebasvelascodev3101@gmail.com
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Base>

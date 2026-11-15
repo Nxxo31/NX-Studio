@@ -1,0 +1,90 @@
+---
+/**
+ * Render de las secciones de las páginas legales (Términos / Privacidad / Cookies).
+ *
+ * El copy vive en src/i18n/{es,en,pt}.json bajo `pages.legal.<slug>`. Las
+ * secciones son arrays, así que NO pasan por t() (que solo resuelve strings)
+ * — se leen del dict con getMessages(). Cada sección puede traer:
+ *   - content: string  → párrafo, o lista si las líneas empiezan con '•'
+ *   - table:   objeto  → tabla (cabecera + filas) en vez de párrafo
+ */
+import { getLocale, getMessages } from '~/i18n';
+
+type Section = {
+  title: string;
+  content: string;
+  table?: { head: string[]; rows: string[][] };
+};
+
+interface Props {
+  /** Slug del documento dentro de `pages.legal`. */
+  slug: 'terminos' | 'privacidad' | 'cookies';
+}
+
+const { slug } = Astro.props;
+const locale = getLocale(Astro);
+
+// Cast explícito: el shape de `sections` varía por documento (algunas tienen
+// `table`), y el tipo derivado de es.json no lo expresa de forma uniforme.
+const dict = getMessages(locale) as unknown as {
+  pages: { legal: Record<string, { sections: Section[] }> };
+};
+const sections = dict.pages.legal[slug].sections;
+
+/** Una línea que empieza con '•' es un ítem de lista. */
+function toBullets(content: string): string[] | null {
+  const lines = content
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean);
+  if (lines.length < 2 || !lines.every((l) => l.startsWith('•'))) return null;
+  return lines.map((l) => l.slice(1).trim());
+}
+
+const rendered = sections.map((section) => ({
+  title: section.title,
+  content: section.content,
+  table: section.table ?? null,
+  bullets: toBullets(section.content),
+}));
+---
+
+{
+  rendered.map((section) => (
+    <section class="mb-10">
+      <h2 class="font-display text-xl font-bold mb-3">{section.title}</h2>
+      {section.table ? (
+        <div class="overflow-x-auto mb-6">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr>
+                {section.table.head.map((cell) => (
+                  <th class="border border-nx-border bg-nx-surface px-3 py-2 text-left font-mono text-xs uppercase tracking-widest text-nx-text">
+                    {cell}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {section.table.rows.map((row) => (
+                <tr>
+                  {row.map((cell) => (
+                    <td class="border border-nx-border px-3 py-2 text-sm text-nx-text">{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : section.bullets ? (
+        <ul class="list-disc list-inside mb-4 space-y-2 text-nx-text leading-relaxed">
+          {section.bullets.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      ) : (
+        <p class="text-nx-text leading-relaxed mb-4">{section.content}</p>
+      )}
+    </section>
+  ))
+}
