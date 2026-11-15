@@ -68,3 +68,12 @@ coverage/
 
 # Backup build output (manual mv of dist/ before destructive ops)
 dist.bak/
+
+# Build output fresco (contiene server/.dev.vars con la API key de 21st.dev)
+dist-fresh/
+
+# Reportes de npm audit generados
+npm_audit.json
+
+# Capturas sueltas de despliegue
+nx-studio-ghpages-*.png
