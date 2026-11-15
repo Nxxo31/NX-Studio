@@ -1015,6 +1015,36 @@
       "confirmedDuration": "Duração: {min} minutos",
       "meetPending": "Enviamos o link da videochamada por e-mail assim que for confirmado.",
       "confirmedNote": "Enviamos um e-mail com o resumo do orçamento e o link. Se precisar remarcar, responda esse e-mail."
+    },
+    "cotizacion": {
+      "title": "Sua cotação — NX-Studio",
+      "description": "Sua faixa de investimento na sua moeda local. Detectada automaticamente pela sua região.",
+      "headingA": "Sua cotação",
+      "headingEm": "na sua moeda",
+      "sub": "Esta é a faixa estimada convertida para a moeda do seu país. O preço exato é definido com você na chamada.",
+      "detected": "Detectado",
+      "rateNote": "Taxa de câmbio",
+      "range": "Faixa estimada",
+      "estimated": "estimadas",
+      "band": "Nível",
+      "breakdownTitle": "Detalhamento (USD base)",
+      "agendar": "Agendar chamada",
+      "contacto": "Enviar solicitação",
+      "disclaimer": "⚠ Faixa indicativa — o preço exato é definido com você conforme os detalhes do seu projeto. Taxas atualizadas a cada 6h (exchangerate.host).",
+      "changeCurrency": "Trocar moeda",
+      "bands": {
+        "Starter": "Starter",
+        "Standard": "Standard",
+        "Growth": "Growth",
+        "Enterprise": "Enterprise"
+      },
+      "breakdown": {
+        "shape": "Shape",
+        "subtotalFeatures": "Subtotal features",
+        "baseFee": "Base fee (kickoff)",
+        "multiplier": "Multiplier total",
+        "total": "Total"
+      }
     }
   },
   "chatbot": {

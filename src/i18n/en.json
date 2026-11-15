@@ -463,6 +463,36 @@
         }
       }
     },
+    "cotizacion": {
+      "title": "Your Quote — NX-Studio",
+      "description": "Your investment range in your local currency. Auto-detected by your region.",
+      "headingA": "Your quote",
+      "headingEm": "in your currency",
+      "sub": "This is the estimated range converted to your country's currency. The exact price is defined with you on the call.",
+      "detected": "Detected",
+      "rateNote": "Exchange rate",
+      "range": "Estimated range",
+      "estimated": "estimated",
+      "band": "Tier",
+      "breakdownTitle": "Breakdown (USD base)",
+      "agendar": "Schedule call",
+      "contacto": "Submit request",
+      "disclaimer": "⚠ Indicative range — the exact price is defined with you based on your project details. Rates updated every 6h (exchangerate.host).",
+      "changeCurrency": "Change currency",
+      "bands": {
+        "Starter": "Starter",
+        "Standard": "Standard",
+        "Growth": "Growth",
+        "Enterprise": "Enterprise"
+      },
+      "breakdown": {
+        "shape": "Shape",
+        "subtotalFeatures": "Subtotal features",
+        "baseFee": "Base fee (kickoff)",
+        "multiplier": "Multiplier total",
+        "total": "Total"
+      }
+    },
     "laboratorio": {
       "title": "AI Lab — NX-Studio",
       "description": "Applied AI experiments: assistants that use your information and automated tasks, proven in real production.",

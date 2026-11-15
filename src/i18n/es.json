@@ -463,6 +463,36 @@
         }
       }
     },
+    "cotizacion": {
+      "title": "Tu cotización — NX-Studio",
+      "description": "Tu rango de inversión en tu moneda local. Detectado automáticamente por tu región.",
+      "headingA": "Tu cotización",
+      "headingEm": "en tu moneda",
+      "sub": "Este es el rango estimado convertido a la moneda de tu país. El precio exacto se define contigo en la llamada.",
+      "detected": "Detectado",
+      "rateNote": "Tasa de cambio",
+      "range": "Rango estimado",
+      "estimated": "estimadas",
+      "band": "Nivel",
+      "breakdownTitle": "Desglose (USD base)",
+      "agendar": "Agendar llamada",
+      "contacto": "Enviar solicitud",
+      "disclaimer": "⚠ Rango indicativo — el precio exacto se define contigo según los detalles de tu proyecto. Tasas actualizadas cada 6h (exchangerate.host).",
+      "changeCurrency": "Cambiar moneda",
+      "bands": {
+        "Starter": "Starter",
+        "Standard": "Standard",
+        "Growth": "Growth",
+        "Enterprise": "Enterprise"
+      },
+      "breakdown": {
+        "shape": "Shape",
+        "subtotalFeatures": "Subtotal features",
+        "baseFee": "Base fee (kickoff)",
+        "multiplier": "Multiplier total",
+        "total": "Total"
+      }
+    },
     "laboratorio": {
       "title": "Laboratorio IA — NX-Studio",
       "description": "Experimentos de IA aplicada: asistentes que usan tu información y tareas automatizadas, probados en producción real.",

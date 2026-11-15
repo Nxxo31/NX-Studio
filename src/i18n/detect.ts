@@ -93,10 +93,10 @@ export function detectLocale(input: DetectInput): DetectResult {
     };
   }
 
-  // 4. Detección por país, luego Accept-Language
+  // 4. Detección: Accept-Language PRIMERO (preferencia del usuario), luego país
   const detected =
-    countryToLocale(input.cfIpCountry) ??
     localeFromAcceptLanguage(input.acceptLanguage) ??
+    countryToLocale(input.cfIpCountry) ??
     DEFAULT_LOCALE;
 
   if (detected === DEFAULT_LOCALE) return { action: 'serve', locale: 'es' };

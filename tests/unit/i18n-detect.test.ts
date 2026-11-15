@@ -88,9 +88,9 @@ describe('detectLocale', () => {
     expect(r).toEqual({ action: 'redirect', locale: 'pt', location: '/pt/' });
   });
 
-  it('curl test 2: cf-ipcountry=MX + Accept-Language en-US → serve es (país gana)', () => {
+  it('curl test 2: cf-ipcountry=MX + Accept-Language en-US → redirect /en/ (browser language wins)', () => {
     const r = detectLocale({ pathname: '/', cfIpCountry: 'MX', acceptLanguage: 'en-US' });
-    expect(r).toEqual({ action: 'serve', locale: 'es' });
+    expect(r).toEqual({ action: 'redirect', locale: 'en', location: '/en/' });
   });
 
   it('curl test 3: cookie nx-studio-locale=en → redirect a /en/<path>', () => {
